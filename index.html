@@ -1,1 +1,351 @@
-e
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kin — Join the Waitlist</title>
+<style>
+  :root {
+    --bg: #0f0f12;
+    --card: #17171c;
+    --text: #f2f2f5;
+    --muted: #9a9aa5;
+    --accent: #ff6a3d;
+    --accent-hover: #ff8258;
+    --border: #2a2a32;
+    --error: #ff5c5c;
+    --success: #4ade80;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 24px;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .logo {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .tagline {
+    text-align: center;
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 32px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  h1 {
+    font-size: 20px;
+    margin: 0 0 6px;
+  }
+
+  .sub {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 0 0 24px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  input {
+    width: 100%;
+    background: #0f0f12;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  input::placeholder {
+    color: #55555f;
+  }
+
+  input:focus {
+    border-color: var(--accent);
+  }
+
+  .contact-toggle {
+    display: flex;
+    gap: 8px;
+    background: #0f0f12;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px;
+  }
+
+  .contact-toggle button {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-radius: 7px;
+    padding: 9px 0;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .contact-toggle button.active {
+    background: var(--accent);
+    color: #1a0d06;
+  }
+
+  .hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: -8px;
+  }
+
+  .field-error {
+    font-size: 12px;
+    color: var(--error);
+    min-height: 16px;
+  }
+
+  button.submit {
+    margin-top: 4px;
+    background: var(--accent);
+    color: #1a0d06;
+    border: none;
+    border-radius: 10px;
+    padding: 13px 0;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.05s ease;
+  }
+
+  button.submit:hover {
+    background: var(--accent-hover);
+  }
+
+  button.submit:active {
+    transform: scale(0.99);
+  }
+
+  .status {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 16px;
+    min-height: 20px;
+  }
+
+  .status.success { color: var(--success); }
+  .status.error { color: var(--error); }
+
+  .footer-note {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 20px;
+  }
+
+  .success-view {
+    display: none;
+    text-align: center;
+    padding: 8px 0;
+  }
+
+  .success-view .check {
+    font-size: 40px;
+    margin-bottom: 12px;
+  }
+
+  .success-view h2 {
+    font-size: 18px;
+    margin: 0 0 6px;
+  }
+
+  .success-view p {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="logo">Kin</div>
+  <div class="tagline">Stay close to the people who matter.</div>
+
+  <div class="card">
+    <div id="form-view">
+      <h1>Join the waitlist</h1>
+      <p class="sub">Be first to know when Kin launches. No spam, ever.</p>
+
+      <form id="waitlist-form" novalidate>
+        <div>
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="First name or nickname" required autocomplete="given-name">
+          <div class="field-error" id="name-error"></div>
+        </div>
+
+        <div>
+          <label>How should we reach you?</label>
+          <div class="contact-toggle" role="tablist">
+            <button type="button" id="tab-email" class="active">Email</button>
+            <button type="button" id="tab-phone">Phone</button>
+          </div>
+        </div>
+
+        <div id="email-field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email">
+          <div class="field-error" id="email-error"></div>
+        </div>
+
+        <div id="phone-field" style="display:none;">
+          <label for="phone">Phone number</label>
+          <input type="tel" id="phone" name="phone" placeholder="+1 555 123 4567" autocomplete="tel">
+          <div class="field-error" id="phone-error"></div>
+        </div>
+
+        <button type="submit" class="submit">Join waitlist</button>
+        <div class="status" id="form-status"></div>
+      </form>
+    </div>
+
+    <div id="success-view" class="success-view">
+      <div class="check">🎉</div>
+      <h2>You're on the list</h2>
+      <p>We'll email or text you the moment Kin is ready.</p>
+    </div>
+  </div>
+
+  <div class="footer-note">This is a test deployment. Signups are not yet stored anywhere.</div>
+</div>
+
+<script>
+  const form = document.getElementById('waitlist-form');
+  const tabEmail = document.getElementById('tab-email');
+  const tabPhone = document.getElementById('tab-phone');
+  const emailField = document.getElementById('email-field');
+  const phoneField = document.getElementById('phone-field');
+  const emailInput = document.getElementById('email');
+  const phoneInput = document.getElementById('phone');
+  const nameInput = document.getElementById('name');
+  const formStatus = document.getElementById('form-status');
+
+  let contactMode = 'email';
+
+  function setMode(mode) {
+    contactMode = mode;
+    const isEmail = mode === 'email';
+    tabEmail.classList.toggle('active', isEmail);
+    tabPhone.classList.toggle('active', !isEmail);
+    emailField.style.display = isEmail ? '' : 'none';
+    phoneField.style.display = isEmail ? 'none' : '';
+    clearErrors();
+  }
+
+  tabEmail.addEventListener('click', () => setMode('email'));
+  tabPhone.addEventListener('click', () => setMode('phone'));
+
+  function clearErrors() {
+    document.getElementById('name-error').textContent = '';
+    document.getElementById('email-error').textContent = '';
+    document.getElementById('phone-error').textContent = '';
+    formStatus.textContent = '';
+    formStatus.className = 'status';
+  }
+
+  function isValidEmail(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  function isValidPhone(value) {
+    const digits = value.replace(/[^\d]/g, '');
+    return digits.length >= 7;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearErrors();
+
+    let valid = true;
+
+    if (!nameInput.value.trim()) {
+      document.getElementById('name-error').textContent = 'Please enter a name or nickname.';
+      valid = false;
+    }
+
+    if (contactMode === 'email') {
+      if (!emailInput.value.trim()) {
+        document.getElementById('email-error').textContent = 'Email is required.';
+        valid = false;
+      } else if (!isValidEmail(emailInput.value.trim())) {
+        document.getElementById('email-error').textContent = 'Please enter a valid email.';
+        valid = false;
+      }
+    } else {
+      if (!phoneInput.value.trim()) {
+        document.getElementById('phone-error').textContent = 'Phone number is required.';
+        valid = false;
+      } else if (!isValidPhone(phoneInput.value.trim())) {
+        document.getElementById('phone-error').textContent = 'Please enter a valid phone number.';
+        valid = false;
+      }
+    }
+
+    if (!valid) {
+      formStatus.textContent = 'Please fix the errors above.';
+      formStatus.className = 'status error';
+      return;
+    }
+
+    // TODO: wire this up to a real backend / API endpoint before launch.
+    const payload = {
+      name: nameInput.value.trim(),
+      email: contactMode === 'email' ? emailInput.value.trim() : null,
+      phone: contactMode === 'phone' ? phoneInput.value.trim() : null
+    };
+    console.log('Waitlist signup (not persisted):', payload);
+
+    document.getElementById('form-view').style.display = 'none';
+    document.getElementById('success-view').style.display = 'block';
+  });
+</script>
+
+</body>
+</html>
