@@ -19,9 +19,10 @@
     <img class="logo__mark" src="/assets/img/logo-wordmark.png" alt="" width="1392" height="1130">
     <span class="logo__dot" aria-hidden="true"></span>
   </div>
-  <div class="tagline">Stay close to the people who matter.</div>
+  <div class="tagline">Where strangers become kin</div>
 
   <div class="card card--hero">
+    <img class="card__bg" src="/assets/img/card.svg" alt="" aria-hidden="true">
     <div class="card__content">
     <div id="form-view">
       <h1 class="card__title">Join the waitlist</h1>
@@ -37,27 +38,26 @@
         <div class="field">
           <label>How should we reach you?</label>
           <div class="segmented" role="tablist">
+            <span class="segmented__pill" aria-hidden="true"></span>
             <button type="button" id="tab-email" class="active">Email</button>
             <button type="button" id="tab-phone">Phone</button>
           </div>
         </div>
 
-        <div class="field" id="email-field">
-          <label for="email">Email</label>
-          <input class="input" type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email">
+        <div class="field field--contact" id="email-field">
+          <input class="input" type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" aria-label="Email">
           <div class="field-error" id="email-error"></div>
         </div>
 
-        <div class="field" id="phone-field" style="display:none;">
-          <label for="phone">Phone number</label>
-          <input class="input" type="tel" id="phone" name="phone" placeholder="+1 555 123 4567" autocomplete="tel">
+        <div class="field field--contact" id="phone-field" style="display:none;">
+          <input class="input" type="tel" id="phone" name="phone" placeholder="+1 555 123 4567" autocomplete="tel" aria-label="Phone number">
           <div class="field-error" id="phone-error"></div>
         </div>
 
         <!-- Honeypot: hidden from humans, bots tend to fill it. Leave empty. -->
         <input class="visually-hidden" type="text" id="website" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
 
-        <button type="submit" class="btn btn--block btn--mt submit">Submit</button>
+        <button type="submit" class="btn btn--block btn--mt submit"><span class="btn__label">Submit</span></button>
         <p class="consent">By joining, you agree to our <a href="/privacy-policy/">Privacy Policy</a>.</p>
         <div class="status" id="form-status"></div>
       </form>

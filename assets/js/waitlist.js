@@ -12,6 +12,8 @@
 
   const tabEmail = document.getElementById('tab-email');
   const tabPhone = document.getElementById('tab-phone');
+  const segmented = tabEmail.closest('.segmented');
+  const segmentedPill = segmented.querySelector('.segmented__pill');
   const emailField = document.getElementById('email-field');
   const phoneField = document.getElementById('phone-field');
   const emailInput = document.getElementById('email');
@@ -20,6 +22,7 @@
   const websiteInput = document.getElementById('website');
   const formStatus = document.getElementById('form-status');
   const submitButton = form.querySelector('button.submit');
+  const submitLabel = submitButton.querySelector('.btn__label') || submitButton;
 
   // Cloudflare Worker endpoint. Override at deploy time by setting
   // window.KIN_API_BASE before this script runs.
@@ -29,10 +32,15 @@
   let contactMode = 'email';
 
   function setMode(mode) {
+    if (mode === contactMode) return;
     contactMode = mode;
     const isEmail = mode === 'email';
     tabEmail.classList.toggle('active', isEmail);
     tabPhone.classList.toggle('active', !isEmail);
+    segmented.classList.toggle('is-phone', !isEmail);
+    segmentedPill.classList.remove('is-launching');
+    void segmentedPill.offsetWidth; // restart the launch keyframes on repeat clicks
+    segmentedPill.classList.add('is-launching');
     emailField.style.display = isEmail ? '' : 'none';
     phoneField.style.display = isEmail ? 'none' : '';
     clearErrors();
@@ -100,9 +108,9 @@
       website: websiteInput ? websiteInput.value : '' // honeypot — always empty for real users
     };
 
-    const originalLabel = submitButton.textContent;
+    const originalLabel = submitLabel.textContent;
     submitButton.disabled = true;
-    submitButton.textContent = 'Joining…';
+    submitLabel.textContent = 'Joining…';
     formStatus.textContent = '';
     formStatus.className = 'status';
 
@@ -126,7 +134,7 @@
       document.getElementById('success-view').style.display = 'block';
     } catch (err) {
       submitButton.disabled = false;
-      submitButton.textContent = originalLabel;
+      submitLabel.textContent = originalLabel;
       formStatus.textContent = err.message || 'Network error. Please try again.';
       formStatus.className = 'status error';
     }
