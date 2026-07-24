@@ -103,4 +103,15 @@
   /* ---- Motion ---- */
   --transition-fast: 0.15s ease;
   --transition-press: 0.05s ease;
+
+  /* Timing scale from the Figma motion-principles board (Motion / Timing) */
+  --duration-instant:   120ms;
+  --duration-quick:     220ms;
+  --duration-standard:  450ms;
+  --duration-hero:      800ms;
+
+  /* "Physical weight" — objects accelerate gently, settle naturally,
+     never snap into place. */
+  --ease-emergence: cubic-bezier(0.16, 1, 0.3, 1);   /* material emergence: condense, never snap */
+  --ease-drop:      cubic-bezier(0.22, 1, 0.36, 1);  /* drop: gentle decelerate into a soft landing */
 }

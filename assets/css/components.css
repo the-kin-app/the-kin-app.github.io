@@ -7,10 +7,64 @@
 
 /* ---- Brand / logo -------------------------------------------------- */
 .logo {
+  position: relative;
   display: block;
   width: 120px;
   height: auto;
   margin: 0 auto var(--space-2);
+}
+
+/* Animated homepage lockup — the wordmark (dot masked out at the source,
+   see assets/img/logo-wordmark.png) plays Material Emergence; the dot is
+   a plain circle (matches --color-accent exactly) that plays Drop on top.
+   Both start together, 0.8s after the page lands, per the Figma motion
+   principles board (Motion > Behaviors). */
+.logo__mark {
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0;
+  /* Runs a little longer than the dot's Hero-length Drop (890ms vs. 800ms)
+     so the dot lands at the ~90%-done point of the emergence, not at its
+     very end — the wordmark keeps quietly resolving for another beat
+     after the dot has already settled, then reaches a fully crisp finish. */
+  animation: logo-emerge 890ms var(--ease-emergence) 0.8s both;
+}
+
+.logo__dot {
+  position: absolute;
+  left: 46.48%;
+  top: 22.65%;
+  width: 10.06%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: var(--color-accent);
+  opacity: 0;
+  animation: logo-dot-drop var(--duration-hero) var(--ease-drop) 0.8s both;
+}
+
+@keyframes logo-emerge {
+  0%   { opacity: 0;    filter: blur(18px); transform: scale(1.06); }
+  50%  { opacity: 0.55; filter: blur(7px);  transform: scale(1.02); }
+  80%  { opacity: 0.9;  filter: blur(2px);  transform: scale(1.004); }
+  100% { opacity: 1;    filter: blur(0);    transform: scale(1); }
+}
+
+@keyframes logo-dot-drop {
+  0%   { opacity: 0; transform: translateY(-42px) scale(0.9); }
+  55%  { opacity: 1; }
+  72%  { transform: translateY(3px) scale(1.03); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo__mark,
+  .logo__dot {
+    animation: none;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
 }
 
 .tagline {
@@ -147,6 +201,10 @@
   display: inline-block;
   text-align: center;
   text-decoration: none;
+  /* Explicit fill, not just the glass sheen — without it, native button
+     chrome (iOS/Safari renders this as gray even with appearance: none)
+     shows through wherever the translucent gradient doesn't fully cover. */
+  background-color: var(--color-surface);
   background-image: var(--gradient-glass);
   backdrop-filter: blur(3px);
   color: var(--color-on-accent);

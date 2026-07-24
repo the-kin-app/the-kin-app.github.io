@@ -50,6 +50,16 @@ a:hover { color: var(--color-accent-hover); }
 
 img { max-width: 100%; display: block; }
 
+/* iOS Safari themes native form-control chrome blue unless appearance is
+   reset — without this, .btn's submit button shows the system tint under
+   its own background instead of the authored gradient. */
+button, input, select, textarea {
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  color: inherit;
+}
+
 h1, h2, h3, p { margin: 0; }
 
 /* Layout containers */
