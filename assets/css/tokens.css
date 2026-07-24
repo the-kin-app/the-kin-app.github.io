@@ -17,25 +17,47 @@
 
 :root {
   /* ---- Color ---- */
-  --color-bg:            #0f0f12;
-  --color-surface:       #17171c;  /* cards, raised panels */
-  --color-surface-sunken:#0f0f12;  /* inset fields */
-  --color-text:          #f2f2f5;
-  --color-muted:         #9a9aa5;
-  --color-border:        #2a2a32;
+  --color-bg:            #efe6df;  /* flat fallback behind the hero photo */
+  --color-surface:       #fbf8f4;  /* cards, raised panels */
+  --color-surface-sunken:transparent; /* inset fields (float on the card via shadow only) */
+  --color-surface-pill:  rgba(255, 255, 255, 0.6); /* active segmented pill */
+  --color-text:          #24222c;
+  --color-muted:         #6f6a7d;
+  --color-muted-strong:  #494949;  /* tagline under the logo */
+  --color-border:        #f3f3f3;
 
-  --color-accent:        #ff6a3d;
-  --color-accent-hover:  #ff8258;
-  --color-on-accent:     #1a0d06;  /* text/icons on accent fills */
+  --color-accent:        #c15cdb;
+  --color-accent-hover:  #a83fc4;
+  --color-on-accent:     #24222c;  /* text/icons on accent fills (glass pills stay light, so text stays dark) */
 
-  --color-error:         #ff5c5c;
-  --color-success:       #4ade80;
+  --color-error:         #e0435f;
+  --color-success:       #29a866;
 
-  /* Brand gradient (logo, hero accents) */
-  --gradient-brand: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+  /* Brand gradient (accents) */
+  --gradient-brand: linear-gradient(135deg, var(--color-accent), #e6a6f2);
+
+  /* Frosted-glass sheen used on pills (segmented active state, submit button).
+     Toned down from the raw Figma export — full-strength white reads as a
+     glossy plastic highlight once it's on a flat cream surface instead of a
+     blurred photo, so every stop here is roughly half the source opacity. */
+  --gradient-glass:
+    linear-gradient(270deg, rgba(255, 255, 255, 0.35) 4.8556%, rgba(255, 255, 255, 0) 17.515%),
+    linear-gradient(270deg, rgba(255, 255, 255, 0) 90.115%, rgba(255, 255, 255, 0.25) 101.92%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0) 44.418%, rgba(255, 255, 255, 0.05) 115.25%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.4) 26.411%, rgba(255, 255, 255, 0) 44.418%),
+    linear-gradient(90deg, rgba(242, 238, 231, 0.4) 0%, rgba(242, 238, 231, 0.4) 100%);
+
+  /* Page background: soft gradient fallback for pages without the hero photo */
+  --gradient-page-bg: linear-gradient(160deg, #f4e9df 0%, #ede2e4 45%, #e9e6ec 100%);
+
+  /* ---- Shadow ---- */
+  --shadow-card:            0px 20px 45px rgba(43, 26, 46, 0.16);
+  --shadow-pill:             0px 4px 22px rgba(0, 0, 0, 0.12);
+  --shadow-accent-glow:      0px 0px 22px 4px rgba(193, 92, 219, 0.2);
+  --shadow-inset-highlight:  inset 0.7px 0.7px 0.5px rgba(255, 255, 255, 0.25);
 
   /* ---- Typography ---- */
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
   --text-xs:   12px;
   --text-sm:   13px;
@@ -62,13 +84,17 @@
   --space-6: 24px;
   --space-7: 28px;
   --space-8: 32px;
+  --space-9: 36px;
+  --space-10: 40px;
+  --space-11: 44px;
   --space-12: 48px;
 
   /* ---- Radius ---- */
   --radius-sm: 7px;
-  --radius-md: 10px;
+  --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 22px;
+  --radius-2xl: 32px; /* card corners */
 
   /* ---- Layout ---- */
   --container-narrow: 420px;  /* form/card column */

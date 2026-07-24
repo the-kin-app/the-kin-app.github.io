@@ -11,11 +11,22 @@ html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--color-bg);
+  background: var(--gradient-page-bg);
   color: var(--color-text);
   font-family: var(--font-sans);
   font-size: var(--text-base);
   line-height: var(--leading-normal);
+}
+
+/* Hero pages (homepage, waitlist) sit on the blurred photo backdrop.
+   (The photo alone — layering it under the opaque page gradient would
+   just hide it, since that gradient has no transparency of its own.) */
+body.bg-photo {
+  background-image: url("/assets/img/bg-waitlist.jpg");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
 }
 
 /* Vertically + horizontally centered single-column pages

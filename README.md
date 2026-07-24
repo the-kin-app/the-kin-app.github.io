@@ -20,7 +20,9 @@ waitlist submissions.
 │   ├── js/
 │   │   └── waitlist.js      Waitlist form validation + submission
 │   ├── img/
-│   │   └── logo.svg         Placeholder logo mark
+│   │   ├── logo.png         Kin wordmark
+│   │   ├── card.svg         Waitlist card vector (Figma export)
+│   │   └── bg-waitlist.jpg  Hero background photo
 │   └── favicon.svg          Placeholder favicon
 ├── worker/                 Cloudflare Worker + D1 waitlist API (see worker/README.md)
 └── CNAME
@@ -50,11 +52,12 @@ When generating code from Figma (Figma → code / Dev Mode / MCP), map the
 output onto these tokens and component classes rather than emitting inline
 styles, so everything stays consistent and maintainable.
 
-### Replacing placeholder assets
+### Replacing assets
 
-- `assets/img/logo.svg` and `assets/favicon.svg` are placeholders (gradient
-  "K"). Drop in the designer's exports at the same paths — the homepage and
-  `<link rel="icon">` references pick them up automatically.
+- `assets/img/logo.png`, `assets/img/card.svg`, and `assets/img/bg-waitlist.jpg`
+  come straight from the Figma "Waitlist (using components)" frame. Re-export
+  and drop in at the same paths to update them; `assets/favicon.svg` is still
+  a placeholder.
 
 ## Local preview
 
