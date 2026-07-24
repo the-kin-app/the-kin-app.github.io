@@ -23,28 +23,16 @@
     <p class="card__sub">Point your camera at the code below.</p>
 
     <div class="qr-box">
-      <img id="qr-img" alt="QR code linking to the Kin waitlist page" width="220" height="220">
+      <img src="/assets/img/qr-waitlist.png" alt="QR code linking to the Kin waitlist page" width="220" height="220">
     </div>
 
     <div class="url">
-      <a id="target-link" href="/waitlist/"></a>
+      <a href="https://kinapp.social/waitlist/">kinapp.social/waitlist</a>
     </div>
   </div>
 
   <a class="back-link" href="/waitlist/">← Back to the waitlist page</a>
 </div>
-
-<script>
-  // Target = the waitlist page, resolved relative to this page so it works on
-  // localhost, GitHub Pages, and any future custom domain without edits.
-  const targetUrl = new URL('../waitlist/', window.location.href).href;
-
-  document.getElementById('target-link').textContent = targetUrl;
-  document.getElementById('target-link').href = targetUrl;
-
-  const qrImg = document.getElementById('qr-img');
-  qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=440x440&margin=0&data=' + encodeURIComponent(targetUrl);
-</script>
 
 </body>
 </html>
