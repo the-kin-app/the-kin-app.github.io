@@ -4,138 +4,37 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kin — Scan to Join</title>
-<style>
-  :root {
-    --bg: #0f0f12;
-    --card: #17171c;
-    --text: #f2f2f5;
-    --muted: #9a9aa5;
-    --accent: #ff6a3d;
-    --accent-hover: #ff8258;
-    --border: #2a2a32;
-  }
-
-  * { box-sizing: border-box; }
-
-  body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    padding: 24px;
-  }
-
-  .wrap {
-    width: 100%;
-    max-width: 380px;
-    text-align: center;
-  }
-
-  .logo {
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 8px;
-  }
-
-  .tagline {
-    color: var(--muted);
-    font-size: 15px;
-    margin-bottom: 32px;
-  }
-
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px;
-  }
-
-  h1 {
-    font-size: 18px;
-    margin: 0 0 6px;
-  }
-
-  .sub {
-    color: var(--muted);
-    font-size: 14px;
-    margin: 0 0 24px;
-  }
-
-  .qr-box {
-    background: #fff;
-    border-radius: 12px;
-    padding: 16px;
-    display: inline-block;
-    line-height: 0;
-  }
-
-  .qr-box img {
-    display: block;
-    width: 220px;
-    height: 220px;
-  }
-
-  .url {
-    margin-top: 20px;
-    font-size: 13px;
-    color: var(--muted);
-    word-break: break-all;
-  }
-
-  .url a {
-    color: var(--accent);
-    text-decoration: none;
-  }
-
-  .url a:hover {
-    color: var(--accent-hover);
-    text-decoration: underline;
-  }
-
-  .back {
-    display: inline-block;
-    margin-top: 20px;
-    font-size: 13px;
-    color: var(--muted);
-    text-decoration: none;
-  }
-
-  .back:hover {
-    color: var(--text);
-  }
-</style>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
 </head>
-<body>
+<body class="center">
 
-<div class="wrap">
-  <div class="logo">Kin</div>
+<div class="container text-center" style="max-width:380px;">
+  <div class="logo-wordmark">Kin</div>
   <div class="tagline">Stay close to the people who matter.</div>
 
   <div class="card">
-    <h1>Scan to join the waitlist</h1>
-    <p class="sub">Point your camera at the code below.</p>
+    <h1 class="card__title">Scan to join the waitlist</h1>
+    <p class="card__sub">Point your camera at the code below.</p>
 
     <div class="qr-box">
       <img id="qr-img" alt="QR code linking to the Kin waitlist page" width="220" height="220">
     </div>
 
     <div class="url">
-      <a id="target-link" href="../"></a>
+      <a id="target-link" href="/waitlist/"></a>
     </div>
   </div>
 
-  <a class="back" href="../">← Back to the waitlist page</a>
+  <a class="back-link" href="/waitlist/">← Back to the waitlist page</a>
 </div>
 
 <script>
-  // Target = site root, resolved relative to this page so it works on
+  // Target = the waitlist page, resolved relative to this page so it works on
   // localhost, GitHub Pages, and any future custom domain without edits.
-  const targetUrl = new URL('../', window.location.href).href;
+  const targetUrl = new URL('../waitlist/', window.location.href).href;
 
   document.getElementById('target-link').textContent = targetUrl;
   document.getElementById('target-link').href = targetUrl;

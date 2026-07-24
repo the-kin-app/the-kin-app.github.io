@@ -1,0 +1,268 @@
+/* ============================================================
+   Kin — Components
+   Reusable UI blocks. Each maps to a Figma component of the same
+   name. Style with tokens only (see tokens.css) — no literals.
+   Depends on tokens.css + base.css.
+   ============================================================ */
+
+/* ---- Brand / logo -------------------------------------------------- */
+.logo-mark {
+  width: 84px;
+  height: 84px;
+  margin: 0 auto var(--space-6);
+  border-radius: var(--radius-xl);
+  background: var(--gradient-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-on-accent);
+  letter-spacing: var(--tracking-tight);
+}
+
+.logo-wordmark {
+  text-align: center;
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-tight);
+  margin-bottom: var(--space-2);
+}
+
+.tagline {
+  text-align: center;
+  color: var(--color-muted);
+  font-size: var(--text-base);
+  margin-bottom: var(--space-8);
+}
+
+/* ---- Card ---------------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-7);
+}
+
+.card__title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-1);
+}
+
+.card__sub {
+  color: var(--color-muted);
+  font-size: 14px;
+  margin: 0 0 var(--space-6);
+}
+
+/* ---- Form ---------------------------------------------------------- */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.field label,
+.label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-muted);
+  margin-bottom: var(--space-2);
+  display: block;
+}
+
+.input {
+  width: 100%;
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text);
+  font-size: var(--text-base);
+  font-family: inherit;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.input::placeholder { color: #55555f; }
+.input:focus { border-color: var(--color-accent); }
+
+.field-error {
+  font-size: var(--text-xs);
+  color: var(--color-error);
+  min-height: 16px;
+}
+
+.hint {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  margin-top: calc(var(--space-2) * -1);
+}
+
+/* ---- Segmented toggle --------------------------------------------- */
+.segmented {
+  display: flex;
+  gap: var(--space-2);
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-1);
+}
+
+.segmented button {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 9px 0;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.segmented button.active {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* ---- Buttons ------------------------------------------------------- */
+.btn {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 13px 26px;
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-bold);
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-press);
+}
+
+.btn:hover { background: var(--color-accent-hover); color: var(--color-on-accent); }
+.btn:active { transform: scale(0.99); }
+.btn:disabled { opacity: 0.7; cursor: default; }
+
+.btn--block { display: block; width: 100%; padding: 13px 0; }
+.btn--mt { margin-top: var(--space-1); }
+
+/* ---- Status / feedback -------------------------------------------- */
+.status {
+  text-align: center;
+  font-size: 14px;
+  margin-top: var(--space-4);
+  min-height: 20px;
+}
+.status.success { color: var(--color-success); }
+.status.error { color: var(--color-error); }
+
+.consent {
+  text-align: center;
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  margin: 0;
+}
+.consent a { color: var(--color-accent); text-decoration: none; }
+.consent a:hover { color: var(--color-accent-hover); text-decoration: underline; }
+
+.footer-note {
+  text-align: center;
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+  margin-top: var(--space-5);
+}
+.footer-note a { color: var(--color-muted); text-decoration: none; }
+.footer-note a:hover { color: var(--color-accent-hover); text-decoration: underline; }
+
+/* ---- Success view -------------------------------------------------- */
+.success-view {
+  display: none;
+  text-align: center;
+  padding: var(--space-2) 0;
+}
+.success-view .check { font-size: 40px; margin-bottom: var(--space-3); }
+.success-view h2 { font-size: 18px; margin: 0 0 var(--space-1); }
+.success-view p { color: var(--color-muted); font-size: 14px; margin: 0; }
+
+/* ---- Prose (long-form pages, e.g. privacy policy) ----------------- */
+.prose h1 { font-size: 22px; margin: 0 0 var(--space-6); }
+.prose h2 {
+  font-size: var(--text-md);
+  margin: var(--space-7) 0 var(--space-2);
+  color: var(--color-text);
+}
+.prose h2:first-of-type { margin-top: 0; }
+.prose p,
+.prose li { font-size: 14px; line-height: var(--leading-normal); color: #c9c9d1; }
+.prose ul { margin: var(--space-2) 0; padding-left: var(--space-5); }
+.prose li { margin-bottom: var(--space-1); }
+
+.note {
+  background: #1f1a12;
+  border: 1px solid #4a3a1a;
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  color: #e8c988;
+  margin: var(--space-2) 0 var(--space-4);
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: var(--space-7);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  text-decoration: none;
+}
+.back-link:hover { color: var(--color-text); }
+
+.page-header__title {
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-tight);
+  margin-bottom: var(--space-1);
+}
+.page-header__meta {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-8);
+}
+
+/* ---- QR code ------------------------------------------------------- */
+.qr-box {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: inline-block;
+  line-height: 0;
+}
+.qr-box img { display: block; width: 220px; height: 220px; }
+
+.url {
+  margin-top: var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  word-break: break-all;
+}
+.url a { color: var(--color-accent); text-decoration: none; }
+.url a:hover { color: var(--color-accent-hover); text-decoration: underline; }
+
+/* ---- Hero (homepage) ---------------------------------------------- */
+.hero__title {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-tight);
+  margin: 0 0 var(--space-3);
+}
+.hero__description {
+  color: var(--color-muted);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  margin: 0 0 var(--space-8);
+}

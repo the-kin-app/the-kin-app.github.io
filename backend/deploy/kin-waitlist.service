@@ -1,0 +1,43 @@
+# systemd unit for the Kin waitlist backend.
+# Install: sudo cp kin-waitlist.service /etc/systemd/system/
+#          sudo systemctl daemon-reload
+#          sudo systemctl enable --now kin-waitlist
+# Logs:    journalctl -u kin-waitlist -f
+
+[Unit]
+Description=Kin waitlist backend
+After=network.target
+
+[Service]
+Type=simple
+# Dedicated unprivileged user (create with: sudo useradd -r -s /usr/sbin/nologin kin)
+User=kin
+Group=kin
+
+# Absolute path to the backend directory on the server.
+WorkingDirectory=/opt/kin-site/backend
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=3
+
+# --- Configuration (edit these) ---
+Environment=HOST=127.0.0.1
+Environment=PORT=8080
+Environment=DB_FILE=/var/lib/kin/waitlist.db
+Environment=ALLOW_ORIGIN=https://kinapp.social
+Environment=TRUST_PROXY=1
+Environment=RATE_MAX=5
+Environment=RATE_WINDOW_MS=600000
+# Generate once with: openssl rand -hex 32
+Environment=ADMIN_TOKEN=CHANGE_ME
+
+# --- Hardening ---
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+# Allow writes only to the database directory.
+ReadWritePaths=/var/lib/kin
+
+[Install]
+WantedBy=multi-user.target

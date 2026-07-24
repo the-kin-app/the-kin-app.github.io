@@ -1,0 +1,64 @@
+/* ============================================================
+   Kin — Base
+   Reset, document defaults, and shared layout primitives.
+   Depends on tokens.css.
+   ============================================================ */
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+
+/* Vertically + horizontally centered single-column pages
+   (homepage, waitlist, qr). */
+body.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+}
+
+/* Top-aligned reading page (privacy policy). */
+body.page {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-12) var(--space-6) 80px;
+}
+
+a { color: var(--color-accent); }
+a:hover { color: var(--color-accent-hover); }
+
+img { max-width: 100%; display: block; }
+
+h1, h2, h3, p { margin: 0; }
+
+/* Layout containers */
+.container {
+  width: 100%;
+  max-width: var(--container-narrow);
+}
+
+.container-prose {
+  width: 100%;
+  max-width: var(--container-prose);
+}
+
+/* Utility */
+.text-center { text-align: center; }
+.muted { color: var(--color-muted); }
+.visually-hidden {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}

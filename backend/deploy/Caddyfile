@@ -1,0 +1,24 @@
+# Caddy reverse proxy for the Kin waitlist backend.
+#
+# Caddy automatically provisions and renews a Let's Encrypt TLS certificate
+# for the domain below, terminates HTTPS, and forwards to the local Node
+# process. The browser only ever talks to Caddy over HTTPS.
+#
+# Install: sudo cp Caddyfile /etc/caddy/Caddyfile
+#          sudo systemctl reload caddy
+#
+# Prerequisite: an A/AAAA DNS record for api.kinapp.social pointing at this
+# server's public IP, and ports 80 + 443 open.
+
+api.kinapp.social {
+	reverse_proxy 127.0.0.1:8080
+
+	# Caddy sets X-Forwarded-For automatically; the backend reads it because
+	# the service runs with TRUST_PROXY=1.
+
+	encode gzip
+
+	log {
+		output file /var/log/caddy/kin-waitlist.log
+	}
+}

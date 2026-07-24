@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kin — Join the Waitlist</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+</head>
+<body class="center">
+
+<div class="container">
+  <div class="logo-wordmark">Kin</div>
+  <div class="tagline">Stay close to the people who matter.</div>
+
+  <div class="card">
+    <div id="form-view">
+      <h1 class="card__title">Join the waitlist</h1>
+      <p class="card__sub">Be first to know when Kin launches. No spam, ever.</p>
+
+      <form id="waitlist-form" class="form" novalidate>
+        <div class="field">
+          <label for="name">Name</label>
+          <input class="input" type="text" id="name" name="name" placeholder="First name or nickname" required autocomplete="given-name">
+          <div class="field-error" id="name-error"></div>
+        </div>
+
+        <div class="field">
+          <label>How should we reach you?</label>
+          <div class="segmented" role="tablist">
+            <button type="button" id="tab-email" class="active">Email</button>
+            <button type="button" id="tab-phone">Phone</button>
+          </div>
+        </div>
+
+        <div class="field" id="email-field">
+          <label for="email">Email</label>
+          <input class="input" type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email">
+          <div class="field-error" id="email-error"></div>
+        </div>
+
+        <div class="field" id="phone-field" style="display:none;">
+          <label for="phone">Phone number</label>
+          <input class="input" type="tel" id="phone" name="phone" placeholder="+1 555 123 4567" autocomplete="tel">
+          <div class="field-error" id="phone-error"></div>
+        </div>
+
+        <!-- Honeypot: hidden from humans, bots tend to fill it. Leave empty. -->
+        <input class="visually-hidden" type="text" id="website" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+        <button type="submit" class="btn btn--block btn--mt submit">Join waitlist</button>
+        <p class="consent">By joining, you agree to our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+        <div class="status" id="form-status"></div>
+      </form>
+    </div>
+
+    <div id="success-view" class="success-view">
+      <div class="check">🎉</div>
+      <h2>You're on the list</h2>
+      <p>We'll email or text you the moment Kin is ready.</p>
+    </div>
+  </div>
+
+  <div class="footer-note">We'll only use your details to let you know when Kin launches.</div>
+</div>
+
+<script src="/assets/js/waitlist.js"></script>
+
+</body>
+</html>
