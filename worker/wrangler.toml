@@ -1,0 +1,29 @@
+name = "kin-waitlist"
+main = "src/index.js"
+compatibility_date = "2026-07-24"
+
+# Custom domain route. Requires kinapp.social's DNS to be on Cloudflare (see
+# worker/README.md "Exposing the Worker"). Comment this out and just use the
+# workers.dev URL if you'd rather not touch DNS yet.
+routes = [
+  { pattern = "api.kinapp.social", custom_domain = true }
+]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kin-waitlist"
+database_id = "fde4602f-58b3-4a8a-ba97-031a38848892"     # from `wrangler d1 create kin-waitlist`
+migrations_dir = "migrations"
+
+[vars]
+ALLOW_ORIGIN = "https://kinapp.social"
+
+# Native Workers rate limiting: 5 requests per 60s per key (per IP, see
+# src/index.js). The binding only supports fixed 10s/60s periods.
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+simple = { limit = 5, period = 60 }
+
+# ADMIN_TOKEN is a secret, not a var — set it with:
+#   wrangler secret put ADMIN_TOKEN

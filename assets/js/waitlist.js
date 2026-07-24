@@ -1,7 +1,7 @@
 /* ============================================================
    Kin — Waitlist form handler
-   Validates input and submits to the self-hosted backend.
-   See /backend for the API. Endpoint is configurable via
+   Validates input and submits to the Cloudflare Worker API.
+   See /worker for the API. Endpoint is configurable via
    window.KIN_API_BASE (set before this script loads).
    ============================================================ */
 (function () {
@@ -21,7 +21,7 @@
   const formStatus = document.getElementById('form-status');
   const submitButton = form.querySelector('button.submit');
 
-  // Self-hosted backend endpoint. Override at deploy time by setting
+  // Cloudflare Worker endpoint. Override at deploy time by setting
   // window.KIN_API_BASE before this script runs.
   const API_BASE = (window.KIN_API_BASE || 'https://api.kinapp.social').replace(/\/$/, '');
   const SUBMIT_URL = API_BASE + '/waitlist';

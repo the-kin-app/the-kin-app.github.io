@@ -1,0 +1,14 @@
+{
+  "name": "kin-waitlist-worker",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "migrate:local": "wrangler d1 migrations apply kin-waitlist --local",
+    "migrate:remote": "wrangler d1 migrations apply kin-waitlist --remote",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

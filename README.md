@@ -1,7 +1,7 @@
 # Kin — marketing site
 
 Static site (plain HTML/CSS/JS, no build step) served from the domain root.
-Deployed via GitHub Pages (`CNAME`). A small self-hosted backend handles
+Deployed via GitHub Pages (`CNAME`). A Cloudflare Worker + D1 handles
 waitlist submissions.
 
 ## Structure
@@ -22,7 +22,7 @@ waitlist submissions.
 │   ├── img/
 │   │   └── logo.svg         Placeholder logo mark
 │   └── favicon.svg          Placeholder favicon
-├── backend/                Self-hosted waitlist API (see backend/README.md)
+├── worker/                 Cloudflare Worker + D1 waitlist API (see worker/README.md)
 └── CNAME
 ```
 
@@ -63,11 +63,11 @@ python3 -m http.server 8000      # from the repo root
 # open http://localhost:8000
 ```
 
-For the waitlist form to submit locally, run the backend and point the form at
-it (see `backend/README.md`): set `window.KIN_API_BASE` before `waitlist.js`
+For the waitlist form to submit locally, run the Worker and point the form at
+it (see `worker/README.md`): set `window.KIN_API_BASE` before `waitlist.js`
 loads.
 
 ## Backend
 
-The waitlist API (validation, SQLite storage, rate limiting, and other
-security measures) lives in `backend/`. See `backend/README.md`.
+The waitlist API (validation, D1 storage, rate limiting, and other security
+measures) is a Cloudflare Worker in `worker/`. See `worker/README.md`.

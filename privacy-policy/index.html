@@ -13,7 +13,7 @@
 
 <div class="container-prose">
   <div class="page-header__title">Kin</div>
-  <div class="page-header__meta">Last updated: 23 July 2026</div>
+  <div class="page-header__meta">Last updated: 24 July 2026</div>
 
   <div class="card prose">
     <h1>Privacy Policy</h1>
@@ -32,7 +32,11 @@
       <li>A name or nickname — whatever you're comfortable giving us, no legal name required</li>
       <li>Either an email address or a phone number, whichever you choose to provide when joining the waitlist</li>
     </ul>
-    <p>We only ask for one contact method, not both, so we don't hold more than we need.</p>
+    <p>
+      We only ask for one contact method, not both, so we don't hold more than
+      we need. We do not collect your IP address, browser/device information,
+      or any other technical metadata when you submit the form.
+    </p>
 
     <h2>Why we collect it</h2>
     <p>We use your details to:</p>
@@ -48,16 +52,19 @@
     </p>
 
     <h2>Where your data is stored</h2>
-    <div class="note">
-      This site is currently a test deployment. As published, the waitlist
-      form does not transmit or store any data anywhere.
-    </div>
     <p>
-      Once the waitlist is actually live, submissions will be stored in a
-      database we control directly (for example, Supabase/Postgres). We
-      don't sell, rent, or share your data with third parties for their own
-      marketing purposes. We'll update this section with the specific
-      provider before real signups are collected.
+      Waitlist submissions are stored in a database we control directly,
+      hosted on <strong>Cloudflare</strong> (D1, Cloudflare's serverless
+      database product), reachable only through a small API we wrote
+      ourselves. Cloudflare acts as our infrastructure provider/processor for
+      this data — it doesn't use waitlist submissions for its own purposes,
+      and data may be processed on Cloudflare's infrastructure outside your
+      country, under Cloudflare's standard contractual safeguards for
+      international transfers.
+    </p>
+    <p>
+      We don't sell, rent, or share your data with third parties for their
+      own marketing purposes.
     </p>
 
     <h2>How long we keep it</h2>
