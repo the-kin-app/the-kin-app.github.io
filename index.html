@@ -49,21 +49,6 @@
   </defs>
 </svg>
 
-<header class="nav">
-  <a class="nav__brand" href="/" aria-label="Kin">
-    <svg class="wordmark" viewBox="0 0 216 136" aria-hidden="true">
-      <g class="wordmark__letters"><use href="#kin-letters"/></g>
-      <circle cx="107.182" cy="18.634" r="18.596" fill="#c15cdb"/>
-    </svg>
-  </a>
-  <nav class="nav__right">
-    <a class="nav__link" href="#min">Min</a>
-    <a class="nav__link" href="#how">How it works</a>
-    <a class="nav__link" href="#values">Values</a>
-    <a class="btn" href="/waitlist/"><span class="btn__fill" aria-hidden="true"></span><span class="btn__label">Join the waitlist</span></a>
-  </nav>
-</header>
-
 <main>
 
   <!-- ── hero ─────────────────────────────────────────────── -->
@@ -103,7 +88,6 @@
         <span>Memory stays on your device</span>
       </p>
     </div>
-    <div class="scrollcue" aria-hidden="true"><span>scroll</span><i></i></div>
   </section>
 
   <!-- ── the problem ──────────────────────────────────────── -->
@@ -137,7 +121,7 @@
   <section class="dawn" id="dawn" data-reveal>
     <div>
       <div class="min min--dawn" data-min aria-hidden="true"></div>
-      <p class="rise" data-delay="2">Then the dot leaves the logo, and starts paying attention.</p>
+      <p class="rise" data-delay="2">Meet Min. Everything else on your phone is watching you — Min is watching the street you're standing on.</p>
     </div>
   </section>
 
@@ -196,7 +180,7 @@
 
       <div class="steps">
         <article class="step resin rise" data-delay="1">
-          <h3>You talk</h3>
+          <h3>You talk to Min</h3>
           <p>A conversation, not a signup form.</p>
         </article>
         <article class="step resin rise" data-delay="2">
@@ -208,6 +192,14 @@
           <p>Forty metres away. Go say hi.</p>
         </article>
       </div>
+
+      <p class="lede memo-intro rise" data-delay="3">
+        <b>Memos</b> are a photo of what's in front of you and a line about it,
+        pinned to the spot you took it — the queue is gone, the trees on the
+        corner finally opened. No picture, no memo: nobody leaves one from the
+        sofa. Whoever walks past next gets to see it, it fades as it stops being
+        true, and leaving one earns you Kinka.
+      </p>
 
       <!-- The loop, as a loop. Four stations, and Kinka orbiting between
            them — the currency is literally what closes the circle. -->
@@ -222,8 +214,8 @@
         </div>
 
         <div class="cycle__station cycle__station--n resin">
-          <b>Add a memo</b>
-          <span>note what's here · earn</span>
+          <b>Leave a memo</b>
+          <span>photograph what's here · earn</span>
         </div>
         <div class="cycle__station cycle__station--e resin">
           <b>Ask Min</b>
@@ -305,11 +297,27 @@
     <span>© 2026 Kin</span>
     <span>
       <a href="/privacy-policy/">Privacy Policy</a> ·
-      <a href="/waitlist/">Waitlist</a> ·
-      <a href="mailto:hello@kinapp.social">hello@kinapp.social</a>
+      <a href="/waitlist/">Waitlist</a>
     </span>
   </div>
 </footer>
+
+<!-- Docked to the bottom of the viewport (see .nav), and last in the source
+     so the page's content comes before it for keyboard and screen readers. -->
+<header class="nav">
+  <a class="nav__brand" href="/" aria-label="Kin">
+    <svg class="wordmark" viewBox="0 0 216 136" aria-hidden="true">
+      <g class="wordmark__letters"><use href="#kin-letters"/></g>
+      <circle cx="107.182" cy="18.634" r="18.596" fill="#c15cdb"/>
+    </svg>
+  </a>
+  <nav class="nav__right">
+    <a class="nav__link" href="#min">Min</a>
+    <a class="nav__link" href="#how">How it works</a>
+    <a class="nav__link" href="#values">Values</a>
+    <a class="btn" href="/waitlist/"><span class="btn__fill" aria-hidden="true"></span><span class="btn__label">Join the waitlist</span></a>
+  </nav>
+</header>
 
 <script type="module" src="/assets/js/landing.js"></script>
 </body>

@@ -38,6 +38,13 @@
 
   --shell: min(1140px, 100% - 2 * var(--space-6));
 
+  /* The nav docks at the bottom of the viewport, so the CTA sits under the
+     thumb. Anything that would otherwise end up underneath it reserves
+     --dock-clear at the foot of the page. */
+  --dock-h: 57px;
+  --dock-gap: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+  --dock-clear: calc(var(--dock-h) + var(--dock-gap) + var(--space-5));
+
   /* the wordmark letterforms, minus the i-dot — Min occupies that himself */
   --mask-kin: url('/assets/img/kin-letters-mask.svg');
 }
@@ -403,11 +410,14 @@ p { margin: 0; }
    On screen at every scroll position, including both palette crossovers, so
    it opts out of the ramp: its own material, its own fixed ink. Brightness
    on the backdrop filter is what lets it stay genuinely translucent and
-   still hold dark text over the dusk half. */
+   still hold dark text over the dusk half.
+
+   Docked to the bottom rather than the top: the waitlist CTA is the only
+   thing in it that matters, and down there it lands under the thumb. */
 
 .nav {
   position: fixed;
-  top: var(--space-4);
+  bottom: var(--dock-gap);
   left: 50%;
   translate: -50% 0;
   z-index: 20;
@@ -617,8 +627,8 @@ p { margin: 0; }
   min-height: 100svh;
   display: grid;
   align-content: center;
-  padding-top: 124px;
-  padding-bottom: 96px;
+  padding-top: 96px;
+  padding-bottom: calc(var(--dock-clear) + var(--space-6));
   text-align: center;
 }
 .hero .shell { display: grid; justify-items: center; }
@@ -647,25 +657,6 @@ p { margin: 0; }
   margin-top: var(--space-10);
   font-size: var(--text-sm);
   color: var(--ink-faint);
-}
-
-.scrollcue {
-  position: absolute;
-  left: 50%;
-  bottom: var(--space-8);
-  translate: -50% 0;
-  display: grid;
-  justify-items: center;
-  gap: 10px;
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-}
-.scrollcue i {
-  width: 1px;
-  height: 44px;
-  background: linear-gradient(var(--ink-faint), transparent);
 }
 
 /* ---- problem ----------------------------------------------- */
@@ -718,8 +709,9 @@ p { margin: 0; }
   font-weight: var(--font-weight-semibold);
   letter-spacing: -0.03em;
   line-height: 1.25;
-  max-width: 24ch;
+  max-width: 26ch;
   margin-top: var(--space-8);
+  text-wrap: balance;
 }
 
 /* ---- Min section ------------------------------------------- */
@@ -876,6 +868,19 @@ p { margin: 0; }
 }
 .step h3 { margin-bottom: var(--space-3); }
 .step p { color: var(--ink-soft); font-size: var(--text-base); line-height: 1.6; }
+
+/* Memos are the one piece of vocabulary the loop needs before it can be
+   read, so they're defined just above the ring — where the word first
+   appears on the page. */
+.memo-intro {
+  max-width: 58ch;
+  margin: clamp(var(--space-9), 6vw, 76px) auto 0;
+  text-align: center;
+}
+.memo-intro b {
+  color: var(--ink);
+  font-weight: var(--font-weight-semibold);
+}
 
 /* ---- the loop, as a loop -----------------------------------
    Four stations around a ring with Kinka orbiting between them. Diamond
@@ -1049,7 +1054,9 @@ p { margin: 0; }
   text-align: center;
   padding: 30svh 0 12svh;
 }
-.closer h2 { max-width: 21ch; }
+/* max-width without auto margins would pin the heading to the left of the
+   shell — invisible on phones, where 21ch is the full column anyway */
+.closer h2 { max-width: 21ch; margin-inline: auto; }
 .closer .lede { margin: var(--space-7) auto 0; text-align: center; }
 .closer .hero__actions { justify-content: center; }
 
@@ -1063,7 +1070,7 @@ p { margin: 0; }
   position: relative;
   z-index: 1;
   border-top: 1px solid var(--rule);
-  padding: var(--space-8) 0 var(--space-10);
+  padding: var(--space-8) 0 calc(var(--space-10) + var(--dock-clear));
   font-size: var(--text-sm);
   color: var(--ink-faint);
 }
@@ -1120,10 +1127,9 @@ p { margin: 0; }
   .nav__link { display: none; }
 
   .btn--lg { padding: 16px 26px; font-size: var(--text-base); }
-  .hero { padding-top: 104px; }
+  .hero { padding-top: 72px; }
   .hero__actions { flex-direction: column; align-items: stretch; }
   .hero__actions .btn { justify-content: center; }
-  .scrollcue { display: none; }
   .wordmark--hero { width: min(300px, 62vw); }
 
   .dawn { min-height: 96svh; padding-top: 9svh; }
