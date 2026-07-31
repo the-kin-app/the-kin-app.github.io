@@ -264,10 +264,16 @@ export async function createScene(canvas) {
     pointer.ty = (e.clientY / innerHeight) * 2 - 1;
   }, { passive: true });
 
+  // Measured from the canvas's own box rather than innerHeight: CSS sizes it
+  // to the large viewport so a retracting iOS toolbar can't reveal an edge
+  // below it, and a buffer sized to the small viewport would stretch the
+  // field vertically by exactly the toolbar's height.
   function resize() {
-    renderer.setSize(innerWidth, innerHeight, false);
-    camera.aspect = innerWidth / innerHeight;
-    camera.fov = innerWidth < 760 ? 66 : 52;
+    const w = canvas.clientWidth || innerWidth;
+    const h = canvas.clientHeight || innerHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.fov = w < 760 ? 66 : 52;
     camera.updateProjectionMatrix();
     dotMat.uniforms.uScale.value = Math.min(devicePixelRatio, 2);
   }

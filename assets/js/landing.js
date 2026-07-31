@@ -426,8 +426,42 @@ function conversation() {
   })();
 }
 
+/* ---------- 6. the dock -------------------------------------
+   Phones only (the CSS gate is inside the narrow media query): the nav
+   surfaces on the first scroll and sinks again at the very top. The two
+   thresholds are deliberately apart — one shared threshold would let a
+   scroll that settles right on it flutter the nav in and out. */
+
+function dock() {
+  const nav = document.querySelector('.nav');
+  if (!nav) return;
+  const root = document.documentElement;
+
+  // Only from here is the nav allowed to be hidden, so anything that throws
+  // earlier leaves a visible, working CTA instead of none at all.
+  root.classList.add('dock-armed');
+
+  const SURFACE = 56;   // px scrolled before it rises
+  const SINK = 12;      // and back below this, where the hero CTA is in view
+  let up = false;
+
+  const sync = () => {
+    if (!up && scrollY > SURFACE) {
+      up = true;
+      root.classList.add('is-docked');
+    } else if (up && scrollY < SINK) {
+      up = false;
+      root.classList.remove('is-docked');
+    }
+  };
+
+  addEventListener('scroll', sync, { passive: true });
+  sync();   // reloading mid-page should not require a scroll to get the nav back
+}
+
 /* ---------- boot ------------------------------------------- */
 
+dock();
 reveals();
 minBodies();
 buttons();

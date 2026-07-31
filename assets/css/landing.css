@@ -56,6 +56,16 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+
+  /* Two defences for the same seam. iOS lays fixed elements out against the
+     small viewport, so a slow drag-scroll retracts the toolbar, grows the
+     visible area, and exposes a strip below the atmosphere; and either end
+     of the document can rubber-band the fixed layers off their own edge.
+     Painting the root in the live --bg means whatever shows through is the
+     colour the atmosphere is sitting on anyway, and overscroll-behavior
+     stops the bounce that reveals it. */
+  background: var(--bg);
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -73,6 +83,11 @@ body {
 canvas#scene {
   position: fixed;
   inset: 0;
+  /* Sized to the *large* viewport — the one with the toolbar retracted — so
+     the layer already covers the space a retracting toolbar is about to
+     reveal. Over-constrains inset, which drops `bottom`; browsers without
+     lvh ignore the whole declaration and keep the inset box. */
+  height: 100lvh;
   z-index: 0;
   pointer-events: none;
 }
@@ -84,6 +99,7 @@ canvas#scene {
 .env {
   position: fixed;
   inset: 0;
+  height: 100lvh;   /* see canvas#scene */
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
@@ -1125,6 +1141,33 @@ p { margin: 0; }
 
   .nav { padding: 7px 7px 7px 16px; gap: var(--space-4); }
   .nav__link { display: none; }
+
+  /* At the top of the page the dock is redundant — the hero carries its own
+     full-width CTA two thumb-widths above it — so on phones it waits below
+     the fold and surfaces on the first scroll. It arrives on the same recipe
+     as everything else on the page (opacity, a little over-scale, blur
+     clearing on --ease-emergence): the object rises to the surface rather
+     than sliding in like a toolbar. Its resting state is untouched.
+
+     Gated on .dock-armed, which the script adds only once it has taken
+     charge — if landing.js never runs, the nav simply stays visible. */
+  .dock-armed .nav {
+    opacity: 0;
+    /* far enough to clear its own shadow, which is cast well below the pill */
+    transform: translateY(calc(100% + var(--dock-gap) + var(--space-8))) scale(1.04);
+    filter: blur(5px);
+    pointer-events: none;
+    transition:
+      opacity var(--duration-emergence) ease,
+      transform var(--duration-emergence) var(--ease-emergence),
+      filter var(--duration-emergence) ease;
+  }
+  .dock-armed.is-docked .nav {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    pointer-events: auto;
+  }
 
   .btn--lg { padding: 16px 26px; font-size: var(--text-base); }
   .hero { padding-top: 72px; }
