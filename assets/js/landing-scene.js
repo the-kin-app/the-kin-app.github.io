@@ -33,7 +33,7 @@ const FOG_FAR = 108;
 
 /* Lit resin under two lighting conditions. Nothing saturated, nothing neon. */
 const COLD = new THREE.Color('#a99fc0');   // dusk — cool, a little lonely
-const WARM = new THREE.Color('#f7dcc0');   // sunlight through fog
+const WARM = new THREE.Color('#f6dcd8');   // warm light through fog
 const PEARL = new THREE.Color('#fbf6ef');
 const ACCENT = new THREE.Color('#c15cdb'); // sparingly, and only on a meeting
 

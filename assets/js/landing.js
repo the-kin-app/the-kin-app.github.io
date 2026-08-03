@@ -10,11 +10,16 @@
    4. buttons()      — the submerge press: the object sinks, goes clear,
                        ripples, then surfaces with the accent taking over.
    5. conversation() — types Min's lines into the phone mock.
+   6. constellation()— scrubs the problem→Min figure off the scroll position.
    ============================================================ */
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
+const smoothstep = (v) => v * v * (3 - 2 * v);
+
+/* progress through one phase of a scrubbed sequence, eased at both ends */
+const seg = (t, a, b) => smoothstep(clamp((t - a) / (b - a || 1)));
 
 /* ---------- 1. daybreak ------------------------------------- */
 
@@ -88,16 +93,26 @@ function buildRamps() {
   const top = (sel) => document.querySelector(sel)?.offsetTop ?? 0;
 
   const problem = pp(top('#problem'));
-  const dawnPx = top('#dawn');
   const closerPx = top('#closer');
+
+  /* The dawn is now the constellation's scroll track, several viewports
+     tall, so its keyframes are fractions of its own height rather than of
+     the viewport. The plum floor *holds* through the whole assembly — the
+     figure is built out of translucency and needs a dark floor to read
+     against — then the light breaks as the links go out, and full daylight
+     lands exactly as the stage unpins. */
+  const dawn = document.querySelector('#dawn');
+  const dawnPx = dawn?.offsetTop ?? 0;
+  const dawnH = dawn?.offsetHeight ?? vh;
 
   return {
     bg: [
       [0, [30, 27, 46]],                           // #1e1b2e — dusk
       [problem, [38, 32, 56]],
       [pp(dawnPx - vh * 0.35), [58, 46, 68]],      // #3a2e44 — the plum floor
-      [pp(dawnPx + vh * 0.30), [214, 176, 168]],   // first light
-      [pp(dawnPx + vh * 0.60), [248, 228, 210]],   // #f8e4d2 — apricot light
+      [pp(dawnPx + dawnH * 0.56), [58, 46, 68]],   // …held, all through the assembly
+      [pp(dawnPx + dawnH * 0.80), [214, 176, 168]], // first light, with the links
+      [pp(dawnPx + dawnH * 0.99), [248, 228, 210]], // #f8e4d2 — apricot, as it unpins
       [pp(closerPx - vh * 0.10), [246, 236, 226]],
       [pp(closerPx + vh * 0.30), [58, 46, 68]],    // dusk again
       [1, [30, 27, 46]],
@@ -105,18 +120,18 @@ function buildRamps() {
     /* the field diffuses away in the daylight and returns at dusk */
     alpha: [
       [0, 1], [problem + 0.04, 0.95],
-      [pp(dawnPx + vh * 0.62), 0], [pp(closerPx + vh * 0.05), 0],
+      [pp(dawnPx + dawnH * 0.96), 0], [pp(closerPx + vh * 0.05), 0],
       [pp(closerPx + vh * 0.45), 1], [1, 1],
     ],
     /* how strongly people pull toward the people near them */
     gather: [
       [0, 0.12], [problem, 0.05],
-      [pp(dawnPx - vh * 0.3), 0.3], [pp(dawnPx + vh * 0.4), 0.6],
+      [pp(dawnPx - vh * 0.3), 0.3], [pp(dawnPx + dawnH * 0.85), 0.6],
       [pp(closerPx), 0.85], [1, 1],
     ],
     warmth: [
       [0, 0], [problem, 0.05],
-      [pp(dawnPx + vh * 0.10), 0.7], [pp(dawnPx + vh * 0.45), 1], [1, 1],
+      [pp(dawnPx + dawnH * 0.78), 0.7], [pp(dawnPx + dawnH * 0.97), 1], [1, 1],
     ],
   };
 }
@@ -330,7 +345,7 @@ function minBodies() {
 
 function buttons() {
   for (const btn of document.querySelectorAll('.btn')) {
-    // the interactive sunlight↔magenta fill tracks the cursor
+    // the interactive orchid↔magenta fill tracks the cursor
     btn.addEventListener('pointermove', (e) => {
       const r = btn.getBoundingClientRect();
       btn.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
@@ -426,35 +441,153 @@ function conversation() {
   })();
 }
 
-/* ---------- 6. the dock -------------------------------------
-   Phones only (the CSS gate is inside the narrow media query): the nav
-   surfaces on the first scroll and sinks again at the very top. The two
-   thresholds are deliberately apart — one shared threshold would let a
-   scroll that settles right on it flutter the nav in and out. */
+/* ---------- 6. the constellation ----------------------------
+   The problem and the answer are one figure, scrubbed by the scroll rather
+   than played on a timer: scroll down and it assembles, scroll back up and
+   it comes apart again, at whatever speed you move.
+
+   One scalar drives everything. `t` is how far you are through the scene's
+   track, smoothed with a little inertia so the figure follows the scroll
+   instead of snapping to it, and every element takes its own slice of it:
+
+     0.03 → 0.47   the eight arrive, one after another
+     0.24 → 0.52   the first line holds — about a viewport of reading
+     0.52 → 0.66   Min fades into the hole in the middle
+     0.58 → 0.70   the caption hands over to "Meet Min"
+     0.66 → 0.94   the links go out, and each screen goes dark as its
+                   link lands — that person looked up
+
+   The JS only ever writes numbers into custom properties; what those numbers
+   mean is CSS's business (see "what the script drives" in landing.css). */
+
+const BLOB_AT = (i) => 0.03 + i * 0.045;    // when person i arrives
+const BLOB_FADE = 0.12;
+const LINK_AT = (i) => 0.66 + i * 0.028;    // when their link is drawn
+const LINK_DRAW = 0.085;
+const DASH = 24;                            // one unit longer than the longest link
+
+function constellation() {
+  const scene = document.querySelector('.scene');
+  if (!scene) return;
+
+  const blobs = [...scene.querySelectorAll('.blob')];
+  const links = [...scene.querySelectorAll('.ring__links line')];
+  const min = scene.querySelector('.min--dawn');
+  const caption = [...scene.querySelectorAll('.scene__line')];
+  if (!blobs.length) return;
+
+  // Reduced motion: leave the scene unarmed, which is the assembled figure
+  // in CSS, and never run the loop at all.
+  if (reduced) return;
+
+  function paint(t, now) {
+    blobs.forEach((b, i) => {
+      const here = seg(t, BLOB_AT(i), BLOB_AT(i) + BLOB_FADE);
+      const linked = seg(t, LINK_AT(i), LINK_AT(i) + LINK_DRAW);
+      b.style.setProperty('--in', here.toFixed(3));
+      b.style.setProperty('--cold', (1 - linked).toFixed(3));
+      b.style.setProperty('--warm', linked.toFixed(3));
+
+      // Unconnected, everyone drifts on their own period. The drift dies as
+      // the link lands — the line is fixed geometry, so a body still moving
+      // under it would pull away from its own connection.
+      const amp = (1 - linked) * 5;
+      const ph = i * 1.7;
+      const dx = Math.sin(now / 1600 + ph) * amp;
+      const dy = Math.cos(now / 2100 + ph * 1.3) * amp * 0.8;
+      b.style.translate = `calc(-50% + ${dx.toFixed(2)}px) calc(-50% + ${dy.toFixed(2)}px)`;
+    });
+
+    links.forEach((l, i) => {
+      const drawn = seg(t, LINK_AT(i), LINK_AT(i) + LINK_DRAW);
+      l.style.setProperty('--in', drawn.toFixed(3));
+      l.style.setProperty('--dash', (DASH * (1 - drawn)).toFixed(2));
+    });
+
+    min?.style.setProperty('--in', seg(t, 0.52, 0.66).toFixed(3));
+    // the first line holds while nothing else moves, then leaves as Min lands
+    caption[0]?.style.setProperty('--in',
+      (seg(t, 0.10, 0.24) * (1 - seg(t, 0.52, 0.60))).toFixed(3));
+    caption[1]?.style.setProperty('--in', seg(t, 0.58, 0.70).toFixed(3));
+  }
+
+  scene.classList.add('is-armed');
+
+  /* The track is taller than the viewport by design. Scrubbing starts a
+     little before the stage pins — the first people are already arriving
+     while you're still reading the paragraph above them. */
+  let start = 0;
+  let span = 1;
+  const measure = () => {
+    start = scene.offsetTop - innerHeight * 0.55;
+    span = Math.max(1, scene.offsetHeight - innerHeight * 0.45);
+  };
+  measure();
+  addEventListener('resize', measure);
+  addEventListener('load', measure);
+
+  let t = null;
+  let settled = false;
+
+  requestAnimationFrame(function frame(now) {
+    requestAnimationFrame(frame);
+
+    const target = clamp((scrollY - start) / span);
+    // no catch-up animation when the page loads mid-scene
+    t = t === null ? target : lerp(t, target, 0.11);
+
+    // Once the figure is at either end and the scroll has stopped there is
+    // nothing left to move — the drift is already dead at the top end.
+    const still = Math.abs(target - t) < 0.0004;
+    const quiet = still && (t < 0.001 || t > 0.97);
+    if (quiet && settled) return;
+    settled = quiet;
+
+    paint(t, now);
+  });
+}
+
+/* ---------- 7. the dock -------------------------------------
+   The nav surfaces once the hero is behind you and sinks again when you
+   come back up to it. The two thresholds are deliberately apart — one
+   shared threshold would let a scroll that settles right on it flutter
+   the nav in and out. */
 
 function dock() {
   const nav = document.querySelector('.nav');
   if (!nav) return;
   const root = document.documentElement;
+  const hero = document.querySelector('.hero');
 
   // Only from here is the nav allowed to be hidden, so anything that throws
   // earlier leaves a visible, working CTA instead of none at all.
   root.classList.add('dock-armed');
 
-  const SURFACE = 56;   // px scrolled before it rises
-  const SINK = 12;      // and back below this, where the hero CTA is in view
-  let up = false;
+  // The last stretch of the hero is empty space below its CTA, so the nav is
+  // allowed to arrive slightly before the section technically ends.
+  let surface = 56;
+  let sink = 12;
+  const measure = () => {
+    const h = hero?.offsetHeight ?? 0;
+    surface = Math.max(56, h * 0.82);
+    sink = Math.max(12, surface - Math.min(160, h * 0.14));
+  };
 
+  let up = false;
   const sync = () => {
-    if (!up && scrollY > SURFACE) {
+    if (!up && scrollY > surface) {
       up = true;
       root.classList.add('is-docked');
-    } else if (up && scrollY < SINK) {
+    } else if (up && scrollY < sink) {
       up = false;
       root.classList.remove('is-docked');
     }
   };
 
+  const remeasure = () => { measure(); sync(); };
+  measure();
+  addEventListener('resize', remeasure);
+  addEventListener('load', remeasure);
   addEventListener('scroll', sync, { passive: true });
   sync();   // reloading mid-page should not require a scroll to get the nav back
 }
@@ -466,6 +599,7 @@ reveals();
 minBodies();
 buttons();
 conversation();
+constellation();
 
 // The atmosphere is a bonus, never a dependency: if three.js can't be
 // fetched, the colour ramp still runs and the page reads fine.

@@ -28,17 +28,17 @@
 
   --color-accent:        #c15cdb;
   --color-accent-hover:  #a83fc4;
-  /* Second accent: sunlight. Pairs with the magenta so neither has to carry a
-     surface alone — the two together read as warm light through resin. */
-  --color-sunlight:      #f6c98b;
-  --color-sunlight-deep: #e9a074;
+  /* Light end of the accent: orchid. Pairs with the magenta so neither has to
+     carry a surface alone — the two together read as lit resin rather than as
+     a flat swatch. */
+  --color-accent-soft:   #e6a6f2;
   --color-on-accent:     #24222c;  /* text/icons on accent fills (glass pills stay light, so text stays dark) */
 
   --color-error:         #e0435f;
   --color-success:       #29a866;
 
   /* Brand gradient (accents) */
-  --gradient-brand: linear-gradient(135deg, var(--color-accent), #e6a6f2);
+  --gradient-brand: linear-gradient(135deg, var(--color-accent), var(--color-accent-soft));
 
   /* Frosted-glass sheen used on pills (segmented active state, submit button).
      Toned down from the raw Figma export — full-strength white reads as a
@@ -87,11 +87,11 @@
     inset -1px 0 0 rgba(255, 255, 255, 0.3);
   --bloom-resin: inset 0 0 22px 8px rgba(255, 255, 255, 0.55);
 
-  /* The interactive fill: sunlight and magenta, mixed live under the cursor. */
+  /* The interactive fill: orchid into magenta, mixed live under the cursor. */
   --gradient-interactive:
     radial-gradient(80% 130% at var(--mx, 50%) var(--my, 50%),
-      rgba(246, 201, 139, 0.85) 0%,
-      rgba(226, 141, 199, 0.7) 42%,
+      rgba(230, 166, 242, 0.85) 0%,
+      rgba(214, 122, 224, 0.7) 42%,
       rgba(193, 92, 219, 0.55) 100%);
 
   /* ---- Shadow ---- */

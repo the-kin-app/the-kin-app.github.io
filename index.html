@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kin — Where strangers become Kin</title>
-<meta name="description" content="Kin is the social app that helps you meet people in the real world. Min learns who you are, then introduces you to the people, groups and moments around you. Helsinki first.">
+<title>Kin — Where strangers becomes kin</title>
+<meta name="description" content="Kin introduces you to the right people and info around you, at the right moment. No swiping, no doom scrolling, no chatting — just accept the intro and say hello, in real life. Helsinki first.">
 <meta name="theme-color" content="#1e1b2e">
 
-<meta property="og:title" content="Kin — Where strangers become Kin">
-<meta property="og:description" content="The social app that helps you meet people in the real world.">
+<meta property="og:title" content="Kin — Where your city becomes kin">
+<meta property="og:description" content="The app that introduces you to the right people and info around you, at the right moment.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kinapp.social/">
 <meta name="twitter:card" content="summary_large_image">
@@ -36,25 +36,12 @@
 <canvas id="scene" aria-hidden="true"></canvas>
 <div class="rail" aria-hidden="true"></div>
 
-<!-- The wordmark letterforms, from assets/img/kin-logos/kin-logo-flat.svg.
-     Used by the small flat mark in the nav; the hero uses the same shapes as
-     a mask over a backdrop-filter, so its letters are cast glass. -->
-<svg width="0" height="0" aria-hidden="true" style="position:absolute">
-  <defs>
-    <g id="kin-letters">
-      <path d="M78.4741 118.834C81.1253 122.018 81.1962 126.62 79.4218 130.151C77.7685 133.44 74.2698 135.745 70.2701 135.967C66.2705 136.188 62.7885 134.486 60.1665 131.344L32.4818 98.242L21.944 107.019L21.7478 126.545C21.6935 132.13 16.3703 135.879 11.0722 135.996C6.22499 136.105 0.0459255 132.385 0.0417504 126.582L0 18.1616C0 12.3629 5.74068 8.41768 10.7173 8.35493C16.1115 8.2838 21.7561 12.3253 21.7728 18.2076L21.9524 79.0597L57.9078 48.3847C59.9954 46.6066 62.5714 46.1757 65.2309 46.1088C69.694 46.2426 73.5309 48.9202 75.0965 52.7609C76.6621 56.6015 76.0025 61.7977 72.5539 64.7137L49.5828 84.1429L78.4741 118.83V118.834Z"/>
-      <path d="M194.59 86.3852C194.553 76.156 187.23 68.2906 177.339 68.0145C167.945 67.7509 159.299 75.0306 159.236 85.013L158.969 126.352C158.931 132.034 153.662 135.862 148.473 135.992C143.304 136.121 137.53 132.276 137.534 126.398L137.576 84.5109C138.273 65.1738 153.245 49.3719 172.108 47.121C194.448 44.456 215.031 60.9733 215.954 83.7578L215.996 126.624C216 132.142 210.414 135.807 205.713 135.979C200.602 136.163 194.766 132.565 194.741 126.871L194.582 86.3894L194.59 86.3852Z"/>
-      <path d="M118.067 126.453C117.048 132.306 112.656 135.946 107.074 135.987C102.327 136.021 96.3688 132.368 96.3688 126.679L96.3438 59.0489C96.3438 53.2754 102.135 49.4724 107.165 49.51C112.196 49.5477 117.87 53.4093 117.887 59.0949L118.071 126.461L118.067 126.453Z"/>
-    </g>
-  </defs>
-</svg>
-
 <main>
 
   <!-- ── hero ─────────────────────────────────────────────── -->
   <section class="hero" data-reveal>
     <div class="shell">
-      <h1 class="visually-hidden">Kin — where strangers become Kin</h1>
+      <h1 class="visually-hidden">Kin — where stranger becomes kin</h1>
 
       <!-- Cast-glass letterforms with Min sitting in the i-dot's place -->
       <div class="wordmark--hero" role="img" aria-label="kin">
@@ -66,11 +53,10 @@
         </div>
       </div>
 
-      <h2 class="rise" data-delay="2">Where strangers become&nbsp;Kin</h2>
+      <h2 class="rise" data-delay="2">Where strangers become&nbsp;kin</h2>
       <p class="lede rise" data-delay="3">
-        The social app that helps you meet people in the real world. Min learns
-        who you are through conversation, then introduces you to the people,
-        groups and moments actually worth walking toward.
+        IRL social app that introduces you to the right people and moments around you. No swiping, no doom-scrolling, no texting — just
+        accept the intro, then say hello, in real life.
       </p>
       <div class="hero__actions rise" data-delay="4">
         <a class="btn btn--primary btn--lg" href="/waitlist/">
@@ -82,46 +68,74 @@
         </a>
         <a class="btn btn--quiet btn--lg" href="#problem"><span class="btn__label">Why we're building it</span></a>
       </div>
-      <p class="hero__meta rise" data-delay="4">
-        <span>Helsinki · private beta</span>
-        <span>No feed, no scroll</span>
-        <span>Memory stays on your device</span>
-      </p>
     </div>
   </section>
 
   <!-- ── the problem ──────────────────────────────────────── -->
   <section id="problem" data-reveal>
     <div class="shell">
-      <p class="label rise">01 — the quiet part</p>
       <div class="problem__grid">
         <div>
-          <h2 class="rise" data-delay="1">A million people within walking distance. Nobody to talk to.</h2>
+          <h2 class="rise">A city full of people everywhere you look. Barely a word between them.</h2>
         </div>
         <div class="stack">
           <p class="lede rise" data-delay="2">
-            Cities put us metres from each other and screens keep us hours apart.
-            Social platforms were tuned for time on the glass — global, para-social,
-            endless — and the awkwardness of a first sentence kills almost every
-            real moment before it starts.
+            Cities bring people this close, and we keep our distance with our
+            screens. Social apps have been optimised to keep us staring at the
+            glass, taking our attention away from all that is around us.
           </p>
           <p class="lede rise" data-delay="3">
-            Loneliness is now a public health problem with a very friendly interface.
+            Which is the one thing they can never give back: a real social
+            experience, with the people already within walking distance.
           </p>
-          <blockquote class="quote rise" data-delay="4">
-            The internet is full. The street is empty.
-            <small>The most valuable thing a person can do is a physical thing — and almost nothing online is built to cause one.</small>
-          </blockquote>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── dawn: Min detaches from the wordmark ─────────────── -->
-  <section class="dawn" id="dawn" data-reveal>
-    <div>
-      <div class="min min--dawn" data-min aria-hidden="true"></div>
-      <p class="rise" data-delay="2">Meet Min. Everything else on your phone is watching you — Min is watching the street you're standing on.</p>
+  <!-- ── the constellation ────────────────────────────────────
+       One figure, scrubbed by the scroll rather than played on a timer.
+       Eight people fade in around an empty middle, Min arrives in the hole,
+       then the links go out one at a time and the screens go dark. All of
+       the per-element values come from constellation() in landing.js;
+       without it the whole figure just sits there, assembled. -->
+  <section class="scene" id="dawn">
+    <div class="scene__stage">
+      <div class="ring" data-ring role="img"
+           aria-label="Eight people standing around each other with nothing between them, until Min arrives in the middle and connects them one by one.">
+        <svg class="ring__links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <line x1="50.73" y1="35.02" x2="51.66" y2="15.99"/>
+          <line x1="60.43" y1="39.22" x2="75.13" y2="24.03"/>
+          <line x1="65.00" y1="49.63" x2="84.00" y2="49.17"/>
+          <line x1="59.82" y1="61.34" x2="71.42" y2="74.71"/>
+          <line x1="48.23" y1="64.89" x2="45.83" y2="85.05"/>
+          <line x1="38.56" y1="59.70" x2="22.34" y2="73.47"/>
+          <line x1="35.11" y1="48.18" x2="15.95" y2="45.85"/>
+          <line x1="40.30" y1="38.56" x2="26.53" y2="22.34"/>
+        </svg>
+
+        <span class="blob" style="--x: 52%; --y: 9%"></span>
+        <span class="blob" style="--x: 80%; --y: 19%"></span>
+        <span class="blob" style="--x: 91%; --y: 49%"></span>
+        <span class="blob" style="--x: 76%; --y: 80%"></span>
+        <span class="blob" style="--x: 45%; --y: 92%"></span>
+        <span class="blob" style="--x: 17%; --y: 78%"></span>
+        <span class="blob" style="--x: 9%; --y: 45%"></span>
+        <span class="blob" style="--x: 22%; --y: 17%"></span>
+
+        <div class="min min--dawn" data-min aria-hidden="true"></div>
+      </div>
+
+      <!-- two lines in one slot: the second takes over as Min lands -->
+      <div class="scene__caption">
+        <p class="scene__line" data-line="1">
+          Interactions waiting to happen, all around them. Nobody starts one.
+        </p>
+        <p class="scene__line" data-line="2">
+          But maybe all we need is a little push from a little curious friend.
+          Meet <b class="term">Min</b>.
+        </p>
+      </div>
     </div>
   </section>
 
@@ -129,26 +143,19 @@
   <section id="min" data-reveal>
     <div class="shell split">
       <div>
-        <p class="label rise">02 — meet Min</p>
-        <h2 class="rise" data-delay="1" style="margin-top: var(--space-6)">
+        <h2 class="rise">
           Not a feed.<br>A companion.
         </h2>
         <p class="lede rise" data-delay="2" style="margin-top: var(--space-6)">
-          You just talk. Min picks up your interests, your taste, your rhythm — no
-          questionnaire, no profile to maintain. Then it watches the block around
-          you for the one thing you'd actually want to know.
+          The idea is simple. You converse with <b class="term">Min</b> naturally,
+          and it learns to understand you as a person. Then Min goes out into
+          your surroundings and connects you to the most relevant people and
+          info.
         </p>
         <p class="lede rise" data-delay="3" style="margin-top: var(--space-5)">
-          What Min learns stays on your phone. Nothing about you ever crosses the
-          wire in one piece, and there is no dossier to browse — not even for you.
-          That's the point.
+          There is no swiping, no profile to maintain, no chatting. The app is
+          built to do one thing: ease the awkwardness of that initial hello.
         </p>
-        <div class="chips rise" data-delay="4">
-          <span class="chip">On-device memory</span>
-          <span class="chip">Stateless inference</span>
-          <span class="chip">No profile leaves whole</span>
-          <span class="chip">One nudge, not notifications</span>
-        </div>
       </div>
 
       <div class="rise" data-delay="2">
@@ -170,95 +177,104 @@
     </div>
   </section>
 
-  <!-- ── how it works ─────────────────────────────────────── -->
-  <section id="how" data-reveal>
+  <!-- ── memos ────────────────────────────────────────────── -->
+  <section id="memos" data-reveal>
     <div class="shell">
-      <p class="label rise">03 — the loop</p>
-      <h2 class="rise" data-delay="1" style="margin-top: var(--space-5); max-width: 20ch">
-        Talk. Walk. Meet a person.
+      <h2 class="rise" style="max-width: 22ch">
+        Your street,<br>ten minutes ago.
       </h2>
-
-      <div class="steps">
-        <article class="step resin rise" data-delay="1">
-          <h3>You talk to Min</h3>
-          <p>A conversation, not a signup form.</p>
-        </article>
-        <article class="step resin rise" data-delay="2">
-          <h3>Min goes outside</h3>
-          <p>It reads the street around you.</p>
-        </article>
-        <article class="step resin rise" data-delay="3">
-          <h3>You get one nudge</h3>
-          <p>Forty metres away. Go say hi.</p>
-        </article>
-      </div>
-
-      <p class="lede memo-intro rise" data-delay="3">
-        <b>Memos</b> are a photo of what's in front of you and a line about it,
-        pinned to the spot you took it — the queue is gone, the trees on the
-        corner finally opened. No picture, no memo: nobody leaves one from the
-        sofa. Whoever walks past next gets to see it, it fades as it stops being
-        true, and leaving one earns you Kinka.
+      <p class="lede section-lede rise" data-delay="2">
+        Meeting people is one part of being connected to your city. The other is
+        the hyperlocal and time-specific: a lunch deal that ends at two, a
+        gathering in the park nobody planned until an hour ago. Those are
+        <b class="term">memos</b>, and they change how you move around a city.
       </p>
 
-      <!-- The loop, as a loop. Four stations, and Kinka orbiting between
-           them — the currency is literally what closes the circle. -->
-      <div class="cycle rise" data-delay="2">
-        <div class="cycle__ring" aria-hidden="true">
-          <span class="cycle__orbit"><span class="cycle__kinka"></span></span>
+      <div class="split split--flip">
+        <div class="rise" data-delay="2">
+          <div class="phone" role="img"
+               aria-label="A phone showing the memo map: memos left by other people pinned to the streets around you.">
+            <div class="phone__screen">
+              <div class="phone__head">
+                <svg class="phone__avatar phone__avatar--pin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 21.5s7-6.2 7-11.1A7 7 0 0 0 5 10.4c0 4.9 7 11.1 7 11.1Z"
+                        stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                  <circle cx="12" cy="10" r="2.4" fill="currentColor"/>
+                </svg>
+                <span>
+                  <b>Memos</b>
+                  <i>map · 400 m around you</i>
+                </span>
+              </div>
+
+              <div class="mmap" aria-hidden="true">
+                <span class="mmap__radius"></span>
+                <span class="mmap__you"></span>
+                <span class="mmap__pin mmap__pin--1"><i>soup 6€ till 2</i></span>
+                <span class="mmap__pin mmap__pin--2"><i>music in the park</i></span>
+                <span class="mmap__pin mmap__pin--3"><i>queue's gone</i></span>
+              </div>
+
+              <div class="memo" aria-hidden="true">
+                <b>Music in the park, maybe thirty people</b>
+                <span>8 min ago · 120 m away</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="cycle__hub">
-          <b>Kinka</b>
-          <span>closes the loop</span>
-        </div>
-
-        <div class="cycle__station cycle__station--n resin">
-          <b>Leave a memo</b>
-          <span>photograph what's here · earn</span>
-        </div>
-        <div class="cycle__station cycle__station--e resin">
-          <b>Ask Min</b>
-          <span>what's happening · spend</span>
-        </div>
-        <div class="cycle__station cycle__station--s resin">
-          <b>Get an intro</b>
-          <span>someone 40 m away</span>
-        </div>
-        <div class="cycle__station cycle__station--w resin">
-          <b>Meet them</b>
-          <span>now you know something</span>
-        </div>
+        <ol class="flow">
+          <li class="flow__step resin rise" data-delay="1">
+            <b>Leave a memo</b>
+            <p>
+              When you see something a fellow neighbour would want to know,
+              leave a <b class="term">memo</b> on the spot. Anonymous by
+              default, and there are no likes to collect.
+            </p>
+          </li>
+          <li class="flow__step resin rise" data-delay="2">
+            <b>View memos</b>
+            <p>
+              The map view is where you find the memos around you, each one
+              pinned to the place it belongs to and fading as it stops being
+              true.
+            </p>
+          </li>
+          <li class="flow__step resin rise" data-delay="3">
+            <b>Ask Min</b>
+            <p>
+              Memos are also what <b class="term">Min</b> reads to answer timely
+              questions about your city.
+              <i>Are there any spots with music and people?</i>
+              <i>Any good lunch deals?</i>
+            </p>
+          </li>
+        </ol>
       </div>
-
-      <p class="cycle__note rise" data-delay="3">
-        The public street and your private companion, paid for by the same coin.
-      </p>
     </div>
   </section>
 
   <!-- ── values ───────────────────────────────────────────── -->
   <section id="values" data-reveal>
     <div class="shell">
-      <p class="label rise">04 — the four nots</p>
-      <h2 class="rise" data-delay="1" style="margin-top: var(--space-6); max-width: 26ch">
+      <h2 class="rise" style="max-width: 26ch">
         We copied nothing from the companies that got us here.
       </h2>
       <div class="nots">
         <div class="not resin rise" data-delay="1">
-          <b>Privacy, <s>not profit at all costs</s></b>
+          <b><span class="not__yes">Privacy</span>, <s>not profit at all costs</s></b>
           <p>We don't sell data — not as a policy, as an architecture. Every consumer of your persona has a declared allow-list, and zero weight means zero egress.</p>
         </div>
         <div class="not resin rise" data-delay="2">
-          <b>Local, <s>not global</s></b>
-          <p>Nothing from the other side of the planet. Kin only knows the few hundred metres around you, because that's the only place you can walk to.</p>
+          <b><span class="not__yes">Local</span>, <s>not global</s></b>
+          <p>Nothing from the other side of the planet. <b class="term">Min</b> only knows the few hundred metres around you, because that's the only place you can walk to.</p>
         </div>
         <div class="not resin rise" data-delay="3">
-          <b>Social, <s>not para-social</s></b>
+          <b><span class="not__yes">Social</span>, <s>not para-social</s></b>
           <p>No followers, no audience, no performing. Kin's only successful outcome is two people in the same room, talking.</p>
         </div>
         <div class="not resin rise" data-delay="4">
-          <b>Informative, <s>not addictive</s></b>
+          <b><span class="not__yes">Informative</span>, <s>not addictive</s></b>
           <p>No engagement ranking, no streaks, no manufactured urgency. Proactive contact is capped by design — the app is not allowed to nag you.</p>
         </div>
       </div>
@@ -268,8 +284,7 @@
   <!-- ── closer ───────────────────────────────────────────── -->
   <section class="closer" id="closer">
     <div class="shell" data-reveal>
-      <p class="label rise" style="justify-content: center">the whole idea</p>
-      <h2 class="rise" data-delay="1" style="margin-top: var(--space-6)">
+      <h2 class="rise">
         The only app that wins when you put it down.
       </h2>
       <p class="lede rise" data-delay="2">
@@ -306,14 +321,18 @@
      so the page's content comes before it for keyboard and screen readers. -->
 <header class="nav">
   <a class="nav__brand" href="/" aria-label="Kin">
-    <svg class="wordmark" viewBox="0 0 216 136" aria-hidden="true">
-      <g class="wordmark__letters"><use href="#kin-letters"/></g>
-      <circle cx="107.182" cy="18.634" r="18.596" fill="#c15cdb"/>
-    </svg>
+    <!-- the same cast-glass mark as the hero, at pebble size: the letterforms
+         are a mask over a backdrop-filter, so they are made of whatever is
+         behind them rather than of ink -->
+    <span class="wordmark--nav" aria-hidden="true">
+      <span class="wordmark__glass wordmark__glass--shadow"></span>
+      <span class="wordmark__glass"></span>
+      <span class="wordmark__dot"></span>
+    </span>
   </a>
   <nav class="nav__right">
     <a class="nav__link" href="#min">Min</a>
-    <a class="nav__link" href="#how">How it works</a>
+    <a class="nav__link" href="#memos">Memos</a>
     <a class="nav__link" href="#values">Values</a>
     <a class="btn" href="/waitlist/"><span class="btn__fill" aria-hidden="true"></span><span class="btn__label">Join the waitlist</span></a>
   </nav>
