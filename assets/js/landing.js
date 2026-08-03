@@ -9,9 +9,12 @@
                        follows you with inertia. He does not blink.
    4. buttons()      — the submerge press: the object sinks, goes clear,
                        ripples, then surfaces with the accent taking over.
+                       Lives in press.js — the waitlist uses it too.
    5. conversation() — types Min's lines into the phone mock.
    6. constellation()— scrubs the problem→Min figure off the scroll position.
    ============================================================ */
+
+import { buttons } from '/assets/js/press.js';
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -338,50 +341,6 @@ function minBodies() {
   requestAnimationFrame(frame);
 }
 
-/* ---------- 4. the submerge press --------------------------
-   Press: the object sinks and goes clear — glass under water, only text
-   and a thin edge left. A ripple spreads from the contact point. Release:
-   it surfaces, and the accent takes over to say it's active. */
-
-function buttons() {
-  for (const btn of document.querySelectorAll('.btn')) {
-    // the interactive orchid↔magenta fill tracks the cursor
-    btn.addEventListener('pointermove', (e) => {
-      const r = btn.getBoundingClientRect();
-      btn.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
-      btn.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
-    });
-
-    btn.addEventListener('pointerdown', (e) => {
-      const r = btn.getBoundingClientRect();
-      btn.classList.add('is-submerged');
-      btn.classList.remove('is-active');
-
-      if (reduced) return;
-      const ripple = document.createElement('span');
-      ripple.className = 'btn__ripple';
-      ripple.style.left = `${e.clientX - r.left}px`;
-      ripple.style.top = `${e.clientY - r.top}px`;
-      // reach the far corner of the button
-      ripple.style.setProperty('--reach', `${Math.hypot(r.width, r.height) * 1.1}px`);
-      btn.appendChild(ripple);
-      ripple.addEventListener('animationend', () => ripple.remove());
-    });
-
-    const surface = () => {
-      if (!btn.classList.contains('is-submerged')) return;
-      btn.classList.remove('is-submerged');
-      // emerging: the accent floods in and settles
-      btn.classList.add('is-active');
-    };
-    btn.addEventListener('pointerup', surface);
-    btn.addEventListener('pointerleave', () => {
-      btn.classList.remove('is-submerged', 'is-active');
-    });
-    btn.addEventListener('blur', () => btn.classList.remove('is-active'));
-  }
-}
-
 /* ---------- 5. the conversation ---------------------------- */
 
 const SCRIPT = [
@@ -592,9 +551,27 @@ function dock() {
   sync();   // reloading mid-page should not require a scroll to get the nav back
 }
 
+/* ---------- 8. the dwell scroll cue -------------------------
+   A quiet nudge for anyone who lands on the hero and just... sits there. If
+   they haven't scrolled a few seconds in, a small "scroll" cue fades in below
+   the fold. It steps aside the moment they actually scroll, so it never
+   competes with the dock surfacing underneath it. */
+
+function dwellScrollCTA() {
+  const cta = document.querySelector('.scroll-cta');
+  if (!cta) return;
+  const root = document.documentElement;
+
+  root.classList.add('dwell-armed');
+
+  const timer = setTimeout(() => root.classList.add('dwell-in'), 3200);
+  addEventListener('scroll', () => clearTimeout(timer), { passive: true, once: true });
+}
+
 /* ---------- boot ------------------------------------------- */
 
 dock();
+dwellScrollCTA();
 reveals();
 minBodies();
 buttons();

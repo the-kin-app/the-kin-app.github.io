@@ -245,6 +245,7 @@ p { margin: 0; }
 .in [data-delay="2"] { transition-delay: calc(2 * var(--stagger-cascade)); }
 .in [data-delay="3"] { transition-delay: calc(3 * var(--stagger-cascade)); }
 .in [data-delay="4"] { transition-delay: calc(4 * var(--stagger-cascade)); }
+.in [data-delay="5"] { transition-delay: calc(5 * var(--stagger-cascade)); }
 
 /* ---- optical resin ----------------------------------------
    A thick translucent object: you see the environment through it, the top
@@ -581,10 +582,12 @@ p { margin: 0; }
 }
 
 /* ---- the nav mark ------------------------------------------
-   The hero's glass, at 50px. Two differences, both because the nav pebble is
-   a *light* surface: the backdrop is darkened rather than brightened through
-   the letters, so they read as thick smoked glass instead of disappearing,
-   and the cast shadow is scaled down to match the mark. */
+   The hero mark at 50px: the same bloom, cast glass and Min in the i-dot. It
+   is never "entering" — the dock surfaces long after the hero has played — so
+   every entry animation is switched off and the final state is the base one.
+   The only thing that differs from the hero is the backdrop maths: the nav
+   pebble is a *light* surface, so the environment is darkened rather than
+   brightened through the letters, or they'd disappear into it. */
 
 .wordmark--nav {
   position: relative;
@@ -593,21 +596,43 @@ p { margin: 0; }
   aspect-ratio: 216 / 136;
 }
 .wordmark--nav .wordmark__glass {
-  /* it has always been on screen by the time the dock surfaces */
   opacity: 1;
   filter: none;
   animation: none;
   background: linear-gradient(166deg,
-    rgba(255, 255, 255, 0.62) 0%,
-    rgba(255, 255, 255, 0.16) 46%,
-    rgba(255, 255, 255, 0.48) 100%);
-  backdrop-filter: blur(4px) saturate(150%) brightness(0.68);
+    rgba(255, 255, 255, 0.72) 0%,
+    rgba(255, 255, 255, 0.34) 34%,
+    rgba(255, 250, 244, 0.2) 62%,
+    rgba(255, 255, 255, 0.56) 100%);
+  backdrop-filter: blur(4px) saturate(150%) brightness(0.7);
 }
 .wordmark--nav .wordmark__glass--shadow {
   background: rgba(24, 16, 30, 0.38);
   backdrop-filter: none;
   translate: 0 1px;
   filter: blur(1.5px);
+}
+/* the hero's warm bloom, tightened to the mark and breathing on the house 5s
+   loop, so the small mark has the hero's glow without its softness */
+.wordmark--nav .wordmark__bloom {
+  inset: -18%;
+  opacity: 1;
+  filter: blur(6px);
+  background: radial-gradient(50% 50% at 50% 55%, rgba(255, 236, 214, 0.3), transparent 68%);
+  animation: breathe 5s ease-in-out infinite;
+}
+.wordmark--nav .wordmark__min {
+  opacity: 1;
+  animation: none;
+}
+
+/* Min, at nav scale. His morph and eye-glow loops come from .min, so all he
+   needs here is a float sized to a 15px body — the hero's -11px would launch
+   him out of the pebble. */
+.min--nav { animation: float-nav 9s ease-in-out infinite; }
+@keyframes float-nav {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-1.5px); }
 }
 
 /* the i-dot, which at this size is the whole of the mark's colour */
@@ -706,6 +731,7 @@ p { margin: 0; }
 /* A centred composition, so Min — who is the dot of the i, at 49.6% of the
    wordmark — lands on the horizontal centre of the screen. */
 .hero {
+  position: relative;
   min-height: 100svh;
   display: grid;
   align-content: center;
@@ -716,6 +742,51 @@ p { margin: 0; }
   text-align: center;
 }
 .hero .shell { display: grid; justify-items: center; }
+
+/* A quiet nudge, not a second CTA: it only shows once someone has sat on the
+   hero a few seconds without acting, and steps aside the moment the dock
+   takes over below. Gated on .dwell-armed the same way the dock is gated on
+   .dock-armed — if the timer script never runs, it simply never appears
+   instead of sitting broken on screen. */
+.scroll-cta {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-6);
+  translate: -50% 0;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  z-index: 2;
+}
+.scroll-cta__chevron { animation: scroll-cta-bob 1.8s ease-in-out infinite; }
+@keyframes scroll-cta-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(4px); }
+}
+.dwell-armed .scroll-cta {
+  opacity: 0;
+  transform: translateY(6px);
+  filter: blur(4px);
+  pointer-events: none;
+  transition:
+    opacity var(--duration-emergence) ease,
+    transform var(--duration-emergence) var(--ease-emergence),
+    filter var(--duration-emergence) ease;
+}
+.dwell-armed.dwell-in .scroll-cta {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  pointer-events: auto;
+}
+/* The dock is the next thing to look at once the hero is behind you, so the
+   nudge steps back rather than stacking with it. */
+.is-docked .scroll-cta { opacity: 0; pointer-events: none; }
 
 .hero h2 {
   font-size: clamp(1.75rem, 3.2vw, 2.75rem);

@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kin — Where strangers becomes kin</title>
-<meta name="description" content="Kin introduces you to the right people and info around you, at the right moment. No swiping, no doom scrolling, no chatting — just accept the intro and say hello, in real life. Helsinki first.">
+<meta name="description" content="Kin introduces you to the right people and moments around you, at the right moment. No swiping, no doom scrolling, no chatting — just accept the intro and say hello, in real life. Helsinki first.">
 <meta name="theme-color" content="#1e1b2e">
 
 <meta property="og:title" content="Kin — Where your city becomes kin">
-<meta property="og:description" content="The app that introduces you to the right people and info around you, at the right moment.">
+<meta property="og:description" content="The app that introduces you to the right people and moments around you, at the right moment.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kinapp.social/">
 <meta name="twitter:card" content="summary_large_image">
@@ -68,7 +68,15 @@
         </a>
         <a class="btn btn--quiet btn--lg" href="#problem"><span class="btn__label">Why we're building it</span></a>
       </div>
+      <p class="fineprint rise" data-delay="5">Early beta coming to Helsinki, fall 2026.</p>
     </div>
+
+    <a class="scroll-cta" href="#problem" aria-label="Scroll to learn more">
+      <span class="scroll-cta__label">Scroll</span>
+      <svg class="scroll-cta__chevron" width="14" height="8" viewBox="0 0 14 8" fill="none" aria-hidden="true">
+        <path d="M1 1l6 6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
   </section>
 
   <!-- ── the problem ──────────────────────────────────────── -->
@@ -76,13 +84,14 @@
     <div class="shell">
       <div class="problem__grid">
         <div>
-          <h2 class="rise">A city full of people everywhere you look. Barely a word between them.</h2>
+          <h2 class="rise">A city full of interesting people and moments, yet we're stuck staring at our screens.</h2>
         </div>
         <div class="stack">
           <p class="lede rise" data-delay="2">
-            Cities bring people this close, and we keep our distance with our
-            screens. Social apps have been optimised to keep us staring at the
-            glass, taking our attention away from all that is around us.
+            We're more connected than ever, and lonelier than ever. Loneliness
+            is now a public health concern of its own, and the apps in our
+            pocket keep making it worse — built to hold our attention, not to
+            get us to actually meet.
           </p>
           <p class="lede rise" data-delay="3">
             Which is the one thing they can never give back: a real social
@@ -150,7 +159,7 @@
           The idea is simple. You converse with <b class="term">Min</b> naturally,
           and it learns to understand you as a person. Then Min goes out into
           your surroundings and connects you to the most relevant people and
-          info.
+          moments.
         </p>
         <p class="lede rise" data-delay="3" style="margin-top: var(--space-5)">
           There is no swiping, no profile to maintain, no chatting. The app is
@@ -321,13 +330,17 @@
      so the page's content comes before it for keyboard and screen readers. -->
 <header class="nav">
   <a class="nav__brand" href="/" aria-label="Kin">
-    <!-- the same cast-glass mark as the hero, at pebble size: the letterforms
-         are a mask over a backdrop-filter, so they are made of whatever is
-         behind them rather than of ink -->
+    <!-- the hero mark at pebble size, same parts in the same order: bloom,
+         cast shadow, glass letterforms, and Min himself in the i-dot. The
+         letterforms are a mask over a backdrop-filter, so they are made of
+         whatever is behind them rather than of ink. -->
     <span class="wordmark--nav" aria-hidden="true">
+      <span class="wordmark__bloom"></span>
       <span class="wordmark__glass wordmark__glass--shadow"></span>
       <span class="wordmark__glass"></span>
-      <span class="wordmark__dot"></span>
+      <span class="wordmark__min">
+        <span class="min min--nav" data-min data-phase="3.4"></span>
+      </span>
     </span>
   </a>
   <nav class="nav__right">
