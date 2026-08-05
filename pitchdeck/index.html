@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kin — the short version</title>
+<meta name="description" content="The public pitch, in eight screens: why real-life connection disappeared, and what Kin does about it. Swipe through.">
+<meta name="theme-color" content="#1e1b2e">
+
+<meta property="og:title" content="Kin — the short version">
+<meta property="og:description" content="The public pitch, in eight screens: why real-life connection disappeared, and what Kin does about it.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kinapp.social/pitchdeck/">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<!-- the deck borrows the landing page's material system wholesale (resin,
+     buttons, Min, the ring, the four "nots") and pitchdeck.css turns the
+     document into a paged deck on top of it. Order matters. -->
+<link rel="stylesheet" href="/assets/css/landing.css">
+<link rel="stylesheet" href="/assets/css/pitchdeck.css">
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js" } }
+</script>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     HOW TO EDIT THIS DECK
+     ──────────────────────────────────────────────────────────
+     · One <section class="slide"> is one slide. Add, remove or reorder
+       them freely — the toolbar, the dots, the counter and the palette
+       all build themselves from what's in the markup.
+     · data-title  is the name in the toolbar's dot tooltip.
+     · data-bg     is that slide's background colour. The page lerps
+       between neighbours as you swipe, so keep the sequence a journey:
+       dusk → first light → daylight → dusk. Ink picks itself by contrast.
+     · <p class="slot"></p> is YOUR SPACE. Every slide has one, empty.
+       Type a line into it and it appears; leave it empty and it doesn't
+       exist. That's where the context you still want to add goes.
+     · Keep it short. If a slide needs a paragraph, it needs two slides.
+     ══════════════════════════════════════════════════════════ -->
+
+<!-- the environment everything floats in — same fog, same light as / -->
+<div class="env" aria-hidden="true">
+  <span class="fog fog--1"></span>
+  <span class="fog fog--2"></span>
+  <span class="fog fog--3"></span>
+</div>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="rail" aria-hidden="true"></div>
+
+<main class="deck" tabindex="-1" aria-roledescription="slide deck" aria-label="The Kin pitch, in eight slides">
+
+  <!-- ── 1. cover ─────────────────────────────────────────────
+       Almost empty on purpose: the mark, the line, nothing to read. -->
+  <section class="slide cover" data-title="Kin" data-bg="#1e1b2e"
+           aria-roledescription="slide" aria-label="Kin — where strangers become kin">
+    <div class="slide__inner">
+      <div class="wordmark--hero" role="img" aria-label="kin">
+        <span class="wordmark__bloom" aria-hidden="true"></span>
+        <span class="wordmark__glass wordmark__glass--shadow" aria-hidden="true"></span>
+        <span class="wordmark__glass" aria-hidden="true"></span>
+        <div class="wordmark__min" aria-hidden="true">
+          <div class="min min--hero" data-min data-phase="1.9"></div>
+        </div>
+      </div>
+
+      <h1 class="rise" data-delay="2">Where strangers become&nbsp;kin</h1>
+      <p class="lede rise" data-delay="3">
+        An IRL social app that introduces you to the people and moments
+        already around you.
+      </p>
+      <p class="slot rise" data-delay="4"></p>
+
+      <span class="hint rise" data-delay="5">
+        Swipe
+        <svg width="18" height="10" viewBox="0 0 18 10" fill="none" aria-hidden="true">
+          <path d="M1 5h14M11 1l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+    </div>
+  </section>
+
+  <!-- ── 2. the problem ───────────────────────────────────────
+       A crowd, each person lit from below by their own screen, and four
+       connections that start, hesitate and fade. The near-miss, drawn.
+
+       The bodies are positioned by --x / --y only, so moving someone is
+       a two-number edit. -->
+  <section class="slide" data-title="The problem" data-bg="#221f39"
+           aria-roledescription="slide" aria-label="The problem: more connected than ever, lonelier than ever">
+    <span class="slide__tag">The problem</span>
+    <div class="slide__inner">
+      <h2 class="rise">More connected than ever.<br>Lonelier than ever.</h2>
+
+      <div class="crowd rise" data-delay="2" role="img"
+           aria-label="A room full of people, each one lit by their own screen. A few connections start between them and fade before they land.">
+        <svg class="crowd__misses" viewBox="0 0 100 56" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M14 20 Q24 10 34 22"/>
+          <path d="M46 16 Q58 6 68 18"/>
+          <path d="M26 42 Q38 34 50 44"/>
+          <path d="M62 38 Q74 30 86 40"/>
+        </svg>
+
+        <span class="blob" style="--x: 13%; --y: 34%"></span>
+        <span class="blob" style="--x: 33%; --y: 40%"></span>
+        <span class="blob" style="--x: 46%; --y: 28%"></span>
+        <span class="blob" style="--x: 68%; --y: 32%"></span>
+        <span class="blob" style="--x: 86%; --y: 25%"></span>
+        <span class="blob" style="--x: 24%; --y: 74%"></span>
+        <span class="blob" style="--x: 51%; --y: 79%"></span>
+        <span class="blob" style="--x: 62%; --y: 66%"></span>
+        <span class="blob" style="--x: 87%; --y: 72%"></span>
+        <span class="blob" style="--x: 8%; --y: 60%"></span>
+      </div>
+
+      <p class="slide__foot rise" data-delay="3">
+        Every phone is a door out of the room we're actually in. The dog walk,
+        the dropped glove, the traveller with the map out — near-misses with
+        someone you'll never meet, killed by awkwardness before they start.
+      </p>
+      <p class="slot rise" data-delay="4"></p>
+    </div>
+  </section>
+
+  <!-- ── 3. why now ───────────────────────────────────────────
+       Three shifts that look like separate news stories, drawn as three
+       cards whose lines run down and meet in one place. The cards rise in
+       order, then the joins draw, then the opening lands — the argument in
+       the order you'd say it out loud. -->
+  <section class="slide slide--now" data-title="Why now" data-bg="#3a2e44"
+           aria-roledescription="slide" aria-label="Why now: three cultural shifts arriving at the same time">
+    <span class="slide__tag">Why now</span>
+    <div class="slide__inner">
+      <h2 class="rise">Three shifts, all pointing the same way.</h2>
+
+      <div class="shifts" role="group"
+           aria-label="Distrust of big tech, the return of analog, and loneliness named a public health crisis — arriving together.">
+        <div class="shift rise" data-delay="1">
+          <span class="shift__icon" aria-hidden="true">
+            <!-- a screen that watches back -->
+            <svg viewBox="0 0 32 32" fill="none">
+              <rect x="6" y="3" width="20" height="26" rx="3.4" stroke="currentColor" stroke-width="1.4" opacity=".75"/>
+              <path d="M9.5 16c2.6-3.4 10.4-3.4 13 0-2.6 3.4-10.4 3.4-13 0Z" stroke="currentColor" stroke-width="1.3" opacity=".85"/>
+              <circle cx="16" cy="16" r="2.1" fill="currentColor" opacity=".9"/>
+            </svg>
+          </span>
+          <h3>Trust has broken</h3>
+          <p>Addiction lawsuits, antitrust cases, and a public that has gone
+            cold on being the product.</p>
+        </div>
+
+        <div class="shift rise" data-delay="2">
+          <span class="shift__icon" aria-hidden="true">
+            <!-- vinyl: the one object in the row that moves -->
+            <svg viewBox="0 0 32 32" fill="none">
+              <g class="vinyl">
+                <circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="1.4" opacity=".8"/>
+                <circle cx="16" cy="16" r="9" stroke="currentColor" stroke-width="1" opacity=".4"/>
+                <circle cx="16" cy="16" r="5.6" stroke="currentColor" stroke-width="1" opacity=".3"/>
+                <circle cx="16" cy="16" r="2.6" fill="currentColor" opacity=".85"/>
+                <circle cx="16" cy="16" r="0.9" fill="none" stroke="#fff" stroke-width="1"/>
+              </g>
+            </svg>
+          </span>
+          <h3>Analog is back</h3>
+          <p>Vinyl, film, wired headphones, dumbphones — a growing market,
+            not a niche.</p>
+        </div>
+
+        <div class="shift rise" data-delay="3">
+          <span class="shift__icon" aria-hidden="true">
+            <!-- one person, inside a bubble that doesn't quite close -->
+            <svg viewBox="0 0 32 32" fill="none">
+              <circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="1.2"
+                      stroke-dasharray="3 3.4" opacity=".38"/>
+              <circle cx="16" cy="12.6" r="3.1" stroke="currentColor" stroke-width="1.4" opacity=".85"/>
+              <path d="M10.6 23.4v-1.2a5.4 5.4 0 0 1 10.8 0v1.2" stroke="currentColor"
+                    stroke-width="1.4" stroke-linecap="round" opacity=".85"/>
+            </svg>
+          </span>
+          <h3>Loneliness is a health crisis</h3>
+          <p>Not a mood any more — a named public health problem, on the
+            record.</p>
+        </div>
+
+        <!-- the three lines that make it one story rather than three -->
+        <!-- aspect kept, so the hairlines stay hairlines and pathLength="1"
+             lets all three draw in the same beat regardless of length -->
+        <svg class="shifts__join" viewBox="0 0 100 8" aria-hidden="true">
+          <path pathLength="1" d="M16.7 0V2.4Q16.7 7.4 49.4 7.7"/>
+          <path pathLength="1" d="M50 0v7.7"/>
+          <path pathLength="1" d="M83.3 0V2.4Q83.3 7.4 50.6 7.7"/>
+        </svg>
+
+        <!-- no data-delay past this point: the joins draw between the cards
+             and the payoff, so the last three lines are timed off them in
+             pitchdeck.css rather than riding the cascade's steps -->
+        <span class="shifts__now rise">The opening for Kin</span>
+      </div>
+
+      <p class="slide__foot rise">
+        Three separate news stories, one moment: people want out of the feed
+        and back into the room.
+      </p>
+      <p class="slot rise"></p>
+    </div>
+  </section>
+
+  <!-- ── 4. the solution ──────────────────────────────────────
+       The problem's scattered bodies, gathered: Min arrives in the hole in
+       the middle, then the connections go out one at a time and each screen
+       goes dark as its link lands — that person looked up.
+
+       Geometry and the per-element CSS both come from the landing page's
+       #dawn scene. Only the driver differs: pitchdeck.js plays it on entry
+       instead of scrubbing it off the scroll. -->
+  <section class="slide" data-title="What Kin is" data-bg="#5c4a5e"
+           aria-roledescription="slide" aria-label="The solution: Kin introduces you to the people around you">
+    <span class="slide__tag">The idea</span>
+    <div class="slide__inner">
+      <h2 class="rise">An introduction. Not a feed.</h2>
+
+      <div class="scene rise" data-delay="2">
+        <div class="scene__stage">
+          <div class="ring" role="img"
+               aria-label="Eight people standing apart, until Min arrives in the middle and connects them to each other one by one.">
+            <svg class="ring__links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <line x1="50.73" y1="35.02" x2="51.66" y2="15.99"/>
+              <line x1="60.43" y1="39.22" x2="75.13" y2="24.03"/>
+              <line x1="65.00" y1="49.63" x2="84.00" y2="49.17"/>
+              <line x1="59.82" y1="61.34" x2="71.42" y2="74.71"/>
+              <line x1="48.23" y1="64.89" x2="45.83" y2="85.05"/>
+              <line x1="38.56" y1="59.70" x2="22.34" y2="73.47"/>
+              <line x1="35.11" y1="48.18" x2="15.95" y2="45.85"/>
+              <line x1="40.30" y1="38.56" x2="26.53" y2="22.34"/>
+            </svg>
+
+            <span class="blob" style="--x: 52%; --y: 9%"></span>
+            <span class="blob" style="--x: 80%; --y: 19%"></span>
+            <span class="blob" style="--x: 91%; --y: 49%"></span>
+            <span class="blob" style="--x: 76%; --y: 80%"></span>
+            <span class="blob" style="--x: 45%; --y: 92%"></span>
+            <span class="blob" style="--x: 17%; --y: 78%"></span>
+            <span class="blob" style="--x: 9%; --y: 45%"></span>
+            <span class="blob" style="--x: 22%; --y: 17%"></span>
+
+            <div class="min min--dawn" data-min data-phase="3.4" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="slide__foot rise" data-delay="3">
+        <b class="term">Min</b> gets to know you through ordinary conversation,
+        then goes out into the few hundred metres around you and introduces
+        you — to the right people, and the right moments. Less phone time,
+        more real time.
+      </p>
+      <p class="slot rise" data-delay="4"></p>
+    </div>
+  </section>
+
+  <!-- ── 5. how it works ──────────────────────────────────────
+       Three beats, each one an object doing the thing rather than a
+       caption describing it.
+
+       THE DEMO FILM GOES HERE. When the film is cut, drop it in place of
+       the three .beat__stage figures — one wide frame reads better than
+       three small ones:
+
+         <div class="resin" style="border-radius: var(--radius-2xl); padding: 10px">
+           <video src="/assets/video/kin-demo.mp4" poster="/assets/img/demo-poster.jpg"
+                  style="display:block; width:100%; border-radius:var(--radius-lg)"
+                  muted loop playsinline controls></video>
+         </div>
+  -->
+  <section class="slide" data-title="How it works" data-bg="#d8b3a8"
+           aria-roledescription="slide" aria-label="How it works: yes, walk over, hello">
+    <span class="slide__tag">How it works</span>
+    <div class="slide__inner">
+      <h2 class="rise">Yes → walk over → hello.</h2>
+
+      <div class="beats">
+        <div class="beat resin rise" data-delay="1">
+          <div class="beat__stage" aria-hidden="true">
+            <div class="notif">
+              <span class="min" data-min data-phase="0.7"></span>
+              <span>
+                <b>Someone nearby shoots film too.</b>
+                <i>120 m · leaving in 10 min</i>
+              </span>
+              <span class="notif__yes">Yes</span>
+            </div>
+          </div>
+          <h3>You get an intro</h3>
+          <p>One notification, one decision. No feed to check.</p>
+        </div>
+
+        <div class="beat resin rise" data-delay="2">
+          <div class="beat__stage" aria-hidden="true">
+            <div class="walk">
+              <span class="walk__path"></span>
+              <span class="walk__trail"></span>
+              <span class="walk__them"></span>
+              <span class="walk__you"></span>
+            </div>
+          </div>
+          <h3>You walk over</h3>
+          <p>They said yes too. That's the whole awkward part, handled.</p>
+        </div>
+
+        <div class="beat resin rise" data-delay="3">
+          <div class="beat__stage" aria-hidden="true">
+            <div class="meet">
+              <div class="meet__pair">
+                <span></span><span></span>
+                <span class="meet__thread"></span>
+              </div>
+              <span class="meet__phone"></span>
+            </div>
+          </div>
+          <h3>You meet</h3>
+          <p>In person, with no screen in between. The app's job is done.</p>
+        </div>
+      </div>
+
+      <p class="slot rise" data-delay="4"></p>
+    </div>
+  </section>
+
+  <!-- ── 6. why it's different ────────────────────────────────
+       The two business models next to each other: one that has to keep you
+       scrolling, and one that only pays off once you've left. -->
+  <section class="slide" data-title="Why it's different" data-bg="#f2eee7"
+           aria-roledescription="slide" aria-label="Why it's different: we win when you put your phone down">
+    <span class="slide__tag">Why it's different</span>
+    <div class="slide__inner">
+      <h2 class="rise">This is not social media.</h2>
+
+      <div class="versus">
+        <div class="vs vs--them rise" data-delay="1">
+          <span class="vs__label">Built to hold you</span>
+          <div class="feed" aria-hidden="true">
+            <!-- two identical runs, so the loop has no seam -->
+            <div class="feed__strip">
+              <i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+          </div>
+          <p>Scroll, chat, post, maintain the persona. Their revenue is your
+             attention, so it can never be enough.</p>
+        </div>
+
+        <div class="vs resin rise" data-delay="2">
+          <span class="vs__label">Built to let you go</span>
+          <div class="done" aria-hidden="true">
+            <span class="done__card">
+              <span class="min" data-min data-phase="2.2"></span>
+              Intro accepted
+            </span>
+            <span class="done__out">→ you're outside, talking to someone</span>
+          </div>
+          <p>No scroll, no chat, no profile. Kin's only successful outcome is
+             two people in the same room.</p>
+        </div>
+      </div>
+
+      <p class="versus__line rise" data-delay="3">
+        We make money when you put your phone down.
+      </p>
+      <p class="slide__foot rise" data-delay="4">
+        Built around trust, not attention: no selling data, no infinite
+        scroll, no ads competing for your eyeballs.
+      </p>
+      <p class="slot rise" data-delay="4"></p>
+    </div>
+  </section>
+
+  <!-- ── 7. the vision ────────────────────────────────────────
+       Four pairs. The value we keep is painted in the one warm gradient on
+       the page; the one we don't gets struck through as the card lands. -->
+  <section class="slide" data-title="The vision" data-bg="#e9ae9e"
+           aria-roledescription="slide" aria-label="The vision: technology that actually makes life better">
+    <span class="slide__tag">The vision</span>
+    <div class="slide__inner">
+      <h2 class="rise">Tech that actually makes our lives better.</h2>
+
+      <div class="nots">
+        <div class="not resin rise" data-delay="1">
+          <b><span class="not__yes">Privacy</span>, <s>not profit at all costs</s></b>
+          <p>We don't sell data — not as a policy, as an architecture.</p>
+        </div>
+        <div class="not resin rise" data-delay="2">
+          <b><span class="not__yes">Local</span>, <s>not global</s></b>
+          <p>Only the few hundred metres you can actually walk to.</p>
+        </div>
+        <div class="not resin rise" data-delay="3">
+          <b><span class="not__yes">Social</span>, <s>not para-social</s></b>
+          <p>No followers, no audience, no performing.</p>
+        </div>
+        <div class="not resin rise" data-delay="4">
+          <b><span class="not__yes">Informative</span>, <s>not addictive</s></b>
+          <p>No streaks, no ranking, no manufactured urgency.</p>
+        </div>
+      </div>
+
+      <p class="slot rise" data-delay="5"></p>
+    </div>
+  </section>
+
+  <!-- ── 8. get involved ──────────────────────────────────────
+       One clear, casual ask. Put your contact line in the .slot. -->
+  <section class="slide close" data-title="Come along" data-bg="#241f36"
+           aria-roledescription="slide" aria-label="Get involved: join the waitlist, or say hi in Helsinki">
+    <span class="slide__tag">Come along</span>
+    <div class="slide__inner">
+      <h2 class="rise">Come say hi. In person.</h2>
+      <p class="lede rise" data-delay="2">
+        We're building this in Helsinki first, one neighbourhood at a time.
+        If you're here, you're early enough to shape what your street feels
+        like.
+      </p>
+
+      <div class="hero__actions rise" data-delay="3">
+        <a class="btn btn--primary btn--lg" href="/waitlist/">
+          <span class="btn__fill" aria-hidden="true"></span>
+          <span class="btn__label">Join the waitlist</span>
+          <svg class="btn__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a class="btn btn--quiet btn--lg" href="/"><span class="btn__label">The longer story</span></a>
+      </div>
+
+      <span class="close__where rise" data-delay="4">Helsinki · early beta, fall 2026</span>
+
+      <!-- YOUR CONTACT LINE GOES HERE, e.g.
+           <p class="slot">hello@kinapp.social · @kin.helsinki</p> -->
+      <p class="slot rise" data-delay="5"></p>
+    </div>
+  </section>
+
+</main>
+
+<!-- The toolbar: the site's nav pebble with the deck's controls sunk into
+     it. Dots, the counter and the arrows' disabled states are all wired up
+     from the slides by pitchdeck.js. Last in the source so the slides come
+     first for keyboard and screen readers. -->
+<footer class="nav bar" role="group" aria-label="Deck controls">
+  <a class="nav__brand" href="/" aria-label="Kin — home">
+    <span class="wordmark--nav" aria-hidden="true">
+      <span class="wordmark__bloom"></span>
+      <span class="wordmark__glass wordmark__glass--shadow"></span>
+      <span class="wordmark__glass"></span>
+      <span class="wordmark__min">
+        <span class="min min--nav" data-min data-phase="3.4"></span>
+      </span>
+    </span>
+  </a>
+
+  <div class="bar__group">
+    <button class="bar__btn" type="button" data-nav="prev" aria-label="Previous slide">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <!-- one dot per slide, built by the script -->
+    <div class="bar__dots" role="tablist" aria-label="Slides"></div>
+
+    <button class="bar__btn" type="button" data-nav="next" aria-label="Next slide">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <span class="bar__count" aria-hidden="true">1/8</span>
+</footer>
+
+<script type="module" src="/assets/js/pitchdeck.js"></script>
+</body>
+</html>

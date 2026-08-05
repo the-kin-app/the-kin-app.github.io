@@ -9,6 +9,7 @@ waitlist submissions.
 ```
 /
 ├── index.html              Homepage — the long-form landing page (see below)
+├── pitchdeck/index.html    The public pitch deck — swipeable slides (see below)
 ├── waitlist/index.html     Waitlist signup form
 ├── privacy-policy/index.html
 ├── qr/index.html           QR code that links to the waitlist
@@ -17,11 +18,15 @@ waitlist submissions.
 │   │   ├── tokens.css       Design tokens (colors, type, spacing, radius) ← Figma variables map here
 │   │   ├── base.css         Reset, document defaults, layout primitives
 │   │   ├── components.css   Reusable UI blocks (card, form, buttons, hero, prose, qr…)
-│   │   └── landing.css      Homepage only (does not load base/components)
+│   │   ├── landing.css      Homepage only (does not load base/components)
+│   │   └── pitchdeck.css    Deck paging + per-slide figures; loads on top of landing.css
 │   ├── js/
 │   │   ├── waitlist.js      Waitlist form validation + submission
-│   │   ├── landing.js       Homepage: colour ramp, reveals, Min, buttons, typewriter
-│   │   └── landing-scene.js Homepage WebGL atmosphere (three.js, ES module)
+│   │   ├── press.js         The submerge button press (shared by every page)
+│   │   ├── min.js           Min himself: the 5s morph loop and the gaze (shared)
+│   │   ├── landing.js       Homepage: colour ramp, reveals, typewriter, constellation
+│   │   ├── landing-scene.js WebGL atmosphere (three.js, ES module) — homepage + deck
+│   │   └── pitchdeck.js     Deck: paging, palette, the ring's on-entry timeline
 │   ├── img/
 │   │   ├── kin-logos/       Logo assets (flat / gradient / glass) + their README
 │   │   ├── kin-letters-mask.svg  Wordmark minus the i-dot; masks the glass hero logo
@@ -183,6 +188,72 @@ brand:
 The previous single-screen splash (logo + tagline + CTA, built on
 `base.css` / `components.css`) is still in git history if it's ever wanted
 back — it was the `index.html` at commit `c8ffe30`.
+
+## The pitch deck (`/pitchdeck`)
+
+The public, short version of the pitch — eight slides, built out of the same
+material system as the homepage rather than exported from a slide tool. It
+loads `landing.css` first and `pitchdeck.css` on top, so a surface that needs
+to be an object is `.resin`, a person is a `.blob`, a button is a `.btn`, and
+Min is Min. The source of the outline is
+`kin/Business/pitch deck (public).md`.
+
+`pitchdeck/CLAUDE.md` is the working context for the deck — the invariants,
+the add-a-slide template, and the preview/screenshot recipe. Read that before
+editing in there.
+
+**Editing it is markup, not code.** One `<section class="slide">` is one
+slide; the toolbar, the dots, the counter, the progress hairline and the
+palette all build themselves from what's in the document.
+
+| Attribute / hook | What it does |
+| --- | --- |
+| `data-title` | the slide's name in the toolbar dot's tooltip |
+| `data-bg` | that slide's background colour |
+| `<p class="slot">` | **your space** — one empty paragraph per slide. Type into it and it appears; `.slot:empty` is `display: none`, so an unused one doesn't exist |
+| `class="rise" data-delay="n"` | joins the emergence cascade, `n` steps in |
+
+- **Paging is native, and it turns with the device.** The deck is a
+  `scroll-snap` track — sideways on a desktop, **downwards on a phone**, the
+  gesture each one already has — so swiping is the browser's own. The axis is
+  a CSS decision at the 760px breakpoint; `pitchdeck.js` reads the same
+  `matchMedia` query, so that number lives in both files and has to stay in
+  step. The script only adds the keyboard (arrows, space, Home/End), a
+  vertical wheel → page translation for the sideways track, the toolbar and a
+  `#3`-style hash you can link to. Without it you can still drag through
+  every slide.
+- **The light moves with your thumb.** Each slide's `data-bg` is a stop on
+  the same ramp the homepage scrolls through — dusk, plum, first light,
+  daylight, dusk again — and the mix follows the scroll position rather than
+  the settled slide, so the room changes *while* you swipe. `--ink` still
+  picks itself by contrast, so a new slide colour needs no second edit.
+  Check any colour you add: it wants ≥ 5:1 against one of the two inks.
+- **Only the slide you're on is live.** The rest are `inert` — eight slides'
+  worth of links in the tab order would scroll the track out from under a
+  keyboard user — and the looping figures are gated on `.is-active`, so
+  nothing animates off screen.
+- **Slide 3 is the three shifts, and the hairlines that join them.** Three
+  cards rise in order, the lines under them draw down into one point, and the
+  payoff lands last — the argument in the order you'd say it out loud. The
+  cards are hollows rather than `.resin`, because resin forces dark ink and
+  this slide's plum is the mid-tone trap.
+- **The ring on slide 4 is the homepage's `#dawn` figure**, geometry and CSS
+  untouched. A slide has no scroll to scrub, so `ring()` plays the same
+  `--in` / `--cold` / `--warm` values on a 4.2s timeline on entry instead.
+- **Slide 5 is where the demo film goes.** There's a commented-in snippet in
+  the markup: drop the video in place of the three `.beat__stage` figures.
+- **Min lives in `min.js` now**, imported by both the landing page and the
+  deck, so there is one Min and not two that drift apart. Nothing about his
+  behaviour changed in the move.
+
+Slides fit one screen by construction (type is clamped against `svh` as well
+as `vw`, and the phone breakpoint drops the beats' sentences and shortens the
+figures). On the **sideways** track a slide that outgrows the viewport anyway
+scrolls inside itself instead of clipping, and the wheel handler notices and
+lets that scroll happen rather than paging. On the **vertical** track it
+can't: the deck owns the up-down gesture there, so slides are
+`overflow: hidden` and the phone rules have to keep them inside one screen —
+worth re-checking at 390×844 if you add copy to a slide.
 
 ## Local preview
 
