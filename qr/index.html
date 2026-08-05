@@ -3,7 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kin — Scan to Join</title>
+<title>Kin — Scan to join</title>
+<meta name="description" content="A QR code pointing at the Kin waitlist, for printing and pinning up.">
+<meta name="theme-color" content="#1e1b2e">
+<!-- A print/utility page, not a destination: it holds a QR code that points
+     at /waitlist/, so it has nothing to offer anyone who finds it in search.
+     noindex rather than a robots.txt Disallow — a blocked page can never be
+     crawled, so the crawler would never read this tag. -->
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://kinapp.social/qr/">
+
 <link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -1,0 +1,11 @@
+# kinapp.social
+#
+# Everything is crawlable on purpose. /qr/ and /business/ are kept out of
+# search with a `noindex` meta tag on the pages themselves, NOT with a
+# Disallow here — a disallowed page is never fetched, so a crawler would
+# never read the noindex and the URL can still surface as a bare link.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://kinapp.social/sitemap.xml
