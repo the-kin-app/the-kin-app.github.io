@@ -1,12 +1,17 @@
 /**
- * Kin waitlist — Cloudflare Worker.
+ * Kin waitlist + business interest form — Cloudflare Worker.
  *
  * Storage: D1 (serverless SQLite). Same request/response contract as the
- * previous self-hosted Node backend, so the frontend (assets/js/waitlist.js)
- * needs no changes.
+ * previous self-hosted Node backend, so the frontends
+ * (assets/js/waitlist.js, assets/js/business.js) need no changes.
  *
- * Deliberately NOT collected: IP address, user agent. Only what the form
- * asks for — name, and one of email/phone.
+ * Two forms, two tables, one Worker:
+ *   - /waitlist  -> signups          (consumer waitlist, name + email/phone)
+ *   - /business  -> business_signups (business interest form, only
+ *                   business_name + location required, rest optional)
+ *
+ * Deliberately NOT collected: IP address, user agent. Only what each form
+ * actually asks for.
  *
  * Security measures (see worker/README.md for detail):
  *   - Parameterized D1 queries (no SQL injection)
@@ -22,7 +27,13 @@
  */
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MAX_BODY_BYTES = 8 * 1024; // 8 KiB
+const MAX_BODY_BYTES = 16 * 1024; // 16 KiB — business form carries more optional fields than the waitlist
+
+const BUSINESS_TYPES = new Set(['cafe_restaurant', 'bar_nightlife', 'gym_fitness', 'salon_spa', 'retail', 'services', 'other']);
+const MARKETING_CHANNELS = new Set(['word_of_mouth', 'social_media', 'paid_ads', 'physical_ads', 'flyers_press', 'nothing']);
+const CONCEPT_INTEREST = new Set(['definitely', 'maybe', 'not_really']);
+const PRICING_PREF = new Set(['per_post', 'monthly', 'per_redemption', 'not_sure']);
+const PILOT_INTEREST = new Set(['yes', 'maybe', 'no']);
 
 function corsHeaders(origin) {
   return {
@@ -63,6 +74,84 @@ function validate(payload) {
     const digits = phone.replace(/[^\d]/g, '');
     if (!phone) return 'Phone number is required.';
     if (digits.length < 7 || digits.length > 15) return 'Please enter a valid phone number.';
+  }
+
+  return null;
+}
+
+function validateBusiness(payload) {
+  if (!payload || typeof payload !== 'object') return 'Invalid request body.';
+
+  const businessName = typeof payload.business_name === 'string' ? payload.business_name.trim() : '';
+  if (!businessName) return 'Please enter your business name.';
+  if (businessName.length > 150) return 'Business name is too long.';
+
+  const location = typeof payload.location === 'string' ? payload.location.trim() : '';
+  if (!location) return 'Please enter a location.';
+  if (location.length > 200) return 'Location is too long.';
+
+  if (payload.business_type != null && !BUSINESS_TYPES.has(payload.business_type)) {
+    return 'Invalid business type.';
+  }
+
+  // The "Something else, what?" write-in. Free text, so it gets the same
+  // treatment as every other free-text field: a type check and a length
+  // cap here, and .bind() at the insert — never string-built SQL.
+  if (payload.business_type_other != null) {
+    if (typeof payload.business_type_other !== 'string' || payload.business_type_other.length > 150) {
+      return 'That answer is too long.';
+    }
+  }
+
+  if (payload.contact_name != null) {
+    if (typeof payload.contact_name !== 'string' || payload.contact_name.length > 100) {
+      return 'Contact name is too long.';
+    }
+  }
+
+  const method = payload.contact_method;
+  if (method != null && method !== 'email' && method !== 'phone') return 'Invalid contact method.';
+
+  if (method === 'email') {
+    const email = typeof payload.email === 'string' ? payload.email.trim() : '';
+    if (!email || !EMAIL_RE.test(email) || email.length > 254) return 'Please enter a valid email.';
+  } else if (method === 'phone') {
+    const phone = typeof payload.phone === 'string' ? payload.phone.trim() : '';
+    const digits = phone.replace(/[^\d]/g, '');
+    if (!phone || digits.length < 7 || digits.length > 15) return 'Please enter a valid phone number.';
+  }
+
+  if (payload.current_marketing != null) {
+    if (!Array.isArray(payload.current_marketing) || payload.current_marketing.length > MARKETING_CHANNELS.size) {
+      return 'Invalid marketing selection.';
+    }
+    for (const v of payload.current_marketing) {
+      if (!MARKETING_CHANNELS.has(v)) return 'Invalid marketing selection.';
+    }
+  }
+
+  if (payload.slow_times != null) {
+    if (typeof payload.slow_times !== 'string' || payload.slow_times.length > 300) return 'That answer is too long.';
+  }
+
+  if (payload.concept_interest != null && !CONCEPT_INTEREST.has(payload.concept_interest)) {
+    return 'Invalid concept response.';
+  }
+
+  if (payload.walkin_value != null) {
+    if (typeof payload.walkin_value !== 'string' || payload.walkin_value.length > 50) return 'That answer is too long.';
+  }
+
+  if (payload.pricing_pref != null && !PRICING_PREF.has(payload.pricing_pref)) {
+    return 'Invalid pricing response.';
+  }
+
+  if (payload.pilot_interest != null && !PILOT_INTEREST.has(payload.pilot_interest)) {
+    return 'Invalid pilot response.';
+  }
+
+  if (payload.trust_notes != null) {
+    if (typeof payload.trust_notes !== 'string' || payload.trust_notes.length > 1000) return 'That answer is too long.';
   }
 
   return null;
@@ -140,6 +229,93 @@ async function handleWaitlist(request, env, origin) {
   }
 }
 
+async function handleBusiness(request, env, origin) {
+  if (env.RATE_LIMITER) {
+    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+    const { success } = await env.RATE_LIMITER.limit({ key: ip });
+    if (!success) {
+      return json(429, { error: 'Too many requests. Please try again later.' }, origin);
+    }
+  }
+
+  let raw;
+  try {
+    raw = await request.text();
+  } catch {
+    return json(400, { error: 'Invalid request.' }, origin);
+  }
+  if (raw.length > MAX_BODY_BYTES) {
+    return json(413, { error: 'Payload too large.' }, origin);
+  }
+
+  let payload;
+  try {
+    payload = JSON.parse(raw);
+  } catch {
+    return json(400, { error: 'Invalid JSON.' }, origin);
+  }
+
+  // Honeypot: hidden field real users never fill. If populated, pretend
+  // success and drop the submission silently.
+  if (typeof payload.website === 'string' && payload.website.trim() !== '') {
+    return json(201, { ok: true }, origin);
+  }
+
+  const error = validateBusiness(payload);
+  if (error) return json(400, { error }, origin);
+
+  const businessName = payload.business_name.trim();
+  const location = payload.location.trim();
+  const businessType = payload.business_type || null;
+  // Only meaningful alongside 'other' — anything sent with a real category
+  // is dropped, so the column can't disagree with business_type.
+  const businessTypeOther = businessType === 'other'
+    ? ((typeof payload.business_type_other === 'string' && payload.business_type_other.trim()) || null)
+    : null;
+  const contactName = (typeof payload.contact_name === 'string' && payload.contact_name.trim()) || null;
+  const contactMethod = payload.contact_method || null;
+  // Lower-cased for case-insensitive dedup against the unique index.
+  const email = contactMethod === 'email' ? payload.email.trim().toLowerCase() : null;
+  const phone = contactMethod === 'phone' ? payload.phone.trim() : null;
+  const currentMarketing = Array.isArray(payload.current_marketing) && payload.current_marketing.length
+    ? payload.current_marketing.join(',')
+    : null;
+  const slowTimes = (typeof payload.slow_times === 'string' && payload.slow_times.trim()) || null;
+  const conceptInterest = payload.concept_interest || null;
+  const walkinValue = (typeof payload.walkin_value === 'string' && payload.walkin_value.trim()) || null;
+  const pricingPref = payload.pricing_pref || null;
+  const pilotInterest = payload.pilot_interest || null;
+  const trustNotes = (typeof payload.trust_notes === 'string' && payload.trust_notes.trim()) || null;
+  const createdAt = new Date().toISOString();
+
+  try {
+    await env.DB.prepare(
+      `INSERT INTO business_signups (
+         business_name, location, business_type, business_type_other,
+         contact_name, contact_method, email, phone, current_marketing,
+         slow_times, concept_interest, walkin_value, pricing_pref,
+         pilot_interest, trust_notes, created_at
+       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    )
+      .bind(
+        businessName, location, businessType, businessTypeOther,
+        contactName, contactMethod, email, phone, currentMarketing,
+        slowTimes, conceptInterest, walkinValue, pricingPref,
+        pilotInterest, trustNotes, createdAt
+      )
+      .run();
+    return json(201, { ok: true }, origin);
+  } catch (err) {
+    if (String(err && err.message).includes('UNIQUE')) {
+      // Already submitted with this email/phone — same response as
+      // success, so the endpoint can't be used to check registration.
+      return json(201, { ok: true }, origin);
+    }
+    console.error('D1 insert failed:', err);
+    return json(500, { error: 'Could not save your submission. Please try again.' }, origin);
+  }
+}
+
 async function handleAdminList(request, env, origin) {
   const authHeader = request.headers.get('Authorization') || '';
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
@@ -152,6 +328,26 @@ async function handleAdminList(request, env, origin) {
   const recent = await env.DB.prepare(
     `SELECT id, name, contact_method, email, phone, created_at
      FROM signups ORDER BY id DESC LIMIT 100`
+  ).all();
+
+  return json(200, { count: countRow.n, recent: recent.results }, origin);
+}
+
+async function handleAdminBusinessList(request, env, origin) {
+  const authHeader = request.headers.get('Authorization') || '';
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
+
+  if (!env.ADMIN_TOKEN || !timingSafeEqual(token, env.ADMIN_TOKEN)) {
+    return json(401, { error: 'Unauthorized.' }, origin);
+  }
+
+  const countRow = await env.DB.prepare('SELECT COUNT(*) AS n FROM business_signups').first();
+  const recent = await env.DB.prepare(
+    `SELECT id, business_name, location, business_type, business_type_other,
+            contact_name, contact_method, email, phone, current_marketing,
+            slow_times, concept_interest, walkin_value, pricing_pref,
+            pilot_interest, trust_notes, created_at
+     FROM business_signups ORDER BY id DESC LIMIT 100`
   ).all();
 
   return json(200, { count: countRow.n, recent: recent.results }, origin);
@@ -174,8 +370,16 @@ export default {
       return handleWaitlist(request, env, origin);
     }
 
+    if (request.method === 'POST' && (url.pathname === '/business' || url.pathname === '/business/')) {
+      return handleBusiness(request, env, origin);
+    }
+
     if (request.method === 'GET' && url.pathname === '/admin/signups') {
       return handleAdminList(request, env, origin);
+    }
+
+    if (request.method === 'GET' && url.pathname === '/admin/business-signups') {
+      return handleAdminBusinessList(request, env, origin);
     }
 
     return json(404, { error: 'Not found.' }, origin);

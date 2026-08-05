@@ -3,9 +3,20 @@
 Serverless replacement for the old self-hosted Node backend. Same request
 contract, so `assets/js/waitlist.js` at the repo root needs no changes.
 
+One Worker now backs two forms, on two tables in the same D1 database:
+
+| Form | Page | Endpoint | Table | Migration |
+| --- | --- | --- | --- | --- |
+| Consumer waitlist | `/waitlist/` | `POST /waitlist` | `signups` | `0001_init.sql` |
+| Business interest form | `/business/` | `POST /business` | `business_signups` | `0002_business_signups.sql`, `0003_business_type_other.sql` |
+
 - **Compute:** Cloudflare Workers (`src/index.js`)
-- **Storage:** Cloudflare D1 — serverless SQLite (`migrations/0001_init.sql`)
-- **Collects:** name + (email or phone) only. No IP address, no user agent.
+- **Storage:** Cloudflare D1 — serverless SQLite (`migrations/`)
+- **Collects:** waitlist — name + (email or phone). Business form — business
+  name + location (required), plus optional contact info and questionnaire
+  answers (business type, current marketing, slow hours, concept reaction,
+  pricing preference, pilot interest). No IP address, no user agent, either
+  way.
 
 ```
 Browser ──HTTPS──> GitHub Pages   (kinapp.social)      static site
@@ -36,15 +47,24 @@ npx wrangler d1 create kin-waitlist
 Copy the `database_id` from the output into `wrangler.toml`
 (`REPLACE_WITH_D1_DATABASE_ID`).
 
-## 3. Run the migration
+## 3. Run the migrations
 
 ```bash
 npm run migrate:remote
 ```
 
-Creates the `signups` table and its unique indexes on the live D1 database.
-(`npm run migrate:local` runs it against the local dev database instead, for
-use with `wrangler dev`.)
+Applies every file in `migrations/` that hasn't run yet, on the live D1
+database:
+
+- `0001_init.sql` — the `signups` table and its unique indexes
+- `0002_business_signups.sql` — the `business_signups` table and its indexes
+- `0003_business_type_other.sql` — adds `business_type_other`, the free-text
+  write-in behind the "Something else, what?" business-type option
+
+(`npm run migrate:local` runs the same thing against the local dev database
+instead, for use with `wrangler dev`.) Safe to re-run; already-applied
+migrations are skipped, so a deployment sitting on any earlier migration
+catches up with this one command.
 
 ## 4. Set the admin token
 
@@ -104,14 +124,21 @@ curl -X POST https://api.kinapp.social/waitlist \
   -H 'Content-Type: application/json' \
   -d '{"name":"Test","contact_method":"email","email":"test@example.com"}'
 # -> {"ok":true}
+
+curl -X POST https://api.kinapp.social/business \
+  -H 'Content-Type: application/json' \
+  -d '{"business_name":"Test Cafe","location":"Kallio, Helsinki"}'
+# -> {"ok":true}
 ```
 
-Then submit the real form at `kinapp.social/waitlist/`.
+Then submit the real forms at `kinapp.social/waitlist/` and
+`kinapp.social/business/`.
 
 ## 8. Read signups
 
 ```bash
 curl -H 'Authorization: Bearer <ADMIN_TOKEN>' https://api.kinapp.social/admin/signups
+curl -H 'Authorization: Bearer <ADMIN_TOKEN>' https://api.kinapp.social/admin/business-signups
 ```
 
 Or query D1 directly:
@@ -119,6 +146,9 @@ Or query D1 directly:
 ```bash
 npx wrangler d1 execute kin-waitlist --remote \
   --command "SELECT created_at, name, email, phone FROM signups ORDER BY id DESC;"
+
+npx wrangler d1 execute kin-waitlist --remote \
+  --command "SELECT created_at, business_name, location, concept_interest, pilot_interest FROM business_signups ORDER BY id DESC;"
 ```
 
 ## Local development
@@ -161,4 +191,7 @@ Ported from the previous backend, adjusted for the Workers runtime:
 - **Generic error messages** — internals only reach the Cloudflare log tail
   (`npm run tail`), never the response body.
 - **Minimal data collection** — no IP address or user agent is stored,
-  unlike the previous backend.
+  unlike the previous backend. The business form only *requires* business
+  name + location; every questionnaire field is optional and validated
+  against a fixed set of allowed values where applicable (business type,
+  marketing channels, concept/pricing/pilot answers).

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kin for Business — Reach the street outside your door</title>
+<meta name="description" content="Kin is exploring a way for neighbourhood businesses to reach the people already within walking distance. Tell us about your business — two minutes, two required questions.">
+<meta name="theme-color" content="#1e1b2e">
+<meta name="robots" content="noindex">
+
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/landing.css">
+<link rel="stylesheet" href="/assets/css/business.css">
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js" } }
+</script>
+
+<!-- Arms the scroll-reveal before first paint. If this never runs, the
+     questionnaire simply renders visible instead of waiting for an
+     observer that isn't coming (see "reveal fail-safe" in business.css). -->
+<script>document.documentElement.classList.add('reveal-armed');</script>
+</head>
+<body class="biz">
+
+<!-- the environment everything floats in: light pooling at the floor,
+     slow banks of fog above it -->
+<div class="env" aria-hidden="true">
+  <span class="fog fog--1"></span>
+  <span class="fog fog--2"></span>
+  <span class="fog fog--3"></span>
+</div>
+<canvas id="scene" aria-hidden="true"></canvas>
+
+<main>
+
+  <!-- ── hero ─────────────────────────────────────────────── -->
+  <section class="biz-hero" data-reveal>
+    <div class="shell">
+      <h1 class="visually-hidden">Kin for Business</h1>
+
+      <!-- Cast-glass letterforms with Min sitting in the i-dot's place -->
+      <div class="wordmark--hero" role="img" aria-label="kin">
+        <span class="wordmark__bloom" aria-hidden="true"></span>
+        <span class="wordmark__glass wordmark__glass--shadow" aria-hidden="true"></span>
+        <span class="wordmark__glass" aria-hidden="true"></span>
+        <!-- the flat i-dot, shown only if the module never runs to draw Min -->
+        <span class="wordmark__dot" aria-hidden="true"></span>
+        <div class="wordmark__min" aria-hidden="true">
+          <div class="min min--hero" data-min data-phase="1.9"></div>
+        </div>
+      </div>
+
+      <div class="biz-eyebrow rise" data-delay="1">For business</div>
+
+      <h2 class="rise" data-delay="2">The street outside your door, actually reachable.</h2>
+
+      <p class="lede rise" data-delay="3">
+        We're building an app for people to find what's happening around them
+        right now. Before we build anything for businesses, we want to hear
+        from you — what you'd actually use, and what you'd pay for.
+      </p>
+
+      <p class="fineprint rise" data-delay="4">
+        About two minutes. Only two questions are required.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── the questionnaire ────────────────────────────────── -->
+  <section class="biz-form-section">
+    <form id="business-form" class="biz-form" novalidate>
+
+      <!-- 1 ─ who you are -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Step 1 of 4</span>
+          <h2 class="rise" data-delay="1">Your business</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            The only two things we actually need. Everything after this is
+            optional — answer what's useful, skip what isn't.
+          </p>
+        </div>
+
+        <div class="field rise" data-delay="3">
+          <label for="business_name">What's your business called?</label>
+          <input class="input" type="text" id="business_name" name="business_name"
+                 placeholder="e.g. Café Aurinko" required autocomplete="organization">
+          <div class="field-error" id="business_name-error"></div>
+        </div>
+
+        <div class="field rise" data-delay="3">
+          <label for="location">Where is it?</label>
+          <input class="input" type="text" id="location" name="location"
+                 placeholder="Neighbourhood or street" required autocomplete="address-level2">
+          <div class="field-error" id="location-error"></div>
+        </div>
+
+        <div class="field rise" data-delay="4">
+          <label for="business_type">What kind of place is it? <span class="opt">(optional)</span></label>
+          <select class="select is-placeholder" id="business_type" name="business_type">
+            <option value="" selected disabled>Choose one</option>
+            <option value="cafe_restaurant">Café / restaurant</option>
+            <option value="bar_nightlife">Bar / nightlife</option>
+            <option value="gym_fitness">Gym / fitness studio</option>
+            <option value="salon_spa">Salon / spa / wellness</option>
+            <option value="retail">Retail shop</option>
+            <option value="services">Other services</option>
+            <option value="other">Something else, what?</option>
+          </select>
+
+          <!-- revealed by the select above; the write-in for "Something else" -->
+          <div class="field--conditional" id="business_type_other-field" style="display:none;">
+            <label class="visually-hidden" for="business_type_other">Tell us what kind of place it is</label>
+            <input class="input" type="text" id="business_type_other" name="business_type_other"
+                   placeholder="What kind of place is it?" maxlength="150">
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 ─ how it works today -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Step 2 of 4</span>
+          <h2 class="rise" data-delay="1">How people find you today</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            What you already do matters more to us than what you think of our
+            idea — so we're asking this first.
+          </p>
+        </div>
+
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend>How do new customers find you? <span class="opt">(pick any)</span></legend>
+          <div class="option-group">
+            <label class="option"><input type="checkbox" name="current_marketing" value="word_of_mouth"><span>Word of mouth</span></label>
+            <label class="option"><input type="checkbox" name="current_marketing" value="social_media"><span>Social media posts</span></label>
+            <label class="option"><input type="checkbox" name="current_marketing" value="paid_ads"><span>Paid ads online (Google / Meta)</span></label>
+            <label class="option"><input type="checkbox" name="current_marketing" value="physical_ads"><span>Signage, posters or billboards</span></label>
+            <label class="option"><input type="checkbox" name="current_marketing" value="flyers_press"><span>Flyers or local press</span></label>
+            <label class="option"><input type="checkbox" name="current_marketing" value="nothing"><span>Nothing right now</span></label>
+          </div>
+        </fieldset>
+
+        <div class="field rise" data-delay="4">
+          <label for="slow_times">Any slow hours you wish you could fill? <span class="opt">(optional)</span></label>
+          <input class="input" type="text" id="slow_times" name="slow_times"
+                 placeholder="e.g. weekday afternoons, Tuesday evenings">
+        </div>
+      </div>
+
+      <!-- 3 ─ the concept -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Step 3 of 4</span>
+          <h2 class="rise" data-delay="1">The thing we're considering</h2>
+        </div>
+
+        <p class="concept rise" data-delay="2">
+          You post a time-limited offer in under a minute — <b>"20% off pastries
+          until 3pm"</b>, <b>"two spots left in tonight's class"</b>. It reaches only
+          people who are within about a kilometre right now, and whose interests
+          match what you offer. Live for hours, not weeks. The goal is a walk-in
+          today, not brand awareness.
+        </p>
+
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend>Honest first reaction? <span class="opt">(optional)</span></legend>
+          <div class="option-group">
+            <label class="option"><input type="radio" name="concept_interest" value="definitely"><span>I'd use that</span></label>
+            <label class="option"><input type="radio" name="concept_interest" value="maybe"><span>Maybe — depends on the details</span></label>
+            <label class="option"><input type="radio" name="concept_interest" value="not_really"><span>Not for us</span></label>
+          </div>
+        </fieldset>
+
+        <div class="field rise" data-delay="4">
+          <label for="walkin_value">Roughly what is one new walk-in worth to you? <span class="opt">(optional, €)</span></label>
+          <input class="input" type="text" id="walkin_value" name="walkin_value"
+                 placeholder="e.g. 15" inputmode="decimal">
+        </div>
+
+        <fieldset class="fieldset rise" data-delay="4">
+          <legend>Which way of paying would suit you? <span class="opt">(optional)</span></legend>
+          <p class="q-note">
+            We haven't set prices — they'd depend on your size and what a
+            customer is worth to you. It's the shape we're asking about.
+          </p>
+          <div class="option-group">
+            <label class="option"><input type="radio" name="pricing_pref" value="per_post"><span>A small fee each time you post an offer</span></label>
+            <label class="option"><input type="radio" name="pricing_pref" value="monthly"><span>A flat monthly fee, with a set number of offers included</span></label>
+            <label class="option"><input type="radio" name="pricing_pref" value="per_redemption"><span>Nothing up front — you pay only when an offer is redeemed</span></label>
+            <label class="option"><input type="radio" name="pricing_pref" value="not_sure"><span>Not sure yet</span></label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 4 ─ pilot + contact -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Step 4 of 4</span>
+          <h2 class="rise" data-delay="1">Want in early?</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            We're starting in one Helsinki neighbourhood. A pilot would mean
+            posting roughly two offers a week for four weeks, free.
+          </p>
+        </div>
+
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend>Interested in the pilot? <span class="opt">(optional)</span></legend>
+          <div class="option-group">
+            <label class="option"><input type="radio" name="pilot_interest" value="yes"><span>Yes, count us in</span></label>
+            <label class="option"><input type="radio" name="pilot_interest" value="maybe"><span>Tell me more first</span></label>
+            <label class="option"><input type="radio" name="pilot_interest" value="no"><span>Not right now</span></label>
+          </div>
+        </fieldset>
+
+        <div class="field rise" data-delay="4">
+          <label for="contact_name">Your name <span class="opt">(optional)</span></label>
+          <input class="input" type="text" id="contact_name" name="contact_name"
+                 placeholder="First name" autocomplete="name">
+        </div>
+
+        <div class="field rise" data-delay="4">
+          <label>How should we reach you? <span class="opt">(optional)</span></label>
+          <div class="segmented" role="tablist">
+            <span class="segmented__pill" aria-hidden="true"></span>
+            <button type="button" id="tab-email" class="active">Email</button>
+            <button type="button" id="tab-phone">Phone</button>
+          </div>
+
+          <div class="field--contact" id="email-field">
+            <input class="input" type="email" id="email" name="email"
+                   placeholder="you@yourbusiness.com" autocomplete="email" aria-label="Email">
+            <div class="field-error" id="email-error"></div>
+          </div>
+
+          <div class="field--contact" id="phone-field" style="display:none;">
+            <input class="input" type="tel" id="phone" name="phone"
+                   placeholder="+358 40 123 4567" autocomplete="tel" aria-label="Phone number">
+            <div class="field-error" id="phone-error"></div>
+          </div>
+        </div>
+
+        <div class="field rise" data-delay="5">
+          <label for="trust_notes">Anything that would put you off this? <span class="opt">(optional)</span></label>
+          <textarea class="textarea" id="trust_notes" name="trust_notes"
+                    placeholder="Pricing, admin effort, trust, past bad experiences — whatever comes to mind"></textarea>
+        </div>
+      </div>
+
+      <!-- Honeypot: hidden from humans, bots tend to fill it. Leave empty. -->
+      <input class="visually-hidden" type="text" id="website" name="website"
+             tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <div class="biz-submit" data-reveal>
+        <button type="submit" class="btn btn--primary btn--lg submit rise">
+          <span class="btn__fill" aria-hidden="true"></span>
+          <span class="btn__label">Send it over</span>
+          <svg class="btn__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <p class="consent rise" data-delay="1">
+          By sending this you agree to our <a href="/privacy-policy/">Privacy Policy</a>.
+          We'll only use it to work out whether to build this.
+        </p>
+        <div class="status" id="form-status"></div>
+      </div>
+    </form>
+
+    <div id="success-view" class="resin biz-success">
+      <div class="min" data-min data-phase="0.6" aria-hidden="true"></div>
+      <h2>Thanks — that's genuinely useful</h2>
+      <p>
+        If we run a pilot near you, we'll be in touch. If you left no contact
+        details, your answers still count — they're what tells us whether this
+        is worth building at all.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer__row">
+    <span>© 2026 Kin</span>
+    <span>
+      <a href="/privacy-policy/">Privacy Policy</a> ·
+      <a href="/">About Kin</a>
+    </span>
+  </div>
+</footer>
+
+<!-- Docked to the bottom of the viewport (see .nav), and last in the source
+     so the page's content comes before it for keyboard and screen readers. -->
+<header class="nav">
+  <a class="nav__brand" href="/" aria-label="Kin">
+    <span class="wordmark--nav" aria-hidden="true">
+      <span class="wordmark__bloom"></span>
+      <span class="wordmark__glass wordmark__glass--shadow"></span>
+      <span class="wordmark__glass"></span>
+      <span class="wordmark__min">
+        <span class="min min--nav" data-min data-phase="3.4"></span>
+      </span>
+    </span>
+  </a>
+  <nav class="nav__right">
+    <a class="nav__link" href="/">About Kin</a>
+    <a class="btn" href="/waitlist/"><span class="btn__fill" aria-hidden="true"></span><span class="btn__label">I'm not a business</span></a>
+  </nav>
+</header>
+
+<script type="module" src="/assets/js/business.js"></script>
+</body>
+</html>
