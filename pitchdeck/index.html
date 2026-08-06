@@ -446,7 +446,18 @@
         <a class="btn btn--quiet btn--lg" href="/"><span class="btn__label">The longer story</span></a>
       </div>
 
-      <span class="close__where rise" data-delay="4">Helsinki · early beta, fall 2026</span>
+      <!-- The same code as /qr/, so a room can join without being handed a
+           link. Hidden on the phone track, where there is no screen left for
+           it and nobody needs to scan the screen they are holding. -->
+      <div class="close__scan rise" data-delay="4">
+        <div class="close__plate">
+          <img src="/assets/img/qr-waitlist.png" alt="QR code linking to the Kin waitlist"
+               width="820" height="820" loading="lazy" decoding="async">
+        </div>
+        <span class="close__scanline">Scan to join · kinapp.social/waitlist</span>
+      </div>
+
+      <span class="close__where rise" data-delay="5">Helsinki · early beta, fall 2026</span>
 
       <!-- YOUR CONTACT LINE GOES HERE, e.g.
            <p class="slot">hello@kinapp.social · @kin.helsinki</p> -->

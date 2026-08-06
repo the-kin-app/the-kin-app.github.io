@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kin — three minutes</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="The three-minute version of the Kin pitch. The source of kin-3-minute.pdf.">
+
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/landing.css">
+<link rel="stylesheet" href="/assets/css/pitchdeck.css">
+<link rel="stylesheet" href="/assets/css/pitchdeck-short.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     THE THREE-MINUTE DECK — the source of kin-3-minute.pdf
+     ──────────────────────────────────────────────────────────
+     Six pages, one hook: "when did you last talk to a stranger?"
+     It is deliberately under-written. The slides carry the images and
+     one line each; everything else is said out loud.
+
+     · Every figure here already exists in /pitchdeck/ — the crowd, the
+       ring, the three beats, the QR. Only .moment (page 3) is new.
+     · Nothing animates: pitchdeck-short.css pins every looping figure
+       to one frame, because a PDF only gets one.
+     · --bg and --ink are set inline per page. On the live deck the
+       script lerps them; here each page is on its own.
+     · To re-export:
+         python3 -m http.server 8000        # from the repo root
+         SH=$(echo ~/Library/Caches/ms-playwright/chromium_headless_shell-*/chrome-mac/headless_shell)
+         "$SH" --headless --disable-gpu --no-pdf-header-footer \
+               --print-to-pdf=pitchdeck/short/kin-3-minute.pdf \
+               --virtual-time-budget=4000 \
+               "http://localhost:8000/pitchdeck/short/"
+     ══════════════════════════════════════════════════════════ -->
+
+<main class="deck">
+
+  <!-- ── 1. the question ──────────────────────────────────────
+       Ask it, then stop talking. The page is nearly empty so the room
+       has somewhere to put the silence. -->
+  <section class="slide short-cover" style="--bg: #1e1b2e; --ink: #f8f2ea">
+    <div class="env" aria-hidden="true">
+      <span class="fog fog--1"></span>
+      <span class="fog fog--2"></span>
+      <span class="fog fog--3"></span>
+    </div>
+
+    <div class="slide__inner">
+      <!-- The static mark, not the live one. The hero wordmark is cast glass:
+           it refracts the fog behind it with a backdrop-filter, and a print
+           has no backdrop to filter — the letters come out grey and muddy.
+           This is the same logo, already resolved. -->
+      <img class="mark" src="/assets/img/kin-logos/kin-logo-glass.svg"
+           alt="kin" width="216" height="136">
+
+      <h1>When did you last talk to a stranger?</h1>
+      <p class="lede">Not a barista. Not a colleague. A stranger.</p>
+      <p class="slot"></p>
+    </div>
+    <span class="pg">1</span>
+  </section>
+
+  <!-- ── 2. the near-miss ─────────────────────────────────────
+       The crowd from the long deck, unchanged. Its four arcs are
+       frozen at the frame where they have almost arrived. -->
+  <section class="slide" style="--bg: #221f39; --ink: #f8f2ea">
+    <div class="env" aria-hidden="true">
+      <span class="fog fog--1"></span>
+      <span class="fog fog--2"></span>
+      <span class="fog fog--3"></span>
+    </div>
+
+    <span class="slide__tag">The near-miss</span>
+    <div class="slide__inner">
+      <h2>The chance is there all day.<br>We're looking at our screens.</h2>
+
+      <!-- The four arcs are the chance: each one starts, gets most of the
+           way to somebody, and stops. They are frozen at that frame — see
+           `.crowd__misses path` in pitchdeck-short.css. -->
+      <div class="crowd" role="img"
+           aria-label="A room full of people, each one lit from below by their own screen. A few connections start between them and stop before they land.">
+        <svg class="crowd__misses" viewBox="0 0 100 56" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M14 20 Q24 10 34 22"/>
+          <path d="M46 16 Q58 6 68 18"/>
+          <path d="M26 42 Q38 34 50 44"/>
+          <path d="M62 38 Q74 30 86 40"/>
+        </svg>
+
+        <span class="blob" style="--x: 13%; --y: 34%"></span>
+        <span class="blob" style="--x: 33%; --y: 40%"></span>
+        <span class="blob" style="--x: 46%; --y: 28%"></span>
+        <span class="blob" style="--x: 68%; --y: 32%"></span>
+        <span class="blob" style="--x: 86%; --y: 25%"></span>
+        <span class="blob" style="--x: 24%; --y: 74%"></span>
+        <span class="blob" style="--x: 51%; --y: 79%"></span>
+        <span class="blob" style="--x: 62%; --y: 66%"></span>
+        <span class="blob" style="--x: 87%; --y: 72%"></span>
+        <span class="blob" style="--x: 8%; --y: 60%"></span>
+      </div>
+
+      <p class="slide__foot">
+        The traveller looking around for help. The person across from you
+        listening to your favourite band. So many openings — and we avoid the
+        awkwardness by going into our phones.
+      </p>
+      <p class="slot"></p>
+    </div>
+    <span class="pg">2</span>
+  </section>
+
+  <!-- ── 3. the feeling ───────────────────────────────────────
+       The whole pitch, emotionally. Two people lit by each other in a
+       field of people who aren't. Say your own version of it here —
+       the neighbour, the pram, the tourist with the map. -->
+  <section class="slide" style="--bg: #3a2e44; --ink: #f8f2ea">
+    <div class="env" aria-hidden="true">
+      <span class="fog fog--1"></span>
+      <span class="fog fog--2"></span>
+      <span class="fog fog--3"></span>
+    </div>
+
+    <span class="slide__tag">The feeling</span>
+    <div class="slide__inner">
+      <h2>And when it does, you carry it all day.</h2>
+
+      <!-- The same room as page 2, on purpose: eight of these ten bodies
+           are in the positions they were a page ago, still cold. Two of
+           them looked up. Move anyone and you break the rhyme. -->
+      <div class="moment" role="img"
+           aria-label="The same room as before. Everyone is still lit by their own screen except two people in the middle, who have looked up and are talking, lit warmly by each other.">
+        <span class="moment__glow" aria-hidden="true"></span>
+
+        <span class="blob" style="--x: 13%; --y: 34%"></span>
+        <span class="blob" style="--x: 68%; --y: 32%"></span>
+        <span class="blob" style="--x: 86%; --y: 25%"></span>
+        <span class="blob" style="--x: 24%; --y: 74%"></span>
+        <span class="blob" style="--x: 62%; --y: 78%"></span>
+        <span class="blob" style="--x: 87%; --y: 72%"></span>
+        <span class="blob" style="--x: 8%;  --y: 60%"></span>
+        <span class="blob" style="--x: 33%; --y: 22%"></span>
+
+        <span class="moment__thread" aria-hidden="true"></span>
+        <span class="blob blob--warm" style="--x: 42%; --y: 50%"></span>
+        <span class="blob blob--warm" style="--x: 58%; --y: 50%"></span>
+      </div>
+
+      <p class="slide__foot">
+        You helped a traveller find their way. You found out your neighbour is
+        a huge football fan too. And the street stops feeling like a sea of
+        strangers.
+      </p>
+      <p class="slot"></p>
+    </div>
+    <span class="pg">3</span>
+  </section>
+
+  <!-- ── 4. what Kin is ───────────────────────────────────────
+       The ring from the long deck, assembled: Min in the middle,
+       everyone joined, everyone's screen off. -->
+  <section class="slide" style="--bg: #5c4a5e; --ink: #f8f2ea">
+    <div class="env" aria-hidden="true">
+      <span class="fog fog--1"></span>
+      <span class="fog fog--2"></span>
+      <span class="fog fog--3"></span>
+    </div>
+
+    <span class="slide__tag">What Kin is</span>
+    <div class="slide__inner">
+      <h2>An introduction. Not a feed.</h2>
+
+      <div class="scene">
+        <div class="scene__stage">
+          <div class="ring" style="--in: 1" role="img"
+               aria-label="Eight people standing in a circle, connected to Min in the middle and to each other.">
+            <svg class="ring__links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <line x1="50.73" y1="35.02" x2="51.66" y2="15.99"/>
+              <line x1="60.43" y1="39.22" x2="75.13" y2="24.03"/>
+              <line x1="65.00" y1="49.63" x2="84.00" y2="49.17"/>
+              <line x1="59.82" y1="61.34" x2="71.42" y2="74.71"/>
+              <line x1="48.23" y1="64.89" x2="45.83" y2="85.05"/>
+              <line x1="38.56" y1="59.70" x2="22.34" y2="73.47"/>
+              <line x1="35.11" y1="48.18" x2="15.95" y2="45.85"/>
+              <line x1="40.30" y1="38.56" x2="26.53" y2="22.34"/>
+            </svg>
+
+            <!-- every screen is off and Min's light is on them instead -->
+            <span class="blob" style="--x: 52%; --y: 9%;  --cold: 0; --warm: 1"></span>
+            <span class="blob" style="--x: 80%; --y: 19%; --cold: 0; --warm: 1"></span>
+            <span class="blob" style="--x: 91%; --y: 49%; --cold: 0; --warm: 1"></span>
+            <span class="blob" style="--x: 76%; --y: 80%; --cold: 0; --warm: 1"></span>
+            <span class="blob" style="--x: 45%; --y: 92%; --cold: 0; --warm: 1"></span>
+            <span class="blob" style="--x: 17%; --y: 78%; --cold: 0; --warm: 1"></span>
+            <span class="blob" style="--x: 9%;  --y: 45%; --cold: 0; --warm: 1"></span>
+            <span class="blob" style="--x: 22%; --y: 17%; --cold: 0; --warm: 1"></span>
+
+            <div class="min min--dawn" data-min data-phase="3.4" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Min is in the picture but not in the words: naming him costs a
+           sentence, and the room doesn't need the character to get the idea. -->
+      <p class="slide__foot">
+        An IRL social app that introduces you to the people and moments already
+        around you — inside the few hundred metres you can actually walk to.
+      </p>
+      <p class="slot"></p>
+    </div>
+    <span class="pg">4</span>
+  </section>
+
+  <!-- ── 5. how it works ──────────────────────────────────────
+       The three beats, unchanged, held still. -->
+  <section class="slide" style="--bg: #d8b3a8; --ink: #21212d">
+    <div class="env" aria-hidden="true">
+      <span class="fog fog--1"></span>
+      <span class="fog fog--3"></span>
+    </div>
+
+    <span class="slide__tag">How it works</span>
+    <div class="slide__inner">
+      <h2>Yes → walk over → hello.</h2>
+
+      <!-- No card headings: the slide's own line already says yes → walk
+           over → hello, and repeating it three times underneath is the
+           same three words twice. One figure, one sentence. -->
+      <div class="beats">
+        <div class="beat resin">
+          <div class="beat__stage" aria-hidden="true">
+            <div class="notif">
+              <span class="min" data-min data-phase="0.7"></span>
+              <span>
+                <b>Someone nearby shoots film too.</b>
+                <i>120 m · leaving in 10 min</i>
+              </span>
+              <span class="notif__yes">Yes</span>
+            </div>
+          </div>
+          <p>One notification, one decision. No feed to check.</p>
+        </div>
+
+        <!-- Beats 2 and 3 are drawn as flat SVG rather than as the live
+             deck's little positioned divs. Those are elliptical border-radii
+             and gradient backgrounds a few pixels across, sitting inside a
+             backdrop-filter layer, and Chrome's PDF backend drops them — the
+             printed page came out with an empty box where the figure was.
+             Vector shapes with flat fills always survive. Beat 1 is the live
+             markup, because it prints correctly as it is. -->
+        <div class="beat resin">
+          <div class="beat__stage" aria-hidden="true">
+            <svg class="fig" viewBox="0 0 160 100" fill="none">
+              <!-- the ground you cover. It stops short of the ring around
+                   them — the arrow and the ring must not touch. -->
+              <path d="M40 50h50" stroke="#F8F2EA" stroke-opacity=".34" stroke-width="2"
+                    stroke-linecap="round" stroke-dasharray="0.5 8"/>
+              <path d="M96 45l5 5-5 5" stroke="#F8F2EA" stroke-opacity=".45" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- you -->
+              <ellipse cx="30" cy="50" rx="9" ry="10" fill="#F1EAF0"/>
+              <!-- them: they already said yes, so they carry the accent -->
+              <circle cx="130" cy="50" r="17" stroke="#E6A6F2" stroke-opacity=".4" stroke-width="1.5"/>
+              <ellipse cx="130" cy="50" rx="9" ry="10" fill="#F1EAF0"/>
+            </svg>
+          </div>
+          <p>They said yes too. That's the whole awkward part, handled.</p>
+        </div>
+
+        <div class="beat resin">
+          <div class="beat__stage" aria-hidden="true">
+            <svg class="fig" viewBox="0 0 160 100" fill="none">
+              <!-- two people, close enough to talk -->
+              <ellipse cx="64" cy="40" rx="10" ry="11" fill="#F1EAF0"/>
+              <ellipse cx="96" cy="40" rx="10" ry="11" fill="#F1EAF0"/>
+              <path d="M77 40h6" stroke="#E6A6F2" stroke-opacity=".9" stroke-width="2"
+                    stroke-linecap="round"/>
+              <!-- the phone, face down on the table, which is the point -->
+              <g transform="rotate(-6 80 74)">
+                <rect x="63" y="66" width="34" height="15" rx="4.5"
+                      fill="#F8F2EA" fill-opacity=".08"
+                      stroke="#F8F2EA" stroke-opacity=".22" stroke-width="1"/>
+              </g>
+              <text x="80" y="95" text-anchor="middle" font-size="7.5" letter-spacing="1.1"
+                    fill="#F8F2EA" fill-opacity=".42">SCREEN OFF</text>
+            </svg>
+          </div>
+          <p>In person, with no screen in between.</p>
+        </div>
+      </div>
+
+      <p class="slot"></p>
+    </div>
+    <span class="pg">5</span>
+  </section>
+
+  <!-- ── 6. come along ────────────────────────────────────────
+       One ask, and a code the room can point a phone at while you're
+       still standing there. -->
+  <section class="slide close" style="--bg: #241f36; --ink: #f8f2ea">
+    <div class="env" aria-hidden="true">
+      <span class="fog fog--1"></span>
+      <span class="fog fog--2"></span>
+      <span class="fog fog--3"></span>
+    </div>
+
+    <span class="slide__tag">Come along</span>
+    <div class="slide__inner">
+      <h2>Come say hi. In person.</h2>
+      <p class="lede">
+        Helsinki first, one neighbourhood at a time. If you're here, you're
+        early enough to shape what your street feels like.
+      </p>
+
+      <div class="close__scan">
+        <div class="close__plate">
+          <img src="/assets/img/qr-waitlist.png" alt="QR code linking to the Kin waitlist"
+               width="820" height="820">
+        </div>
+        <span class="close__scanline">Scan to join · kinapp.social/waitlist</span>
+      </div>
+
+      <span class="close__where">Helsinki · early beta, fall 2026</span>
+
+      <!-- YOUR CONTACT LINE GOES HERE, e.g.
+           <p class="slot">hello@kinapp.social · @kin.helsinki</p> -->
+      <p class="slot"></p>
+    </div>
+    <span class="pg">6</span>
+  </section>
+
+</main>
+
+<!-- Min only. The deck's own script pages and lerps, and there is
+     nothing here to page. -->
+<script type="module">
+  import { minBodies } from '/assets/js/min.js';
+  minBodies();
+</script>
+</body>
+</html>

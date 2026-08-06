@@ -1,0 +1,243 @@
+/* ============================================================
+   Kin — the three-minute deck (print layer)
+   ------------------------------------------------------------
+   Six pages, made of the same resin, Min and blobs as /pitchdeck/.
+   This file loads *after* pitchdeck.css and does three things:
+
+     1. unrolls the swipeable track into a stack of fixed-size pages
+     2. freezes every looping figure on its most legible frame, since
+        a PDF has no second frame to wait for
+     3. adds the one figure this deck has that the long one doesn't:
+        .moment — the thing you remember, two people and a warm link
+
+   Nothing here invents a material. Change the page size in one
+   place: --pw / --ph below.
+   ============================================================ */
+
+:root {
+  /* 16:9 at 96dpi — a projector slide, and it prints fine on A4 landscape */
+  --pw: 1280px;
+  --ph: 720px;
+}
+
+@page { size: 1280px 720px; margin: 0; }
+
+/* ---- the stack ---------------------------------------------
+   pitchdeck.css made the document a horizontal track. Undo exactly
+   that much and nothing else. */
+
+html, body {
+  height: auto;
+  overflow: visible;
+  background: #14121f;
+}
+body::after { display: none; }   /* the grain is a screen optic, not an ink */
+
+.deck {
+  display: block;
+  height: auto;
+  overflow: visible;
+  scroll-snap-type: none;
+}
+
+.slide {
+  position: relative;
+  isolation: isolate;
+  flex: none;
+  width: var(--pw);
+  height: var(--ph);
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 54px 76px 60px;
+  /* each page carries its own light rather than sharing one fixed layer —
+     a position:fixed atmosphere prints on page one only */
+  background: var(--bg);
+  color: var(--ink);
+  break-after: page;
+  page-break-after: always;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+.slide:last-child { break-after: auto; page-break-after: auto; }
+
+/* on screen, so the source page reads as a stack of slides */
+@media screen {
+  body { padding: 40px 0; display: grid; gap: 40px; justify-items: center; }
+  .deck { display: grid; gap: 40px; }
+  .slide { box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.7); border-radius: 8px; }
+}
+
+/* ---- the print viewport is not the screen viewport ---------
+   Chrome lays a print run out narrow enough that pitchdeck.css's phone
+   branch — `@media (max-width: 760px)` — is live, and that branch hides
+   things: the beat captions, the shift copy, and the whole QR block on
+   the last page. You cannot see this in a browser screenshot, because a
+   screenshot is 1280px wide and the query never fires. Anything that
+   branch switches off has to be switched back on here, by name.
+
+   Symptom, if this regresses: a page looks right on screen and prints
+   with a hole in it. Check the phone branch first. */
+.beat p, .shift p { display: block; }
+.close__scan { display: flex; }
+
+/* The derived inks are color-mixed once, at :root, and inherit as finished
+   colours — so a page that sets its own --ink inline has to re-derive them
+   or its quiet text stays the root's cream. (On the live deck the script
+   writes all four.) */
+.slide {
+  --ink-soft:  color-mix(in srgb, var(--ink) 66%, transparent);
+  --ink-faint: color-mix(in srgb, var(--ink) 52%, transparent);
+  --rule:      color-mix(in srgb, var(--ink) 12%, transparent);
+}
+
+/* the atmosphere, per page instead of per window */
+.slide > .env { position: absolute; height: 100%; z-index: 0; }
+/* z-index only — .slide__tag is absolutely positioned and must stay that way */
+.slide__inner, .pg { position: relative; z-index: 1; }
+.slide__tag { z-index: 1; }
+
+.slide__inner {
+  gap: 30px;
+  width: 100%;
+  height: 100%;
+  align-content: center;
+}
+
+/* ---- type, at a fixed page size ----------------------------
+   The live deck sizes itself against svh, which has no meaning in a
+   paged context. Here the page is a known 1280×720, so the type is
+   just numbers. */
+
+.slide h1 { font-size: 62px; line-height: 1.08; max-width: 17ch; }
+.slide h2 { font-size: 44px; line-height: 1.12; max-width: 22ch; }
+.slide h3 { font-size: 20px; }
+.slide .lede { font-size: 19px; max-width: 46ch; }
+.slide__foot { font-size: 16px; line-height: 1.55; max-width: 62ch; }
+.slide__tag { top: 40px; font-size: 11px; }
+.slide .not > b { font-size: 21px; }
+
+/* the page number, quiet, bottom right */
+.pg {
+  position: absolute;
+  right: 40px;
+  bottom: 34px;
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.16em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faint);
+}
+
+/* ---- everything holds still --------------------------------
+   A PDF catches one frame, so every looping figure is pinned to the
+   frame that says the most. The list below mirrors, one for one, the
+   animations in landing.css and pitchdeck.css. */
+
+*, *::before, *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* the emergence cascade, landed */
+.rise { opacity: 1; transform: none; filter: none; }
+.min__eyes { opacity: 1; transform: none; }
+.min__glow { opacity: 0.72; }
+.not > b s::after { transform: scaleX(1); }
+
+/* the intro, on screen */
+.notif { opacity: 1; }
+
+/* the near-miss, frozen at the moment it has almost got there — the 34%
+   frame of `near-miss`, most of the way across and then not */
+.crowd__misses path { opacity: 0.7; stroke-dashoffset: 8; }
+
+/* ---- 3. the moment -----------------------------------------
+   The one figure this deck adds, and it is deliberately page 2 again:
+   same box, same bodies, same cold screens. Two of them have looked up.
+   The rhyme is the argument — nothing about the room changed except
+   which light two people are standing in. */
+
+.moment {
+  position: relative;
+  width: 620px;
+  aspect-ratio: 16 / 9;
+}
+/* still under their own screens, and they recede for it */
+.moment .blob {
+  width: 40px;
+  --cold: 1;
+  --warm: 0;
+  opacity: 0.55;
+}
+/* the two who looked up: nearer, larger, lit by each other */
+.moment .blob--warm {
+  width: 56px;
+  --cold: 0;
+  --warm: 1;
+  opacity: 1;
+}
+/* the link between them — the page's one warm gradient, and unlike the
+   near-misses on page 2 it goes all the way across */
+.moment__thread {
+  position: absolute;
+  left: 42%;
+  right: 42%;
+  top: 50%;
+  height: 1.5px;
+  border-radius: 2px;
+  background: linear-gradient(90deg,
+    transparent,
+    color-mix(in srgb, var(--color-accent-soft) 95%, transparent) 26%,
+    color-mix(in srgb, var(--color-accent-soft) 95%, transparent) 74%,
+    transparent);
+}
+/* the warmth the pair is standing in */
+.moment__glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: 340px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255, 236, 214, 0.26),
+    rgba(216, 190, 226, 0.12) 44%,
+    transparent 70%);
+  filter: blur(26px);
+}
+
+/* ---- borrowed figures, at page scale ----------------------- */
+
+.crowd { width: 620px; }
+.slide .ring { width: 300px; }
+.slide .scene { display: grid; justify-items: center; }
+
+.beats { grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.beat { padding: 22px; gap: 16px; }
+.beat p { font-size: 14.5px; max-width: 26ch; }
+
+/* Beats 2 and 3 were drawn for a figure a third of this size, where a 13px
+   body and a 1px thread are the right weight. Blown up to a printed page
+   they read as dust. Everything here is the same figure, at page scale —
+   the geometry is untouched. */
+.beat__stage { aspect-ratio: 16 / 10; }
+
+/* beats 2 and 3, drawn straight onto the stage */
+.fig { display: block; width: 100%; height: 100%; }
+
+/* the intro sits in the middle of its stage rather than at the top of it —
+   on the live deck it drops in from above and needs the room to fall */
+.notif { top: 50%; translate: 0 -50%; }
+
+/* the ask has to be scannable from the back of a room, so the code is the
+   largest object on its page and the sentence under it is small */
+.close__plate { padding: 14px; border-radius: var(--radius-xl); }
+.close__plate img { width: 268px; }
+.close__scan { margin-top: 0; gap: 10px; }
+.close__scanline { font-size: 14px; }
+
+/* the mark, resolved: a flat asset, because the live one is cast glass and
+   glass needs a backdrop the printer doesn't have */
+.mark { width: 150px; height: auto; display: block; }
+.short-cover h1 { max-width: 15ch; }

@@ -679,12 +679,37 @@ html { scroll-behavior: auto; }   /* the deck animates its own scrolling */
   font-size: var(--text-sm);
   color: var(--ink-faint);
 }
-.close__where::before {
-  content: '';
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 22%, transparent);
+
+/* The QR plate stays literally white and unfiltered — the code has to
+   survive a camera across a room, so it is the one object on the page that
+   is not made of the site's glass. */
+.close__scan {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.close__plate {
+  background: #fff;
+  padding: clamp(8px, 0.9vw, 12px);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 30px -12px rgb(0 0 0 / 0.45);
+  line-height: 0;
+}
+.close__plate img {
+  display: block;
+  width: clamp(96px, min(11vw, 16svh), 168px);
+  height: auto;
+}
+.close__scanline {
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+}
+
+/* No room for it on the vertical track, and no reason for it either. */
+@media (max-width: 760px) {
+  .close__scan { display: none; }
 }
 
 /* ---- the toolbar ------------------------------------------

@@ -8,6 +8,11 @@ repo). No financials, no metrics, no ask — that's the investor deck.
 Read the brand rules in the root `README.md` ("Brand rules it is built to")
 before changing anything visual. They are constraints, not preferences.
 
+`pitchdeck/short/` is the three-minute version: six pages, one hook ("when
+did you last talk to a stranger?"), built from these same figures and
+exported to `kin-3-minute.pdf`. It is a paged document, not a deck — no
+script, nothing moving — and its own file explains how to re-export it.
+
 ## Where things live
 
 | File | What it owns |
