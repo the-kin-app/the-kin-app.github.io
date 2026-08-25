@@ -1,74 +1,110 @@
 /* ============================================================
    Kin — Design Tokens
    ------------------------------------------------------------
-   Single source of truth for the design system. These CSS custom
-   properties are the code counterpart of Figma Variables:
+   The web counterpart of `KinTokens.swift` in kin-app-designs, which
+   itself mirrors the `Kin tokens` Figma collection. Names follow the
+   same paths, with `/` becoming `-`:
 
-     Figma Variable collection  ->  CSS custom property group below
-       Color / bg               ->  --color-bg
-       Radius / md              ->  --radius-md
-       Spacing / 4              ->  --space-4
+     color/ink/primary   ->  --ink-primary
+     resin/pebble        ->  --resin-pebble
+     radius/icon-pebble  ->  --radius-pebble-md
 
-   When the designer exports variables from Figma, update the values
-   here (names should match 1:1). Components reference only these
-   tokens — never hard-coded values — so a re-theme touches this file
-   alone.
+   THE DIRECTION (from MATERIAL.md): frosted optical resin with visible
+   thickness — not glassmorphism. Everything is warm. Violet is the only
+   cool note in the whole system, which is exactly why it reads as the
+   accent; when text drifted cool-purple the violet stopped being special,
+   so the ink was warmed to #23211E and stayed there.
+
+   Status light runs GOLD -> AMBER -> BROWN and deliberately never enters
+   red, so dim ambient lighting can't be mistaken for a fault. There is
+   ONE error red, and ONE shadow ink varied by alpha.
+
+   Components reference only these tokens — a re-theme touches this file.
    ============================================================ */
 
 :root {
-  /* ---- Color ---- */
-  --color-bg:            #efe6df;  /* flat fallback behind the hero photo */
-  --color-surface:       #fbf8f4;  /* cards, raised panels */
-  --color-surface-sunken:transparent; /* inset fields (float on the card via shadow only) */
-  --color-surface-pill:  rgba(255, 255, 255, 0.6); /* active segmented pill */
-  --color-text:          #24222c;
-  --color-muted:         #6f6a7d;
-  --color-muted-strong:  #494949;  /* tagline under the logo */
-  --color-border:        #f3f3f3;
+  /* ---- Ink ----------------------------------------------------
+     WARM. Violet is the only cool note in Kin. */
+  --ink-primary:   #23211E;
+  --ink-secondary: #6D6861;
+  --ink-tertiary:  #938C80;
+  /* Warm brown for icons sitting IN resin — near-black fights the material. */
+  --ink-on-resin:  #5A4536;
+  /* Ink for anything sitting on the dark end of the world. */
+  --ink-inverse:   #FAF7F2;
 
-  --color-accent:        #c15cdb;
-  --color-accent-hover:  #a83fc4;
-  /* Light end of the accent: orchid. Pairs with the magenta so neither has to
-     carry a surface alone — the two together read as lit resin rather than as
-     a flat swatch. */
-  --color-accent-soft:   #e6a6f2;
-  --color-on-accent:     #24222c;  /* text/icons on accent fills (glass pills stay light, so text stays dark) */
+  /* ---- Violet ----
+     Wet, and the emerge hint. One accent, three levels — never a second hue. */
+  --violet:        #C9A8E0;
+  --violet-deep:   #B287CC;
+  --violet-light:  #E4D2F0;
+  /* Text weight. The accent is a LIGHT — at 15px on cream it stops being
+     readable long before it stops being violet, so links and small marks
+     take this and the light levels stay on surfaces. */
+  --violet-ink:    #7A5A94;
 
-  --color-error:         #e0435f;
-  --color-success:       #29a866;
+  /* ---- Status ---- */
+  --status-good:   #E5B04E;  /* gold  */
+  --status-dim:    #D89A50;  /* amber */
+  --status-bad:    #B8804F;  /* brown */
+  --status-error:  #CF564C;  /* the one error red */
+  --status-ok:     #5E9B63;
 
-  /* Brand gradient (accents) */
-  --gradient-brand: linear-gradient(135deg, var(--color-accent), var(--color-accent-soft));
-
-  /* Frosted-glass sheen used on pills (segmented active state, submit button).
-     Toned down from the raw Figma export — full-strength white reads as a
-     glossy plastic highlight once it's on a flat cream surface instead of a
-     blurred photo, so every stop here is roughly half the source opacity. */
-  --gradient-glass:
-    linear-gradient(270deg, rgba(255, 255, 255, 0.35) 4.8556%, rgba(255, 255, 255, 0) 17.515%),
-    linear-gradient(270deg, rgba(255, 255, 255, 0) 90.115%, rgba(255, 255, 255, 0.25) 101.92%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0) 44.418%, rgba(255, 255, 255, 0.05) 115.25%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.4) 26.411%, rgba(255, 255, 255, 0) 44.418%),
-    linear-gradient(90deg, rgba(242, 238, 231, 0.4) 0%, rgba(242, 238, 231, 0.4) 100%);
-
-  /* Page background: soft gradient fallback for pages without the hero photo */
-  --gradient-page-bg: linear-gradient(160deg, #f4e9df 0%, #ede2e4 45%, #e9e6ec 100%);
-
-  /* ---- Brand environments (Figma: Onboarding BG gradient variants) ----
-     Dark mode is the same material language under different lighting — a warm
-     plum dusk, never a black void. */
-  --color-dusk-top:    #1e1b2e;
-  --color-dusk-bottom: #3a2e44;
-  --color-warm-top:    #f8e4d2;  /* warm gradient — apricot light */
-  --color-warm-bottom: #e9ae9e;
-  --color-pearl:       #fcfcfc;
-  --color-limestone:   #f2eee7;
-
-  /* ---- Optical resin ----
+  /* ---- Resin surfaces ----
      Kin's signature material: translucent (not transparent), thick edges,
-     soft matte finish, subtle internal diffusion. This is the Figma CARD
-     recipe at full strength — `--gradient-glass` above is the toned-down
-     variant used for small pills on flat cream. */
+     soft matte finish, subtle internal diffusion. */
+  --resin-light:   #FAF7F2;
+  --resin-base:    #F2EEE7;
+  --resin-pebble:  #FEFCF9;
+  --resin-warm:    #FAF6F0;
+  --resin-glass:   #FAF5EA;
+  --resin-milk:    #FAFAFA;
+  /* The dark end of a thickness gradient — also the deepest warm surface
+     the site ever sits on. */
+  --resin-volume:  #6B5C4D;
+
+  /* ---- World ----
+     One warm place, lit from the shore. The site scrolls from the back of
+     the cave out into it; these are its stops, darkest to brightest. */
+  --world-cave:    #2A2320;
+  --world-floor-d: #463A31;
+  --world-sand:    #D6C5AC;
+  --world-grad4:   #CBC1B0;
+  --world-grad3:   #DFD7C9;
+  --world-haze:    #DED6CB;
+  --world-grad2:   #E3DBD0;
+  --world-grad1:   #F0EBE2;
+  --world-floor:   #8F8578;
+  --world-speckle: #1A1714;
+  /* The active page dot's bloom — the warmest light in the system. */
+  --world-halo:    #FFF2D4;
+
+  /* ---- Shadow ----
+     ONE ink, varied by alpha. Never a second shadow colour. */
+  --shadow-ink:    15, 13, 20;                 /* #0F0D14, as channels */
+  --shadow-contact: 0 2px 3px  rgba(15, 13, 20, 0.18);
+  --shadow-lift:    0 8px 16px -6px rgba(15, 13, 20, 0.22);
+  --shadow-card:    0 20px 45px -16px rgba(15, 13, 20, 0.16);
+  --shadow-media:   0 30px 80px -30px rgba(15, 13, 20, 0.42);
+
+  /* ---- Material alphas ----
+     NOT colours — opacities. Kin's surfaces are white at varying alpha over
+     a warm world, so forcing these into a colour system would produce
+     colour tokens that actually describe transparency. */
+  --alpha-btn-rest:      0.65;
+  --alpha-btn-rest-2:    0.22;
+  --alpha-btn-press:     0.14;
+  --alpha-btn-press-2:   0.10;
+  --alpha-rim:           0.70;
+  --alpha-rim-2:         0.55;
+  --alpha-pebble-top:    0.92;
+  --alpha-pebble-bottom: 0.38;
+  --alpha-edge-glow:     0.42;
+
+  /* ---- Composed materials -------------------------------------
+     The card recipe at full strength. A translucent solid is brightest
+     where light travels furthest through it, i.e. the edges — that radial
+     edge-glow is what actually reads as translucency, not the blur. */
   --gradient-resin:
     linear-gradient(270deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0) 59.949%),
     linear-gradient(270deg, rgba(255, 255, 255, 0) 50.959%, rgba(255, 255, 255, 0.4) 101.92%),
@@ -77,9 +113,19 @@
     linear-gradient(90deg, rgba(242, 238, 231, 0.5) 0%, rgba(242, 238, 231, 0.5) 100%);
   --blur-resin: 12.5px;
 
-  /* Thick-edge lighting. Cast resin has a lit top edge, a dimmer bottom edge
-     and an internal bloom — these three inset shadows are what separate a
-     physical object from a flat translucent sheet. */
+  /* The same recipe at roughly half strength, for small pills on flat cream
+     — full-strength white there reads as glossy plastic, not resin. */
+  --gradient-glass:
+    linear-gradient(270deg, rgba(255, 255, 255, 0.35) 4.8556%, rgba(255, 255, 255, 0) 17.515%),
+    linear-gradient(270deg, rgba(255, 255, 255, 0) 90.115%, rgba(255, 255, 255, 0.25) 101.92%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0) 44.418%, rgba(255, 255, 255, 0.05) 115.25%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.4) 26.411%, rgba(255, 255, 255, 0) 44.418%),
+    linear-gradient(90deg, rgba(242, 238, 231, 0.4) 0%, rgba(242, 238, 231, 0.4) 100%);
+
+  /* Thick-edge lighting: a lit top edge, a dimmer bottom edge, an internal
+     bloom. These three are what separate a physical object from a flat
+     translucent sheet, and they are drawn separately from the material so
+     the depth survives when transparency is turned off. */
   --edge-resin:
     inset 0 1.5px 0 rgba(255, 255, 255, 0.92),
     inset 0 -1px 0 rgba(255, 255, 255, 0.4),
@@ -87,26 +133,24 @@
     inset -1px 0 0 rgba(255, 255, 255, 0.3);
   --bloom-resin: inset 0 0 22px 8px rgba(255, 255, 255, 0.55);
 
-  /* The interactive fill: orchid into magenta, mixed live under the cursor. */
+  /* The interactive fill: violet mixed live under the cursor. */
   --gradient-interactive:
     radial-gradient(80% 130% at var(--mx, 50%) var(--my, 50%),
-      rgba(230, 166, 242, 0.85) 0%,
-      rgba(214, 122, 224, 0.7) 42%,
-      rgba(193, 92, 219, 0.55) 100%);
+      rgba(228, 210, 240, 0.85) 0%,
+      rgba(201, 168, 224, 0.7) 42%,
+      rgba(178, 135, 204, 0.55) 100%);
 
-  /* ---- Shadow ---- */
-  --shadow-resin:       0px 3px 25px rgba(0, 0, 0, 0.32);
-  --shadow-resin-inner: inset 0px 0px 12px 5px var(--color-pearl);
+  /* Brand gradient (accents) */
+  --gradient-brand: linear-gradient(135deg, var(--violet-deep), var(--violet-light));
 
-  --shadow-card:            0px 20px 45px rgba(43, 26, 46, 0.16);
-  --shadow-pill:             0px 4px 22px rgba(0, 0, 0, 0.12);
-  --shadow-accent-glow:      0px 0px 22px 4px rgba(193, 92, 219, 0.2);
-  --shadow-inset-highlight:  inset 0.7px 0.7px 0.5px rgba(255, 255, 255, 0.25);
+  /* Page ground for anything without the world behind it. */
+  --gradient-page-bg: linear-gradient(160deg,
+    var(--world-grad1) 0%, var(--world-grad2) 45%, var(--world-grad3) 100%);
 
   /* ---- Typography ---- */
-  --font-sans: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  /* The Figma comps are set in SF Pro Rounded. Apple platforms have it (and
+  /* The comps are set in SF Pro Rounded. Apple platforms have it (and
      `ui-rounded` resolves to it); Nunito is the closest web fallback. */
+  --font-sans: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-rounded: 'SF Pro Rounded', ui-rounded, 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
   --text-xs:   12px;
@@ -139,37 +183,83 @@
   --space-11: 44px;
   --space-12: 48px;
 
-  /* ---- Radius ---- */
+  /* ---- Radius ----
+     The app's card is 82 on 340 wide — roughly a quarter of the width, and
+     that ratio is the look. Corner smoothing is 0.70 in Figma and has no
+     web equivalent; CSS corners are the same ≈0.60 circular arc SwiftUI's
+     `.continuous` gives, so this is a known, accepted delta. */
   --radius-sm: 7px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 22px;
-  --radius-2xl: 32px; /* card corners */
-  --radius-pebble: 48px; /* large resin cards — the Figma CARD is 82px on 312px wide */
-  --radius-resin: 82px;
+  --radius-md: 14px;   /* icon pebble sm */
+  --radius-lg: 16px;   /* icon pebble md */
+  --radius-xl: 20px;   /* value row */
+  --radius-2xl: 26px;  /* info pebble */
+  --radius-pebble: 48px;
+  --radius-resin: 82px; /* the card */
+  --radius-pill: 999px;
 
   /* ---- Layout ---- */
   --container-narrow: 420px;  /* form/card column */
   --container-prose: 720px;   /* long-form text (privacy policy) */
 
-  /* ---- Motion ---- */
+  /* ---- Motion ----
+     Durations only. A bezier is not a token, but the two curves below are
+     the whole feel, so they live here rather than in prose: objects
+     accelerate gently, settle naturally, and never snap. */
   --transition-fast: 0.15s ease;
   --transition-press: 0.05s ease;
 
-  /* Timing scale from the Figma motion-principles board (Motion / Timing) */
   --duration-instant:   120ms;
   --duration-quick:     220ms;
   --duration-standard:  450ms;
   --duration-hero:      800ms;
 
-  /* "Physical weight" — objects accelerate gently, settle naturally,
-     never snap into place. */
-  --ease-emergence: cubic-bezier(0.16, 1, 0.3, 1);   /* material emergence: condense, never snap */
-  --ease-drop:      cubic-bezier(0.22, 1, 0.36, 1);  /* drop: gentle decelerate into a soft landing */
+  --ease-emergence: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-drop:      cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* Reveal recipe from the Figma splash handoff notes: "like a ball rising to
-     the surface — magnified + blurred underwater, clarifying as it settles."
+  /* Reveal recipe: "like a ball rising to the surface — magnified + blurred
+     underwater, clarifying as it settles."
      opacity 0→1 · scale 1.06→1 · y +8→0 · blur 5→0, one after another. */
   --duration-emergence: 550ms;
   --stagger-cascade:    180ms;
+
+  /* ============================================================
+     Compatibility layer
+     ------------------------------------------------------------
+     The old magenta/orchid names, pointed at the new warm system so
+     existing pages re-theme without a rename pass. New work should use
+     the tokens above; these are here to be deleted once nothing calls
+     them, not to be extended.
+     ============================================================ */
+  --color-bg:             var(--world-grad2);
+  --color-surface:        var(--resin-light);
+  --color-surface-sunken: transparent;
+  --color-surface-pill:   rgba(255, 255, 255, 0.6);
+  --color-text:           var(--ink-primary);
+  --color-muted:          var(--ink-secondary);
+  --color-muted-strong:   #4A453D;
+  --color-border:         #EAE4DA;
+
+  --color-accent:       var(--violet);
+  --color-accent-hover: var(--violet-deep);
+  --color-accent-ink:   var(--violet-ink);
+  --color-accent-soft:  var(--violet-light);
+  --color-on-accent:    var(--ink-primary);
+
+  --color-error:   var(--status-error);
+  --color-success: var(--status-ok);
+
+  /* The two ends of the world, as the pages still name them. "Dusk" is now
+     the back of the cave — warm and dim, never a cool void. */
+  --color-dusk-top:    var(--world-cave);
+  --color-dusk-bottom: var(--world-floor-d);
+  --color-warm-top:    var(--world-grad1);
+  --color-warm-bottom: var(--world-sand);
+  --color-pearl:       var(--resin-pebble);
+  --color-limestone:   var(--resin-base);
+
+  --shadow-resin:       0px 3px 25px rgba(15, 13, 20, 0.32);
+  --shadow-resin-inner: inset 0px 0px 12px 5px var(--resin-pebble);
+  --shadow-pill:            0px 4px 22px rgba(15, 13, 20, 0.12);
+  --shadow-accent-glow:     0px 0px 22px 4px rgba(201, 168, 224, 0.28);
+  --shadow-inset-highlight: inset 0.7px 0.7px 0.5px rgba(255, 255, 255, 0.25);
 }

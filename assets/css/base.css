@@ -18,13 +18,18 @@ body {
   line-height: var(--leading-normal);
 }
 
-/* Hero pages (homepage, waitlist) sit on the blurred photo backdrop.
-   (The photo alone — layering it under the opaque page gradient would
-   just hide it, since that gradient has no transparency of its own.) */
+/* Hero pages (waitlist, qr) sit on the world — the same warm ground the app
+   draws behind everything: cave shade on the left, light off the shore on
+   the right, bokeh between. Composited from the app's `kin-bg-far` +
+   `kin-bg-near` plates over world/grad1.
+
+   It is anchored right-of-centre so the lit half sits behind the content;
+   the shaded cave end is only ever a crop. Nothing near the edges matters,
+   which is exactly why this layer can be treated as a picture. */
 body.bg-photo {
-  background-image: url("/assets/img/bg-waitlist.jpg");
+  background-image: url("/assets/img/bg-world.jpg");
   background-size: cover;
-  background-position: center top;
+  background-position: 72% center;
   background-repeat: no-repeat;
   background-attachment: scroll;
 }
@@ -45,8 +50,8 @@ body.page {
   padding: var(--space-12) var(--space-6) 80px;
 }
 
-a { color: var(--color-accent); }
-a:hover { color: var(--color-accent-hover); }
+a { color: var(--violet-ink); }
+a:hover { color: var(--ink-primary); }
 
 img { max-width: 100%; display: block; }
 

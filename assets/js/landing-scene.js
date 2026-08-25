@@ -32,10 +32,10 @@ const FOG_NEAR = 30;
 const FOG_FAR = 108;
 
 /* Lit resin under two lighting conditions. Nothing saturated, nothing neon. */
-const COLD = new THREE.Color('#a99fc0');   // dusk — cool, a little lonely
-const WARM = new THREE.Color('#f6dcd8');   // warm light through fog
-const PEARL = new THREE.Color('#fbf6ef');
-const ACCENT = new THREE.Color('#c15cdb'); // sparingly, and only on a meeting
+const COLD = new THREE.Color('#A39EA3');   // screen light — the one cool note, and a lonely one
+const WARM = new THREE.Color('#F5E7CF');   // warm light through fog
+const PEARL = new THREE.Color('#FEFCF9');
+const ACCENT = new THREE.Color('#C9A8E0'); // sparingly, and only on a meeting
 
 /* ---- scene -------------------------------------------------- */
 
@@ -62,7 +62,7 @@ export async function createScene(canvas) {
   const fog = {
     uFogNear: { value: FOG_NEAR },
     uFogFar: { value: FOG_FAR },
-    uFogColor: { value: new THREE.Color('#3a2e44') },
+    uFogColor: { value: new THREE.Color('#463A31') },
   };
 
   const FOG_CHUNK = /* glsl */ `
@@ -284,8 +284,8 @@ export async function createScene(canvas) {
 
   const c = new THREE.Color();
   const c2 = new THREE.Color();
-  const fogDusk = new THREE.Color('#3a2e44');
-  const fogWarm = new THREE.Color('#e9ae9e');
+  const fogDusk = new THREE.Color('#463A31');
+  const fogWarm = new THREE.Color('#D6C5AC');
   const clock = new THREE.Clock();
   let prevT = 0;
   let frame = 0;
@@ -402,7 +402,7 @@ export async function createScene(canvas) {
       c.copy(COLD).lerp(WARM, w);
       c.lerp(PEARL, (1 - defocus) * 0.4);
       // the accent marks a moment, never decoration: only a pair that has
-      // actually found each other picks up any magenta at all
+      // actually found each other picks up any violet at all
       if (near[i] > 0.6) c.lerp(ACCENT, (near[i] - 0.6) * 0.32);
 
       col[i3 + 0] = c.r;

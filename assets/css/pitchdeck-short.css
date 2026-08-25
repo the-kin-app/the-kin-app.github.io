@@ -29,7 +29,7 @@
 html, body {
   height: auto;
   overflow: visible;
-  background: #14121f;
+  background: #181512;
 }
 body::after { display: none; }   /* the grain is a screen optic, not an ink */
 
@@ -64,7 +64,7 @@ body::after { display: none; }   /* the grain is a screen optic, not an ink */
 @media screen {
   body { padding: 40px 0; display: grid; gap: 40px; justify-items: center; }
   .deck { display: grid; gap: 40px; }
-  .slide { box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.7); border-radius: 8px; }
+  .slide { box-shadow: 0 30px 80px -30px rgba(15, 13, 20, 0.7); border-radius: 8px; }
 }
 
 /* ---- the print viewport is not the screen viewport ---------
@@ -201,8 +201,8 @@ body::after { display: none; }   /* the grain is a screen optic, not an ink */
   aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(circle,
-    rgba(255, 236, 214, 0.26),
-    rgba(216, 190, 226, 0.12) 44%,
+    rgba(255, 242, 212, 0.26),
+    rgba(201, 168, 224, 0.12) 44%,
     transparent 70%);
   filter: blur(26px);
 }

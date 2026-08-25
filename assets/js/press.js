@@ -14,7 +14,7 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export function buttons(root = document) {
   for (const btn of root.querySelectorAll('.btn')) {
-    // the interactive orchid↔magenta fill tracks the cursor
+    // the interactive violet fill tracks the cursor
     btn.addEventListener('pointermove', (e) => {
       const r = btn.getBoundingClientRect();
       btn.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);

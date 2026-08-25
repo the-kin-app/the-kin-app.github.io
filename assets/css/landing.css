@@ -8,10 +8,11 @@
 
    Every surface is the same optical resin, lit differently — thick
    translucent objects with lit edges and internal bloom, not sheets of
-   colour. Dark mode is the same identity under dusk light.
+   colour. The dark half of the scroll is the same identity, lit from
+   deeper in the cave.
 
-   The accent is used sparingly and never alone: magenta always arrives
-   paired with orchid, mixed live under the cursor.
+   The accent is used sparingly and never alone: the violet always arrives
+   as a pair — pale into deep — mixed live under the cursor.
 
    --bg and --ink are lerped by landing.js as you scroll.
    ============================================================ */
@@ -24,12 +25,12 @@
 @property --ink {
   syntax: '<color>';
   inherits: true;
-  initial-value: #f8f2ea;
+  initial-value: #FAF7F2;
 }
 
 :root {
-  --bg:  #1e1b2e;
-  --ink: #f8f2ea;
+  --bg:  #2A2320;
+  --ink: #FAF7F2;
   transition: --ink 240ms ease;
 
   --ink-soft:  color-mix(in srgb, var(--ink) 66%, transparent);
@@ -112,8 +113,8 @@ canvas#scene {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(125% 72% at 50% 118%, rgba(233, 174, 158, 0.4), transparent 70%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.07) 0%, transparent 32%);
+    radial-gradient(125% 72% at 50% 118%, rgba(214, 197, 172, 0.4), transparent 70%),
+    linear-gradient(180deg, rgba(15, 13, 20, 0.07) 0%, transparent 32%);
 }
 
 /* Fog banks: very large, very soft, very slow. They read as depth rather
@@ -128,19 +129,19 @@ canvas#scene {
 .fog--1 {
   width: 62vw; height: 42vw;
   left: -14vw; top: 8vh;
-  background: radial-gradient(circle, rgba(233, 174, 158, 0.24), transparent 68%);
+  background: radial-gradient(circle, rgba(214, 197, 172, 0.24), transparent 68%);
   animation: fog-drift-1 68s ease-in-out infinite;
 }
 .fog--2 {
   width: 54vw; height: 38vw;
   right: -12vw; top: 34vh;
-  background: radial-gradient(circle, rgba(216, 190, 226, 0.2), transparent 68%);
+  background: radial-gradient(circle, rgba(201, 168, 224, 0.2), transparent 68%);
   animation: fog-drift-2 84s ease-in-out infinite;
 }
 .fog--3 {
   width: 76vw; height: 40vw;
   left: 12vw; bottom: -14vh;
-  background: radial-gradient(circle, rgba(255, 236, 214, 0.18), transparent 70%);
+  background: radial-gradient(circle, rgba(255, 242, 212, 0.18), transparent 70%);
   animation: fog-drift-3 96s ease-in-out infinite;
 }
 @keyframes fog-drift-1 {
@@ -254,9 +255,9 @@ p { margin: 0; }
    how the Figma dark-gradient onboarding card behaves. */
 
 .resin {
-  --ink: #21212d;
-  --ink-soft: #55505f;
-  --ink-faint: #7d7889;
+  --ink: #23211E;
+  --ink-soft: #6D6861;
+  --ink-faint: #938C80;
   position: relative;
   isolation: isolate;
   color: var(--ink);
@@ -268,7 +269,7 @@ p { margin: 0; }
      and a positive one would paint it over the text. */
   background:
     radial-gradient(120% 80% at 18% -12%, rgba(255, 255, 255, 0.6), transparent 58%),
-    radial-gradient(70% 50% at 88% 108%, rgba(233, 174, 158, 0.2), transparent 62%),
+    radial-gradient(70% 50% at 88% 108%, rgba(214, 197, 172, 0.2), transparent 62%),
     linear-gradient(168deg,
       rgba(255, 255, 255, 0.5) 0%,
       rgba(255, 255, 255, 0.24) 32%,
@@ -278,12 +279,12 @@ p { margin: 0; }
   box-shadow:
     var(--edge-resin),
     var(--bloom-resin),
-    0 2px 3px rgba(43, 26, 46, 0.1),
-    0 30px 60px -24px rgba(43, 26, 46, 0.45);
+    0 2px 3px rgba(15, 13, 20, 0.1),
+    0 30px 60px -24px rgba(15, 13, 20, 0.45);
 }
 
 /* ---- buttons ----------------------------------------------
-   A pressable physical object. Idle: resin with orchid and magenta
+   A pressable physical object. Idle: resin with the violet pair
    mixing under the cursor. Pressed: it submerges — sinks, goes clear,
    leaves only text and a thin wet edge, and ripples. Released: it
    surfaces and the accent takes over to say it's active. */
@@ -304,9 +305,9 @@ p { margin: 0; }
   box-shadow:
     var(--edge-resin),
     inset 0 0 18px 6px rgba(255, 255, 255, 0.4),
-    0 2px 2px rgba(43, 26, 46, 0.1),
-    0 14px 26px -10px rgba(43, 26, 46, 0.42);
-  color: #21212d;
+    0 2px 2px rgba(15, 13, 20, 0.1),
+    0 14px 26px -10px rgba(15, 13, 20, 0.42);
+  color: #23211E;
   font-family: inherit;
   font-size: var(--text-base);
   font-weight: var(--font-weight-semibold);
@@ -323,7 +324,7 @@ p { margin: 0; }
     color 260ms ease;
 }
 
-/* The interactive fill — orchid into magenta, following the cursor. It has
+/* The interactive fill — pale violet into deep, following the cursor. It has
    to sit *above* the button's own background (z-index 0, not -1) or the resin
    wash hides it; the label is then lifted above the fill. */
 .btn__fill {
@@ -339,7 +340,7 @@ p { margin: 0; }
 .btn:hover .btn__fill { opacity: 0.45; }
 
 /* The primary carries a little of the light at rest, so it reads as the main
-   action without becoming a slab of magenta. */
+   action without becoming a slab of violet. */
 .btn--primary .btn__fill { opacity: 0.34; }
 .btn--primary:hover .btn__fill { opacity: 0.62; }
 
@@ -351,8 +352,8 @@ p { margin: 0; }
   box-shadow:
     var(--edge-resin),
     inset 0 0 22px 8px rgba(255, 255, 255, 0.45),
-    0 3px 3px rgba(43, 26, 46, 0.1),
-    0 20px 34px -12px rgba(43, 26, 46, 0.46);
+    0 3px 3px rgba(15, 13, 20, 0.1),
+    0 20px 34px -12px rgba(15, 13, 20, 0.46);
 }
 
 /* — submerged: under the surface, wet and nearly clear — */
@@ -365,9 +366,9 @@ p { margin: 0; }
   border-color: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(3px) saturate(120%) brightness(0.98);
   box-shadow:
-    inset 0 2px 10px rgba(43, 26, 46, 0.28),
+    inset 0 2px 10px rgba(15, 13, 20, 0.28),
     inset 0 -1px 0 rgba(255, 255, 255, 0.5),
-    0 0 0 rgba(0, 0, 0, 0);
+    0 0 0 rgba(15, 13, 20, 0);
   transition-duration: 150ms;
 }
 .btn.is-submerged .btn__fill { opacity: 0.06; }
@@ -379,14 +380,14 @@ p { margin: 0; }
 }
 .btn.is-active .btn__fill {
   opacity: 1;
-  /* Palest orchid at the point of contact, easing out into the accent. Kept
+  /* Palest violet at the point of contact, easing out into the accent. Kept
      light enough through the middle that the graphite label still clears
      contrast. */
   background:
     radial-gradient(110% 165% at var(--mx, 50%) var(--my, 50%),
-      #f9e2fb 0%,
+      #F3EAF9 0%,
       var(--color-accent-soft) 34%,
-      #d987dd 72%,
+      #BE96D6 72%,
       var(--color-accent) 100%);
 }
 
@@ -427,7 +428,7 @@ p { margin: 0; }
    On screen at every scroll position, including both palette crossovers, so
    it opts out of the ramp: its own material, its own fixed ink. Brightness
    on the backdrop filter is what lets it stay genuinely translucent and
-   still hold dark text over the dusk half.
+   still hold dark text over the cave half.
 
    Docked to the bottom rather than the top: the waitlist CTA is the only
    thing in it that matters, and down there it lands under the thumb. */
@@ -447,21 +448,21 @@ p { margin: 0; }
   border-radius: 999px;
   isolation: isolate;
 
-  --ink: #21212d;
-  --ink-soft: #55505f;
-  --rule: rgba(33, 33, 45, 0.12);
+  --ink: #23211E;
+  --ink-soft: #6D6861;
+  --rule: rgba(35, 33, 30, 0.12);
   color: var(--ink);
   border: 1px solid rgba(255, 255, 255, 0.55);
   background:
     radial-gradient(120% 140% at 12% -30%, rgba(255, 255, 255, 0.7), transparent 62%),
-    radial-gradient(60% 120% at 92% 130%, rgba(233, 174, 158, 0.18), transparent 60%),
+    radial-gradient(60% 120% at 92% 130%, rgba(214, 197, 172, 0.18), transparent 60%),
     linear-gradient(168deg, rgba(255, 255, 255, 0.42), rgba(242, 238, 231, 0.2));
   backdrop-filter: blur(30px) saturate(170%) brightness(1.55);
   box-shadow:
     var(--edge-resin),
     inset 0 0 24px 8px rgba(255, 255, 255, 0.36),
-    0 2px 3px rgba(43, 26, 46, 0.12),
-    0 22px 44px -16px rgba(43, 26, 46, 0.5);
+    0 2px 3px rgba(15, 13, 20, 0.12),
+    0 22px 44px -16px rgba(15, 13, 20, 0.5);
 }
 /* The hero is its own screen and carries its own full-width CTA, so the dock
    has nothing to add while you're still on it: it waits below the fold and
@@ -504,15 +505,15 @@ p { margin: 0; }
 .nav__right .btn {
   padding: 11px 20px;
   font-size: var(--text-sm);
-  background: rgba(33, 33, 45, 0.05);
-  border-color: rgba(33, 33, 45, 0.1);
+  background: rgba(35, 33, 30, 0.05);
+  border-color: rgba(35, 33, 30, 0.1);
   backdrop-filter: none;
-  box-shadow: inset 0 1px 2px rgba(43, 26, 46, 0.08);
+  box-shadow: inset 0 1px 2px rgba(15, 13, 20, 0.08);
 }
 .nav__right .btn:hover {
   transform: none;
-  background: rgba(33, 33, 45, 0.09);
-  box-shadow: inset 0 1px 3px rgba(43, 26, 46, 0.12);
+  background: rgba(35, 33, 30, 0.09);
+  box-shadow: inset 0 1px 3px rgba(15, 13, 20, 0.12);
 }
 
 .nav__link {
@@ -526,7 +527,7 @@ p { margin: 0; }
 
 /* ---- the wordmark, and Min inside it -----------------------
    Min is the dot of the lowercase i. He only detaches later, so the visitor
-   feels they discovered him. He is only magenta in the small flat mark —
+   feels they discovered him. He carries the accent only in the small flat mark —
    at hero size he is the same pearl resin as everything else. */
 
 .wordmark--hero {
@@ -562,7 +563,7 @@ p { margin: 0; }
 /* the cast edge: lifts the letterforms off the fog behind them */
 .wordmark__glass--shadow {
   z-index: -1;
-  background: rgba(24, 16, 30, 0.45);
+  background: rgba(15, 13, 20, 0.45);
   backdrop-filter: none;
   translate: 0 3px;
   filter: blur(7px);
@@ -572,7 +573,7 @@ p { margin: 0; }
   position: absolute;
   inset: -12%;
   pointer-events: none;
-  background: radial-gradient(50% 50% at 50% 55%, rgba(255, 236, 214, 0.22), transparent 68%);
+  background: radial-gradient(50% 50% at 50% 55%, rgba(255, 242, 212, 0.22), transparent 68%);
   filter: blur(22px);
   opacity: 0;
   animation: surface 900ms var(--ease-emergence) 500ms forwards;
@@ -607,7 +608,7 @@ p { margin: 0; }
   backdrop-filter: blur(4px) saturate(150%) brightness(0.7);
 }
 .wordmark--nav .wordmark__glass--shadow {
-  background: rgba(24, 16, 30, 0.38);
+  background: rgba(15, 13, 20, 0.38);
   backdrop-filter: none;
   translate: 0 1px;
   filter: blur(1.5px);
@@ -618,7 +619,7 @@ p { margin: 0; }
   inset: -18%;
   opacity: 1;
   filter: blur(6px);
-  background: radial-gradient(50% 50% at 50% 55%, rgba(255, 236, 214, 0.3), transparent 68%);
+  background: radial-gradient(50% 50% at 50% 55%, rgba(255, 242, 212, 0.3), transparent 68%);
   animation: breathe 5s ease-in-out infinite;
 }
 .wordmark--nav .wordmark__min {
@@ -649,14 +650,15 @@ p { margin: 0; }
 }
 
 /* Min sits exactly where the i-dot is: centre 49.62% / 13.70% of the 216×136
-   box. The flat dot is 17.2% of the width, but Min's body only fills ~64% of
-   his own square, so the square has to be larger to land at the same size —
-   and he gets a little extra, because he's a character, not punctuation. */
+   box. The flat dot is 17.2% of the width, but Min's body only fills ~60% of
+   his own square — and his ears reach past that again — so the square has to
+   be larger to land at the same size. He gets a little extra beyond that,
+   because he's a character, not punctuation. */
 .wordmark__min {
   position: absolute;
   left: 49.62%;
   top: 13.70%;
-  width: 30%;
+  width: 27%;
   aspect-ratio: 1;
   translate: -50% -50%;
   opacity: 0;
@@ -664,9 +666,11 @@ p { margin: 0; }
 }
 
 /* ---- Min ---------------------------------------------------
-   A rounded resin pebble with luminescent eyes. The body morphs on an exact
-   5s loop (landing.js writes the path); the eyes carry a slow looping glow.
-   No blink. */
+   A small creature cast in warm opal resin and lit from the inside: a dome
+   body, two ear flaps hanging down his sides, two foot nubs, two hot eyes.
+   min.js writes his outline every frame — body, ears and a volume-conserving
+   settle — so everything here is the light around him, never his shape.
+   He does not blink. */
 
 .min {
   position: relative;
@@ -696,7 +700,7 @@ p { margin: 0; }
   position: absolute;
   inset: -44%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 236, 214, 0.3), rgba(216, 190, 226, 0.14) 46%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 226, 170, 0.34), rgba(255, 240, 214, 0.12) 46%, transparent 70%);
   filter: blur(20px);
   animation: breathe 5s ease-in-out infinite;
 }
@@ -869,7 +873,7 @@ p { margin: 0; }
   border-radius: 46% 46% 52% 52% / 48% 48% 54% 54%;
   /* Mixed from --ink, not from white: the scene ends in daylight, and --ink
      is a registered property, so these bodies crossfade from pale glass on
-     the plum floor to smoked glass on the apricot without a second rule. */
+     the cave floor to smoked glass in the daylight without a second rule. */
   border: 1px solid color-mix(in srgb, var(--ink) 26%, transparent);
   background: linear-gradient(172deg,
     color-mix(in srgb, var(--ink) 17%, transparent),
@@ -886,10 +890,12 @@ p { margin: 0; }
   border-radius: inherit;
   pointer-events: none;
 }
-/* the cold light of a screen, held under the face */
+/* the cold light of a screen, held under the face. Desaturated on purpose:
+   in the warm world a true blue reads as a lamp rather than as light, and
+   "nothing saturated, nothing neon" is a brand rule, not a preference. */
 .blob::after {
   background: radial-gradient(50% 34% at 50% 78%,
-    rgba(126, 184, 232, 0.95), rgba(126, 184, 232, 0) 70%);
+    rgba(150, 178, 205, 0.78), rgba(150, 178, 205, 0) 70%);
   opacity: var(--cold, 1);
 }
 /* Min's light, falling on them from the middle — his own violet, so it still
@@ -915,8 +921,8 @@ p { margin: 0; }
   overflow: visible;
 }
 .ring__links line {
-  /* the ink, tinted toward the accent — a pale pink line on the plum floor
-     and a deep plum one once the sun is up, without ever changing rule */
+  /* the ink, tinted toward the accent — a pale violet line on the cave floor
+     and a deep warm one once the sun is up, without ever changing rule */
   stroke: color-mix(in srgb, var(--ink) 58%, var(--color-accent));
   stroke-width: 0.38;
   stroke-linecap: round;
@@ -1015,7 +1021,7 @@ p { margin: 0; }
 }
 .split--flip { margin-top: clamp(var(--space-9), 6vw, 80px); }
 
-/* the phone: a physical object holding the app's own dusk */
+/* the phone: a physical object holding the app's own dark end of the world */
 .phone {
   position: relative;
   width: min(324px, 78vw);
@@ -1023,12 +1029,12 @@ p { margin: 0; }
   aspect-ratio: 9 / 18.5;
   border-radius: 46px;
   padding: 11px;
-  background: linear-gradient(160deg, #55495e, #241e2f 42%, #372e40);
+  background: linear-gradient(160deg, #6B5C4D, #2A2320 42%, #463A31);
   box-shadow:
     inset 0 1.5px 0 rgba(255, 255, 255, 0.28),
     inset 0 -1px 0 rgba(255, 255, 255, 0.12),
-    0 3px 4px rgba(43, 26, 46, 0.2),
-    0 46px 90px -24px rgba(43, 26, 46, 0.55);
+    0 3px 4px rgba(15, 13, 20, 0.2),
+    0 46px 90px -24px rgba(15, 13, 20, 0.55);
 }
 .phone::after {
   content: '';
@@ -1044,13 +1050,13 @@ p { margin: 0; }
   border-radius: 36px;
   overflow: hidden;
   background:
-    radial-gradient(120% 60% at 50% 100%, rgba(233, 174, 158, 0.16), transparent 70%),
+    radial-gradient(120% 60% at 50% 100%, rgba(214, 197, 172, 0.16), transparent 70%),
     linear-gradient(180deg, var(--color-dusk-top), var(--color-dusk-bottom));
   display: flex;
   flex-direction: column;
   gap: 9px;
   padding: 42px 14px 16px;
-  color: #f8f2ea;
+  color: #FAF7F2;
 }
 
 .phone__spacer { flex: 1; }
@@ -1067,7 +1073,7 @@ p { margin: 0; }
   display: block;
   font-style: normal;
   font-size: 11px;
-  color: rgba(248, 242, 234, 0.5);
+  color: rgba(250, 247, 242, 0.5);
 }
 .phone__avatar { width: 30px; height: 30px; flex: none; }
 /* the memo screen is headed by a pin rather than by Min */
@@ -1108,7 +1114,7 @@ p { margin: 0; }
   padding: 11px 16px;
   border-radius: 999px;
   font-size: var(--text-sm);
-  color: rgba(248, 242, 234, 0.4);
+  color: rgba(250, 247, 242, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.03);
 }
@@ -1129,7 +1135,7 @@ p { margin: 0; }
     linear-gradient(115deg, transparent 48.7%, rgba(255, 255, 255, 0.06) 48.7% 51.3%, transparent 51.3%),
     repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 33.3%),
     repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 25%),
-    radial-gradient(120% 80% at 50% 50%, rgba(230, 166, 242, 0.08), transparent 70%);
+    radial-gradient(120% 80% at 50% 50%, rgba(228, 210, 240, 0.08), transparent 70%);
 }
 
 /* the radius, centred on you: a soft pool with a dashed edge */
@@ -1140,7 +1146,7 @@ p { margin: 0; }
   aspect-ratio: 1;
   translate: -50% -50%;
   border-radius: 50%;
-  border: 1px dashed rgba(248, 242, 234, 0.22);
+  border: 1px dashed rgba(250, 247, 242, 0.22);
   background: radial-gradient(circle,
     color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 68%);
 }
@@ -1167,7 +1173,7 @@ p { margin: 0; }
   width: 7px; height: 7px;
   flex: none;
   border-radius: 50%;
-  /* orchid pins, so they read as memos and not as the magenta "you" dot */
+  /* pale pins, so they read as memos and not as the accent "you" dot */
   background: var(--color-accent-soft);
   box-shadow: 0 0 10px 2px color-mix(in srgb, var(--color-accent-soft) 55%, transparent);
   animation: pin-pulse 4.6s var(--ease-emergence) infinite;
@@ -1176,7 +1182,7 @@ p { margin: 0; }
   font-style: normal;
   font-size: 10.5px;
   line-height: 1.2;
-  color: rgba(248, 242, 234, 0.72);
+  color: rgba(250, 247, 242, 0.72);
   white-space: nowrap;
 }
 /* scattered, and never on top of you */
@@ -1211,7 +1217,7 @@ p { margin: 0; }
   display: block;
   margin-top: 3px;
   font-size: 11px;
-  color: rgba(248, 242, 234, 0.5);
+  color: rgba(250, 247, 242, 0.5);
 }
 
 /* ---- the memos flow ----------------------------------------

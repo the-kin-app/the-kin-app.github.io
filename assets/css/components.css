@@ -16,7 +16,7 @@
 
 /* Animated homepage lockup — the wordmark (dot masked out at the source,
    see assets/img/logo-wordmark.png) plays Material Emergence; the dot is
-   a plain circle (matches --color-accent exactly) that plays Drop on top.
+   a plain circle (matches the flat mark's dot exactly) that plays Drop on top.
    Both start together, 0.8s after the page lands, per the Figma motion
    principles board (Motion > Behaviors). */
 .logo__mark {
@@ -38,7 +38,7 @@
   width: 10.06%;
   aspect-ratio: 1 / 1;
   border-radius: 50%;
-  background: var(--color-accent);
+  background: var(--violet-deep);
   opacity: 0;
   animation: logo-dot-drop var(--duration-hero) var(--ease-drop) 0.8s both;
 }
@@ -283,7 +283,7 @@
   transition: box-shadow var(--transition-fast), transform var(--transition-press);
 }
 
-.btn:hover { box-shadow: 0px 0px 28px 6px rgba(193, 92, 219, 0.3), var(--shadow-inset-highlight); }
+.btn:hover { box-shadow: 0px 0px 28px 6px rgba(201, 168, 224, 0.3), var(--shadow-inset-highlight); }
 .btn:active { transform: scale(0.99); }
 .btn:disabled { opacity: 0.7; cursor: default; }
 
@@ -349,8 +349,8 @@
   color: var(--color-muted);
   margin: 0;
 }
-.consent a { color: var(--color-accent); text-decoration: none; }
-.consent a:hover { color: var(--color-accent-hover); text-decoration: underline; }
+.consent a { color: var(--violet-ink); text-decoration: none; }
+.consent a:hover { color: var(--ink-primary); text-decoration: underline; }
 
 .footer-note {
   text-align: center;
@@ -359,7 +359,7 @@
   margin-top: var(--space-5);
 }
 .footer-note a { color: var(--color-muted); text-decoration: none; }
-.footer-note a:hover { color: var(--color-accent-hover); text-decoration: underline; }
+.footer-note a:hover { color: var(--ink-primary); text-decoration: underline; }
 
 /* ---- Success view -------------------------------------------------- */
 .success-view {
@@ -380,17 +380,17 @@
 }
 .prose h2:first-of-type { margin-top: 0; }
 .prose p,
-.prose li { font-size: 14px; line-height: var(--leading-normal); color: #454154; }
+.prose li { font-size: 14px; line-height: var(--leading-normal); color: #4A453D; }
 .prose ul { margin: var(--space-2) 0; padding-left: var(--space-5); }
 .prose li { margin-bottom: var(--space-1); }
 
 .note {
-  background: #fbf1de;
-  border: 1px solid #ecd8a6;
+  background: #FAF3E3;
+  border: 1px solid #E5C98A;
   border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4);
   font-size: var(--text-sm);
-  color: #8a6a1a;
+  color: #8A6A22;
   margin: var(--space-2) 0 var(--space-4);
 }
 
@@ -433,8 +433,8 @@
   color: var(--color-muted);
   word-break: break-all;
 }
-.url a { color: var(--color-accent); text-decoration: none; }
-.url a:hover { color: var(--color-accent-hover); text-decoration: underline; }
+.url a { color: var(--violet-ink); text-decoration: none; }
+.url a:hover { color: var(--ink-primary); text-decoration: underline; }
 
 /* ---- Hero (homepage) ---------------------------------------------- */
 .hero__title {

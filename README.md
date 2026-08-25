@@ -10,20 +10,23 @@ waitlist submissions.
 /
 ├── index.html              Homepage — the long-form landing page (see below)
 ├── pitchdeck/index.html    The public pitch deck — swipeable slides (see below)
-├── waitlist/index.html     Waitlist signup form
+├── waitlist/index.html     The scan page — a three-slide banner + one-field signup, all above the fold
 ├── privacy-policy/index.html
 ├── qr/index.html           QR code that links to the waitlist
 ├── assets/
 │   ├── css/
-│   │   ├── tokens.css       Design tokens (colors, type, spacing, radius) ← Figma variables map here
+│   │   ├── tokens.css       Design tokens (colors, type, spacing, radius) ← mirrors KinTokens.swift / Figma `Kin tokens`
 │   │   ├── base.css         Reset, document defaults, layout primitives
 │   │   ├── components.css   Reusable UI blocks (card, form, buttons, hero, prose, qr…)
 │   │   ├── landing.css      Homepage only (does not load base/components)
-│   │   └── pitchdeck.css    Deck paging + per-slide figures; loads on top of landing.css
+│   │   ├── pitchdeck.css    Deck paging + per-slide figures; loads on top of landing.css
+│   │   ├── waitlist.css     The waitlist card, form and inputs; loads on top of landing.css
+│   │   └── waitlist-hero.css  The waitlist's three-slide banner + its no-scroll layout
 │   ├── js/
-│   │   ├── waitlist.js      Waitlist form validation + submission
+│   │   ├── waitlist-hero.js The waitlist banner (auto-advance, swipe, dots) + its one-field form
+│   │   ├── waitlist.js      The older name + email/phone form (unused by any page today)
 │   │   ├── press.js         The submerge button press (shared by every page)
-│   │   ├── min.js           Min himself: the 5s morph loop and the gaze (shared)
+│   │   ├── min.js           Min himself: anatomy, the 5s morph loop, the gaze (shared)
 │   │   ├── landing.js       Homepage: colour ramp, reveals, typewriter, constellation
 │   │   ├── landing-scene.js WebGL atmosphere (three.js, ES module) — homepage + deck
 │   │   └── pitchdeck.js     Deck: paging, palette, the ring's on-entry timeline
@@ -32,7 +35,8 @@ waitlist submissions.
 │   │   ├── kin-letters-mask.svg  Wordmark minus the i-dot; masks the glass hero logo
 │   │   ├── logo.png         Kin wordmark
 │   │   ├── card.svg         Waitlist card vector (Figma export)
-│   │   └── bg-waitlist.jpg  Hero background photo
+│   │   ├── bg-world.jpg     The world — the app's own warm backdrop (far + near plates, composited)
+│   │   └── bg-waitlist.jpg  Previous hero photo (unused; kept for reference)
 │   └── favicon.svg          Placeholder favicon
 ├── worker/                 Cloudflare Worker + D1 waitlist API (see worker/README.md)
 └── CNAME
@@ -47,8 +51,12 @@ touching page markup:
 
 1. **Tokens are the single source of truth.** Every color, font size, spacing
    step, and radius lives in `assets/css/tokens.css` as a CSS custom property.
-   These are named to mirror **Figma Variables** 1:1 (e.g. Figma
-   `Color/accent` → `--color-accent`, `Radius/lg` → `--radius-lg`).
+   They mirror the app's `KinTokens.swift` (and through it the Figma `Kin
+   tokens` collection) 1:1, with `/` becoming `-`: `color/ink/primary` →
+   `--ink-primary`, `resin/pebble` → `--resin-pebble`. The old
+   `--color-*` names are kept at the foot of the file as aliases onto the new
+   ones, so existing pages re-theme without a rename pass; they are there to
+   be deleted, not extended.
 2. **Components reference only tokens** — never hard-coded values. Class names
    in `components.css` (`.card`, `.btn`, `.input`, `.segmented`, `.hero__*`,
    `.prose`) each correspond to a Figma component of the same name.
@@ -64,16 +72,19 @@ styles, so everything stays consistent and maintainable.
 
 ### Replacing assets
 
-- `assets/img/logo.png`, `assets/img/card.svg`, and `assets/img/bg-waitlist.jpg`
-  come straight from the Figma "Waitlist (using components)" frame. Re-export
-  and drop in at the same paths to update them; `assets/favicon.svg` is still
-  a placeholder.
+- `assets/img/logo.png` and `assets/img/card.svg` come straight from the Figma
+  "Waitlist (using components)" frame. Re-export and drop in at the same paths
+  to update them; `assets/favicon.svg` is still a placeholder.
+- `assets/img/bg-world.jpg` is the app's own backdrop — `kin-bg-far` +
+  `kin-bg-near` from `kin-app-designs`, composited over `--world-grad1` and
+  flattened. Regenerate it from those plates rather than editing it.
 
 ## The homepage (`/`)
 
-A long-form scroll narrative lit by one moving light source: it opens at dusk
-(`#1e1b2e → #3a2e44`), breaks into apricot daylight (`#f8e4d2 → #e9ae9e`) at the
-moment Min leaves the wordmark, and settles back to dusk at the closer. It uses
+A long-form scroll narrative lit by one moving light source: it opens at the
+back of the cave (`#2A2320 → #463A31`), breaks into daylight
+(`#D6C5AC → #F0EBE2`) at the moment Min leaves the wordmark, and returns to the
+cave at the closer — the app's world, seen end to end. It uses
 `tokens.css` but not `base.css` / `components.css` — it has its own stylesheet
 so it can't drag the rest of the site around.
 
@@ -90,7 +101,7 @@ brand:
   into the `background` itself. Because the material is a pale wash, a resin
   object carries dark ink in *both* lighting conditions and never re-themes —
   exactly how the Figma dark-gradient onboarding card behaves. Dark mode is the
-  same identity under dusk light, never a black void.
+  same identity lit from deeper in the cave, never a black void.
   - Anything sitting *on* an object is a **well sunk into it** (inset shadow, no
     border) rather than another pebble stacked on top. Same reason the nav's CTA
     is an inset well: an object inside an object reads as flat sheets.
@@ -120,36 +131,50 @@ brand:
   and Min occupies the dot's exact position (49.62% / 13.70% of the 216×136 box).
   He only detaches at the `#dawn` beat, so the visitor feels they discovered him
   rather than being introduced to a mascot.
-  - **He is only magenta in the small flat mark.** At any real size he is the
-    same pearl resin as everything else.
-  - His body is **generated, not drawn** (`pebblePath()`), morphing on an
-    **exact 5s loop** — every harmonic is a whole multiple of the loop frequency,
-    which is what makes it seamless rather than nearly-seamless. His eyes carry
-    a slow 5s glow. **He never blinks.** Gaze follows the cursor with inertia.
+  - **He is a creature, not a pebble.** A dome body cast in warm opal resin and
+    lit from the inside, two ear flaps hanging down his sides, two foot nubs,
+    two hot eyes. The light sits low and centred, because that is where it is
+    trapped; the dome above it stays milky.
+  - **He carries the accent only in the small flat mark.** At any real size he
+    is warm opal resin — the violet belongs to the logo's i-dot, not to him.
+  - His body is **generated, not drawn** (`bodyPath()` / `earPath()`), morphing
+    on an **exact 5s loop** — every harmonic is a whole multiple of the loop
+    frequency, which is what makes it seamless rather than nearly-seamless.
+    - The silhouette is a list of **anchor points with a stiffness weight** each,
+      not a radius function: feet are not a harmonic, they have to be authored.
+      The dome breathes at full amplitude and the feet barely move, because a
+      creature whose feet wobbled like its head would read as a jelly.
+    - The ears **hinge at their root and trail the body by a beat**, and the
+      whole figure **squashes and stretches conserving volume**, scaled about
+      his feet rather than his centre — he settles onto the ground, he does not
+      shrink toward his middle.
+    - His eyes carry a slow 5s glow. **He never blinks.** Gaze follows the
+      cursor with inertia.
   - Min is stamped into each host as real DOM by `minFigure()`. An `<svg><use>`
     would clone him into a shadow tree where per-instance CSS and gaze can't
     reach, and every copy would share one morph phase.
-- **The accent never arrives alone.** Magenta is always paired with sunlight
-  (`--gradient-interactive`), mixed live under the cursor, so no surface is a
-  slab of one accent. It appears on the i-dot in the flat mark, on the primary
-  CTA, on Kinka, and on a pair in the field that has actually found each other.
+- **The accent never arrives alone.** The violet is always mixed live under the
+  cursor (`--gradient-interactive`), pale into deep, so no surface is a slab of
+  one accent. It appears on the i-dot in the flat mark, on the primary CTA, on
+  Kinka, and on a pair in the field that has actually found each other.
+  **Violet is the only cool note in Kin** — that is precisely why it reads as
+  the accent, and why the ink is warm (`#23211E`) rather than cool graphite.
 - **Buttons are pressable objects.** Press → the object *submerges*: sinks 3px,
   goes almost clear, drops its blur to 3px (wet), and keeps only a thin bright
   edge and its label — which switches to the page ink, because the material it
   was printed on is no longer there. A ripple spreads from the contact point.
-  Release → it surfaces and the sunlight-into-magenta fill floods in to say it's
+  Release → it surfaces and the pale-into-deep violet fill floods in to say it's
   active. Layer order matters here: the fill sits at `z-index: 0` (*above* the
   element's own background, or the resin wash hides it) and labels are wrapped
   in `.btn__label` spans, since a bare text node can't be lifted above it.
 - **Type** is `--font-rounded` (SF Pro Rounded, per the comps; `ui-rounded` on
   Apple platforms, Nunito as the web fallback) at Semibold — not bold, not black.
 
-> **One open conflict.** `Brand Book.md` names the accent as *Coral Red /
-> Vermilion / Poppy*, and `Direction Summary.md` says "Coral is the primary
-> accent color". But the shipped logo, favicon, `tokens.css` and the Figma
-> i-dot are all `#c15cdb` magenta. This page follows the magenta, since that's
-> what's in the artifacts. If coral is actually current, it's a one-line change
-> to `--color-accent` — nothing else hardcodes it.
+> **Accent history.** `Brand Book.md` once named the accent as *Coral Red /
+> Vermilion / Poppy*, and the site shipped `#c15cdb` magenta for a while. Both
+> are superseded: the app's settled tokens give **one** accent, violet
+> `#C9A8E0`, at three levels. If it ever moves again it is a one-line change to
+> `--violet` — nothing else hardcodes it.
 
 ### How it holds together
 
@@ -223,8 +248,8 @@ palette all build themselves from what's in the document.
   `#3`-style hash you can link to. Without it you can still drag through
   every slide.
 - **The light moves with your thumb.** Each slide's `data-bg` is a stop on
-  the same ramp the homepage scrolls through — dusk, plum, first light,
-  daylight, dusk again — and the mix follows the scroll position rather than
+  the same ramp the homepage scrolls through — cave, cave floor, first light,
+  daylight, cave again — and the mix follows the scroll position rather than
   the settled slide, so the room changes *while* you swipe. `--ink` still
   picks itself by contrast, so a new slide colour needs no second edit.
   Check any colour you add: it wants ≥ 5:1 against one of the two inks.
@@ -236,7 +261,7 @@ palette all build themselves from what's in the document.
   cards rise in order, the lines under them draw down into one point, and the
   payoff lands last — the argument in the order you'd say it out loud. The
   cards are hollows rather than `.resin`, because resin forces dark ink and
-  this slide's plum is the mid-tone trap.
+  this slide's cave brown is the mid-tone trap.
 - **The ring on slide 4 is the homepage's `#dawn` figure**, geometry and CSS
   untouched. A slide has no scroll to scrub, so `ring()` plays the same
   `--in` / `--cold` / `--warm` values on a 4.2s timeline on entry instead.

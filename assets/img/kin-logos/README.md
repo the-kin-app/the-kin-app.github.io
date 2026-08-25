@@ -7,8 +7,8 @@ SVGs are vector and scale to any size.
 
 | Asset | Files | Notes |
 |---|---|---|
-| **Flat** | `kin-logo-flat.svg`, `kin-logo-flat-{512,1024,2048}w.png` | Solid `#21212D` wordmark, `#C15CDB` dot. The workhorse — use on light backgrounds. |
-| **Gradient** | `kin-logo-gradient.svg`, `kin-logo-gradient-{512,1024,2048}w.png` | Pink → purple → violet across the letterforms, glowing magenta dot. |
+| **Flat** | `kin-logo-flat.svg`, `kin-logo-flat-{512,1024,2048}w.png` | Warm ink `#23211E` wordmark, `--violet-deep` `#B287CC` dot. The workhorse — use on light backgrounds. |
+| **Gradient** | `kin-logo-gradient.svg`, `kin-logo-gradient-{512,1024,2048}w.png` | Pale violet → deep violet across the letterforms, glowing violet dot. One hue, three levels — never a second colour. |
 | **Glass** | `kin-logo-glass.svg`, `kin-logo-glass-{512,1024,2048}w.png` | Translucent white resin with a warm bloom. Needs something behind it — see caveat. |
 
 ## Caveat on the glass version
@@ -16,7 +16,7 @@ SVGs are vector and scale to any size.
 In Figma this logo uses a **backdrop blur**, meaning it blurs whatever sits
 behind it. A transparent PNG has nothing behind it, so the blur cannot be
 baked in. What is rendered here is everything else — the 55% white body, the
-hairline glass edges, the warm outer bloom and the translucent magenta dot.
+hairline glass edges, the warm outer bloom and the translucent violet dot.
 
 Over a photo or gradient it will read very close to Figma. On a flat colour it
 will look slightly flatter than the Figma frame, because the real blur is

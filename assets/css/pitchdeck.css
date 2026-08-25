@@ -269,7 +269,7 @@ html { scroll-behavior: auto; }   /* the deck animates its own scrolling */
 /* These are not objects — they're three things that are already true, so
    they're hollows in the slide rather than resin on it (the same move
    `.vs--them` makes). It also keeps the ink: resin forces dark ink, and
-   dark ink on this slide's plum is the mid-tone trap. */
+   dark ink on this slide's cave brown is the mid-tone trap. */
 .shift {
   display: grid;
   align-content: start;
@@ -393,9 +393,9 @@ html { scroll-behavior: auto; }   /* the deck animates its own scrolling */
   aspect-ratio: 16 / 9;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  /* the app's own dusk, so the three figures read as one device */
+  /* the app's own cave, so the three figures read as one device */
   background:
-    radial-gradient(120% 70% at 50% 108%, rgba(233, 174, 158, 0.18), transparent 70%),
+    radial-gradient(120% 70% at 50% 108%, rgba(214, 197, 172, 0.18), transparent 70%),
     linear-gradient(180deg, var(--color-dusk-top), var(--color-dusk-bottom));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
@@ -414,7 +414,7 @@ html { scroll-behavior: auto; }   /* the deck animates its own scrolling */
   background: rgba(255, 255, 255, 0.09);
   border: 1px solid rgba(255, 255, 255, 0.14);
   backdrop-filter: blur(8px);
-  color: #f8f2ea;
+  color: #FAF7F2;
   opacity: 0;
 }
 .slide.is-active .notif { animation: notif-in 6s var(--ease-emergence) infinite; }
@@ -425,7 +425,7 @@ html { scroll-behavior: auto; }   /* the deck animates its own scrolling */
 }
 .notif .min { width: 22px; height: 22px; flex: none; }
 .notif b { display: block; font-size: 11px; font-weight: var(--font-weight-semibold); line-height: 1.25; }
-.notif i { display: block; font-style: normal; font-size: 9.5px; color: rgba(248, 242, 234, 0.55); }
+.notif i { display: block; font-style: normal; font-size: 9.5px; color: rgba(250, 247, 242, 0.55); }
 
 /* the yes, pressing itself */
 .notif__yes {
@@ -435,14 +435,14 @@ html { scroll-behavior: auto; }   /* the deck animates its own scrolling */
   border-radius: 999px;
   font-size: 10px;
   font-weight: var(--font-weight-semibold);
-  color: #24222c;
+  color: #23211E;
   background: linear-gradient(96deg, var(--color-accent-soft), var(--color-accent));
 }
 .slide.is-active .notif__yes { animation: yes-press 6s var(--ease-drop) infinite; }
 @keyframes yes-press {
-  0%, 54%   { transform: none; box-shadow: 0 0 0 0 rgba(230, 166, 242, 0); }
-  60%       { transform: scale(0.92); box-shadow: 0 0 0 6px rgba(230, 166, 242, 0.22); }
-  70%, 100% { transform: none; box-shadow: 0 0 0 0 rgba(230, 166, 242, 0); }
+  0%, 54%   { transform: none; box-shadow: 0 0 0 0 rgba(228, 210, 240, 0); }
+  60%       { transform: scale(0.92); box-shadow: 0 0 0 6px rgba(228, 210, 240, 0.22); }
+  70%, 100% { transform: none; box-shadow: 0 0 0 0 rgba(228, 210, 240, 0); }
 }
 
 /* — beat 2: you walk over — */
@@ -453,7 +453,7 @@ html { scroll-behavior: auto; }   /* the deck animates its own scrolling */
   top: 58%;
   height: 1px;
   background: repeating-linear-gradient(90deg,
-    rgba(248, 242, 234, 0.3) 0 4px, transparent 4px 9px);
+    rgba(250, 247, 242, 0.3) 0 4px, transparent 4px 9px);
 }
 .walk__you, .walk__them {
   position: absolute;
@@ -462,7 +462,7 @@ html { scroll-behavior: auto; }   /* the deck animates its own scrolling */
   aspect-ratio: 1 / 1.06;
   translate: -50% -50%;
   border-radius: 46% 46% 52% 52% / 48% 48% 54% 54%;
-  background: linear-gradient(172deg, rgba(255, 253, 254, 0.95), rgba(196, 182, 206, 0.9));
+  background: linear-gradient(172deg, rgba(255, 252, 245, 0.95), rgba(235, 211, 176, 0.92));
 }
 .walk__you { left: 18%; }
 .walk__them { left: 82%; }
@@ -500,7 +500,7 @@ html { scroll-behavior: auto; }   /* the deck animates its own scrolling */
   width: 15px;
   aspect-ratio: 1 / 1.06;
   border-radius: 46% 46% 52% 52% / 48% 48% 54% 54%;
-  background: linear-gradient(172deg, rgba(255, 253, 254, 0.96), rgba(196, 182, 206, 0.9));
+  background: linear-gradient(172deg, rgba(255, 252, 245, 0.96), rgba(235, 211, 176, 0.92));
 }
 /* the thread between them, with a pulse running end to end */
 .meet__thread {
@@ -538,7 +538,7 @@ html { scroll-behavior: auto; }   /* the deck animates its own scrolling */
   font-size: 8px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(248, 242, 234, 0.4);
+  color: rgba(250, 247, 242, 0.4);
   white-space: nowrap;
 }
 
@@ -619,10 +619,10 @@ html { scroll-behavior: auto; }   /* the deck animates its own scrolling */
   border-radius: 999px;
   font-size: var(--text-sm);
   font-weight: var(--font-weight-semibold);
-  color: #21212d;
+  color: #23211E;
   border: 1px solid rgba(255, 255, 255, 0.55);
   background: linear-gradient(168deg, rgba(255, 255, 255, 0.6), rgba(242, 238, 231, 0.3));
-  box-shadow: var(--edge-resin), 0 10px 22px -12px rgba(43, 26, 46, 0.5);
+  box-shadow: var(--edge-resin), 0 10px 22px -12px rgba(15, 13, 20, 0.5);
 }
 .done__card .min { width: 20px; height: 20px; flex: none; }
 .done__out {
@@ -694,7 +694,7 @@ html { scroll-behavior: auto; }   /* the deck animates its own scrolling */
   background: #fff;
   padding: clamp(8px, 0.9vw, 12px);
   border-radius: var(--radius-lg);
-  box-shadow: 0 10px 30px -12px rgb(0 0 0 / 0.45);
+  box-shadow: 0 10px 30px -12px rgb(15 13 20 / 0.45);
   line-height: 0;
 }
 .close__plate img {
@@ -727,14 +727,14 @@ html { scroll-behavior: auto; }   /* the deck animates its own scrolling */
   width: 34px; height: 34px;
   padding: 0;
   border-radius: 50%;
-  border: 1px solid rgba(33, 33, 45, 0.1);
-  background: rgba(33, 33, 45, 0.05);
-  box-shadow: inset 0 1px 2px rgba(43, 26, 46, 0.08);
-  color: #21212d;
+  border: 1px solid rgba(35, 33, 30, 0.1);
+  background: rgba(35, 33, 30, 0.05);
+  box-shadow: inset 0 1px 2px rgba(15, 13, 20, 0.08);
+  color: #23211E;
   cursor: pointer;
   transition: background var(--transition-fast), opacity var(--transition-fast);
 }
-.bar__btn:hover:not(:disabled) { background: rgba(33, 33, 45, 0.11); }
+.bar__btn:hover:not(:disabled) { background: rgba(35, 33, 30, 0.11); }
 .bar__btn:disabled { opacity: 0.3; cursor: default; }
 
 /* the dots: one per slide, the current one stretched into a pill */
@@ -745,13 +745,13 @@ html { scroll-behavior: auto; }   /* the deck animates its own scrolling */
   padding: 0;
   border: 0;
   border-radius: 999px;
-  background: rgba(33, 33, 45, 0.2);
+  background: rgba(35, 33, 30, 0.2);
   cursor: pointer;
   transition:
     width var(--duration-quick) var(--ease-emergence),
     background var(--duration-quick) ease;
 }
-.bar__dot:hover { background: rgba(33, 33, 45, 0.38); }
+.bar__dot:hover { background: rgba(35, 33, 30, 0.38); }
 .bar__dot[aria-current="true"] {
   width: 22px;
   background: linear-gradient(96deg, var(--color-accent-hover), var(--color-accent));
@@ -761,7 +761,7 @@ html { scroll-behavior: auto; }   /* the deck animates its own scrolling */
   font-size: var(--text-xs);
   font-weight: var(--font-weight-semibold);
   font-variant-numeric: tabular-nums;
-  color: #55505f;
+  color: #6D6861;
   min-width: 3.4ch;
   text-align: right;
 }

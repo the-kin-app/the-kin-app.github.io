@@ -3,7 +3,7 @@
    ------------------------------------------------------------
    The page behaves like the landing page, minus the scrubbed
    sequence: same Min, same submerge press, same material-emergence
-   reveals, same atmosphere — the palette just stays at dusk.
+   reveals, same atmosphere — the palette just stays at cave.
 
    1. reveals()    — IntersectionObserver adds .in; CSS runs the
                      emergence recipe (shared with the landing page).
@@ -54,10 +54,10 @@ function reveals() {
 
 /* ---------- 4. daybreak + the atmosphere --------------------
    The landing page's sunrise, compressed to this page's shape: the
-   hero opens at dusk, and the light comes up as you reach the first
+   hero opens at cave, and the light comes up as you reach the first
    question. That arc isn't decoration here — .resin is a pale, very
    translucent material, so a card only reads as a lit object once
-   there is light behind it. Held at dusk, the whole questionnaire
+   there is light behind it. Held at cave, the whole questionnaire
    silts up into low-contrast murk.
 
    The helpers below mirror landing.js. They're small, and copying
@@ -65,8 +65,8 @@ function reveals() {
    scroll machinery, which is built around sections this page
    doesn't have (#problem, #dawn, #closer). */
 
-const CREAM = [248, 242, 234];
-const GRAPHITE = [33, 33, 45];
+const CREAM = [250, 247, 242];
+const GRAPHITE = [35, 33, 30];
 
 const smoothstep = (v) => v * v * (3 - 2 * v);
 
@@ -124,10 +124,10 @@ function buildRamps() {
 
   return {
     bg: [
-      [0, [30, 27, 46]],            // #1e1b2e — dusk, under the hero
-      [breaks, [64, 52, 74]],        // the plum floor lifting
-      [lerp(breaks, risen, 0.55), [214, 176, 168]],  // first light
-      [risen, [248, 228, 210]],      // #f8e4d2 — apricot
+      [0, [42, 35, 32]],            // #2A2320 — cave, under the hero
+      [breaks, [70, 58, 49]],        // #463A31 — the cave floor lifting
+      [lerp(breaks, risen, 0.55), [214, 197, 172]],  // first light
+      [risen, [240, 235, 226]],      // #F0EBE2 — daylight
       [Math.min(0.995, risen + 0.18), [246, 238, 230]],
       [1, [244, 235, 228]],          // settled daylight for the rest of the form
     ],

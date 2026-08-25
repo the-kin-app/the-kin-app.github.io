@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Kin — Join the waitlist</title>
-<meta name="description" content="Be first in when Kin launches in Helsinki. Leave a name and one way to reach you — an email or a phone number, never both. No spam, ever.">
-<meta name="theme-color" content="#1e1b2e">
+<meta name="description" content="Kin introduces you to the people, groups and moments already around you. Launching for Helsinki area students in fall 2026 — leave an email and be first in.">
+<meta name="theme-color" content="#2A2320">
 <link rel="canonical" href="https://kinapp.social/waitlist/">
 
 <meta property="og:title" content="Join the Kin waitlist">
-<meta property="og:description" content="Be first in when Kin launches in Helsinki. No spam, ever.">
+<meta property="og:description" content="An introduction, not a feed. Be first in when Kin launches in Helsinki. No spam, ever.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kinapp.social/waitlist/">
 <meta property="og:site_name" content="Kin">
@@ -26,72 +26,272 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/tokens.css">
-<link rel="stylesheet" href="/assets/css/base.css">
-<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/landing.css">
+<link rel="stylesheet" href="/assets/css/waitlist.css">
+<link rel="stylesheet" href="/assets/css/waitlist-hero.css">
 </head>
-<body class="center bg-photo">
 
-<div class="container">
-  <div class="logo" role="img" aria-label="Kin">
-    <img class="logo__mark" src="/assets/img/logo-wordmark.png" alt="" width="1392" height="1130">
-    <span class="logo__dot" aria-hidden="true"></span>
+<!-- ══════════════════════════════════════════════════════════
+     THE SCAN PAGE
+     ──────────────────────────────────────────────────────────
+     This page is reached almost entirely by pointing a phone at a
+     QR code — off a poster, off the last slide of the deck, off a
+     coaster in a bar. So it is built for one glance:
+
+       · everything fits in 100svh. Nothing to scroll to, because
+         nobody standing in a bar is going to scroll.
+       · the banner explains Kin while they read, on its own, in
+         three slides: the near-miss, what it is, how it works.
+         Those are pages 2, 4 and 5 of /pitchdeck/short.
+       · the form asks for one thing. The name the waitlist stores
+         is read off the address — see waitlist-hero.js.
+
+     Materials, figures and Min all come from landing.css, so this
+     is the same world as the landing page, not a lookalike.
+     ══════════════════════════════════════════════════════════ -->
+
+<body class="wlq">
+
+<!-- the world: light pooling to the floor, slow banks of fog above it -->
+<div class="env" aria-hidden="true">
+  <span class="fog fog--1"></span>
+  <span class="fog fog--2"></span>
+  <span class="fog fog--3"></span>
+</div>
+
+<!-- ── the mark, and the when ──────────────────────────────
+     Small on purpose. It says who is asking, and — right under it,
+     before anything else — who it is for and when. Somebody who is
+     not a Helsinki student should learn that in the first second,
+     not after reading three slides and filling in a field. -->
+<div class="wlq-row wlq-head">
+  <div class="wordmark--hero" role="img" aria-label="kin">
+    <span class="wordmark__bloom" aria-hidden="true"></span>
+    <span class="wordmark__glass wordmark__glass--shadow" aria-hidden="true"></span>
+    <span class="wordmark__glass" aria-hidden="true"></span>
+    <div class="wordmark__min" aria-hidden="true">
+      <div class="min min--hero" data-min data-phase="1.9"></div>
+    </div>
   </div>
-  <div class="tagline">Where strangers become kin</div>
 
-  <div class="card card--hero">
-    <img class="card__bg" src="/assets/img/card.svg" alt="" aria-hidden="true">
-    <div class="card__content">
-    <div id="form-view">
-      <h1 class="card__title">Join the waitlist</h1>
-      <p class="card__sub">Be first to know when Kin launches. No spam, ever.</p>
+  <p class="wlq-when">Launching for all Helsinki area students in fall 2026 — get ready.</p>
+</div>
 
-      <form id="waitlist-form" class="form" novalidate>
-        <div class="field">
-          <label for="name">Name</label>
-          <input class="input" type="text" id="name" name="name" placeholder="First name or nickname" required autocomplete="given-name">
-          <div class="field-error" id="name-error"></div>
-        </div>
+<!-- ── the banner ──────────────────────────────────────────
+     Three slides, advancing on their own every ~5s, swipeable, with
+     the dots doubling as the control. -->
+<div class="wlq-row wlq-banner">
 
-        <div class="field">
-          <label>How should we reach you?</label>
-          <div class="segmented" role="tablist">
-            <span class="segmented__pill" aria-hidden="true"></span>
-            <button type="button" id="tab-email" class="active">Email</button>
-            <button type="button" id="tab-phone">Phone</button>
+  <div class="hslides" data-hslides role="group" aria-roledescription="carousel"
+       aria-label="What Kin is, in three slides" tabindex="0">
+    <div class="hslides__track">
+
+      <!-- ── 1. the near-miss ────────────────────────────────
+           Name the habit first — swiping, scrolling, texting — then
+           turn it. The four arcs are what is being missed: each one
+           starts, gets most of the way to somebody, and stops. -->
+      <section class="hslide is-live" aria-label="1 of 3: the near-miss">
+        <div class="hslide__fig">
+          <div class="crowd" role="img"
+               aria-label="A room full of people, each one lit from below by their own screen. A few connections start between them and stop before they land.">
+            <svg class="crowd__misses" viewBox="0 0 100 56" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M14 20 Q24 10 34 22"/>
+              <path d="M46 16 Q58 6 68 18"/>
+              <path d="M26 42 Q38 34 50 44"/>
+              <path d="M62 38 Q74 30 86 40"/>
+            </svg>
+
+            <span class="blob" style="--x: 13%; --y: 34%"></span>
+            <span class="blob" style="--x: 33%; --y: 40%"></span>
+            <span class="blob" style="--x: 46%; --y: 28%"></span>
+            <span class="blob" style="--x: 68%; --y: 32%"></span>
+            <span class="blob" style="--x: 86%; --y: 25%"></span>
+            <span class="blob" style="--x: 24%; --y: 74%"></span>
+            <span class="blob" style="--x: 51%; --y: 79%"></span>
+            <span class="blob" style="--x: 62%; --y: 66%"></span>
+            <span class="blob" style="--x: 87%; --y: 72%"></span>
+            <span class="blob" style="--x: 8%;  --y: 60%"></span>
           </div>
         </div>
 
-        <div class="field field--contact" id="email-field">
-          <input class="input" type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" aria-label="Email">
-          <div class="field-error" id="email-error"></div>
+        <div class="hslide__say">
+          <h2>Swiping. Scrolling. Texting all&nbsp;day.</h2>
+          <p>And endless chances to meet someone, standing right around you.</p>
+        </div>
+      </section>
+
+      <!-- ── 2. what Kin is ──────────────────────────────────
+           The ring, assembled: everyone joined, every screen off,
+           Min holding the middle. He is in the picture but not in
+           the words — naming him costs a sentence this page can't
+           spare, and the idea lands without the character. -->
+      <section class="hslide" aria-label="2 of 3: what Kin is">
+        <div class="hslide__fig">
+          <div class="ring" style="--in: 1" role="img"
+               aria-label="Eight people standing in a circle, connected to Min in the middle and to each other.">
+            <svg class="ring__links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <line x1="50.73" y1="35.02" x2="51.66" y2="15.99"/>
+              <line x1="60.43" y1="39.22" x2="75.13" y2="24.03"/>
+              <line x1="65.00" y1="49.63" x2="84.00" y2="49.17"/>
+              <line x1="59.82" y1="61.34" x2="71.42" y2="74.71"/>
+              <line x1="48.23" y1="64.89" x2="45.83" y2="85.05"/>
+              <line x1="38.56" y1="59.70" x2="22.34" y2="73.47"/>
+              <line x1="35.11" y1="48.18" x2="15.95" y2="45.85"/>
+              <line x1="40.30" y1="38.56" x2="26.53" y2="22.34"/>
+            </svg>
+
+            <!-- every screen is off and Min's light is on them instead -->
+            <span class="blob" style="--x: 52%; --y: 9%;  --cold: 0; --warm: 1"></span>
+            <span class="blob" style="--x: 80%; --y: 19%; --cold: 0; --warm: 1"></span>
+            <span class="blob" style="--x: 91%; --y: 49%; --cold: 0; --warm: 1"></span>
+            <span class="blob" style="--x: 76%; --y: 80%; --cold: 0; --warm: 1"></span>
+            <span class="blob" style="--x: 45%; --y: 92%; --cold: 0; --warm: 1"></span>
+            <span class="blob" style="--x: 17%; --y: 78%; --cold: 0; --warm: 1"></span>
+            <span class="blob" style="--x: 9%;  --y: 45%; --cold: 0; --warm: 1"></span>
+            <span class="blob" style="--x: 22%; --y: 17%; --cold: 0; --warm: 1"></span>
+
+            <div class="min min--dawn" data-min data-phase="3.4" aria-hidden="true"></div>
+          </div>
         </div>
 
-        <div class="field field--contact" id="phone-field" style="display:none;">
-          <input class="input" type="tel" id="phone" name="phone" placeholder="+1 555 123 4567" autocomplete="tel" aria-label="Phone number">
-          <div class="field-error" id="phone-error"></div>
+        <div class="hslide__say">
+          <h2>An introduction. Not a feed.</h2>
+          <p>Kin introduces you to the people, groups and moments already around you — inside the few hundred metres you can walk to.</p>
+        </div>
+      </section>
+
+      <!-- ── 3. how it works ─────────────────────────────────
+           The deck stacks these three; there is no room for that
+           here, so they stay in a row and lose their prose. Three
+           words each is enough — the headline already says it. -->
+      <section class="hslide" aria-label="3 of 3: how it works">
+        <div class="hslide__fig">
+          <div class="mbeats">
+
+            <!-- one notification, one decision -->
+            <div class="mbeat">
+              <div class="mbeat__stage">
+                <svg viewBox="0 0 100 100" fill="none" role="img"
+                     aria-label="A notification arriving, with a Yes button on it.">
+                  <g class="mfig--notif">
+                    <rect x="9" y="31" width="82" height="30" rx="10"
+                          fill="#F8F2EA" fill-opacity=".09"
+                          stroke="#F8F2EA" stroke-opacity=".2" stroke-width="1"/>
+                    <ellipse cx="23" cy="46" rx="6.5" ry="7" fill="#F1EAF0"/>
+                    <rect x="34" y="40.5" width="26" height="3.6" rx="1.8" fill="#F8F2EA" fill-opacity=".55"/>
+                    <rect x="34" y="48"   width="16" height="3"   rx="1.5" fill="#F8F2EA" fill-opacity=".3"/>
+                    <rect class="mfig--yes" x="65" y="40" width="18" height="12" rx="6" fill="#C9A8E0"/>
+                  </g>
+                </svg>
+              </div>
+              <b>One intro.</b>
+            </div>
+
+            <!-- they said yes too — the awkward part, handled -->
+            <div class="mbeat">
+              <div class="mbeat__stage">
+                <svg viewBox="0 0 100 100" fill="none" role="img"
+                     aria-label="One person walking the short distance over to another.">
+                  <!-- the ground you cover, stopping short of the ring -->
+                  <path d="M30 50h34" stroke="#F8F2EA" stroke-opacity=".3" stroke-width="2"
+                        stroke-linecap="round" stroke-dasharray="0.5 7"/>
+                  <path d="M67 46l4 4-4 4" stroke="#F8F2EA" stroke-opacity=".42" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+                  <!-- them: they already said yes, so they carry the accent -->
+                  <circle cx="82" cy="50" r="12.5" stroke="#C9A8E0" stroke-opacity=".45" stroke-width="1.5"/>
+                  <ellipse cx="82" cy="50" rx="7" ry="7.6" fill="#F1EAF0"/>
+                  <!-- you -->
+                  <ellipse class="mfig--walk-you" cx="20" cy="50" rx="7" ry="7.6" fill="#F1EAF0"/>
+                </svg>
+              </div>
+              <b>Both said yes.</b>
+            </div>
+
+            <!-- in person, with no screen in between -->
+            <div class="mbeat">
+              <div class="mbeat__stage">
+                <svg viewBox="0 0 100 100" fill="none" role="img"
+                     aria-label="Two people talking, with a phone face down beside them.">
+                  <ellipse cx="34" cy="42" rx="9" ry="9.6" fill="#F1EAF0"/>
+                  <ellipse cx="66" cy="42" rx="9" ry="9.6" fill="#F1EAF0"/>
+                  <path class="mfig--thread" d="M45 42h10" stroke="#C9A8E0" stroke-width="3"
+                        stroke-linecap="round"/>
+                  <!-- the phone, face down, which is the point -->
+                  <g transform="rotate(-6 50 71)">
+                    <rect x="38" y="65" width="24" height="11" rx="4"
+                          fill="#F8F2EA" fill-opacity=".08"
+                          stroke="#F8F2EA" stroke-opacity=".22" stroke-width="1"/>
+                  </g>
+                </svg>
+              </div>
+              <b>Say hello.</b>
+            </div>
+
+          </div>
         </div>
 
-        <!-- Honeypot: hidden from humans, bots tend to fill it. Leave empty. -->
-        <input class="visually-hidden" type="text" id="website" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="hslide__say">
+          <h2>How it works</h2>
+          <p>Yes → walk over → hello. One decision, no feed to check, no texting first.</p>
+        </div>
+      </section>
 
-        <button type="submit" class="btn btn--block btn--mt submit"><span class="btn__label">Submit</span></button>
-        <p class="consent">By joining, you agree to our <a href="/privacy-policy/">Privacy Policy</a>.</p>
-        <div class="status" id="form-status"></div>
-      </form>
-    </div>
-
-    <div id="success-view" class="success-view">
-      <div class="check">🎉</div>
-      <h2>You're on the list</h2>
-      <p>We'll email or text you the moment Kin is ready.</p>
-    </div>
     </div>
   </div>
 
-  <div class="footer-note">We'll only use your details to let you know when Kin launches.</div>
+  <div class="hdots" role="tablist" aria-label="Choose a slide">
+    <button class="hdot" type="button" role="tab" aria-selected="true"  aria-label="Slide 1: the near-miss"></button>
+    <button class="hdot" type="button" role="tab" aria-selected="false" aria-label="Slide 2: what Kin is"></button>
+    <button class="hdot" type="button" role="tab" aria-selected="false" aria-label="Slide 3: how it works"></button>
+  </div>
 </div>
 
-<script src="/assets/js/waitlist.js"></script>
+<!-- ── the ask ─────────────────────────────────────────────
+     One field. Every extra box here is somebody deciding not to
+     bother, and the address is the only thing we actually need to
+     tell them Kin is open. -->
+<div class="wlq-row">
+  <div class="wl-card wlq-card resin">
+
+    <form id="waitlist-form" class="wlq-form" novalidate>
+      <div class="wlq-form__row">
+        <input class="input" type="email" id="email" name="email"
+               placeholder="you@example.com" autocomplete="email"
+               inputmode="email" required aria-label="Your email"
+               aria-describedby="email-error">
+        <button type="submit" class="btn btn--primary">
+          <span class="btn__fill" aria-hidden="true"></span>
+          <span class="btn__label">Join</span>
+        </button>
+      </div>
+
+      <!-- Honeypot: hidden from humans, bots tend to fill it. Leave empty. -->
+      <input class="visually-hidden" type="text" id="website" name="website"
+             tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <div class="field-error" id="email-error" role="alert"></div>
+      <div class="status" id="form-status" role="status"></div>
+
+      <p class="consent">
+        By joining you agree to our <a href="/privacy-policy/">Privacy Policy</a>.
+      </p>
+    </form>
+
+    <div id="done-view" class="wlq-done">
+      <h2>You're on the list 🎉</h2>
+      <p>We'll email you the moment Kin opens in your neighbourhood.</p>
+    </div>
+
+  </div>
+</div>
+
+<script src="/assets/js/waitlist-hero.js"></script>
+<script type="module">
+  import { minBodies } from '/assets/js/min.js';
+  import { buttons } from '/assets/js/press.js';
+  minBodies();   // Min in the i-dot, and Min in the middle of the ring
+  buttons();     // Join submerges and ripples like every other Kin button
+</script>
 
 </body>
 </html>

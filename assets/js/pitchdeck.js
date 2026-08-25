@@ -5,7 +5,7 @@
                     keyboard, the wheel, the toolbar and the URL hash.
    2. palette()   — lerps --bg / --ink between the slides' own colours as
                     you swipe, so the deck moves through one continuous
-                    dusk → daylight → dusk the way the landing page does.
+                    cave → daylight → cave the way the landing page does.
    3. ring()      — slide 4's constellation, played on entry instead of
                     scrubbed by a scroll. Same CSS, different driver.
    4. minBodies() — Min himself (min.js), shared with the landing page.
@@ -44,8 +44,8 @@ const offset = () => (vertical()
    lerped: the background moves continuously, the ink flips once, and the
    registered `transition: --ink` crossfades everything derived from it. */
 
-const CREAM = [248, 242, 234];
-const GRAPHITE = [33, 33, 45];
+const CREAM = [250, 247, 242];
+const GRAPHITE = [35, 33, 30];
 
 const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 
@@ -72,7 +72,7 @@ function inkFor(bg) {
 function palette() {
   const root = document.documentElement;
   const rail = document.querySelector('.rail');
-  const stops = slides.map((s) => hex(s.dataset.bg || '#1e1b2e'));
+  const stops = slides.map((s) => hex(s.dataset.bg || '#2A2320'));
   let lastInk = null;
   let last = -1;
 

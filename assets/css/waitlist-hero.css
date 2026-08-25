@@ -1,0 +1,458 @@
+/* ============================================================
+   Kin — the scan-and-join page (/waitlist)
+   ------------------------------------------------------------
+   One screen, no scroll. Somebody points a phone at a QR code in a
+   bar and has about four seconds of attention: a banner that tells
+   them what Kin is while they read, and a single field under it.
+
+   THE CONSTRAINT: everything fits in 100svh on the shortest phone
+   we care about. That is why this file is written as a three-row
+   grid with the banner on `minmax(0, 1fr)` — the banner gives up
+   height first, and the figures inside it are sized from their own
+   height rather than their width, so they shrink instead of
+   pushing the form off the bottom of the screen.
+
+   The three slides are pages 2, 4 and 5 of /pitchdeck/short — the
+   near-miss, what Kin is, how it works — with the same materials.
+   The figures are lifted from pitchdeck.css rather than that file
+   being loaded, because pitchdeck.css turns the body into a
+   horizontal scroll-snap deck, which is the opposite of this page.
+
+   Depends on tokens.css + landing.css + waitlist.css.
+   ============================================================ */
+
+/* ---- the page ----------------------------------------------
+   Three rows: the mark, the banner, the form. Only the banner is
+   elastic. Nothing scrolls — if the viewport is too short for the
+   figures, the figures get smaller. */
+
+body.wlq {
+  height: 100svh;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  justify-items: center;
+  align-content: center;
+  gap: clamp(var(--space-3), 2.2svh, var(--space-6));
+  padding:
+    calc(var(--space-5) + env(safe-area-inset-top, 0px))
+    var(--space-5)
+    calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+}
+
+/* every row shares one column, so the wordmark, the slides and the
+   card all line up on the same edges */
+.wlq-row {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 460px;
+}
+
+/* ---- the mark, and the when --------------------------------
+   Small. The mark is a signature here, not a hero — and the line
+   under it is the one piece of copy that has to survive a glance
+   that never reaches the banner. */
+
+.wlq-head {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+}
+
+.wlq .wordmark--hero {
+  width: min(148px, 34vw);
+  margin: 0 auto;
+}
+
+.wlq-when {
+  margin: 0;
+  max-width: 30ch;
+  text-align: center;
+  font-size: clamp(0.8125rem, 3.4vw, 0.9375rem);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--ink-soft);
+  text-wrap: balance;
+}
+
+/* ---- the banner --------------------------------------------
+   A flex track that translates by whole slides. Native-feeling
+   swipe comes from the drag handler in waitlist-hero.js writing
+   --drag; with no script the first slide simply sits there, fully
+   drawn, which is a working page rather than a broken one. */
+
+.wlq-banner {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: clamp(var(--space-2), 1.6svh, var(--space-4));
+  min-height: 0;
+  height: 100%;
+}
+
+.hslides {
+  position: relative;
+  overflow: hidden;
+  /* The track is three viewports wide and rides a composited transform.
+     `contain: paint` states the clip outright rather than leaving it to
+     be inferred from overflow, which is what keeps the neighbouring
+     slide off the page edges mid-swipe. */
+  contain: paint;
+  min-height: 0;
+  /* the drag never leaves the track, so nothing here should also
+     be trying to scroll the page sideways */
+  touch-action: pan-y;
+}
+
+.hslides__track {
+  display: flex;
+  height: 100%;
+  transform: translate3d(calc(var(--i, 0) * -100% + var(--drag, 0px)), 0, 0);
+  transition: transform 620ms var(--ease-emergence);
+}
+.hslides__track.is-dragging { transition: none; }
+
+.hslide {
+  flex: 0 0 100%;
+  min-width: 0;
+  /* A centred column, not a stretched grid: the figure and the words
+     below it are one group, and the empty room on a tall phone belongs
+     above and below that group rather than between its two halves. */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* Generous, because a blob's screen-light bleeds a third of its own
+     height past its box — a tight gap here puts that glow in the
+     headline. */
+  gap: clamp(var(--space-4), 3.2svh, var(--space-7));
+  text-align: center;
+}
+/* An off-screen slide is clipped by the track, never hidden: making it
+   `visibility: hidden` blanked the outgoing slide the instant a swipe
+   started, so you slid from a picture to an empty box. The script marks
+   it aria-hidden instead, and .is-live is what runs its figure. */
+
+/* The figure box hugs whatever is in it — the figures below carry
+   their own size — and `flex: 0 1 auto` lets the whole thing give way
+   first when the screen is short, which is the no-scroll trick.
+
+   --fig-w is stated in absolute terms rather than as a percentage of
+   this box, and every figure measures from it. A figure sized `width:
+   100%` with an aspect-ratio has no intrinsic height to give back, so
+   this box collapsed to well under the picture standing in it and the
+   headline landed on top of the crowd. */
+.hslide__fig {
+  /* The figure's height budget — a share of the viewport, capped — and
+     a width derived from it. Sizing from HEIGHT is what keeps the page
+     off the scrollbar: the figure is the only elastic thing on screen,
+     so it is the thing that has to know how tall the screen is.
+
+     Both axes are then stated outright. Neither an `aspect-ratio` child
+     nor `flex-shrink` can be trusted to land this box on its picture —
+     the first gave this grid no usable row height, and the second then
+     squeezed the box to two thirds of the crowd standing in it, which
+     is how the headline ended up printed over the blobs. So: an exact
+     width, an exact height, and `flex: 0 0 auto`. */
+  --fig-h: min(30svh, 240px);
+  --fig-w: min(calc(100vw - 2 * var(--space-5)), 420px, calc(var(--fig-h) * 16 / 9));
+  --crowd-h: calc(var(--fig-w) * 9 / 16);
+  --ring-d: min(var(--fig-h), calc(var(--fig-w) * 0.62));
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 0;
+}
+
+.hslide__say { display: grid; gap: var(--space-2); justify-items: center; }
+
+.hslide h2 {
+  margin: 0;
+  font-size: clamp(1.0625rem, 4.8vw, 1.375rem);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: var(--ink);
+  text-wrap: balance;
+  max-width: 24ch;
+}
+
+.hslide p {
+  margin: 0;
+  font-size: clamp(0.8125rem, 3.4vw, 0.9375rem);
+  line-height: 1.45;
+  color: var(--ink-soft);
+  text-wrap: balance;
+  max-width: 34ch;
+}
+
+/* ---- the dots ----------------------------------------------
+   Also the control. They are real buttons with a hit area larger
+   than the dot they draw, because this page is only ever touched
+   with a thumb. */
+
+.hdots {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-1);
+}
+
+.hdot {
+  width: 26px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.hdot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 26%, transparent);
+  transition: width 320ms var(--ease-emergence), background 320ms ease;
+}
+.hdot[aria-selected="true"]::before {
+  width: 18px;
+  background: var(--color-accent-soft);
+  box-shadow: 0 0 10px 1px color-mix(in srgb, var(--world-halo) 45%, transparent);
+}
+
+/* ============================================================
+   figure 1 — the near-miss
+   Lifted from pitchdeck.css §2. A room of people, each lit from
+   below by their own screen; the arcs between them start, get most
+   of the way to somebody, and fade.
+   ============================================================ */
+
+.crowd {
+  position: relative;
+  width: var(--fig-w);
+  height: var(--crowd-h);
+}
+.crowd .blob {
+  width: clamp(20px, 8.5%, 42px);
+  --cold: 1;
+  --warm: 0;
+}
+.hslide.is-live .crowd .blob { animation: crowd-drift 9s ease-in-out infinite; }
+/* each body keeps its own period, so the crowd never breathes in unison */
+.hslide.is-live .crowd .blob:nth-child(2n) { animation-duration: 11s; animation-delay: -2s; }
+.hslide.is-live .crowd .blob:nth-child(3n) { animation-duration: 13s; animation-delay: -5s; }
+.hslide.is-live .crowd .blob:nth-child(5n) { animation-duration: 10s; animation-delay: -7s; }
+@keyframes crowd-drift {
+  0%, 100% { transform: translate(0, 0); }
+  33%      { transform: translate(3px, -4px); }
+  66%      { transform: translate(-4px, 2px); }
+}
+
+/* the phone: a cold rectangle of light under each face */
+.crowd .blob::after { inset: -34% -18%; }
+
+.crowd__misses {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.crowd__misses path {
+  fill: none;
+  stroke: color-mix(in srgb, var(--ink) 34%, transparent);
+  stroke-width: 0.4;
+  stroke-linecap: round;
+  stroke-dasharray: 3 3;
+  opacity: 0;
+}
+.hslide.is-live .crowd__misses path { animation: near-miss 7s var(--ease-emergence) infinite; }
+/* the shorthand above sets the delay too, so these have to out-specify it */
+.hslide.is-live .crowd__misses path:nth-child(2) { animation-delay: 1.6s; }
+.hslide.is-live .crowd__misses path:nth-child(3) { animation-delay: 3.4s; }
+.hslide.is-live .crowd__misses path:nth-child(4) { animation-delay: 5.1s; }
+@keyframes near-miss {
+  0%        { opacity: 0; stroke-dashoffset: 40; }
+  14%       { opacity: 0.85; }
+  /* it gets most of the way there, and then it doesn't */
+  34%       { opacity: 0.7; stroke-dashoffset: 8; }
+  55%, 100% { opacity: 0; stroke-dashoffset: 8; }
+}
+
+/* ============================================================
+   figure 2 — what Kin is
+   The ring from landing.css, sized to the banner. Min holds the
+   middle and every screen is off.
+   ============================================================ */
+
+.hslide .ring {
+  /* the only square figure of the three, so it is sized to land at
+     roughly the same height as the other two rather than the same
+     width — three slides that jump in height read as three pages */
+  width: var(--ring-d);
+  height: var(--ring-d);
+}
+.hslide .min--dawn {
+  width: 34%;
+  height: 34%;
+  margin: 0;
+}
+
+/* ============================================================
+   figure 3 — how it works
+   The deck stacks its three beats on a phone. There is no room for
+   that here, so they stay in a row and lose their prose: the
+   slide's own line already says yes -> walk over -> hello, and each
+   beat gets three words underneath instead of a sentence.
+   ============================================================ */
+
+.mbeats {
+  width: min(400px, var(--fig-w));
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(var(--space-2), 2vw, var(--space-4));
+}
+
+.mbeat { display: grid; gap: var(--space-2); justify-items: center; }
+
+.mbeat__stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  /* Recessed into the cave rather than a second cave on top of it: the
+     deck's stage is a dark slab because it sits on a light slide, and
+     here the page is already dark. */
+  border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  background:
+    radial-gradient(120% 70% at 50% 112%, rgba(214, 197, 172, 0.14), transparent 70%),
+    linear-gradient(180deg, rgba(15, 13, 20, 0.34), rgba(15, 13, 20, 0.14));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.mbeat__stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.mbeat b {
+  font-size: clamp(0.6875rem, 2.9vw, 0.8125rem);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.25;
+  color: var(--ink-soft);
+  letter-spacing: -0.01em;
+}
+
+/* Each beat plays its own moment on a shared 5.4s bar, so the row
+   reads left to right as one sentence rather than three loops. */
+/* Each figure rests in its *finished* state. The animation supplies the
+   hidden start, so a beat that isn't running is still a picture. */
+.mfig--walk-you { transform: translateX(34px); }
+.mfig--thread   { opacity: 1; }
+
+.hslide.is-live .mfig--notif    { animation: mnotif 5.4s var(--ease-emergence) infinite; }
+.hslide.is-live .mfig--yes      { animation: myes   5.4s var(--ease-drop) infinite; }
+.hslide.is-live .mfig--walk-you { animation: mwalk  5.4s var(--ease-drop) 0.5s infinite; }
+.hslide.is-live .mfig--thread   { animation: mthread 5.4s ease-in-out 1s infinite; }
+
+@keyframes mnotif {
+  0%        { opacity: 0; transform: translateY(-6px); }
+  14%, 78%  { opacity: 1; transform: none; }
+  92%, 100% { opacity: 0; transform: translateY(-4px); }
+}
+@keyframes myes {
+  0%, 30%   { transform: none; }
+  38%       { transform: scale(0.88); }
+  48%, 100% { transform: none; }
+}
+@keyframes mwalk {
+  0%, 12%   { transform: translateX(0); }
+  52%, 100% { transform: translateX(34px); }
+}
+@keyframes mthread {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 1; }
+}
+
+/* transform-box keeps the SVG transforms above in the element's own
+   box rather than the viewBox origin */
+.mfig--yes, .mfig--walk-you { transform-box: fill-box; transform-origin: center; }
+
+/* ============================================================
+   the form
+   One row: a field and the object you press. The name the waitlist
+   stores is derived from the address — see waitlist-hero.js.
+   ============================================================ */
+
+.wlq-card {
+  padding: clamp(var(--space-4), 4.5vw, var(--space-6));
+  border-radius: var(--radius-2xl);
+}
+
+.wlq-form { display: grid; gap: var(--space-2); }
+
+.wlq-form__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-2);
+  align-items: stretch;
+}
+
+.wlq-form .input { padding: 12px 14px; font-size: var(--text-base); }
+
+.wlq-form .btn {
+  padding: 12px 20px;
+  font-size: var(--text-base);
+}
+
+.wlq-form .field-error { min-height: 0; text-align: center; }
+.wlq-form .field-error:empty { display: none; }
+
+.wlq-form .status { min-height: 0; }
+.wlq-form .status:empty { display: none; }
+
+.wlq-form .consent { margin: 0; text-wrap: balance; }
+/* "Privacy Policy" is one thing; breaking it across two lines makes the
+   link look like two. */
+.wlq-form .consent a { white-space: nowrap; }
+
+/* ---- done --------------------------------------------------
+   Same height as the form it replaces, so the page doesn't jump
+   under the thumb that just pressed the button. */
+
+.wlq-done { display: none; text-align: center; }
+.wlq-done h2 {
+  margin: 0 0 var(--space-1);
+  font-size: clamp(1.0625rem, 4.4vw, 1.25rem);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.wlq-done p { margin: 0; font-size: var(--text-sm); color: var(--ink-soft); }
+
+/* ---- reveal ------------------------------------------------- */
+
+.wlq .wordmark--hero { animation: wl-surface var(--duration-standard) var(--ease-emergence) 120ms both; }
+.wlq-when            { animation: wl-rise var(--duration-emergence) ease 260ms both; }
+.wlq-banner          { animation: wl-rise var(--duration-emergence) ease 320ms both; }
+.wlq-card            { animation: wl-surface var(--duration-hero) var(--ease-emergence) 480ms both; }
+
+/* ---- short screens ------------------------------------------
+   Under about 640px tall the supporting line is the first thing
+   that can go: the headline and the figure carry the slide on
+   their own, and the form must stay on screen. */
+
+@media (max-height: 640px) {
+  .hslide p { display: none; }
+  .wlq .wordmark--hero { width: min(120px, 30vw); }
+  .wlq-head { gap: var(--space-2); }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hslides__track { transition: none; }
+  .wlq .wordmark--hero, .wlq-when, .wlq-banner, .wlq-card {
+    animation: none; opacity: 1; transform: none; filter: none;
+  }
+  .hslide.is-live * { animation: none !important; }
+}

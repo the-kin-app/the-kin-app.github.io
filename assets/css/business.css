@@ -1,7 +1,7 @@
 /* ============================================================
    Kin — Kin for Business
    ------------------------------------------------------------
-   The business questionnaire, in the landing page's world: dusk
+   The business questionnaire, in the landing page's world: cave
    light, drifting fog, cast-glass wordmark, and the questions
    themselves carried on slabs of optical resin.
 
@@ -19,7 +19,7 @@
 
 /* ---- page --------------------------------------------------
    A scrolling document, not the landing page's scrubbed sequence:
-   the palette stays at dusk throughout, so there is no daybreak
+   the palette stays at cave throughout, so there is no daybreak
    ramp and nothing here fights the form for attention. */
 
 .biz main { position: relative; z-index: 1; }
@@ -51,7 +51,7 @@ html.reveal-armed .biz .rise.in {
 
 /* ---- no-module fallbacks -----------------------------------
    business.js stamps .js-ready on <html>. Without it the sunrise
-   never runs, so the page is stuck at dusk — and .resin over dusk is
+   never runs, so the page is stuck at cave — and .resin over cave is
    a pale wash on a dark floor, which is murk, not a lit object. The
    cards therefore carry their own opaque material until the ramp is
    there to light them. Same idea for the i-dot: Min is drawn by the
@@ -244,11 +244,11 @@ html:not(.js-ready) .wordmark--hero .wordmark__dot { display: block; }
   appearance: none;
   -webkit-appearance: none;
   padding: 14px 16px;
-  border: 1px solid rgba(33, 33, 45, 0.08);
+  border: 1px solid rgba(35, 33, 30, 0.08);
   border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.42);
   box-shadow:
-    inset 0 2px 4px rgba(43, 26, 46, 0.1),
+    inset 0 2px 4px rgba(15, 13, 20, 0.1),
     inset 0 -1px 0 rgba(255, 255, 255, 0.7);
   color: var(--ink);
   font-family: inherit;
@@ -270,7 +270,7 @@ html:not(.js-ready) .wordmark--hero .wordmark__dot { display: block; }
   background: rgba(255, 255, 255, 0.6);
   border-color: color-mix(in srgb, var(--color-accent) 40%, transparent);
   box-shadow:
-    inset 0 2px 4px rgba(43, 26, 46, 0.08),
+    inset 0 2px 4px rgba(15, 13, 20, 0.08),
     inset 0 -1px 0 rgba(255, 255, 255, 0.7),
     0 0 0 3px color-mix(in srgb, var(--color-accent) 18%, transparent);
 }
@@ -298,7 +298,7 @@ html:not(.js-ready) .wordmark--hero .wordmark__dot { display: block; }
   cursor: pointer;
 }
 .select.is-placeholder { color: var(--ink-faint); }
-.select option { color: #21212d; }
+.select option { color: #23211E; }
 
 .field-error {
   min-height: 18px;
@@ -320,10 +320,10 @@ html:not(.js-ready) .wordmark--hero .wordmark__dot { display: block; }
   align-items: center;
   gap: var(--space-3);
   padding: 13px 16px;
-  border: 1px solid rgba(33, 33, 45, 0.07);
+  border: 1px solid rgba(35, 33, 30, 0.07);
   border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.3);
-  box-shadow: inset 0 1px 2px rgba(43, 26, 46, 0.06);
+  box-shadow: inset 0 1px 2px rgba(15, 13, 20, 0.06);
   cursor: pointer;
   transition:
     background var(--duration-quick) ease,
@@ -336,7 +336,7 @@ html:not(.js-ready) .wordmark--hero .wordmark__dot { display: block; }
   background: rgba(255, 255, 255, 0.62);
   border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
   box-shadow:
-    inset 0 1px 2px rgba(43, 26, 46, 0.05),
+    inset 0 1px 2px rgba(15, 13, 20, 0.05),
     0 0 0 2px color-mix(in srgb, var(--color-accent) 16%, transparent);
 }
 .option:has(input:focus-visible) {
@@ -351,9 +351,9 @@ html:not(.js-ready) .wordmark--hero .wordmark__dot { display: block; }
   width: 19px;
   height: 19px;
   margin: 0;
-  border: 1.5px solid rgba(33, 33, 45, 0.28);
+  border: 1.5px solid rgba(35, 33, 30, 0.28);
   background: rgba(255, 255, 255, 0.75);
-  box-shadow: inset 0 1px 2px rgba(43, 26, 46, 0.12);
+  box-shadow: inset 0 1px 2px rgba(15, 13, 20, 0.12);
   outline: none;
   cursor: pointer;
   transition: background var(--duration-quick) ease, border-color var(--duration-quick) ease;
@@ -361,9 +361,12 @@ html:not(.js-ready) .wordmark--hero .wordmark__dot { display: block; }
 .option input[type="checkbox"] { border-radius: 6px; }
 .option input[type="radio"] { border-radius: 50%; }
 
+/* the checked fill is the INK level, not the light one — a white check on
+   --violet is unreadable, and the control is the one place the accent has to
+   carry a glyph */
 .option input:checked {
-  background-color: var(--color-accent);
-  border-color: var(--color-accent);
+  background-color: var(--violet-ink);
+  border-color: var(--violet-ink);
   box-shadow: 0 0 8px 1px color-mix(in srgb, var(--color-accent) 35%, transparent);
 }
 .option input[type="checkbox"]:checked {
@@ -417,8 +420,8 @@ html:not(.js-ready) .wordmark--hero .wordmark__dot { display: block; }
   gap: var(--space-2);
   padding: var(--space-1);
   border-radius: var(--radius-xl);
-  background: rgba(33, 33, 45, 0.06);
-  box-shadow: inset 0 2px 4px rgba(43, 26, 46, 0.1);
+  background: rgba(35, 33, 30, 0.06);
+  box-shadow: inset 0 2px 4px rgba(15, 13, 20, 0.1);
 }
 
 .segmented button {
@@ -459,8 +462,8 @@ html:not(.js-ready) .wordmark--hero .wordmark__dot { display: block; }
   background: linear-gradient(168deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.62));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    0 1px 2px rgba(43, 26, 46, 0.12),
-    0 6px 14px -6px rgba(43, 26, 46, 0.3);
+    0 1px 2px rgba(15, 13, 20, 0.12),
+    0 6px 14px -6px rgba(15, 13, 20, 0.3);
   border: 0 solid rgba(255, 255, 255, 0.6);
 }
 .segmented__pill.is-launching::after {

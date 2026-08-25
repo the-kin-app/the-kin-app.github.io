@@ -28,8 +28,8 @@ const seg = (t, a, b) => smoothstep(clamp((t - a) / (b - a || 1)));
 
 /* ---------- 1. daybreak ------------------------------------- */
 
-const CREAM = [248, 242, 234];
-const GRAPHITE = [33, 33, 45];
+const CREAM = [250, 247, 242];
+const GRAPHITE = [35, 33, 30];
 
 function sampleRamp(ramp, p) {
   for (let i = 0; i < ramp.length - 1; i++) {
@@ -85,9 +85,9 @@ function inkFor(bg) {
   return contrast(l, L_CREAM) >= contrast(l, L_GRAPHITE) ? CREAM : GRAPHITE;
 }
 
-/* The environments are the Figma onboarding BG gradients: dusk
-   #1e1b2e → #3a2e44, warm #f8e4d2 → #e9ae9e. Dark here is a warm plum
-   dusk, never a black void — same material language, different light.
+/* The environments are the app's world, lit from either end: the back of
+   the cave #2A2320 → #463A31, the shore #D6C5AC → #F0EBE2. The dark end is
+   warm brown, never a black void — same material, different light.
 
    Keyframes are derived from real section offsets, not hardcoded fractions,
    so editing copy can't drift the sunrise into the middle of a paragraph. */
@@ -102,7 +102,7 @@ function buildRamps() {
 
   /* The dawn is now the constellation's scroll track, several viewports
      tall, so its keyframes are fractions of its own height rather than of
-     the viewport. The plum floor *holds* through the whole assembly — the
+     the viewport. The cave floor *holds* through the whole assembly — the
      figure is built out of translucency and needs a dark floor to read
      against — then the light breaks as the links go out, and full daylight
      lands exactly as the stage unpins. */
@@ -112,17 +112,17 @@ function buildRamps() {
 
   return {
     bg: [
-      [0, [30, 27, 46]],                           // #1e1b2e — dusk
-      [problem, [38, 32, 56]],
-      [pp(dawnPx - vh * 0.35), [58, 46, 68]],      // #3a2e44 — the plum floor
-      [pp(dawnPx + dawnH * 0.56), [58, 46, 68]],   // …held, all through the assembly
-      [pp(dawnPx + dawnH * 0.80), [214, 176, 168]], // first light, with the links
-      [pp(dawnPx + dawnH * 0.99), [248, 228, 210]], // #f8e4d2 — apricot, as it unpins
+      [0, [42, 35, 32]],                           // #2A2320 — cave
+      [problem, [50, 42, 37]],
+      [pp(dawnPx - vh * 0.35), [70, 58, 49]],      // #463A31 — the cave floor
+      [pp(dawnPx + dawnH * 0.56), [70, 58, 49]],   // …held, all through the assembly
+      [pp(dawnPx + dawnH * 0.80), [214, 197, 172]], // first light, with the links
+      [pp(dawnPx + dawnH * 0.99), [240, 235, 226]], // #F0EBE2 — daylight, as it unpins
       [pp(closerPx - vh * 0.10), [246, 236, 226]],
-      [pp(closerPx + vh * 0.30), [58, 46, 68]],    // dusk again
-      [1, [30, 27, 46]],
+      [pp(closerPx + vh * 0.30), [70, 58, 49]],    // cave again
+      [1, [42, 35, 32]],
     ],
-    /* the field diffuses away in the daylight and returns at dusk */
+    /* the field diffuses away in the daylight and returns in the cave */
     alpha: [
       [0, 1], [problem + 0.04, 0.95],
       [pp(dawnPx + dawnH * 0.96), 0], [pp(closerPx + vh * 0.05), 0],
