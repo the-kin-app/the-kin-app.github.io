@@ -3,7 +3,7 @@
  *
  * Storage: D1 (serverless SQLite). Same request/response contract as the
  * previous self-hosted Node backend, so the frontends
- * (assets/js/waitlist.js, assets/js/business.js) need no changes.
+ * (assets/js/waitlist-hero.js, assets/js/business.js) need no changes.
  *
  * Two forms, two tables, one Worker:
  *   - /waitlist  -> signups          (consumer waitlist, name + email/phone)
@@ -46,7 +46,7 @@ const PILOT_INTEREST = new Set(['yes', 'maybe', 'no']);
 //
 // Slugs are ASCII on purpose: 'myyrmaki' keeps the printed QR free of
 // percent-encoding. Adding or retiring a poster or a location is an edit
-// here; assets/js/waitlist.js only checks the shape and leaves the
+// here; assets/js/waitlist-hero.js only checks the shape and leaves the
 // vocabulary to this file.
 const POSTERS = new Set(['a', 'b']);
 const LOCATIONS = new Set([

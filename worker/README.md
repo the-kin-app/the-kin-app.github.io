@@ -1,7 +1,7 @@
 # Kin waitlist — Cloudflare Worker
 
 Serverless replacement for the old self-hosted Node backend. Same request
-contract, so `assets/js/waitlist.js` at the repo root needs no changes.
+contract, so `assets/js/waitlist-hero.js` at the repo root needs no changes.
 
 One Worker now backs two forms, on two tables in the same D1 database:
 
@@ -94,13 +94,13 @@ the `routes` block in `wrangler.toml` and deploy; Cloudflare gives you a URL
 like `https://kin-waitlist.<your-subdomain>.workers.dev`. Then either:
 
 - Set `window.KIN_API_BASE = 'https://kin-waitlist.<subdomain>.workers.dev';`
-  in a small inline `<script>` before `waitlist.js` loads on
+  in a small inline `<script>` before `waitlist-hero.js` loads on
   `waitlist/index.html`, **or**
-- Just change the default in `assets/js/waitlist.js` (`API_BASE` constant)
+- Just change the default in `assets/js/waitlist-hero.js` (`API_BASE` constant)
   to that URL and commit it.
 
 **Option B — `api.kinapp.social` custom domain (what `wrangler.toml` is set
-up for, and what `waitlist.js` already defaults to).** Requires
+up for, and what `waitlist-hero.js` already defaults to).** Requires
 `kinapp.social`'s DNS to be managed by Cloudflare — i.e. the domain's
 nameservers point at Cloudflare, not (only) your registrar's defaults. If
 that's not already the case:
@@ -197,7 +197,7 @@ have to be percent-encoded in the QR, which is easy to get wrong and ugly if
 anyone ever reads the URL off the poster.
 
 A scan hits the Worker, which writes one row to `poster_scans` and 302s to
-`https://kinapp.social/waitlist/?l=otaniemi&p=a`. `assets/js/waitlist.js` reads
+`https://kinapp.social/waitlist/?l=otaniemi&p=a`. `assets/js/waitlist-hero.js` reads
 both params into variables and sends them with the signup, where they land in
 `signups.poster` and `signups.poster_location`. Read the result from
 `/admin/posters`.
@@ -216,7 +216,7 @@ landing page doesn't recount. The 302 carries `Cache-Control: no-store`; drop
 that and a cached redirect would skip the Worker and undercount.
 
 **Adding or retiring a poster or a location** is one edit, to `POSTERS` or
-`LOCATIONS` in `src/index.js`. `assets/js/waitlist.js` only checks that a
+`LOCATIONS` in `src/index.js`. `assets/js/waitlist-hero.js` only checks that a
 param looks like a slug and leaves the vocabulary to the Worker, so the two
 files can't drift apart.
 

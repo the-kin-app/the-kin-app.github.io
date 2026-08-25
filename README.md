@@ -24,7 +24,6 @@ waitlist submissions.
 │   │   └── waitlist-hero.css  The waitlist's three-slide banner + its no-scroll layout
 │   ├── js/
 │   │   ├── waitlist-hero.js The waitlist banner (auto-advance, swipe, dots) + its one-field form
-│   │   ├── waitlist.js      The older name + email/phone form (unused by any page today)
 │   │   ├── press.js         The submerge button press (shared by every page)
 │   │   ├── min.js           Min himself: anatomy, the 5s morph loop, the gaze (shared)
 │   │   ├── landing.js       Homepage: colour ramp, reveals, typewriter, constellation
@@ -288,8 +287,8 @@ python3 -m http.server 8000      # from the repo root
 ```
 
 For the waitlist form to submit locally, run the Worker and point the form at
-it (see `worker/README.md`): set `window.KIN_API_BASE` before `waitlist.js`
-loads.
+it (see `worker/README.md`): set `window.KIN_API_BASE` before
+`waitlist-hero.js` loads.
 
 ## Backend
 

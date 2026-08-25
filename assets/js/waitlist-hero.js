@@ -167,6 +167,25 @@
 
   const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
+  /* Poster attribution. Each printed QR points at
+     api.kinapp.social/<location>/<poster>, which counts the scan and
+     redirects here carrying ?l=<location>&p=<poster>. Read once into
+     memory and held for this page view only — no cookie, no storage,
+     nothing kept on the device, which is what keeps the site clear of a
+     consent banner. Leave the params in the address bar: with nothing
+     persisted, the URL is the attribution.
+
+     Only the shape is checked here. worker/src/index.js holds the
+     allowlists and stores anything it doesn't recognise as NULL, so the
+     vocabulary lives in one place. */
+  const params = new URLSearchParams(location.search);
+  const slug = (key) => {
+    const value = params.get(key);
+    return value && /^[a-z0-9-]{1,32}$/.test(value) ? value : null;
+  };
+  const poster = slug('p');
+  const posterLocation = slug('l');
+
   /* The Worker requires a name and the signups table stores it NOT
      NULL, but this page deliberately asks for one thing only — a
      second field is the difference between joining and not, at a QR
@@ -212,7 +231,9 @@
       contact_method: 'email',
       email: email,
       phone: null,
-      website: websiteInput ? websiteInput.value : '' // honeypot — always empty for real users
+      website: websiteInput ? websiteInput.value : '', // honeypot — always empty for real users
+      poster: poster,
+      poster_location: posterLocation
     };
 
     const original = label.textContent;
