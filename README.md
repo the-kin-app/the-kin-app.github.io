@@ -131,9 +131,17 @@ brand:
   He only detaches at the `#dawn` beat, so the visitor feels they discovered him
   rather than being introduced to a mascot.
   - **He is a creature, not a pebble.** A dome body cast in warm opal resin and
-    lit from the inside, two ear flaps hanging down his sides, two foot nubs,
+    lit from the inside, a short flappy ear at each shoulder, two foot nubs,
     two hot eyes. The light sits low and centred, because that is where it is
     trapped; the dome above it stays milky.
+    - **His eyes sit high**, a little above his middle, per the turnaround
+      sheet. Drawn low in the belly he reads as bottom-heavy and sad; up there
+      the dome above them becomes forehead and the light pooling below becomes
+      a body. `EYE` in `min.js` is the one place that position lives.
+    - **The ears are ears, not arms** — short flaps at the shoulder, angled
+      down and out, straddling the eye line and stopping there. The sort of
+      thing that can become a wave, a point or a wing when he needs one. Run
+      one down toward his feet and it stops reading as an ear.
   - **He carries the accent only in the small flat mark.** At any real size he
     is warm opal resin — the violet belongs to the logo's i-dot, not to him.
   - His body is **generated, not drawn** (`bodyPath()` / `earPath()`), morphing
@@ -143,10 +151,13 @@ brand:
       not a radius function: feet are not a harmonic, they have to be authored.
       The dome breathes at full amplitude and the feet barely move, because a
       creature whose feet wobbled like its head would read as a jelly.
-    - The ears **hinge at their root and trail the body by a beat**, and the
-      whole figure **squashes and stretches conserving volume**, scaled about
-      his feet rather than his centre — he settles onto the ground, he does not
-      shrink toward his middle.
+    - The ears **bend, they do not swing**: every point rotates by the sway
+      angle scaled by its distance from the root, so the tip travels furthest
+      and the flap curves along its length. One angle for the whole outline is
+      a paddle on a hinge. They also **trail the body by a beat**.
+    - The whole figure **squashes and stretches conserving volume**, scaled
+      about his feet rather than his centre — he settles onto the ground, he
+      does not shrink toward his middle.
     - His eyes carry a slow 5s glow. **He never blinks.** Gaze follows the
       cursor with inertia.
   - Min is stamped into each host as real DOM by `minFigure()`. An `<svg><use>`

@@ -155,7 +155,7 @@ body.wlq {
      squeezed the box to two thirds of the crowd standing in it, which
      is how the headline ended up printed over the blobs. So: an exact
      width, an exact height, and `flex: 0 0 auto`. */
-  --fig-h: min(30svh, 240px);
+  --fig-h: min(28svh, 232px);
   --fig-w: min(calc(100vw - 2 * var(--space-5)), 420px, calc(var(--fig-h) * 16 / 9));
   --crowd-h: calc(var(--fig-w) * 9 / 16);
   --ring-d: min(var(--fig-h), calc(var(--fig-w) * 0.62));
@@ -167,6 +167,15 @@ body.wlq {
 }
 
 .hslide__say { display: grid; gap: var(--space-2); justify-items: center; }
+
+/* "the RIGHT people" — the one word the sentence turns on. Weight, not
+   italics: the line is already small, and an oblique at this size reads
+   as a wobble rather than as emphasis. */
+.hslide p em {
+  font-style: normal;
+  font-weight: var(--font-weight-bold);
+  color: var(--ink);
+}
 
 .hslide h2 {
   margin: 0;
@@ -187,6 +196,27 @@ body.wlq {
   text-wrap: balance;
   max-width: 34ch;
 }
+
+/* ---- the problem slide -------------------------------------
+   The opener is the only slide whose two lines are one sentence:
+   the habit, then what it costs. So it drops the usual
+   headline/caption hierarchy — both lines run large, and the
+   second stays in near-full ink instead of fading back, because
+   the cost is the half that has to land. */
+
+.hslide--problem h2 {
+  font-size: clamp(1.1875rem, 5.4vw, 1.625rem);
+  /* narrow enough that it balances onto two full lines rather than
+     leaving a one-word orphan under a long first line */
+  max-width: 20ch;
+}
+.hslide--problem p {
+  font-size: clamp(0.9375rem, 4.2vw, 1.125rem);
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--ink) 86%, transparent);
+  max-width: 26ch;
+}
+.hslide--problem .hslide__say { gap: var(--space-3); }
 
 /* ---- the dots ----------------------------------------------
    Also the control. They are real buttons with a hit area larger
@@ -443,10 +473,27 @@ body.wlq {
    their own, and the form must stay on screen. */
 
 @media (max-height: 640px) {
-  .hslide p { display: none; }
+  /* The supporting line goes first when the screen is short — except on
+     the opener, where it is the other half of the sentence and dropping
+     it would leave three verbs and no point. */
+  .hslide:not(.hslide--problem) p { display: none; }
   .wlq .wordmark--hero { width: min(120px, 30vw); }
   .wlq-head { gap: var(--space-2); }
 
+}
+
+/* Under 600px tall — an SE, or a phone with the keyboard up — the figure
+   gives up another slice. It is the only thing on the page that can. */
+@media (max-height: 600px) {
+  .hslide__fig { --fig-h: min(24svh, 200px); }
+}
+
+/* Under 520px tall — a phone turned sideways, or a keyboard eating most
+   of the screen — the picture goes entirely. There is not room for a
+   figure and a form both, and the form is what the page is for. */
+@media (max-height: 520px) {
+  .hslide__fig { display: none; }
+  .wlq .wordmark--hero { width: min(104px, 26vw); }
 }
 
 @media (prefers-reduced-motion: reduce) {

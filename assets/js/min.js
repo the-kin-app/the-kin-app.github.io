@@ -2,8 +2,8 @@
    Kin — Min
    ------------------------------------------------------------
    Min is a small creature cast in warm opal resin, lit from the inside:
-   a tall dome body, two soft ear flaps that hang down his sides, two foot
-   nubs, and two hot little eyes. He breathes on an exact 5s loop and his
+   a tall dome body, a short flappy ear at each shoulder, two foot nubs and
+   two hot little eyes. He breathes on an exact 5s loop and his
    gaze follows the cursor with inertia. He does not blink.
 
    HE IS NOT DRAWN, HE IS GENERATED. The silhouette below is a fixed set of
@@ -34,6 +34,7 @@
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
+const round1 = (v) => Math.round(v * 10) / 10;
 
 const LOOP = 5;        // seconds — the idle loop, exactly
 
@@ -76,19 +77,45 @@ const BODY = [
 ];
 
 /* One ear, as a closed outline in the same unit space — the RIGHT one; the
-   left is this mirrored. Ears are drawn BEHIND the body, so only the part
-   that reaches past his side is ever visible. That is why they read as
-   flaps lying against him rather than as wings bolted on. */
-const EAR = [
-  [0.42, -0.22], [0.78, -0.10], [1.02,  0.20],
-  [1.09,  0.54], [0.98,  0.82], [0.84,  0.84],
-  [0.75,  0.56], [0.54,  0.18],
-];
-/* Where the ear pivots when it sways — its root, not its centre. A flap
-   hinges where it is attached. */
-const EAR_PIVOT = [0.46, -0.20];
+   left is this mirrored.
 
-const EYE = { x: 0.28, y: 0.18, r: 0.130 };
+   IT IS AN EAR, NOT AN ARM. A short flap at his shoulder, angled down and
+   out, tip stopping about level with his eyes — the sort of thing that can
+   become a wave, a point or a wing when he needs one, and the rest of the
+   time just sits there. Long enough to reach past his side and no longer:
+   run it down toward his feet and it stops being an ear.
+
+   Drawn BEHIND the body, so only the part that reaches past his side is
+   ever visible — which is why the root points can sit well inside his
+   silhouette, and why it reads as a flap lying against him rather than as
+   a limb bolted on. */
+const EAR = [
+  [0.66, -0.50],   // root, top — buried in the body
+  [0.95, -0.42],
+  [1.10, -0.20],
+  [1.09,  0.01],
+  [0.96,  0.09],   // tip, stopping about level with his eyes
+  [0.86, -0.06],
+  [0.70, -0.24],   // root, bottom — also buried
+];
+/* Where the ear hinges — its root, not its centre. */
+const EAR_PIVOT = [0.66, -0.40];
+
+/* Eyes, in the same unit space — and the ONE source for where they are.
+   The turnaround sheet puts them high, a little above his middle. Drawn low,
+   in the belly, he reads as bottom-heavy and sad; up here the dome above them
+   becomes forehead and the light pooling below becomes a body. */
+const EYE = { x: 0.28, y: -0.225, r: 0.135 };
+
+/* The transform the figure below is drawn at. `minBodies` lets a host
+   override cx/cy/rx/ry for the outline, but the eyes are baked into the
+   template markup, so they are placed from these — keep them in step. */
+const CANON = { cx: 256, cy: 272, rx: 172, ry: 178 };
+const EYE_L = round1(CANON.cx - CANON.rx * EYE.x);
+const EYE_R = round1(CANON.cx + CANON.rx * EYE.x);
+const EYE_Y = round1(CANON.cy + CANON.ry * EYE.y);
+const EYE_R_CORE = round1(CANON.rx * EYE.r);
+const EYE_R_BLOOM = round1(CANON.rx * 0.30);
 
 /* ---- geometry ----------------------------------------------------- */
 
@@ -125,19 +152,28 @@ export function bodyPath(phase, cx, cy, rx, ry) {
   return through(pts);
 }
 
-/* An ear. `side` is +1 (right) or −1 (left). The sway is applied here as a
-   rotation about the root rather than as a transform on the node, so the
-   ear's own outline is what moves — a transform would swing the pivot too. */
+/* An ear. `side` is +1 (right) or −1 (left).
+
+   IT BENDS, IT DOES NOT SWING. Every point rotates by the sway angle scaled
+   by how far it sits from the root, so the tip travels furthest and the flap
+   curves along its length. One angle for the whole outline is a paddle on a
+   hinge — right for a door, wrong for something soft. It costs one hypot per
+   point, which is what "flappy" is worth.
+
+   The sway moves the OUTLINE rather than the node, because a transform would
+   carry the hinge along with it. */
 export function earPath(phase, cx, cy, rx, ry, side) {
   const [px, py] = [EAR_PIVOT[0] * side, EAR_PIVOT[1]];
   /* trails the body by a beat: a flap follows the thing it hangs off */
-  const ang = (0.055 * Math.sin(phase - 0.9) + 0.022 * Math.sin(2 * phase + 0.4)) * side;
-  const cos = Math.cos(ang), sin = Math.sin(ang);
+  const sway = (0.20 * Math.sin(phase - 0.9) + 0.07 * Math.sin(2 * phase + 0.4)) * side;
+  const reach = Math.max(...EAR.map(([ux, uy]) => Math.hypot(ux * side - px, uy - py)));
+
   const pts = EAR.map(([ux, uy]) => {
     const dx = ux * side - px, dy = uy - py;
-    const qx = px + dx * cos - dy * sin;
-    const qy = py + dx * sin + dy * cos;
-    return [cx + qx * rx, cy + qy * ry];
+    const ang = sway * (Math.hypot(dx, dy) / reach);   // the tip bends most
+    const cos = Math.cos(ang), sin = Math.sin(ang);
+    return [cx + (px + dx * cos - dy * sin) * rx,
+            cy + (py + dx * sin + dy * cos) * ry];
   });
   return through(pts);
 }
@@ -151,7 +187,7 @@ export function earPath(phase, cx, cy, rx, ry, side) {
    gradient and filter ids unique per instance.
 
    THE MATERIAL, bottom to top: an ambient warm bloom he casts on the world,
-   the ear flaps behind him, his body, the light trapped inside it low and
+   the ears behind him, his body, the light trapped inside it low and
    centred, a rim that brightens toward the edge because that is where the
    light has furthest to travel through him, two speculars, then the eyes.
    No blur passes except the eye bloom — the rim gradient is what reads as
@@ -165,9 +201,9 @@ export const minFigure = (n) => `
       <stop offset="1" stop-color="#EBD3B0" stop-opacity=".96"/>
     </linearGradient>
     <radialGradient id="mi${n}" gradientUnits="userSpaceOnUse"
-      gradientTransform="translate(256 322) scale(196 158)" cx="0" cy="0" r="1">
-      <stop stop-color="#FFC475" stop-opacity=".58"/>
-      <stop offset=".55" stop-color="#FFD595" stop-opacity=".30"/>
+      gradientTransform="translate(256 332) scale(214 168)" cx="0" cy="0" r="1">
+      <stop stop-color="#FFC97F" stop-opacity=".44"/>
+      <stop offset=".50" stop-color="#FFD79A" stop-opacity=".26"/>
       <stop offset="1" stop-color="#FFD79A" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="mr${n}" gradientUnits="userSpaceOnUse"
@@ -206,17 +242,17 @@ export const minFigure = (n) => `
     <path class="min__body" fill="url(#mr${n})"/>
 
     <!-- two speculars on the dome: where the light source is, in one glance -->
-    <ellipse class="min__spec" cx="196" cy="168" rx="21" ry="15" fill="#fff" opacity=".72" transform="rotate(-24 196 168)"/>
-    <ellipse class="min__spec" cx="306" cy="158" rx="13" ry="9"  fill="#fff" opacity=".55" transform="rotate(-18 306 158)"/>
+    <ellipse class="min__spec" cx="203" cy="148" rx="20" ry="14" fill="#fff" opacity=".62" transform="rotate(-26 203 148)"/>
+    <ellipse class="min__spec" cx="300" cy="140" rx="12" ry="8"  fill="#fff" opacity=".44" transform="rotate(-18 300 140)"/>
 
     <g class="min__eyes">
       <g class="min__eye">
-        <ellipse class="min__glow" cx="205" cy="305" rx="52" ry="50" fill="#FFE6B4" filter="url(#mf${n})"/>
-        <ellipse cx="205" cy="305" rx="25" ry="25" fill="#fff"/>
+        <ellipse class="min__glow" cx="${EYE_L}" cy="${EYE_Y}" rx="${EYE_R_BLOOM}" ry="${EYE_R_BLOOM}" fill="#FFE6B4" filter="url(#mf${n})"/>
+        <circle cx="${EYE_L}" cy="${EYE_Y}" r="${EYE_R_CORE}" fill="#fff"/>
       </g>
       <g class="min__eye">
-        <ellipse class="min__glow" cx="307" cy="305" rx="52" ry="50" fill="#FFE6B4" filter="url(#mf${n})"/>
-        <ellipse cx="307" cy="305" rx="25" ry="25" fill="#fff"/>
+        <ellipse class="min__glow" cx="${EYE_R}" cy="${EYE_Y}" rx="${EYE_R_BLOOM}" ry="${EYE_R_BLOOM}" fill="#FFE6B4" filter="url(#mf${n})"/>
+        <circle cx="${EYE_R}" cy="${EYE_Y}" r="${EYE_R_CORE}" fill="#fff"/>
       </g>
     </g>
   </g>

@@ -165,26 +165,34 @@
   const API_BASE = (window.KIN_API_BASE || 'https://api.kinapp.social').replace(/\/$/, '');
   const SUBMIT_URL = API_BASE + '/waitlist';
 
-  const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-
-  /* Poster attribution. Each printed QR points at
+  /* Poster attribution — the same contract as waitlist.js, because this
+     page is where every printed QR actually lands. Each code points at
      api.kinapp.social/<location>/<poster>, which counts the scan and
-     redirects here carrying ?l=<location>&p=<poster>. Read once into
-     memory and held for this page view only — no cookie, no storage,
-     nothing kept on the device, which is what keeps the site clear of a
-     consent banner. Leave the params in the address bar: with nothing
-     persisted, the URL is the attribution.
+     redirects here with ?l=<location>&p=<poster>.
+
+     Read once into memory and held for this page view only — no cookie,
+     no localStorage, nothing on the device, so it needs no consent
+     banner. The trade-off: navigate away and back without the query
+     string and the signup lands unattributed. Every poster loses the
+     same share of those, so the comparison still holds. Which is also
+     why ?l= and ?p= stay in the address bar: with nothing persisted,
+     the URL *is* the attribution.
 
      Only the shape is checked here. worker/src/index.js holds the
-     allowlists and stores anything it doesn't recognise as NULL, so the
-     vocabulary lives in one place. */
-  const params = new URLSearchParams(location.search);
-  const slug = (key) => {
+     authoritative allowlists and stores anything it doesn't recognise
+     as NULL, so the vocabulary lives in one place rather than two. */
+  const SLUG_RE = /^[a-z0-9-]{1,32}$/;
+  const params = new URLSearchParams(window.location.search);
+
+  function readSlug(key) {
     const value = params.get(key);
-    return value && /^[a-z0-9-]{1,32}$/.test(value) ? value : null;
-  };
-  const poster = slug('p');
-  const posterLocation = slug('l');
+    return value && SLUG_RE.test(value) ? value : null;
+  }
+
+  const poster = readSlug('p');
+  const posterLocation = readSlug('l');
+
+  const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
   /* The Worker requires a name and the signups table stores it NOT
      NULL, but this page deliberately asks for one thing only — a
