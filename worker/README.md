@@ -9,14 +9,16 @@ One Worker now backs two forms, on two tables in the same D1 database:
 | --- | --- | --- | --- | --- |
 | Consumer waitlist | `/waitlist/` | `POST /waitlist` | `signups` | `0001_init.sql` |
 | Business interest form | `/business/` | `POST /business` | `business_signups` | `0002_business_signups.sql`, `0003_business_type_other.sql` |
+| Poster A/B tracking | printed QR codes | `GET /<location>/<poster>` | `poster_scans` | `0004_poster_tracking.sql` |
 
 - **Compute:** Cloudflare Workers (`src/index.js`)
 - **Storage:** Cloudflare D1 — serverless SQLite (`migrations/`)
 - **Collects:** waitlist — name + (email or phone). Business form — business
   name + location (required), plus optional contact info and questionnaire
   answers (business type, current marketing, slow hours, concept reaction,
-  pricing preference, pilot interest). No IP address, no user agent, either
-  way.
+  pricing preference, pilot interest). Poster scans — a location, a poster id
+  and a timestamp, nothing else. No IP address, no user agent, any of the
+  three.
 
 ```
 Browser ──HTTPS──> GitHub Pages   (kinapp.social)      static site
@@ -60,6 +62,8 @@ database:
 - `0002_business_signups.sql` — the `business_signups` table and its indexes
 - `0003_business_type_other.sql` — adds `business_type_other`, the free-text
   write-in behind the "Something else, what?" business-type option
+- `0004_poster_tracking.sql` — the `poster_scans` table and the `poster` /
+  `poster_location` columns on `signups`, for the poster A/B test
 
 (`npm run migrate:local` runs the same thing against the local dev database
 instead, for use with `wrangler dev`.) Safe to re-run; already-applied
@@ -129,6 +133,9 @@ curl -X POST https://api.kinapp.social/business \
   -H 'Content-Type: application/json' \
   -d '{"business_name":"Test Cafe","location":"Kallio, Helsinki"}'
 # -> {"ok":true}
+
+curl -si https://api.kinapp.social/otaniemi/a | head -4
+# -> HTTP/2 302 ... location: https://kinapp.social/waitlist/?l=otaniemi&p=a
 ```
 
 Then submit the real forms at `kinapp.social/waitlist/` and
@@ -139,7 +146,24 @@ Then submit the real forms at `kinapp.social/waitlist/` and
 ```bash
 curl -H 'Authorization: Bearer <ADMIN_TOKEN>' https://api.kinapp.social/admin/signups
 curl -H 'Authorization: Bearer <ADMIN_TOKEN>' https://api.kinapp.social/admin/business-signups
+curl -H 'Authorization: Bearer <ADMIN_TOKEN>' https://api.kinapp.social/admin/posters
 ```
+
+`/admin/posters` is the scoreboard — scans, signups and the ratio, pooled per
+poster and again per location/poster cell:
+
+```json
+{"by_poster":[{"poster":"a","scans":412,"signups":38,"conversion":0.0922},
+              {"poster":"b","scans":390,"signups":51,"conversion":0.1308}],
+ "by_location":[{"location":"otaniemi","poster":"a","scans":61,"signups":7,"conversion":0.1148},
+                {"location":"otaniemi","poster":"b","scans":58,"signups":9,"conversion":0.1552},
+                ...]}
+```
+
+**Read `by_poster` to decide the A/B, not `by_location`.** Twelve locations by
+two designs is 24 cells, and splitting the traffic that thin leaves each cell
+too noisy to call. `by_location` answers a different and much coarser
+question — where to hang more posters.
 
 Or query D1 directly:
 
@@ -150,6 +174,61 @@ npx wrangler d1 execute kin-waitlist --remote \
 npx wrangler d1 execute kin-waitlist --remote \
   --command "SELECT created_at, business_name, location, concept_interest, pilot_interest FROM business_signups ORDER BY id DESC;"
 ```
+
+## Poster A/B test
+
+Two poster designs (`a`, `b`) in twelve locations, one QR code per
+combination — 24 codes in all. Each encodes:
+
+```
+https://api.kinapp.social/<location>/<poster>
+```
+
+Locations, as they appear in the URL:
+
+| | | | |
+| --- | --- | --- | --- |
+| `meilahti` | `pasila` | `myllypuro` | `kumpula` |
+| `keskusta` | `arabia` | `viikki` | `otaniemi` |
+| `hanken` | `uniarts` | `diak` | `myyrmaki` |
+
+Slugs are ASCII: **`myyrmaki`, not `myyrmäki`**. A non-ASCII character would
+have to be percent-encoded in the QR, which is easy to get wrong and ugly if
+anyone ever reads the URL off the poster.
+
+A scan hits the Worker, which writes one row to `poster_scans` and 302s to
+`https://kinapp.social/waitlist/?l=otaniemi&p=a`. `assets/js/waitlist.js` reads
+both params into variables and sends them with the signup, where they land in
+`signups.poster` and `signups.poster_location`. Read the result from
+`/admin/posters`.
+
+**No consent banner.** Nothing is stored on or read from the visitor's device
+— no cookie, no `localStorage`, no `sessionStorage` — so the ePrivacy rule that
+triggers a banner is never engaged. A scan row identifies nobody. The cost of
+that choice: attribution lives in the URL, so someone who navigates away from
+`/waitlist/?p=a` and comes back without the query string signs up
+unattributed. Both posters lose the same share, so the comparison holds even
+though the absolute conversion rate reads a little low. Don't strip `?p=` from
+the address bar — with nothing persisted, the URL *is* the attribution.
+
+Scans are counted at the redirect rather than in page JS, so reloading the
+landing page doesn't recount. The 302 carries `Cache-Control: no-store`; drop
+that and a cached redirect would skip the Worker and undercount.
+
+**Adding or retiring a poster or a location** is one edit, to `POSTERS` or
+`LOCATIONS` in `src/index.js`. `assets/js/waitlist.js` only checks that a
+param looks like a slug and leaves the vocabulary to the Worker, so the two
+files can't drift apart.
+
+Unlisted values are ignored rather than rejected. An unrecognised
+`/<location>/<poster>` still redirects, to the bare waitlist — QR codes on
+paper outlive the campaign that printed them. An unrecognised `poster` or
+`poster_location` on a signup is stored as `NULL`; a mangled query string must
+never cost a signup. The two fields are independent, so a readable poster
+still counts even when the location doesn't survive.
+
+**The scan route is matched last**, after every named endpoint, so a
+two-segment path like `/admin/signups` can never fall into it.
 
 ## Local development
 

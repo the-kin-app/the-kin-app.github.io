@@ -17,6 +17,8 @@ migrations_dir = "migrations"
 
 [vars]
 ALLOW_ORIGIN = "https://kinapp.social"
+# Where GET /p/<poster> sends a scan. Same host as the static site.
+SITE_ORIGIN = "https://kinapp.social"
 
 # Native Workers rate limiting: 5 requests per 60s per key (per IP, see
 # src/index.js). The binding only supports fixed 10s/60s periods.
@@ -24,6 +26,20 @@ ALLOW_ORIGIN = "https://kinapp.social"
 name = "RATE_LIMITER"
 namespace_id = "1001"
 simple = { limit = 5, period = 60 }
+
+# Poster scans get their own namespace. Sharing RATE_LIMITER with the forms
+# would let a burst of scans from one network 429 somebody's actual signup.
+# Over the limit only skips the counter row — the redirect still happens, so
+# nobody scanning a poster ever sees an error.
+#
+# Set high on purpose. Mobile carrier NAT puts a lot of phones behind one
+# address, and a busy campus could plausibly produce dozens of scans a minute
+# from a single IP; anything tighter silently undercounts. This is here to
+# stop a trivial flood burning D1 writes, not to police real traffic.
+[[ratelimits]]
+name = "SCAN_LIMITER"
+namespace_id = "1002"
+simple = { limit = 100, period = 60 }
 
 # ADMIN_TOKEN is a secret, not a var — set it with:
 #   wrangler secret put ADMIN_TOKEN

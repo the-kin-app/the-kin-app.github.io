@@ -10,8 +10,13 @@
  *   - /business  -> business_signups (business interest form, only
  *                   business_name + location required, rest optional)
  *
+ * Plus poster A/B tracking (see migrations/0004_poster_tracking.sql):
+ *   - GET /<location>/<poster> -> poster_scans, then a 302 to
+ *     /waitlist/?l=<location>&p=<poster>
+ *
  * Deliberately NOT collected: IP address, user agent. Only what each form
- * actually asks for.
+ * actually asks for. Poster tracking stores nothing on the visitor's device
+ * and nothing that identifies them, so the site needs no consent banner.
  *
  * Security measures (see worker/README.md for detail):
  *   - Parameterized D1 queries (no SQL injection)
@@ -34,6 +39,24 @@ const MARKETING_CHANNELS = new Set(['word_of_mouth', 'social_media', 'paid_ads',
 const CONCEPT_INTEREST = new Set(['definitely', 'maybe', 'not_really']);
 const PRICING_PREF = new Set(['per_post', 'monthly', 'per_redemption', 'not_sure']);
 const PILOT_INTEREST = new Set(['yes', 'maybe', 'no']);
+
+// Printed poster variants and the places they hang. Together these are the
+// only values GET /<location>/<poster> and the signup fields will accept —
+// every other value is ignored, never rejected.
+//
+// Slugs are ASCII on purpose: 'myyrmaki' keeps the printed QR free of
+// percent-encoding. Adding or retiring a poster or a location is an edit
+// here; assets/js/waitlist.js only checks the shape and leaves the
+// vocabulary to this file.
+const POSTERS = new Set(['a', 'b']);
+const LOCATIONS = new Set([
+  'meilahti', 'pasila', 'myllypuro', 'kumpula', 'keskusta', 'arabia',
+  'viikki', 'otaniemi', 'hanken', 'uniarts', 'diak', 'myyrmaki',
+]);
+
+// One path segment: a short lowercase slug, the shape both halves of a
+// poster URL take.
+const SLUG_RE = /^[a-z0-9-]{1,32}$/;
 
 function corsHeaders(origin) {
   return {
@@ -208,14 +231,20 @@ async function handleWaitlist(request, env, origin) {
   // Lower-cased for case-insensitive dedup against the unique index.
   const email = contactMethod === 'email' ? payload.email.trim().toLowerCase() : null;
   const phone = contactMethod === 'phone' ? payload.phone.trim() : null;
+  // Which poster's QR brought them here, and where it was hanging. Anything
+  // outside the allowlists is dropped rather than rejected — a mangled query
+  // string must never cost a signup. The two are independent: a recognised
+  // poster still counts even if the location came through unreadable.
+  const poster = POSTERS.has(payload.poster) ? payload.poster : null;
+  const posterLocation = LOCATIONS.has(payload.poster_location) ? payload.poster_location : null;
   const createdAt = new Date().toISOString();
 
   try {
     await env.DB.prepare(
-      `INSERT INTO signups (name, contact_method, email, phone, created_at)
-       VALUES (?, ?, ?, ?, ?)`
+      `INSERT INTO signups (name, contact_method, email, phone, poster, poster_location, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`
     )
-      .bind(name, contactMethod, email, phone, createdAt)
+      .bind(name, contactMethod, email, phone, poster, posterLocation, createdAt)
       .run();
     return json(201, { ok: true }, origin);
   } catch (err) {
@@ -316,6 +345,47 @@ async function handleBusiness(request, env, origin) {
   }
 }
 
+// GET /<location>/<poster> — the URL printed on the posters. Counts the scan,
+// then bounces to the waitlist carrying both values in the query string.
+//
+// Counting here rather than in page JS means a reload of the landing page
+// doesn't recount, and nothing has to be stored on the visitor's device.
+async function handleScan(location, poster, request, env) {
+  const site = env.SITE_ORIGIN || 'https://kinapp.social';
+
+  // Its own limiter namespace: if scans shared RATE_LIMITER with the forms,
+  // a burst of scans from one network could 429 somebody's actual signup.
+  let allowed = true;
+  if (env.SCAN_LIMITER) {
+    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+    ({ success: allowed } = await env.SCAN_LIMITER.limit({ key: ip }));
+  }
+
+  if (allowed) {
+    try {
+      await env.DB.prepare(
+        'INSERT INTO poster_scans (location, poster, created_at) VALUES (?, ?, ?)'
+      )
+        .bind(location, poster, new Date().toISOString())
+        .run();
+    } catch (err) {
+      // Never strand a real person on an error page over a counter.
+      console.error('D1 scan insert failed:', err);
+    }
+  }
+
+  return new Response(null, {
+    status: 302,
+    headers: {
+      // no-store matters: a cached 302 would skip the Worker and undercount.
+      Location: `${site}/waitlist/?l=${encodeURIComponent(location)}&p=${encodeURIComponent(poster)}`,
+      'Cache-Control': 'no-store',
+      'Referrer-Policy': 'no-referrer',
+      'X-Content-Type-Options': 'nosniff',
+    },
+  });
+}
+
 async function handleAdminList(request, env, origin) {
   const authHeader = request.headers.get('Authorization') || '';
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
@@ -326,7 +396,7 @@ async function handleAdminList(request, env, origin) {
 
   const countRow = await env.DB.prepare('SELECT COUNT(*) AS n FROM signups').first();
   const recent = await env.DB.prepare(
-    `SELECT id, name, contact_method, email, phone, created_at
+    `SELECT id, name, contact_method, email, phone, poster, poster_location, created_at
      FROM signups ORDER BY id DESC LIMIT 100`
   ).all();
 
@@ -351,6 +421,59 @@ async function handleAdminBusinessList(request, env, origin) {
   ).all();
 
   return json(200, { count: countRow.n, recent: recent.results }, origin);
+}
+
+async function handleAdminPosters(request, env, origin) {
+  const authHeader = request.headers.get('Authorization') || '';
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
+
+  if (!env.ADMIN_TOKEN || !timingSafeEqual(token, env.ADMIN_TOKEN)) {
+    return json(401, { error: 'Unauthorized.' }, origin);
+  }
+
+  const scans = await env.DB.prepare(
+    `SELECT location, poster, COUNT(*) AS scans
+       FROM poster_scans GROUP BY location, poster`
+  ).all();
+  const signups = await env.DB.prepare(
+    `SELECT poster_location AS location, poster, COUNT(*) AS signups
+       FROM signups WHERE poster IS NOT NULL GROUP BY poster_location, poster`
+  ).all();
+
+  // Seed both views from the allowlists, so a cell nobody has scanned yet
+  // reports a zero row instead of vanishing from the comparison.
+  const byPoster = new Map();
+  for (const p of POSTERS) byPoster.set(p, { poster: p, scans: 0, signups: 0, conversion: 0 });
+
+  const byLocation = new Map();
+  for (const loc of LOCATIONS) {
+    for (const p of POSTERS) {
+      byLocation.set(`${loc}/${p}`, { location: loc, poster: p, scans: 0, signups: 0, conversion: 0 });
+    }
+  }
+
+  function tally(rows, field) {
+    for (const row of rows) {
+      // Pool first. A row whose location is missing or unrecognised still
+      // belongs in the poster comparison, which is the headline number.
+      if (byPoster.has(row.poster)) byPoster.get(row.poster)[field] += row[field];
+      const cell = byLocation.get(`${row.location}/${row.poster}`);
+      if (cell) cell[field] += row[field];
+    }
+  }
+  tally(scans.results, 'scans');
+  tally(signups.results, 'signups');
+
+  for (const row of [...byPoster.values(), ...byLocation.values()]) {
+    row.conversion = row.scans ? Number((row.signups / row.scans).toFixed(4)) : 0;
+  }
+
+  // by_poster is where the sample size is — 24 cells split the traffic thin,
+  // so read by_location for placement, not for deciding the A/B.
+  return json(200, {
+    by_poster: [...byPoster.values()],
+    by_location: [...byLocation.values()],
+  }, origin);
 }
 
 export default {
@@ -380,6 +503,27 @@ export default {
 
     if (request.method === 'GET' && url.pathname === '/admin/business-signups') {
       return handleAdminBusinessList(request, env, origin);
+    }
+
+    if (request.method === 'GET' && url.pathname === '/admin/posters') {
+      return handleAdminPosters(request, env, origin);
+    }
+
+    // /<location>/<poster> — the URL printed on the posters, kept short so it
+    // reads cleanly under a QR code. Matched last, after every named endpoint
+    // above, so a two-segment path like /admin/signups can never fall in here.
+    if (request.method === 'GET') {
+      const segments = url.pathname.replace(/\/$/, '').split('/').slice(1);
+      if (segments.length === 2 && segments.every((seg) => SLUG_RE.test(seg))) {
+        const [location, poster] = segments;
+        if (LOCATIONS.has(location) && POSTERS.has(poster)) {
+          return handleScan(location, poster, request, env);
+        }
+        // A typo'd or retired poster still lands somewhere useful — QR codes
+        // on paper outlive the campaign that printed them.
+        const site = env.SITE_ORIGIN || 'https://kinapp.social';
+        return Response.redirect(`${site}/waitlist/`, 302);
+      }
     }
 
     return json(404, { error: 'Not found.' }, origin);

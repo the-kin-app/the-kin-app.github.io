@@ -29,6 +29,31 @@
   const API_BASE = (window.KIN_API_BASE || 'https://api.kinapp.social').replace(/\/$/, '');
   const SUBMIT_URL = API_BASE + '/waitlist';
 
+  // Poster attribution. Each printed QR points at
+  // api.kinapp.social/<location>/<poster>, which counts the scan and redirects
+  // here with ?l=<location>&p=<poster>. Read once into memory and held for
+  // this page view only — no cookie, no localStorage, nothing stored on the
+  // device, so this needs no consent banner. The trade-off: navigate away and
+  // back without the query string and the signup lands unattributed. Every
+  // poster loses the same share of those, so the comparison still holds.
+  //
+  // Keep ?l= and ?p= in the address bar. With nothing persisted, the URL *is*
+  // the attribution.
+  //
+  // Only the shape is checked here. worker/src/index.js holds the
+  // authoritative allowlists and stores anything it doesn't recognise as
+  // NULL, so the vocabulary lives in one place rather than two.
+  const SLUG_RE = /^[a-z0-9-]{1,32}$/;
+  const params = new URLSearchParams(window.location.search);
+
+  function readSlug(key) {
+    const value = params.get(key);
+    return value && SLUG_RE.test(value) ? value : null;
+  }
+
+  const poster = readSlug('p');
+  const posterLocation = readSlug('l');
+
   let contactMode = 'email';
 
   function setMode(mode) {
@@ -105,7 +130,9 @@
       contact_method: contactMode,
       email: contactMode === 'email' ? emailInput.value.trim() : null,
       phone: contactMode === 'phone' ? phoneInput.value.trim() : null,
-      website: websiteInput ? websiteInput.value : '' // honeypot — always empty for real users
+      website: websiteInput ? websiteInput.value : '', // honeypot — always empty for real users
+      poster: poster,
+      poster_location: posterLocation
     };
 
     const originalLabel = submitLabel.textContent;
