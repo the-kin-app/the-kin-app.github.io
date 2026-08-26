@@ -1,5 +1,7 @@
--- Poster A/B tracking across locations. Two poster designs (a, b) in each of
--- twelve locations, one QR code per combination, one waitlist form.
+-- Poster tracking across locations. Two poster designs in each of twelve
+-- locations, one QR code per combination, one waitlist form. The design and
+-- location vocabularies live in src/index.js, not here — this table stores
+-- whatever that file allows, so renaming a poster needs no migration.
 --
 -- The QR lands on GET /<location>/<poster>, which counts the scan and
 -- redirects to /waitlist/?l=<location>&p=<poster>; the page carries both

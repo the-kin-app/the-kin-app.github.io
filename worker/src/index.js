@@ -44,11 +44,14 @@ const PILOT_INTEREST = new Set(['yes', 'maybe', 'no']);
 // only values GET /<location>/<poster> and the signup fields will accept —
 // every other value is ignored, never rejected.
 //
+// Posters are named after their tagline, not lettered, so a row in the
+// scoreboard says which artwork it is without anyone holding a key.
+//
 // Slugs are ASCII on purpose: 'myyrmaki' keeps the printed QR free of
 // percent-encoding. Adding or retiring a poster or a location is an edit
 // here; assets/js/waitlist-hero.js only checks the shape and leaves the
 // vocabulary to this file.
-const POSTERS = new Set(['a', 'b']);
+const POSTERS = new Set(['unclesam', 'happy']);
 const LOCATIONS = new Set([
   'meilahti', 'pasila', 'myllypuro', 'kumpula', 'keskusta', 'arabia',
   'viikki', 'otaniemi', 'hanken', 'uniarts', 'diak', 'myyrmaki',
@@ -191,7 +194,39 @@ function timingSafeEqual(a, b) {
   return result === 0;
 }
 
-async function handleWaitlist(request, env, origin) {
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+// Fire-and-forget welcome email via Resend. Called from ctx.waitUntil so a
+// slow or failed send never delays or fails the signup response — a person
+// on the list is the thing that matters, the email is a bonus.
+async function sendWelcomeEmail(env, name, email) {
+  if (!env.RESEND_API_KEY) return; // not configured — skip silently
+  const text = `Hi ${name},\n\nThanks for joining the Kin waitlist. We'll email you as soon as early beta spots open up — Helsinki, early 2027.\n\n— the Kin team`;
+  const html = `<p>Hi ${escapeHtml(name)},</p><p>Thanks for joining the Kin waitlist. We'll email you as soon as early beta spots open up — Helsinki, early 2027.</p><p>— the Kin team</p>`;
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'Kin <hello@kinapp.social>',
+        to: email,
+        subject: "You're on the Kin waitlist",
+        text,
+        html,
+      }),
+    });
+    if (!res.ok) console.error('Resend send failed:', res.status, await res.text());
+  } catch (err) {
+    console.error('Resend send threw:', err);
+  }
+}
+
+async function handleWaitlist(request, env, origin, ctx) {
   if (env.RATE_LIMITER) {
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
     const { success } = await env.RATE_LIMITER.limit({ key: ip });
@@ -246,6 +281,11 @@ async function handleWaitlist(request, env, origin) {
     )
       .bind(name, contactMethod, email, phone, poster, posterLocation, createdAt)
       .run();
+    // Only a genuine new row gets a welcome email — never the duplicate path
+    // below, and never a phone-only signup.
+    if (contactMethod === 'email' && ctx) {
+      ctx.waitUntil(sendWelcomeEmail(env, name, email));
+    }
     return json(201, { ok: true }, origin);
   } catch (err) {
     if (String(err && err.message).includes('UNIQUE')) {
@@ -477,7 +517,7 @@ async function handleAdminPosters(request, env, origin) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const origin = env.ALLOW_ORIGIN || '*';
     const url = new URL(request.url);
 
@@ -490,7 +530,7 @@ export default {
     }
 
     if (request.method === 'POST' && (url.pathname === '/waitlist' || url.pathname === '/waitlist/')) {
-      return handleWaitlist(request, env, origin);
+      return handleWaitlist(request, env, origin, ctx);
     }
 
     if (request.method === 'POST' && (url.pathname === '/business' || url.pathname === '/business/')) {

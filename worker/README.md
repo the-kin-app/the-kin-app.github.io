@@ -9,7 +9,7 @@ One Worker now backs two forms, on two tables in the same D1 database:
 | --- | --- | --- | --- | --- |
 | Consumer waitlist | `/waitlist/` | `POST /waitlist` | `signups` | `0001_init.sql` |
 | Business interest form | `/business/` | `POST /business` | `business_signups` | `0002_business_signups.sql`, `0003_business_type_other.sql` |
-| Poster A/B tracking | printed QR codes | `GET /<location>/<poster>` | `poster_scans` | `0004_poster_tracking.sql` |
+| Poster tracking | printed QR codes | `GET /<location>/<poster>` | `poster_scans` | `0004_poster_tracking.sql` |
 
 - **Compute:** Cloudflare Workers (`src/index.js`)
 - **Storage:** Cloudflare D1 — serverless SQLite (`migrations/`)
@@ -134,8 +134,8 @@ curl -X POST https://api.kinapp.social/business \
   -d '{"business_name":"Test Cafe","location":"Kallio, Helsinki"}'
 # -> {"ok":true}
 
-curl -si https://api.kinapp.social/otaniemi/a | head -4
-# -> HTTP/2 302 ... location: https://kinapp.social/waitlist/?l=otaniemi&p=a
+curl -si https://api.kinapp.social/otaniemi/unclesam | head -4
+# -> HTTP/2 302 ... location: https://kinapp.social/waitlist/?l=otaniemi&p=unclesam
 ```
 
 Then submit the real forms at `kinapp.social/waitlist/` and
@@ -153,16 +153,16 @@ curl -H 'Authorization: Bearer <ADMIN_TOKEN>' https://api.kinapp.social/admin/po
 poster and again per location/poster cell:
 
 ```json
-{"by_poster":[{"poster":"a","scans":412,"signups":38,"conversion":0.0922},
-              {"poster":"b","scans":390,"signups":51,"conversion":0.1308}],
- "by_location":[{"location":"otaniemi","poster":"a","scans":61,"signups":7,"conversion":0.1148},
-                {"location":"otaniemi","poster":"b","scans":58,"signups":9,"conversion":0.1552},
+{"by_poster":[{"poster":"unclesam","scans":412,"signups":38,"conversion":0.0922},
+              {"poster":"happy","scans":390,"signups":51,"conversion":0.1308}],
+ "by_location":[{"location":"otaniemi","poster":"unclesam","scans":61,"signups":7,"conversion":0.1148},
+                {"location":"otaniemi","poster":"happy","scans":58,"signups":9,"conversion":0.1552},
                 ...]}
 ```
 
-**Read `by_poster` to decide the A/B, not `by_location`.** Twelve locations by
-two designs is 24 cells, and splitting the traffic that thin leaves each cell
-too noisy to call. `by_location` answers a different and much coarser
+**Read `by_poster` to decide which design wins, not `by_location`.** Twelve
+locations by two designs is 24 cells, and splitting the traffic that thin
+leaves each cell too noisy to call. `by_location` answers a different and much coarser
 question — where to hang more posters.
 
 Or query D1 directly:
@@ -175,10 +175,19 @@ npx wrangler d1 execute kin-waitlist --remote \
   --command "SELECT created_at, business_name, location, concept_interest, pilot_interest FROM business_signups ORDER BY id DESC;"
 ```
 
-## Poster A/B test
+## Poster test
 
-Two poster designs (`a`, `b`) in twelve locations, one QR code per
-combination — 24 codes in all. Each encodes:
+Two poster designs in twelve locations, one QR code per combination — 24
+codes in all. Designs are named after their tagline rather than lettered, so
+a row in the scoreboard says which artwork it is without anyone holding a
+key:
+
+| Slug | Design |
+| --- | --- |
+| `unclesam` | the Uncle Sam tagline |
+| `happy` | the happy tagline |
+
+Each code encodes:
 
 ```
 https://api.kinapp.social/<location>/<poster>
@@ -197,7 +206,7 @@ have to be percent-encoded in the QR, which is easy to get wrong and ugly if
 anyone ever reads the URL off the poster.
 
 A scan hits the Worker, which writes one row to `poster_scans` and 302s to
-`https://kinapp.social/waitlist/?l=otaniemi&p=a`. `assets/js/waitlist-hero.js` reads
+`https://kinapp.social/waitlist/?l=otaniemi&p=unclesam`. `assets/js/waitlist-hero.js` reads
 both params into variables and sends them with the signup, where they land in
 `signups.poster` and `signups.poster_location`. Read the result from
 `/admin/posters`.
