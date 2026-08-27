@@ -1,5 +1,5 @@
 /* ============================================================
-   Kin — Kin for Business
+   Min for Business
    ------------------------------------------------------------
    The business questionnaire, in the landing page's world: cave
    light, drifting fog, cast-glass wordmark, and the questions
@@ -112,7 +112,7 @@ html:not(.js-ready) .wordmark--hero .wordmark__dot { display: block; }
   margin-bottom: var(--space-5);
 }
 
-/* The <h1> is the visually-hidden page name ("Kin for Business"), so the
+/* The <h1> is the visually-hidden page name ("Min for Business"), so the
    display line here is the <h2> — the wordmark above it is doing the
    work a visible h1 usually would. */
 .biz-hero h2 {

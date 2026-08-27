@@ -1,0 +1,276 @@
+/* ============================================================
+   Min — Printable poster (A3 portrait, 297 × 420 mm)
+   ------------------------------------------------------------
+   A wall poster, not a web page: it is sized in millimetres, laid
+   out once, and never reflows. Everything below is the site's own
+   language — warm world ground, SF Pro Rounded / Nunito, warm ink,
+   violet as the single accent — scaled up until it reads from
+   across a corridor.
+
+   The shout is set in `vw`-free absolute units because a poster has
+   exactly one size. Screen preview and print therefore agree: what
+   the browser shows at 100% is what comes out of the printer.
+
+   Depends on tokens.css.
+   ============================================================ */
+
+@page {
+  size: A3 portrait;
+  margin: 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--world-floor);
+}
+
+/* ---- The sheet -----------------------------------------------------
+   Full bleed. A3 exactly; nothing here is responsive on purpose. */
+.poster {
+  position: relative;
+  width: 297mm;
+  height: 420mm;
+  margin: 0 auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  color: var(--ink-primary);
+  font-family: var(--font-rounded);
+
+  /* The world, printed: light off the shore top-right, cave shade
+     bottom-left. Flat gradients rather than the photo — a JPEG at A3
+     shows its grain, and the poster wants paper, not a screenshot. */
+  background:
+    radial-gradient(120% 85% at 78% 8%,
+      rgba(255, 242, 212, 0.85) 0%,
+      rgba(255, 242, 212, 0) 55%),
+    radial-gradient(95% 70% at 12% 100%,
+      rgba(107, 92, 77, 0.28) 0%,
+      rgba(107, 92, 77, 0) 60%),
+    linear-gradient(160deg,
+      var(--world-grad1) 0%,
+      var(--world-grad2) 42%,
+      var(--world-grad3) 72%,
+      var(--world-grad4) 100%);
+}
+
+/* Ink coverage that heavy at the edges wastes toner and shows every
+   trim error, so the ground stops short of the paper edge on home
+   printers. Print full-bleed by removing this rule. */
+@media print {
+  .poster { box-shadow: none; }
+}
+
+/* ---- Grid ----------------------------------------------------------
+   Head strip, the shout, footer. The shout takes whatever is left. */
+.poster__inner {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 22mm 20mm 18mm;
+}
+
+/* ---- Head ---- */
+.poster__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8mm;
+}
+
+.poster__logo {
+  width: 42mm;
+  height: auto;
+}
+
+.poster__eyebrow {
+  font-size: 6.5mm;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+  text-align: right;
+  line-height: 1.35;
+}
+
+/* ---- The shout -----------------------------------------------------
+   Three lines, each one word-group, ranged left. Tracking is pulled in
+   hard: at this size the default spacing opens holes between letters
+   that read as gaps between words. */
+.poster__shout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  /* Weighted toward the top third: on a wall the eye lands high, and a
+     block floating dead-centre leaves an equal gap above and below that
+     reads as a mistake rather than a choice. */
+  justify-content: flex-start;
+  padding-top: 18mm;
+  margin: 0;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.045em;
+  line-height: 0.86;
+  text-wrap: balance;
+}
+
+.poster__line {
+  display: block;
+  font-size: 70mm;
+}
+
+/* "LOOK UP" is the instruction — it gets the size and the violet.
+   One accent, exactly as the system says. */
+.poster__line--lead {
+  font-size: 50mm;
+  color: var(--ink-secondary);
+}
+
+.poster__line--accent {
+  color: var(--violet-ink);
+}
+
+/* The one soft mark on the sheet: a resin pebble behind the accent
+   line, the same material the app's surfaces are made of. */
+.poster__shout::after {
+  content: "";
+  display: block;
+  width: 34mm;
+  height: 3.2mm;
+  margin-top: 14mm;
+  border-radius: var(--radius-pill);
+  background: var(--gradient-brand);
+}
+
+/* ---- Footer --------------------------------------------------------
+   Two rows. The line gets the full width of the sheet, because it is the
+   only sentence on the poster and squeezing it into a middle column
+   between two artwork slots wraps it in the wrong place. Under it sit the
+   two reserved corners: Min at the left, QR at the right. */
+.poster__footer {
+  padding-top: 10mm;
+  border-top: 0.6mm solid rgba(35, 33, 30, 0.14);
+}
+
+.poster__corners {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 10mm;
+}
+
+/* Reserved artwork areas. Both hold their size whether or not anything is
+   inside them, so the layout is identical before and after you drop the
+   assets in. The dashed outline is a guide, not part of the poster — it
+   disappears the moment a slot has a child element. */
+.poster__slot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* Min gets the wider, taller frame: a character reads at full height, and
+   it can grow up into the quiet band under the shout without moving
+   anything else, since the flex row is bottom-aligned. */
+.poster__slot--min {
+  width: 74mm;
+  height: 62mm;
+  justify-content: flex-start;
+}
+
+/* The QR is a target, not artwork — it only has to be scannable, so it
+   stays a small square in the corner. 40mm is comfortably above the
+   ~25mm floor for a phone camera at arm's length. */
+.poster__slot--qr {
+  width: 42mm;
+  height: 42mm;
+  align-items: center;
+}
+
+.poster__slot:empty {
+  border: 0.5mm dashed rgba(35, 33, 30, 0.22);
+  border-radius: var(--radius-md);
+}
+
+.poster__slot:empty::after {
+  content: attr(data-hint);
+  margin: auto;
+  font-size: 3.4mm;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+  text-align: center;
+  padding: 0 3mm;
+  line-height: 1.4;
+}
+
+.poster__slot > img,
+.poster__slot > svg {
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+}
+
+/* ---- Footer copy ---- */
+.poster__pitch {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8mm;
+}
+
+.poster__pitch-line {
+  font-size: 11mm;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.poster__pitch-line em {
+  font-style: normal;
+  color: var(--violet-ink);
+}
+
+.poster__url {
+  font-size: 7mm;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.01em;
+  color: var(--ink-secondary);
+  white-space: nowrap;
+}
+
+.poster__sub {
+  margin-top: 3mm;
+  font-size: 4.6mm;
+  font-weight: var(--font-weight-normal);
+  color: var(--ink-tertiary);
+}
+
+/* ---- Screen preview only -------------------------------------------
+   On screen the sheet floats on the warm floor so its edges are
+   visible; in print it is the page. */
+@media screen {
+  body {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0;
+  }
+  .poster {
+    box-shadow: var(--shadow-media);
+  }
+}
+
+/* Backgrounds are dropped by default in most print dialogs; this asks
+   for them, and the user still has to tick "Background graphics". */
+@media print {
+  html, body { background: none; }
+  .poster {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    page-break-after: avoid;
+  }
+}

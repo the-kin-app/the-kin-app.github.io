@@ -1,5 +1,5 @@
 /* ============================================================
-   Kin — landing atmosphere
+   Min — landing atmosphere
    ------------------------------------------------------------
    A field of people in fog, seen through a lens, with thin threads of
    light running between the ones who are close: the map, and the

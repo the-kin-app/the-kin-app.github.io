@@ -1,9 +1,9 @@
 /* ============================================================
-   Kin — the scan-and-join page (/waitlist)
+   Min — the scan-and-join page (/waitlist)
    ------------------------------------------------------------
    One screen, no scroll. Somebody points a phone at a QR code in a
    bar and has about four seconds of attention: a banner that tells
-   them what Kin is while they read, and a single field under it.
+   them what Min is while they read, and a single field under it.
 
    THE CONSTRAINT: everything fits in 100svh on the shortest phone
    we care about. That is why this file is written as a three-row
@@ -13,7 +13,7 @@
    pushing the form off the bottom of the screen.
 
    The three slides are pages 2, 4 and 5 of /pitchdeck/short — the
-   near-miss, what Kin is, how it works — with the same materials.
+   near-miss, what Min is, how it works — with the same materials.
    The figures are lifted from pitchdeck.css rather than that file
    being loaded, because pitchdeck.css turns the body into a
    horizontal scroll-snap deck, which is the opposite of this page.
@@ -93,6 +93,14 @@ body.wlq {
 
 .hslides {
   position: relative;
+  /* The clip runs to the edge of the *screen*, not the edge of the row,
+     and every slide carries the same gutter as padding. So the picture
+     and the words still line up with the wordmark and the card above and
+     below them, but a blob's glow — or a headline on a narrow phone —
+     fades out into open page rather than being sliced off by the box. */
+  --gutter: var(--space-5);
+  width: calc(100% + var(--gutter) * 2);
+  margin-inline: calc(var(--gutter) * -1);
   overflow: hidden;
   /* The track is three viewports wide and rides a composited transform.
      `contain: paint` states the clip outright rather than leaving it to
@@ -116,6 +124,8 @@ body.wlq {
 .hslide {
   flex: 0 0 100%;
   min-width: 0;
+  /* the room the clip was eating, given back inside the slide */
+  padding-inline: var(--gutter);
   /* A centred column, not a stretched grid: the figure and the words
      below it are one group, and the empty room on a tall phone belongs
      above and below that group rather than between its two halves. */
@@ -313,7 +323,7 @@ body.wlq {
 }
 
 /* ============================================================
-   figure 2 — what Kin is
+   figure 2 — what Min is
    The ring from landing.css, sized to the banner. Min holds the
    middle and every screen is off.
    ============================================================ */
@@ -415,11 +425,11 @@ body.wlq {
    ============================================================ */
 
 .wlq-card {
-  padding: clamp(var(--space-4), 4.5vw, var(--space-6));
+  padding: clamp(var(--space-5), 5vw, var(--space-6));
   border-radius: var(--radius-2xl);
 }
 
-.wlq-form { display: grid; gap: var(--space-2); }
+.wlq-form { display: grid; gap: var(--space-3); }
 
 .wlq-form__row {
   display: grid;
@@ -428,20 +438,48 @@ body.wlq {
   align-items: stretch;
 }
 
-.wlq-form .input { padding: 12px 14px; font-size: var(--text-base); }
-
-.wlq-form .btn {
-  padding: 12px 20px;
-  font-size: var(--text-base);
+/* 16px, not 15: under 16 iOS zooms the whole page the moment the field
+   is tapped, and this is a page with nowhere to zoom to. It also happens
+   to be the size the address is easiest to proof-read at. */
+.wlq-form .input {
+  padding: 14px 16px;
+  font-size: var(--text-md);
+  letter-spacing: -0.01em;
+}
+/* The placeholder is an example, so it stays quieter than a typed
+   address — but readable at arm's length, which --ink-faint is not. */
+.wlq-form .input::placeholder {
+  color: color-mix(in srgb, var(--ink) 46%, transparent);
 }
 
-.wlq-form .field-error { min-height: 0; text-align: center; }
-.wlq-form .field-error:empty { display: none; }
+.wlq-form .btn {
+  padding: 14px 20px;
+  font-size: var(--text-md);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
 
-.wlq-form .status { min-height: 0; }
+/* Both messages sit under the field they are about, in full ink weight.
+   They only ever appear one at a time, and when neither is there they
+   take no room at all. */
+.wlq-form .field-error,
+.wlq-form .status {
+  min-height: 0;
+  text-align: center;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.4;
+}
+.wlq-form .field-error:empty,
 .wlq-form .status:empty { display: none; }
 
-.wlq-form .consent { margin: 0; text-wrap: balance; }
+.wlq-form .consent {
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--ink) 52%, transparent);
+  text-wrap: balance;
+}
 /* "Privacy Policy" is one thing; breaking it across two lines makes the
    link look like two. */
 .wlq-form .consent a { white-space: nowrap; }
@@ -450,15 +488,43 @@ body.wlq {
    Same height as the form it replaces, so the page doesn't jump
    under the thumb that just pressed the button. */
 
-.wlq-done { display: none; text-align: center; }
+.wlq-done {
+  display: none;
+  text-align: center;
+  padding: var(--space-2) 0;
+}
+/* A drawn tick rather than an emoji: the emoji renders as somebody
+   else's artwork — a different colour, a different era of design — in
+   the middle of the one piece of resin on the page. */
+.wlq-done__tick {
+  width: 34px;
+  height: 34px;
+  margin: 0 auto var(--space-3);
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-success) 16%, transparent);
+  color: var(--color-success);
+}
+.wlq-done__tick svg { width: 17px; height: 17px; display: block; }
+
 .wlq-done h2 {
-  margin: 0 0 var(--space-1);
-  font-size: clamp(1.0625rem, 4.4vw, 1.25rem);
+  margin: 0 0 var(--space-2);
+  font-size: clamp(1.125rem, 4.6vw, 1.375rem);
   font-weight: var(--font-weight-semibold);
   letter-spacing: -0.03em;
+  line-height: 1.25;
   color: var(--ink);
+  text-wrap: balance;
 }
-.wlq-done p { margin: 0; font-size: var(--text-sm); color: var(--ink-soft); }
+.wlq-done p {
+  margin: 0 auto;
+  max-width: 30ch;
+  font-size: var(--text-md);
+  line-height: 1.45;
+  color: var(--ink-soft);
+  text-wrap: balance;
+}
 
 /* ---- reveal ------------------------------------------------- */
 
@@ -493,6 +559,8 @@ body.wlq {
    figure and a form both, and the form is what the page is for. */
 @media (max-height: 520px) {
   .hslide__fig { display: none; }
+  /* the tick is confirmation of something the words already say */
+  .wlq-done__tick { display: none; }
   .wlq .wordmark--hero { width: min(104px, 26vw); }
 }
 

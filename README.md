@@ -1,4 +1,4 @@
-# Kin — marketing site
+# Min — marketing site
 
 Static site (plain HTML/CSS/JS, no build step) served from the domain root.
 Deployed via GitHub Pages (`CNAME`). A Cloudflare Worker + D1 handles
@@ -13,6 +13,7 @@ waitlist submissions.
 ├── waitlist/index.html     The scan page — a three-slide banner + one-field signup, all above the fold
 ├── privacy-policy/index.html
 ├── qr/index.html           QR code that links to the waitlist
+├── qrgenerator/index.html  QR workbench — makes the poster tracking codes (see below)
 ├── assets/
 │   ├── css/
 │   │   ├── tokens.css       Design tokens (colors, type, spacing, radius) ← mirrors KinTokens.swift / Figma `Kin tokens`
@@ -20,10 +21,14 @@ waitlist submissions.
 │   │   ├── components.css   Reusable UI blocks (card, form, buttons, hero, prose, qr…)
 │   │   ├── landing.css      Homepage only (does not load base/components)
 │   │   ├── pitchdeck.css    Deck paging + per-slide figures; loads on top of landing.css
+│   │   ├── qrgenerator.css  The QR workbench + its print sheet
 │   │   ├── waitlist.css     The waitlist card, form and inputs; loads on top of landing.css
 │   │   └── waitlist-hero.css  The waitlist's three-slide banner + its no-scroll layout
 │   ├── js/
 │   │   ├── waitlist-hero.js The waitlist banner (auto-advance, swipe, dots) + its one-field form
+│   │   ├── qr-encode.js     QR encoder — byte mode, versions 1–10, no dependencies
+│   │   ├── qr-style.js      Draws an encoded grid as a Min-styled SVG
+│   │   ├── qrgenerator.js   The workbench page: controls, print sheet, SVG/PNG/ZIP export
 │   │   ├── press.js         The submerge button press (shared by every page)
 │   │   ├── min.js           Min himself: anatomy, the 5s morph loop, the gaze (shared)
 │   │   ├── landing.js       Homepage: colour ramp, reveals, typewriter, constellation
@@ -32,7 +37,7 @@ waitlist submissions.
 │   ├── img/
 │   │   ├── kin-logos/       Logo assets (flat / gradient / glass) + their README
 │   │   ├── kin-letters-mask.svg  Wordmark minus the i-dot; masks the glass hero logo
-│   │   ├── logo.png         Kin wordmark
+│   │   ├── logo.png         Min wordmark
 │   │   ├── card.svg         Waitlist card vector (Figma export)
 │   │   ├── bg-world.jpg     The world — the app's own warm backdrop (far + near plates, composited)
 │   │   └── bg-waitlist.jpg  Previous hero photo (unused; kept for reference)
@@ -50,7 +55,7 @@ touching page markup:
 
 1. **Tokens are the single source of truth.** Every color, font size, spacing
    step, and radius lives in `assets/css/tokens.css` as a CSS custom property.
-   They mirror the app's `KinTokens.swift` (and through it the Figma `Kin
+   They mirror the app's `KinTokens.swift` (and through it the Figma `Min
    tokens` collection) 1:1, with `/` becoming `-`: `color/ink/primary` →
    `--ink-primary`, `resin/pebble` → `--resin-pebble`. The old
    `--color-*` names are kept at the foot of the file as aliases onto the new
@@ -89,7 +94,7 @@ so it can't drag the rest of the site around.
 
 ### Brand rules it is built to
 
-From `kin/samppa/creative direction` and the Kin Figma file. These are
+From `kin/samppa/creative direction` and the Min Figma file. These are
 constraints, not preferences — a "cool" landing page that breaks them is off
 brand:
 
@@ -167,7 +172,7 @@ brand:
   cursor (`--gradient-interactive`), pale into deep, so no surface is a slab of
   one accent. It appears on the i-dot in the flat mark, on the primary CTA, on
   Kinka, and on a pair in the field that has actually found each other.
-  **Violet is the only cool note in Kin** — that is precisely why it reads as
+  **Violet is the only cool note in Min** — that is precisely why it reads as
   the accent, and why the ink is warm (`#23211E`) rather than cool graphite.
 - **Buttons are pressable objects.** Press → the object *submerges*: sinks 3px,
   goes almost clear, drops its blur to 3px (wet), and keeps only a thin bright
@@ -289,6 +294,63 @@ lets that scroll happen rather than paging. On the **vertical** track it
 can't: the deck owns the up-down gesture there, so slides are
 `overflow: hidden` and the phone rules have to keep them inside one screen —
 worth re-checking at 390×844 if you add copy to a slide.
+
+## The QR generator (`/qrgenerator`)
+
+Makes the codes that go on the printed posters. Every poster carries a QR
+pointing at `api.kinapp.social/<location>/<poster>` — the **Worker's** host,
+not the site's. The Worker counts that scan and forwards to
+`kinapp.social/waitlist/?l=&p=`, which is how `/admin/posters` knows which
+artwork worked and where. A code aimed at `kinapp.social/<location>/<poster>`
+instead just 404s on Pages and counts nothing, so the page flags that shape
+as an error rather than a warning. **The codes are measurement instruments** — the
+location and poster lists in `assets/js/qrgenerator.js` must match
+`worker/src/index.js`, or a scan lands on the fallback redirect and the
+scoreboard row it should have filled stays empty. Adding a poster is an edit
+in both files.
+
+Three files, each doing one thing:
+
+| File | Job |
+|---|---|
+| `assets/js/qr-encode.js` | The encoder. Byte mode, versions 1–10, all four error-correction levels. No dependencies — nothing on a printed poster should depend on a script somebody else can change. |
+| `assets/js/qr-style.js` | Turns the boolean grid into an SVG in Min's material: warm ink, pebble modules, softened finder corners, the wordmark on a resin badge. |
+| `assets/js/qrgenerator.js` | The page. Controls, the 24-code contact sheet, and export as SVG, PNG or a ZIP of the whole run. |
+
+Exports are **self-contained**: the wordmark is inlined as vector, there are
+no linked images and no webfonts, so an SVG opens the same in Illustrator as
+in a browser — and the PNG rasteriser is allowed to touch a canvas at all
+only because of that.
+
+### Things that were tried and rejected
+
+Both of these were built, measured against a real decoder, and taken back
+out. They are recorded here so nobody re-adds them:
+
+- **A caption inside the code's own sheet.** Small dense type produces false
+  finder-pattern candidates; a decoder that read the code at every size
+  stopped reading it once the URL was set underneath. Labels now sit *beside*
+  the artwork — in the contact sheet's HTML, and in the filename for
+  downloads.
+- **Separated dot modules.** Gaps break the timing pattern's alternating run.
+  It failed at every dot size tried, including dots big enough to touch.
+  Pebble modules already round every free corner, so a lone module still
+  comes out as a circle — the look survives without the gaps.
+
+Two more constraints worth knowing before changing the styling: the violet
+gradient is deliberately **dark at both ends** (the system's `--violet-deep`
+measures 2.7:1 on cream, and a decoder's threshold lands in the middle of
+that), and gradient element ids carry a hash of the code so two dozen of
+these SVGs can share one document. A repeated id is what made the print
+sheet lose every module while keeping its flat-filled eyes.
+
+### Print notes
+
+40 mm square is the smallest that scans comfortably at arm's length, and
+that is exactly what the poster template reserves (`.poster__slot--qr` in
+`assets/css/poster.css`). Keep the quiet zone — it is part of the artwork,
+not a margin to trim. Warm ink on the resin ground is the print default; the
+cave palette is inverted and belongs on screens.
 
 ## Local preview
 

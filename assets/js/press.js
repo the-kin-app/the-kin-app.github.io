@@ -1,5 +1,5 @@
 /* ============================================================
-   Kin — the submerge press
+   Min — the submerge press
    ------------------------------------------------------------
    Press: the object sinks and goes clear — glass under water, only text
    and a thin edge left. A ripple spreads from the contact point. Release:

@@ -1,5 +1,5 @@
 /* ============================================================
-   Kin — the scan-and-join page (/waitlist)
+   Min — the scan-and-join page (/waitlist)
    ------------------------------------------------------------
    Two small machines on one screen:
 

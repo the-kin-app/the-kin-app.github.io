@@ -1,5 +1,5 @@
 /* ============================================================
-   Kin — landing page behaviour
+   Min — landing page behaviour
    ------------------------------------------------------------
    1. daybreak()     — lerps --bg / --ink along a colour ramp as you scroll
                        and hands alpha/gather/warmth to the atmosphere.

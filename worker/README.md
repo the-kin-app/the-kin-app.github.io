@@ -1,4 +1,4 @@
-# Kin waitlist — Cloudflare Worker
+# Min waitlist — Cloudflare Worker
 
 Serverless replacement for the old self-hosted Node backend. Same request
 contract, so `assets/js/waitlist-hero.js` at the repo root needs no changes.

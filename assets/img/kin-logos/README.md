@@ -1,4 +1,4 @@
-# Kin — Logo assets
+# Min — Logo assets
 
 All PNGs have a transparent background (no matte, straight alpha).
 SVGs are vector and scale to any size.

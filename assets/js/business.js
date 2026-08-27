@@ -1,5 +1,5 @@
 /* ============================================================
-   Kin — Kin for Business questionnaire
+   Min for Business — questionnaire
    ------------------------------------------------------------
    The page behaves like the landing page, minus the scrubbed
    sequence: same Min, same submerge press, same material-emergence

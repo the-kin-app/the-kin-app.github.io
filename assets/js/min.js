@@ -1,5 +1,5 @@
 /* ============================================================
-   Kin — Min
+   Min — the creature
    ------------------------------------------------------------
    Min is a small creature cast in warm opal resin, lit from the inside:
    a tall dome body, a short flappy ear at each shoulder, two foot nubs and

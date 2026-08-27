@@ -1,5 +1,5 @@
 /* ============================================================
-   Kin — waitlist
+   Min — waitlist
    ------------------------------------------------------------
    The waitlist lives in the same world as the landing page: cave
    light, drifting fog, and one piece of optical resin floating in
@@ -270,7 +270,7 @@ button, input {
 .consent a {
   color: var(--ink-soft);
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--ink) 25%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--ink) 40%, transparent);
   text-underline-offset: 2px;
 }
 .consent a:hover { color: var(--color-accent-hover); }

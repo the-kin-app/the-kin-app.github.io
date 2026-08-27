@@ -1,5 +1,5 @@
 /**
- * Kin waitlist + business interest form — Cloudflare Worker.
+ * Min waitlist + business interest form — Cloudflare Worker.
  *
  * Storage: D1 (serverless SQLite). Same request/response contract as the
  * previous self-hosted Node backend, so the frontends
@@ -13,6 +13,10 @@
  * Plus poster A/B tracking (see migrations/0004_poster_tracking.sql):
  *   - GET /<location>/<poster> -> poster_scans, then a 302 to
  *     /waitlist/?l=<location>&p=<poster>
+ *
+ * Transactional email lives in src/emails.js — one template catalogue and
+ * one send helper, so a new message is a new key there, not a new function
+ * here.
  *
  * Deliberately NOT collected: IP address, user agent. Only what each form
  * actually asks for. Poster tracking stores nothing on the visitor's device
@@ -30,6 +34,8 @@
  *   - Generic error messages (no internal details leaked)
  *   - Duplicate signups report success (no enumeration of registered contacts)
  */
+
+import { sendEmail } from './emails.js';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_BODY_BYTES = 16 * 1024; // 16 KiB — business form carries more optional fields than the waitlist
@@ -194,38 +200,6 @@ function timingSafeEqual(a, b) {
   return result === 0;
 }
 
-function escapeHtml(s) {
-  return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-}
-
-// Fire-and-forget welcome email via Resend. Called from ctx.waitUntil so a
-// slow or failed send never delays or fails the signup response — a person
-// on the list is the thing that matters, the email is a bonus.
-async function sendWelcomeEmail(env, name, email) {
-  if (!env.RESEND_API_KEY) return; // not configured — skip silently
-  const text = `Hi ${name},\n\nThanks for joining the Kin waitlist. We'll email you as soon as early beta spots open up — Helsinki, early 2027.\n\n— the Kin team`;
-  const html = `<p>Hi ${escapeHtml(name)},</p><p>Thanks for joining the Kin waitlist. We'll email you as soon as early beta spots open up — Helsinki, early 2027.</p><p>— the Kin team</p>`;
-  try {
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${env.RESEND_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: 'Kin <hello@kinapp.social>',
-        to: email,
-        subject: "You're on the Kin waitlist",
-        text,
-        html,
-      }),
-    });
-    if (!res.ok) console.error('Resend send failed:', res.status, await res.text());
-  } catch (err) {
-    console.error('Resend send threw:', err);
-  }
-}
-
 async function handleWaitlist(request, env, origin, ctx) {
   if (env.RATE_LIMITER) {
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
@@ -284,7 +258,7 @@ async function handleWaitlist(request, env, origin, ctx) {
     // Only a genuine new row gets a welcome email — never the duplicate path
     // below, and never a phone-only signup.
     if (contactMethod === 'email' && ctx) {
-      ctx.waitUntil(sendWelcomeEmail(env, name, email));
+      ctx.waitUntil(sendEmail(env, { to: email, template: 'welcome', data: { name } }));
     }
     return json(201, { ok: true }, origin);
   } catch (err) {

@@ -44,5 +44,5 @@ simple = { limit = 100, period = 60 }
 # ADMIN_TOKEN and RESEND_API_KEY are secrets, not vars — set them with:
 #   wrangler secret put ADMIN_TOKEN
 #   wrangler secret put RESEND_API_KEY
-# RESEND_API_KEY powers the waitlist welcome email (sendWelcomeEmail in
-# src/index.js). If unset, signups still work — the email is just skipped.
+# RESEND_API_KEY powers the transactional emails (templates + send helper in
+# src/emails.js). If unset, signups still work — the email is just skipped.

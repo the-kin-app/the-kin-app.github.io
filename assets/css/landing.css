@@ -1,5 +1,5 @@
 /* ============================================================
-   Kin — landing page
+   Min — landing page
    ------------------------------------------------------------
    Built on tokens.css, and on the creative direction:
 
@@ -1121,7 +1121,7 @@ p { margin: 0; }
 
 /* ---- the memo map, inside the phone ------------------------
    Schematic, not a real map — a placeholder for a real capture: the streets
-   as faint rules, the radius Kin can see, and memos pinned inside it.
+   as faint rules, the radius Min can see, and memos pinned inside it.
    Percentages only, so it reflows with the screen. */
 
 .mmap {
