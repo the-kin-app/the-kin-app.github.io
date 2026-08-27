@@ -35,9 +35,11 @@ waitlist submissions.
 │   │   ├── landing-scene.js WebGL atmosphere (three.js, ES module) — homepage + deck
 │   │   └── pitchdeck.js     Deck: paging, palette, the ring's on-entry timeline
 │   ├── img/
-│   │   ├── kin-logos/       Logo assets (flat / gradient / glass) + their README
-│   │   ├── kin-letters-mask.svg  Wordmark minus the i-dot; masks the glass hero logo
-│   │   ├── logo.png         Min wordmark
+│   │   ├── Logo/            The Figma exports, as delivered (flat black / flat white / resin, SVG + PDF)
+│   │   ├── min-logo-flat.svg       Flat ink wordmark — poster, /qr/, schema.org, QR badge
+│   │   ├── min-logo-flat-white.svg Flat wordmark for dark grounds
+│   │   ├── min-logo-resin.svg      The resolved resin lockup — used where glass can't be cast (print deck)
+│   │   ├── min-letters-mask.svg    Wordmark minus the i-dot; masks the glass hero logo
 │   │   ├── card.svg         Waitlist card vector (Figma export)
 │   │   ├── bg-world.jpg     The world — the app's own warm backdrop (far + near plates, composited)
 │   │   └── bg-waitlist.jpg  Previous hero photo (unused; kept for reference)
@@ -76,7 +78,7 @@ styles, so everything stays consistent and maintainable.
 
 ### Replacing assets
 
-- `assets/img/logo.png` and `assets/img/card.svg` come straight from the Figma
+- `assets/img/Logo/` and `assets/img/card.svg` come straight from the Figma
   "Waitlist (using components)" frame. Re-export and drop in at the same paths
   to update them; `assets/favicon.svg` is still a placeholder.
 - `assets/img/bg-world.jpg` is the app's own backdrop — `kin-bg-far` +
@@ -130,9 +132,9 @@ brand:
   `--ease-emergence`, cascaded `--stagger-cascade` apart. One after another,
   never a simultaneous bloom.
 - **Min is the dot of the lowercase i.** He is already in the logo. The hero
-  letterforms are **cast glass** — `kin-letters-mask.svg` (the wordmark minus the
+  letterforms are **cast glass** — `min-letters-mask.svg` (the wordmark minus the
   i-dot) masking a `backdrop-filter`, so the environment blurs *through* them —
-  and Min occupies the dot's exact position (49.62% / 13.70% of the 216×136 box).
+  and Min occupies the dot's exact position (60.08% / 13.68% of the 138×68 box).
   He only detaches at the `#dawn` beat, so the visitor feels they discovered him
   rather than being introduced to a mascot.
   - **He is a creature, not a pebble.** A dome body cast in warm opal resin and

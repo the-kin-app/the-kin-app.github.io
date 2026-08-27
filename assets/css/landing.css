@@ -47,7 +47,7 @@
   --dock-clear: calc(var(--dock-h) + var(--dock-gap) + var(--space-5));
 
   /* the wordmark letterforms, minus the i-dot — Min occupies that himself */
-  --mask-kin: url('/assets/img/kin-letters-mask.svg');
+  --mask-min: url('/assets/img/min-letters-mask.svg');
 }
 
 /* ---- document ---------------------------------------------- */
@@ -533,18 +533,18 @@ p { margin: 0; }
 .wordmark--hero {
   position: relative;
   width: min(300px, 52vw);
-  aspect-ratio: 216 / 136;
+  aspect-ratio: 138 / 68;
   margin-bottom: var(--space-10);
 }
 
 /* Cast-glass letterforms: the environment is blurred *through* them, with a
    lit top edge and a soft shadow underneath. The letter shapes come from
-   kin-logo-flat.svg, used here as a mask. */
+   min-logo-flat.svg, used here as a mask. */
 .wordmark__glass {
   position: absolute;
   inset: 0;
-  -webkit-mask-image: var(--mask-kin);
-  mask-image: var(--mask-kin);
+  -webkit-mask-image: var(--mask-min);
+  mask-image: var(--mask-min);
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
@@ -593,8 +593,11 @@ p { margin: 0; }
 .wordmark--nav {
   position: relative;
   display: block;
-  width: 50px;
-  aspect-ratio: 216 / 136;
+  /* 60px, not the 50 the taller kin mark wanted: the min letterforms are
+     shorter for a given width, and at 50 they read as a footnote next to
+     the nav links. This lands the letters at the height they had. */
+  width: 60px;
+  aspect-ratio: 138 / 68;
 }
 .wordmark--nav .wordmark__glass {
   opacity: 1;
@@ -639,9 +642,9 @@ p { margin: 0; }
 /* the i-dot, which at this size is the whole of the mark's colour */
 .wordmark__dot {
   position: absolute;
-  left: 49.62%;
-  top: 13.70%;
-  width: 17.2%;
+  left: 60.08%;
+  top: 13.68%;
+  width: 13.48%;
   aspect-ratio: 1;
   translate: -50% -50%;
   border-radius: 50%;
@@ -649,16 +652,16 @@ p { margin: 0; }
   box-shadow: 0 0 5px 1px color-mix(in srgb, var(--color-accent) 45%, transparent);
 }
 
-/* Min sits exactly where the i-dot is: centre 49.62% / 13.70% of the 216×136
-   box. The flat dot is 17.2% of the width, but Min's body only fills ~60% of
+/* Min sits exactly where the i-dot is: centre 60.08% / 13.68% of the 138×68
+   box. The flat dot is 13.48% of the width, but Min's body only fills ~60% of
    his own square — and his ears reach past that again — so the square has to
    be larger to land at the same size. He gets a little extra beyond that,
    because he's a character, not punctuation. */
 .wordmark__min {
   position: absolute;
-  left: 49.62%;
-  top: 13.70%;
-  width: 27%;
+  left: 60.08%;
+  top: 13.68%;
+  width: 21.2%;
   aspect-ratio: 1;
   translate: -50% -50%;
   opacity: 0;

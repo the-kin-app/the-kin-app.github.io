@@ -137,7 +137,7 @@
   // violet dot — see qr-style.js — rather than a broken image.
   async function loadWordmark() {
     try {
-      const res = await fetch('/assets/img/kin-logos/kin-logo-flat.svg');
+      const res = await fetch('/assets/img/min-logo-flat.svg');
       if (!res.ok) throw new Error(res.status);
       const src = await res.text();
       const paths = (src.match(/<path[\s\S]*?\/>/g) || []).join('');

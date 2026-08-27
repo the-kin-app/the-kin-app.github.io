@@ -101,11 +101,11 @@
   };
 
   // The wordmark, injected by the page once it has loaded
-  // /assets/img/kin-logos/kin-logo-flat.svg. Kept as source rather than a
+  // /assets/img/min-logo-flat.svg. Kept as source rather than a
   // linked <image> so a downloaded SVG opens correctly anywhere.
   let wordmark = null;
   function setWordmark(paths, viewBox) {
-    wordmark = paths ? { paths, viewBox: viewBox || '0 0 216 136' } : null;
+    wordmark = paths ? { paths, viewBox: viewBox || '0 0 138 68' } : null;
   }
   const hasWordmark = () => wordmark !== null;
 

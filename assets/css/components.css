@@ -15,7 +15,7 @@
 }
 
 /* Animated homepage lockup — the wordmark (dot masked out at the source,
-   see assets/img/logo-wordmark.png) plays Material Emergence; the dot is
+   see assets/img/min-logo-flat.svg) plays Material Emergence; the dot is
    a plain circle (matches the flat mark's dot exactly) that plays Drop on top.
    Both start together, 0.8s after the page lands, per the Figma motion
    principles board (Motion > Behaviors). */
