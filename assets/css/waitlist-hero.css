@@ -526,6 +526,12 @@ body.wlq {
   text-wrap: balance;
 }
 
+/* The way on. Sits under the confirmation like the form's button sat
+   under the field, so the card keeps its shape after the swap. */
+.wlq-done__more {
+  margin-top: var(--space-4);
+}
+
 /* ---- reveal ------------------------------------------------- */
 
 .wlq .wordmark--hero { animation: wl-surface var(--duration-standard) var(--ease-emergence) 120ms both; }
