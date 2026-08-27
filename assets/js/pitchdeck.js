@@ -1,5 +1,5 @@
 /* ============================================================
-   Kin — the public pitch deck
+   Min — the public pitch deck
    ------------------------------------------------------------
    1. deck()      — paging: swipe is native (scroll-snap), this adds the
                     keyboard, the wheel, the toolbar and the URL hash.

@@ -1,6 +1,6 @@
 # Working on the pitch deck (`/pitchdeck`)
 
-The public, short version of the Kin pitch: eight slides, swipeable, built out
+The public, short version of the Min pitch: eight slides, swipeable, built out
 of the site's own material system rather than exported from a slide tool. The
 outline it came from is `kin/Business/pitch deck (public).md` (not in this
 repo). No financials, no metrics, no ask — that's the investor deck.
@@ -10,7 +10,7 @@ before changing anything visual. They are constraints, not preferences.
 
 `pitchdeck/short/` is the three-minute version: six pages, one hook ("when
 did you last talk to a stranger?"), built from these same figures and
-exported to `kin-3-minute.pdf`. It is a paged document, not a deck — no
+exported to `min-3-minute.pdf`. It is a paged document, not a deck — no
 script, nothing moving — and its own file explains how to re-export it.
 
 ## Where things live

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Min — Poster (A3)</title>
+<meta name="description" content="A printable A3 poster for Min.">
+<!-- A print artefact, not a destination. Same stance as /qr/. -->
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/poster.css">
+</head>
+<body>
+
+<!-- A3 portrait. Print at 100% / "Actual size", background graphics on. -->
+<div class="poster">
+  <div class="poster__inner">
+
+    <header class="poster__head">
+      <img class="poster__logo" src="/assets/img/logo-wordmark.png" alt="Min" width="1392" height="1130">
+      <p class="poster__eyebrow">Helsinki<br>2027</p>
+    </header>
+
+    <h1 class="poster__shout">
+      <span class="poster__line poster__line--lead">HEY YOU</span>
+      <span class="poster__line">LOOK</span>
+      <span class="poster__line poster__line--accent">UP</span>
+    </h1>
+
+    <footer class="poster__footer">
+      <div class="poster__pitch">
+        <p class="poster__pitch-line">No swiping. No chatting. <em>Try Min.</em></p>
+        <p class="poster__url">hellomin.app</p>
+      </div>
+      <p class="poster__sub">Get an intro. Go say hello. Launching for Helsinki students, 2027.</p>
+
+      <div class="poster__corners">
+        <!-- Drop the Min artwork in here (img or inline svg). -->
+        <div class="poster__slot poster__slot--min" data-hint="Min goes here"></div>
+        <!-- Drop the QR code in here. -->
+        <div class="poster__slot poster__slot--qr" data-hint="QR goes here"></div>
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+</body>
+</html>

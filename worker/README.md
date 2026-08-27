@@ -1,4 +1,4 @@
-# Kin waitlist — Cloudflare Worker
+# Min waitlist — Cloudflare Worker
 
 Serverless replacement for the old self-hosted Node backend. Same request
 contract, so `assets/js/waitlist-hero.js` at the repo root needs no changes.
@@ -21,9 +21,9 @@ One Worker now backs two forms, on two tables in the same D1 database:
   three.
 
 ```
-Browser ──HTTPS──> GitHub Pages   (kinapp.social)      static site
+Browser ──HTTPS──> GitHub Pages   (hellomin.app)      static site
    │
-   └──HTTPS POST──> Worker         (api.kinapp.social)  validation, CORS, rate limit
+   └──HTTPS POST──> Worker         (api.hellomin.app)  validation, CORS, rate limit
                       └──> D1                            signups table
 ```
 
@@ -99,54 +99,54 @@ like `https://kin-waitlist.<your-subdomain>.workers.dev`. Then either:
 - Just change the default in `assets/js/waitlist-hero.js` (`API_BASE` constant)
   to that URL and commit it.
 
-**Option B — `api.kinapp.social` custom domain (what `wrangler.toml` is set
+**Option B — `api.hellomin.app` custom domain (what `wrangler.toml` is set
 up for, and what `waitlist-hero.js` already defaults to).** Requires
-`kinapp.social`'s DNS to be managed by Cloudflare — i.e. the domain's
+`hellomin.app`'s DNS to be managed by Cloudflare — i.e. the domain's
 nameservers point at Cloudflare, not (only) your registrar's defaults. If
 that's not already the case:
 
-1. Add `kinapp.social` as a zone in the Cloudflare dashboard.
+1. Add `hellomin.app` as a zone in the Cloudflare dashboard.
 2. Update the nameservers at your domain registrar to the ones Cloudflare
    gives you.
 3. Re-create the apex/`www` DNS records so GitHub Pages keeps working (A
    records to GitHub Pages' IPs, or a CNAME per GitHub's custom-domain docs) —
    don't drop these when migrating the zone.
 4. Once the zone is active, the `routes` entry in `wrangler.toml` (already
-   present) provisions `api.kinapp.social` pointing at this Worker on deploy.
+   present) provisions `api.hellomin.app` pointing at this Worker on deploy.
 
 Option A gets the form working today with zero risk to the existing site's
 DNS. Option B is the nicer permanent URL, but only worth doing once you're
-ready to move `kinapp.social`'s DNS management to Cloudflare.
+ready to move `hellomin.app`'s DNS management to Cloudflare.
 
 ## 7. Verify
 
 ```bash
-curl https://api.kinapp.social/health          # or the workers.dev URL
+curl https://api.hellomin.app/health          # or the workers.dev URL
 # -> {"ok":true}
 
-curl -X POST https://api.kinapp.social/waitlist \
+curl -X POST https://api.hellomin.app/waitlist \
   -H 'Content-Type: application/json' \
   -d '{"name":"Test","contact_method":"email","email":"test@example.com"}'
 # -> {"ok":true}
 
-curl -X POST https://api.kinapp.social/business \
+curl -X POST https://api.hellomin.app/business \
   -H 'Content-Type: application/json' \
   -d '{"business_name":"Test Cafe","location":"Kallio, Helsinki"}'
 # -> {"ok":true}
 
-curl -si https://api.kinapp.social/otaniemi/unclesam | head -4
-# -> HTTP/2 302 ... location: https://kinapp.social/waitlist/?l=otaniemi&p=unclesam
+curl -si https://api.hellomin.app/otaniemi/unclesam | head -4
+# -> HTTP/2 302 ... location: https://hellomin.app/waitlist/?l=otaniemi&p=unclesam
 ```
 
-Then submit the real forms at `kinapp.social/waitlist/` and
-`kinapp.social/business/`.
+Then submit the real forms at `hellomin.app/waitlist/` and
+`hellomin.app/business/`.
 
 ## 8. Read signups
 
 ```bash
-curl -H 'Authorization: Bearer <ADMIN_TOKEN>' https://api.kinapp.social/admin/signups
-curl -H 'Authorization: Bearer <ADMIN_TOKEN>' https://api.kinapp.social/admin/business-signups
-curl -H 'Authorization: Bearer <ADMIN_TOKEN>' https://api.kinapp.social/admin/posters
+curl -H 'Authorization: Bearer <ADMIN_TOKEN>' https://api.hellomin.app/admin/signups
+curl -H 'Authorization: Bearer <ADMIN_TOKEN>' https://api.hellomin.app/admin/business-signups
+curl -H 'Authorization: Bearer <ADMIN_TOKEN>' https://api.hellomin.app/admin/posters
 ```
 
 `/admin/posters` is the scoreboard — scans, signups and the ratio, pooled per
@@ -190,8 +190,14 @@ key:
 Each code encodes:
 
 ```
-https://api.kinapp.social/<location>/<poster>
+https://api.hellomin.app/<location>/<poster>
 ```
+
+**Posters already hanging encode `https://api.kinapp.social/<location>/<poster>`.**
+That route stays in `wrangler.toml` forever: printed paper cannot be reissued,
+and removing it would break every poster in the field. It still counts scans and
+still forwards to `hellomin.app/waitlist/`. The QR generator recognises the old
+shape and flags it legacy, but only ever mints new codes on `api.hellomin.app`.
 
 Locations, as they appear in the URL:
 
@@ -206,7 +212,7 @@ have to be percent-encoded in the QR, which is easy to get wrong and ugly if
 anyone ever reads the URL off the poster.
 
 A scan hits the Worker, which writes one row to `poster_scans` and 302s to
-`https://kinapp.social/waitlist/?l=otaniemi&p=unclesam`. `assets/js/waitlist-hero.js` reads
+`https://hellomin.app/waitlist/?l=otaniemi&p=unclesam`. `assets/js/waitlist-hero.js` reads
 both params into variables and sends them with the signup, where they land in
 `signups.poster` and `signups.poster_location`. Read the result from
 `/admin/posters`.
@@ -269,7 +275,7 @@ Ported from the previous backend, adjusted for the Workers runtime:
 - **Strict validation + length caps** — name ≤ 100, email ≤ 254, phone 7–15
   digits.
 - **Body size cap** — 8 KiB, oversized requests get `413`.
-- **CORS lock** — `ALLOW_ORIGIN` restricts POSTs to `https://kinapp.social`.
+- **CORS lock** — `ALLOW_ORIGIN` restricts POSTs to `https://hellomin.app`.
 - **Security headers** — `X-Content-Type-Options`, `X-Frame-Options`,
   `Referrer-Policy`, `Cache-Control: no-store`.
 - **No enumeration leak** — a duplicate email/phone returns the same success

@@ -1,5 +1,5 @@
 /* ============================================================
-   Kin — Design Tokens
+   Min — Design Tokens
    ------------------------------------------------------------
    The web counterpart of `KinTokens.swift` in kin-app-designs, which
    itself mirrors the `Kin tokens` Figma collection. Names follow the
@@ -24,7 +24,7 @@
 
 :root {
   /* ---- Ink ----------------------------------------------------
-     WARM. Violet is the only cool note in Kin. */
+     WARM. Violet is the only cool note in Min. */
   --ink-primary:   #23211E;
   --ink-secondary: #6D6861;
   --ink-tertiary:  #938C80;
@@ -51,7 +51,7 @@
   --status-ok:     #5E9B63;
 
   /* ---- Resin surfaces ----
-     Kin's signature material: translucent (not transparent), thick edges,
+     Min's signature material: translucent (not transparent), thick edges,
      soft matte finish, subtle internal diffusion. */
   --resin-light:   #FAF7F2;
   --resin-base:    #F2EEE7;
@@ -88,7 +88,7 @@
   --shadow-media:   0 30px 80px -30px rgba(15, 13, 20, 0.42);
 
   /* ---- Material alphas ----
-     NOT colours — opacities. Kin's surfaces are white at varying alpha over
+     NOT colours — opacities. Min's surfaces are white at varying alpha over
      a warm world, so forcing these into a colour system would produce
      colour tokens that actually describe transparency. */
   --alpha-btn-rest:      0.65;

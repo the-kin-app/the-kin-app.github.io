@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Min — QR generator</title>
+<meta name="description" content="Generates the Min-styled tracking QR codes that go on the printed posters.">
+<!-- An internal workbench, same stance as /poster/ and /qr/: it makes print
+     artefacts and has nothing to offer a search result. -->
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/qrgenerator.css">
+</head>
+
+<!-- ══════════════════════════════════════════════════════════
+     THE QR WORKBENCH
+     ──────────────────────────────────────────────────────────
+     Every printed poster carries a QR pointing at
+     api.hellomin.app/<location>/<poster> — the WORKER's host, not
+     the site's. The Worker counts that scan and forwards to
+     hellomin.app/waitlist/?l=&p=, which is how the poster
+     scoreboard at /admin/posters knows which artwork worked and
+     where. A code aimed at hellomin.app/<location>/<poster>
+     instead just 404s on Pages and counts nothing. So these codes are measurement instruments — the
+     vocabulary below has to match worker/src/index.js exactly, or a
+     scan lands on the fallback and the row it should have filled
+     stays empty.
+
+     Nothing here talks to a server. The encoder, the styling and
+     the ZIP are all local, so this page works offline and the
+     artwork is reproducible from the URL alone.
+     ══════════════════════════════════════════════════════════ -->
+
+<body class="qrg">
+<div class="qrg__shell">
+
+  <header class="qrg__head">
+    <div>
+      <h1 class="qrg__title">QR generator</h1>
+      <p class="qrg__lede">
+        Min-styled codes for the printed posters. Every code points at a tracking URL the
+        Worker counts before it forwards to the waitlist, so what you print here is what
+        shows up in the poster scoreboard.
+      </p>
+    </div>
+    <span class="qrg__badge">Internal tool</span>
+  </header>
+
+  <div class="qrg__work">
+
+    <!-- ── left: what to encode, and how it should look ── -->
+    <div>
+      <section class="panel">
+        <h2 class="panel__title">What it points at</h2>
+
+        <div class="toggles" id="mode-toggles" role="group" aria-label="Target type">
+          <button type="button" class="toggle" data-mode="poster" aria-pressed="true">Poster tracking</button>
+          <button type="button" class="toggle" data-mode="custom" aria-pressed="false">Custom URL</button>
+        </div>
+
+        <div class="ctl-grid" id="poster-fields" style="margin-top:var(--space-4);">
+          <label class="ctl">
+            <span class="ctl__label">Location</span>
+            <select id="location"></select>
+          </label>
+          <label class="ctl">
+            <span class="ctl__label">Poster</span>
+            <select id="poster"></select>
+          </label>
+        </div>
+
+        <div class="ctl-grid" id="custom-fields" style="margin-top:var(--space-4);display:none;">
+          <label class="ctl ctl--wide">
+            <span class="ctl__label">URL</span>
+            <input type="text" id="custom-url" value="https://hellomin.app/waitlist/" spellcheck="false">
+          </label>
+        </div>
+
+        <p class="panel__note" id="target-note"></p>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel__title">How it looks</h2>
+        <div class="ctl-grid">
+          <label class="ctl">
+            <span class="ctl__label">Palette</span>
+            <select id="palette"></select>
+          </label>
+          <label class="ctl">
+            <span class="ctl__label">Modules</span>
+            <select id="shape">
+              <option value="pebble">Pebble — rounded, connected</option>
+              <option value="square">Square — classic</option>
+            </select>
+          </label>
+          <label class="ctl">
+            <span class="ctl__label">Finder eyes</span>
+            <select id="eye">
+              <option value="pebble">Pebble corners</option>
+              <option value="circle">Circles</option>
+              <option value="square">Squares</option>
+            </select>
+          </label>
+          <label class="ctl">
+            <span class="ctl__label">Ground</span>
+            <select id="frame">
+              <option value="resin">Resin card</option>
+              <option value="plain">Flat fill</option>
+              <option value="none">Transparent</option>
+            </select>
+          </label>
+          <label class="ctl">
+            <span class="ctl__label">Error correction</span>
+            <select id="level">
+              <option value="H">H — recovers 30% (print)</option>
+              <option value="Q">Q — recovers 25%</option>
+              <option value="M">M — recovers 15%</option>
+              <option value="L">L — recovers 7%</option>
+            </select>
+          </label>
+          <label class="ctl">
+            <span class="ctl__label">Quiet zone (modules)</span>
+            <input type="number" id="quiet" min="0" max="12" step="1" value="4">
+          </label>
+          <label class="ctl">
+            <span class="ctl__label">PNG width (px)</span>
+            <input type="number" id="pixels" min="256" max="4096" step="64" value="1024">
+          </label>
+          <div class="ctl">
+            <span class="ctl__label">Centre badge</span>
+            <label class="check"><input type="checkbox" id="logo" checked> Min wordmark</label>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ── right: the code, and whether it is safe to print ── -->
+    <div class="preview">
+      <section class="panel">
+        <h2 class="panel__title">Preview</h2>
+        <div class="preview__stage" id="stage"></div>
+        <p class="preview__meta" id="meta"></p>
+        <code class="preview__url" id="url-out"></code>
+        <div class="notes" id="notes"></div>
+        <div class="btn-row">
+          <button type="button" class="btn-q" id="dl-svg">Download SVG</button>
+          <button type="button" class="btn-q btn-q--ghost" id="dl-png">PNG</button>
+          <button type="button" class="btn-q btn-q--ghost" id="copy-svg">Copy SVG</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ── the whole print run, in the style set above ── -->
+  <section class="panel" style="margin-top:var(--space-6);">
+    <h2 class="panel__title">Every poster code</h2>
+    <p class="panel__note qrg__print-hide" id="sheet-note"></p>
+    <div class="btn-row qrg__print-hide">
+      <button type="button" class="btn-q" id="dl-zip">Download all as ZIP</button>
+      <button type="button" class="btn-q btn-q--ghost" id="print-sheet">Print sheet</button>
+    </div>
+    <div class="sheet-grid" id="sheet"></div>
+  </section>
+
+</div>
+
+<script src="/assets/js/qr-encode.js"></script>
+<script src="/assets/js/qr-style.js"></script>
+<script src="/assets/js/qrgenerator.js"></script>
+</body>
+</html>
