@@ -213,7 +213,7 @@ async function sendWelcomeEmail(env, name, email) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Kin <hello@kinapp.social>',
+        from: 'Kin <hello@hellomin.app>',
         to: email,
         subject: "You're on the Kin waitlist",
         text,
@@ -391,7 +391,7 @@ async function handleBusiness(request, env, origin) {
 // Counting here rather than in page JS means a reload of the landing page
 // doesn't recount, and nothing has to be stored on the visitor's device.
 async function handleScan(location, poster, request, env) {
-  const site = env.SITE_ORIGIN || 'https://kinapp.social';
+  const site = env.SITE_ORIGIN || 'https://hellomin.app';
 
   // Its own limiter namespace: if scans shared RATE_LIMITER with the forms,
   // a burst of scans from one network could 429 somebody's actual signup.
@@ -561,7 +561,7 @@ export default {
         }
         // A typo'd or retired poster still lands somewhere useful — QR codes
         // on paper outlive the campaign that printed them.
-        const site = env.SITE_ORIGIN || 'https://kinapp.social';
+        const site = env.SITE_ORIGIN || 'https://hellomin.app';
         return Response.redirect(`${site}/waitlist/`, 302);
       }
     }

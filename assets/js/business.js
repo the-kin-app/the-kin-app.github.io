@@ -183,7 +183,7 @@ function daybreak(scene) {
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
 const DEFAULT_API = LOCAL_HOSTS.has(location.hostname)
   ? 'http://localhost:8787'
-  : 'https://api.kinapp.social';
+  : 'https://api.hellomin.app';
 
 const API_BASE = (window.KIN_API_BASE || DEFAULT_API).replace(/\/$/, '');
 const SUBMIT_URL = API_BASE + '/business';

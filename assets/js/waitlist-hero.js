@@ -162,13 +162,15 @@
 
   // Cloudflare Worker endpoint. Override at deploy time by setting
   // window.KIN_API_BASE before this script runs.
-  const API_BASE = (window.KIN_API_BASE || 'https://api.kinapp.social').replace(/\/$/, '');
+  const API_BASE = (window.KIN_API_BASE || 'https://api.hellomin.app').replace(/\/$/, '');
   const SUBMIT_URL = API_BASE + '/waitlist';
 
   /* Poster attribution — the same contract as waitlist.js, because this
-     page is where every printed QR actually lands. Each code points at
-     api.kinapp.social/<location>/<poster>, which counts the scan and
-     redirects here with ?l=<location>&p=<poster>.
+     page is where every printed QR actually lands. Codes on posters
+     already hanging point at api.kinapp.social/<location>/<poster> —
+     the OLD host, kept alive permanently because printed paper can't
+     be reissued. New posters use api.hellomin.app. Either host counts
+     the scan and redirects here with ?l=<location>&p=<poster>.
 
      Read once into memory and held for this page view only — no cookie,
      no localStorage, nothing on the device, so it needs no consent

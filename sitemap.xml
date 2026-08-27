@@ -6,23 +6,23 @@
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://kinapp.social/</loc>
-    <lastmod>2026-08-05</lastmod>
+    <loc>https://hellomin.app/</loc>
+    <lastmod>2026-08-27</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://kinapp.social/waitlist/</loc>
-    <lastmod>2026-08-05</lastmod>
+    <loc>https://hellomin.app/waitlist/</loc>
+    <lastmod>2026-08-27</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kinapp.social/pitchdeck/</loc>
-    <lastmod>2026-08-05</lastmod>
+    <loc>https://hellomin.app/pitchdeck/</loc>
+    <lastmod>2026-08-27</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://kinapp.social/privacy-policy/</loc>
-    <lastmod>2026-08-05</lastmod>
+    <loc>https://hellomin.app/privacy-policy/</loc>
+    <lastmod>2026-08-27</lastmod>
     <priority>0.2</priority>
   </url>
 </urlset>

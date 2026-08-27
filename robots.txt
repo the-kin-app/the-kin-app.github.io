@@ -1,4 +1,4 @@
-# kinapp.social
+# hellomin.app
 #
 # Everything is crawlable on purpose. /qr/ and /business/ are kept out of
 # search with a `noindex` meta tag on the pages themselves, NOT with a
@@ -8,4 +8,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://kinapp.social/sitemap.xml
+Sitemap: https://hellomin.app/sitemap.xml
