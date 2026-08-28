@@ -258,7 +258,13 @@ async function handleWaitlist(request, env, origin, ctx) {
     // Only a genuine new row gets a welcome email — never the duplicate path
     // below, and never a phone-only signup.
     if (contactMethod === 'email' && ctx) {
-      ctx.waitUntil(sendEmail(env, { to: email, template: 'welcome', data: { name } }));
+      // SURVEY_URL is optional — unset, the welcome mail simply omits the
+      // ask rather than linking somewhere broken.
+      ctx.waitUntil(sendEmail(env, {
+        to: email,
+        template: 'welcome',
+        data: { name, surveyUrl: env.SURVEY_URL || null },
+      }));
     }
     return json(201, { ok: true }, origin);
   } catch (err) {
