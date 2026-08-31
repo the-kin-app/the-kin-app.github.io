@@ -30,6 +30,12 @@ ALLOW_ORIGIN = "https://hellomin.app"
 # Where GET /<location>/<poster> sends a scan. Same host as the static site.
 SITE_ORIGIN = "https://hellomin.app"
 
+# The survey linked from the welcome email. Set = the mail carries the ask and
+# the patch that comes with it (welcomeWithSurvey in src/emails.js); unset =
+# the plain welcome, rather than a button pointing at nothing. The page lives
+# at /survey/ in this repo and posts back to POST /survey here.
+SURVEY_URL = "https://hellomin.app/survey/"
+
 # Native Workers rate limiting: 5 requests per 60s per key (per IP, see
 # src/index.js). The binding only supports fixed 10s/60s periods.
 [[ratelimits]]

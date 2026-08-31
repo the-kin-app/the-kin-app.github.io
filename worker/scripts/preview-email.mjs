@@ -4,8 +4,8 @@
  *   node scripts/preview-email.mjs            # every template, both states
  *   node scripts/preview-email.mjs welcome    # just one
  *
- * Renders to .preview/ (git-ignored). The logo src is rewritten to the
- * local file so the mark shows without deploying — the real send always
+ * Renders to .preview/ (git-ignored). Image srcs are rewritten to the
+ * local files so the marks show without deploying — the real send always
  * points at https://hellomin.app.
  *
  * This only checks the layout in a browser. A browser is a far more
@@ -20,15 +20,20 @@ import { TEMPLATES } from '../src/emails.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const outDir = resolve(here, '../.preview');
-const logo = resolve(here, '../../assets/img/min-logo-email.png');
+const assets = resolve(here, '../../assets/img');
 
 // Each case is a name and the data a real send would carry. Both states of
 // every optional field, so the preview covers the branches — a missing name
-// and a missing survey are the two the welcome mail actually ships with.
+// is the one the waitlist actually ships with, since the QR page asks only
+// for an address.
 const CASES = {
   welcome: [
-    ['welcome-full', { name: 'Aino', surveyUrl: 'https://example.com/survey' }],
-    ['welcome-no-name-no-survey', {}],
+    ['welcome', { name: 'Aino' }],
+    ['welcome-no-name', {}],
+  ],
+  welcomeWithSurvey: [
+    ['welcome-survey', { name: 'Aino', surveyUrl: 'https://example.com/survey' }],
+    ['welcome-survey-no-name', { surveyUrl: 'https://example.com/survey' }],
   ],
 };
 
@@ -42,7 +47,11 @@ for (const [template, cases] of Object.entries(CASES)) {
 
   for (const [label, data] of cases) {
     const { subject, html, text } = TEMPLATES[template](data);
-    const local = html.replaceAll('https://hellomin.app/assets/img/min-logo-email.png', `file://${logo}`);
+    // Point every image at the local file so the marks show without deploying.
+    const local = html.replaceAll(
+      /https:\/\/hellomin\.app\/assets\/img\/([\w.-]+)/g,
+      (_, file) => `file://${assets}/${file}`,
+    );
 
     const htmlPath = resolve(outDir, `${label}.html`);
     writeFileSync(htmlPath, local);

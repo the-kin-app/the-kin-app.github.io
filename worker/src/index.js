@@ -9,6 +9,8 @@
  *   - /waitlist  -> signups          (consumer waitlist, name + email/phone)
  *   - /business  -> business_signups (business interest form, only
  *                   business_name + location required, rest optional)
+ *   - /survey    -> survey_responses (the waitlist survey linked from the
+ *                   welcome email; every field optional)
  *
  * Plus poster A/B tracking (see migrations/0004_poster_tracking.sql):
  *   - GET /<location>/<poster> -> poster_scans, then a 302 to
@@ -45,6 +47,22 @@ const MARKETING_CHANNELS = new Set(['word_of_mouth', 'social_media', 'paid_ads',
 const CONCEPT_INTEREST = new Set(['definitely', 'maybe', 'not_really']);
 const PRICING_PREF = new Set(['per_post', 'monthly', 'per_redemption', 'not_sure']);
 const PILOT_INTEREST = new Set(['yes', 'maybe', 'no']);
+
+// The survey (site: /survey/, reached from the welcome email). One slider per
+// app, and these are the slugs the page sends — assets/js/survey.js holds the
+// same list with its display names. Anything outside this set is dropped
+// rather than rejected: a stale page from an old cache must still be able to
+// hand in the answers it did collect.
+const APP_KEYS = new Set([
+  'instagram', 'tiktok', 'snapchat', 'youtube', 'facebook', 'x', 'reddit',
+  'tinder', 'bumble', 'hinge', 'other_dating',
+]);
+// Minutes a day, matching the rail: 0-300 in quarter hours, where 300 means
+// "five hours or more".
+const APP_MINUTES_MAX = 300;
+// Conversations a week, likewise a ceiling rather than a limit.
+const TALKS_MAX = 20;
+const APPS_VERDICT = new Set(['yes', 'no']);
 
 // Printed poster variants and the places they hang. Together these are the
 // only values GET /<location>/<poster> and the signup fields will accept —
@@ -189,6 +207,67 @@ function validateBusiness(payload) {
   return null;
 }
 
+/**
+ * Every field on the survey is optional — a partial answer is worth more than
+ * an abandoned one — so this only ever rejects a value that is the wrong
+ * *shape*, never a missing one.
+ */
+function validateSurvey(payload) {
+  if (!payload || typeof payload !== 'object') return 'Invalid request body.';
+
+  if (payload.app_usage != null) {
+    if (typeof payload.app_usage !== 'object' || Array.isArray(payload.app_usage)) {
+      return 'Invalid app usage.';
+    }
+    // Cap the object before walking it: the body limit already bounds this,
+    // but the allowlist is the real ceiling and it should be stated here.
+    if (Object.keys(payload.app_usage).length > APP_KEYS.size) return 'Invalid app usage.';
+    for (const v of Object.values(payload.app_usage)) {
+      if (typeof v !== 'number' || !Number.isFinite(v) || v < 0 || v > APP_MINUTES_MAX) {
+        return 'Invalid app usage.';
+      }
+    }
+  }
+
+  if (payload.apps_other != null) {
+    if (typeof payload.apps_other !== 'string' || payload.apps_other.length > 150) {
+      return 'That answer is too long.';
+    }
+  }
+
+  if (payload.apps_verdict != null && !APPS_VERDICT.has(payload.apps_verdict)) {
+    return 'Invalid answer.';
+  }
+
+  if (payload.apps_verdict_why != null) {
+    if (typeof payload.apps_verdict_why !== 'string' || payload.apps_verdict_why.length > 1000) {
+      return 'That answer is too long.';
+    }
+  }
+
+  if (payload.strangers_per_week != null) {
+    const n = payload.strangers_per_week;
+    if (typeof n !== 'number' || !Number.isInteger(n) || n < 0 || n > TALKS_MAX) {
+      return 'Invalid answer.';
+    }
+  }
+
+  if (payload.email != null) {
+    const email = typeof payload.email === 'string' ? payload.email.trim() : '';
+    // Empty is fine — the field is optional. A typo is not, because the patch
+    // then quietly never arrives.
+    if (email && (!EMAIL_RE.test(email) || email.length > 254)) return 'Please enter a valid email.';
+  }
+
+  if (payload.campus != null) {
+    if (typeof payload.campus !== 'string' || payload.campus.length > 100) {
+      return 'That answer is too long.';
+    }
+  }
+
+  return null;
+}
+
 // No crypto.timingSafeEqual in the Workers runtime — manual constant-time
 // compare so an invalid admin token can't be brute-forced via response timing.
 function timingSafeEqual(a, b) {
@@ -258,12 +337,14 @@ async function handleWaitlist(request, env, origin, ctx) {
     // Only a genuine new row gets a welcome email — never the duplicate path
     // below, and never a phone-only signup.
     if (contactMethod === 'email' && ctx) {
-      // SURVEY_URL is optional — unset, the welcome mail simply omits the
-      // ask rather than linking somewhere broken.
+      // SURVEY_URL is optional. With one configured the welcome mail carries
+      // the survey ask and the patch that comes with it; without one it is
+      // the plain welcome, rather than an ask linking somewhere broken.
+      const surveyUrl = env.SURVEY_URL || null;
       ctx.waitUntil(sendEmail(env, {
         to: email,
-        template: 'welcome',
-        data: { name, surveyUrl: env.SURVEY_URL || null },
+        template: surveyUrl ? 'welcomeWithSurvey' : 'welcome',
+        data: { name, surveyUrl },
       }));
     }
     return json(201, { ok: true }, origin);
@@ -365,6 +446,88 @@ async function handleBusiness(request, env, origin) {
   }
 }
 
+async function handleSurvey(request, env, origin) {
+  if (env.RATE_LIMITER) {
+    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+    const { success } = await env.RATE_LIMITER.limit({ key: ip });
+    if (!success) {
+      return json(429, { error: 'Too many requests. Please try again later.' }, origin);
+    }
+  }
+
+  let raw;
+  try {
+    raw = await request.text();
+  } catch {
+    return json(400, { error: 'Invalid request.' }, origin);
+  }
+  if (raw.length > MAX_BODY_BYTES) {
+    return json(413, { error: 'Payload too large.' }, origin);
+  }
+
+  let payload;
+  try {
+    payload = JSON.parse(raw);
+  } catch {
+    return json(400, { error: 'Invalid JSON.' }, origin);
+  }
+
+  // Honeypot: hidden field real users never fill. If populated, pretend
+  // success and drop the submission silently.
+  if (typeof payload.website === 'string' && payload.website.trim() !== '') {
+    return json(201, { ok: true }, origin);
+  }
+
+  const error = validateSurvey(payload);
+  if (error) return json(400, { error }, origin);
+
+  // Keep only the apps this Worker knows, and round to whole minutes so the
+  // stored JSON can't carry a float the page never produced. An app nobody
+  // moved is absent, not zero — "not answered" and "I use it none" are
+  // different answers and the column keeps them apart.
+  let appUsage = null;
+  if (payload.app_usage) {
+    const kept = {};
+    for (const [key, minutes] of Object.entries(payload.app_usage)) {
+      if (APP_KEYS.has(key) && minutes > 0) kept[key] = Math.round(minutes);
+    }
+    if (Object.keys(kept).length) appUsage = JSON.stringify(kept);
+  }
+
+  const appsOther = (typeof payload.apps_other === 'string' && payload.apps_other.trim()) || null;
+  const appsVerdict = payload.apps_verdict || null;
+  const appsVerdictWhy =
+    (typeof payload.apps_verdict_why === 'string' && payload.apps_verdict_why.trim()) || null;
+  const strangers = typeof payload.strangers_per_week === 'number' ? payload.strangers_per_week : null;
+  // Lower-cased to match how signups store an address, so the patch list can
+  // be lined up against the waitlist without a case-folding join.
+  const email = (typeof payload.email === 'string' && payload.email.trim().toLowerCase()) || null;
+  const campus = (typeof payload.campus === 'string' && payload.campus.trim()) || null;
+  const createdAt = new Date().toISOString();
+
+  // Somebody who dragged nothing, picked nothing and typed nothing has told us
+  // nothing — that's a stray submit, not a response, and it shouldn't sit in
+  // the counts. An email alone is likewise not an answer.
+  if (!appUsage && !appsOther && !appsVerdict && !appsVerdictWhy && strangers === null) {
+    return json(201, { ok: true }, origin);
+  }
+
+  try {
+    await env.DB.prepare(
+      `INSERT INTO survey_responses (
+         app_usage, app_usage_other, apps_verdict, apps_verdict_why,
+         strangers_per_week, email, campus, created_at
+       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+    )
+      .bind(appUsage, appsOther, appsVerdict, appsVerdictWhy, strangers, email, campus, createdAt)
+      .run();
+    return json(201, { ok: true }, origin);
+  } catch (err) {
+    console.error('D1 insert failed:', err);
+    return json(500, { error: 'Could not save your answers. Please try again.' }, origin);
+  }
+}
+
 // GET /<location>/<poster> — the URL printed on the posters. Counts the scan,
 // then bounces to the waitlist carrying both values in the query string.
 //
@@ -443,6 +606,52 @@ async function handleAdminBusinessList(request, env, origin) {
   return json(200, { count: countRow.n, recent: recent.results }, origin);
 }
 
+async function handleAdminSurvey(request, env, origin) {
+  const authHeader = request.headers.get('Authorization') || '';
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
+
+  if (!env.ADMIN_TOKEN || !timingSafeEqual(token, env.ADMIN_TOKEN)) {
+    return json(401, { error: 'Unauthorized.' }, origin);
+  }
+
+  const countRow = await env.DB.prepare('SELECT COUNT(*) AS n FROM survey_responses').first();
+  const recent = await env.DB.prepare(
+    `SELECT id, app_usage, app_usage_other, apps_verdict, apps_verdict_why,
+            strangers_per_week, email, campus, created_at
+     FROM survey_responses ORDER BY id DESC LIMIT 100`
+  ).all();
+
+  // The two aggregates worth having without a spreadsheet: the yes/no split,
+  // and the average number of conversations a week. Both skip the rows that
+  // left the question alone, so an unanswered question can't read as a zero.
+  const verdict = await env.DB.prepare(
+    `SELECT apps_verdict, COUNT(*) AS n FROM survey_responses
+      WHERE apps_verdict IS NOT NULL GROUP BY apps_verdict`
+  ).all();
+  const talks = await env.DB.prepare(
+    `SELECT AVG(strangers_per_week) AS avg, COUNT(*) AS n FROM survey_responses
+      WHERE strangers_per_week IS NOT NULL`
+  ).first();
+
+  const verdictSplit = { yes: 0, no: 0 };
+  for (const row of verdict.results) verdictSplit[row.apps_verdict] = row.n;
+
+  return json(200, {
+    count: countRow.n,
+    verdict: verdictSplit,
+    strangers_per_week: {
+      answered: talks.n,
+      average: talks.avg == null ? null : Number(talks.avg.toFixed(2)),
+    },
+    // app_usage arrives as the stored JSON string; parsed here so the caller
+    // reads numbers rather than doing it once per row itself.
+    recent: recent.results.map((row) => ({
+      ...row,
+      app_usage: row.app_usage ? JSON.parse(row.app_usage) : null,
+    })),
+  }, origin);
+}
+
 async function handleAdminPosters(request, env, origin) {
   const authHeader = request.headers.get('Authorization') || '';
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
@@ -517,12 +726,20 @@ export default {
       return handleBusiness(request, env, origin);
     }
 
+    if (request.method === 'POST' && (url.pathname === '/survey' || url.pathname === '/survey/')) {
+      return handleSurvey(request, env, origin);
+    }
+
     if (request.method === 'GET' && url.pathname === '/admin/signups') {
       return handleAdminList(request, env, origin);
     }
 
     if (request.method === 'GET' && url.pathname === '/admin/business-signups') {
       return handleAdminBusinessList(request, env, origin);
+    }
+
+    if (request.method === 'GET' && url.pathname === '/admin/survey') {
+      return handleAdminSurvey(request, env, origin);
     }
 
     if (request.method === 'GET' && url.pathname === '/admin/posters') {

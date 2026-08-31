@@ -15,14 +15,30 @@
  *
  * ── On the design ──────────────────────────────────────────────────────
  * The look is the site's, rebuilt in the subset of HTML mail clients agree
- * on: nested tables, inline styles, no CSS file, no gradients, no SVG. The
- * tokens are lifted from assets/css/tokens.css by value (a mail client has
- * no custom properties), and they are listed once in PALETTE below so a
+ * on: nested tables, inline styles, no CSS file, no SVG, no backdrop blur.
+ *
+ * The site's daylight, not its cave. landing.js lerps the world from the
+ * cave out into the light and back, and this takes the light end: the cream
+ * page ground, the wordmark floating on it, and one resin card holding what
+ * is being asked. The order is the site's own — mark, the when, card,
+ * footer — so the mail reads as the next screen after /waitlist/ rather than
+ * a receipt from somewhere else.
+ *
+ * Two things the site does that mail cannot: the resin is translucent (here
+ * it is flattened to the cream it averages to over a light ground, with a
+ * lit rim faked as a near-white border), and the buttons mix violet live
+ * under the cursor (here they are frozen at their rest value — a pale warm
+ * mauve, not a slab of violet; the accent is a light in this system, never
+ * a fill).
+ *
+ * The tokens are lifted from assets/css/tokens.css by value — a mail client
+ * has no custom properties — and listed once in PALETTE below, so a
  * re-theme is one edit rather than a hunt through markup.
  *
- * What survives everywhere: the warm ground, the cream resin card, the ink,
- * the violet accent, the rounded button. What degrades gracefully: rounded
- * corners and shadows (Outlook squares them off — the layout still reads).
+ * What survives everywhere: the cream ground, the resin card, the ink, the
+ * violet accent, the rounded pill. What degrades gracefully: the ground's
+ * gradient (Outlook gets the flat cream), rounded corners and shadows
+ * (Outlook squares them off — the layout still reads).
  */
 
 const FROM = 'Min <hello@hellomin.app>';
@@ -36,33 +52,58 @@ export function escapeHtml(s) {
 // <style> often enough that every colour has to be inlined at the point of
 // use; naming them here keeps that from becoming forty magic hex strings.
 const PALETTE = {
-  ground: '#E3DBD0',      // --world-grad2 — the warm world behind the card
-  card: '#FAF7F2',        // --resin-light — the resin surface
-  rim: '#EFE8DD',         // the card's lit edge, faked as a border
+  // The world at its light end — the three stops of --gradient-page-bg,
+  // which is the ground the site gives anything without the live scroll
+  // atmosphere behind it.
+  ground: '#F0EBE2',      // --world-grad1
+  groundMid: '#E9E2D7',   // between grad1 and grad2 — the gradient's middle
+  groundFar: '#DFD7C9',   // --world-grad3
+  // Ink on the ground. Warm, per tokens.css: violet is the only cool note.
   ink: '#23211E',         // --ink-primary
   inkSoft: '#6D6861',     // --ink-secondary
   inkFaint: '#938C80',    // --ink-tertiary
+  // The resin card. Over a light ground the wash resolves to cream, so
+  // here the canonical --resin-light is the honest flattening; the pebble
+  // inside it goes a step warmer so it still reads as its own object.
+  card: '#FAF7F2',        // --resin-light
+  pebble: '#F3EDE3',      // --resin-base, warmed — the secondary pill's fill
+  rim: '#FFFFFF',         // the card's lit edge, faked as a border
   violetInk: '#7A5A94',   // --violet-ink — the accent at text weight
-  violetFill: '#DCC7EC',  // --violet at button strength over cream
-  violetEdge: '#C9A8E0',  // --violet
-  hair: '#EAE4DA',        // --color-border
+  // The primary button's rest fill. The site mixes --gradient-interactive
+  // at 34% over a pale resin wash; this is what that actually resolves to.
+  // A saturated violet here would read as a slab and break the rule that
+  // the accent is a light.
+  violetRest: '#E2D5E9',
+  violetEdge: '#D0BBDE',
+  hair: '#E4DDD1',        // the rule inside resin
 };
 
 // Nunito is the site's face. Mail clients will not fetch it, so the stack
 // falls through to the rounded system faces the comps were drawn in.
 const FONT = "'Nunito','SF Pro Rounded',ui-rounded,-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
 
-const P = `margin:0 0 18px;font-size:16px;line-height:1.65;color:${PALETTE.ink};`;
+// Typography, lifted from the site rather than from email defaults. Min is
+// set semibold with tight tracking and fairly tight leading — 700 at 1.65
+// reads as a newsletter, which is the one thing this must not look like.
+// Body copy takes the secondary ink: the heading is the only thing in full
+// strength, which is how every card on the site is weighted.
+const P_SOFT = `margin:0 0 16px;font-size:16px;line-height:1.55;letter-spacing:-0.01em;color:${PALETTE.inkSoft};`;
+// The eyebrow over a pebble. Uppercase and small, and the only place the
+// violet appears as text.
+const EYEBROW = `margin:0 0 5px;font-size:12px;font-weight:700;letter-spacing:0.08em;`
+  + `text-transform:uppercase;color:${PALETTE.violetInk};`;
 
 /**
- * The shell every message sits in: warm ground, centred cream card, the
- * wordmark, the content, then the footer.
+ * The shell every message sits in, in the site's own order: the mark on the
+ * dark world, the one line that has to survive a glance, the resin card, and
+ * the footer back out on the ground.
  *
  * `blocks` is raw HTML — the caller has already escaped anything that came
- * from a person. Capped at 600px — the one width every client, Outlook's
- * Word renderer included, lays out the same.
+ * from a person. `standfirst` is the line under the mark, on the ground, and
+ * is optional. Capped at 600px — the one width every client, Outlook's Word
+ * renderer included, lays out the same.
  */
-function layout({ preheader, blocks, footer }) {
+function layout({ preheader, standfirst = '', blocks, footer }) {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -78,20 +119,27 @@ function layout({ preheader, blocks, footer }) {
 <style>
   @media only screen and (max-width:600px) {
     .pad { padding-left:24px !important; padding-right:24px !important; }
-    .pad-top { padding-top:32px !important; }
-    .pad-bottom { padding-bottom:32px !important; }
+    .pad-top { padding-top:28px !important; }
+    .pad-bottom { padding-bottom:28px !important; }
   }
 </style>
 </head>
-<body style="margin:0;padding:0;background:${PALETTE.ground};-webkit-font-smoothing:antialiased;">
+<body style="margin:0;padding:0;background:${PALETTE.groundFar};-webkit-font-smoothing:antialiased;">
 
 <!-- The preview line in the inbox list. Hidden in the message itself. -->
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;">${preheader}</div>
 
+<!-- ── the world ─────────────────────────────────────────────
+     The cream ground, warming as it falls — the site's --gradient-page-bg
+     at the same 160deg. bgcolor carries the colour everywhere; the gradient
+     is pure decoration, and Outlook drops background-image and gets the flat
+     cream, which is the top of that gradient anyway. -->
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
-       style="background:${PALETTE.ground};">
+       bgcolor="${PALETTE.ground}"
+       style="background-color:${PALETTE.ground};
+              background-image:linear-gradient(160deg, ${PALETTE.ground} 0%, ${PALETTE.groundMid} 45%, ${PALETTE.groundFar} 100%);">
   <tr>
-    <td align="center" style="padding:40px 16px;">
+    <td align="center" style="padding:44px 16px 40px;">
 
       <!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
       <!-- width="100%" + max-width, not width="600": the attribute is not a
@@ -101,23 +149,35 @@ function layout({ preheader, blocks, footer }) {
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
              style="width:100%;max-width:600px;">
 
-        <!-- ── the card ───────────────────────────────────────────
-             One resin surface, as on every page of the site: cream,
-             a lit rim, a soft contact shadow, generously rounded. -->
+        <!-- ── the mark, and the when ────────────────────────────
+             Small, as on the site: a signature, not a hero. The ink
+             lockup, because it is sitting out on the cream ground. -->
         <tr>
-          <td style="background:${PALETTE.card};border:1px solid ${PALETTE.rim};border-radius:28px;
-                     padding:0;box-shadow:0 20px 45px -16px rgba(15,13,20,0.16);">
+          <td align="center" style="padding:0 24px 14px;">
+            <img src="${SITE}/assets/img/min-logo-email.png" width="120" height="68" alt="Min"
+                 style="display:block;border:0;width:120px;height:68px;">
+          </td>
+        </tr>
+        ${standfirst ? `<tr>
+          <td align="center" style="padding:0 24px 26px;font-family:${FONT};
+                     font-size:15px;line-height:1.4;font-weight:600;letter-spacing:-0.01em;
+                     color:${PALETTE.inkSoft};">
+            ${standfirst}
+          </td>
+        </tr>` : ''}
 
-            <!-- the mark -->
+        <!-- ── the card ───────────────────────────────────────────
+             One resin surface, as on every page of the site: cream, a lit
+             rim, the soft contact shadow of --shadow-card, generously
+             rounded. -->
+        <tr>
+          <td bgcolor="${PALETTE.card}"
+              style="background-color:${PALETTE.card};border:1px solid ${PALETTE.rim};border-radius:28px;
+                     padding:0;box-shadow:0 2px 3px rgba(15,13,20,0.10), 0 20px 45px -16px rgba(15,13,20,0.18);">
+
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr>
-                <td align="center" class="pad pad-top" style="padding:40px 32px 8px;">
-                  <img src="${SITE}/assets/img/min-logo-email.png" width="104" height="59" alt="Min"
-                       style="display:block;border:0;width:104px;height:59px;">
-                </td>
-              </tr>
-              <tr>
-                <td class="pad pad-bottom" style="padding:16px 40px 40px;font-family:${FONT};">
+                <td class="pad pad-top pad-bottom" style="padding:38px 40px;font-family:${FONT};">
                   ${blocks}
                 </td>
               </tr>
@@ -126,9 +186,9 @@ function layout({ preheader, blocks, footer }) {
           </td>
         </tr>
 
-        <!-- ── the footer, outside the card, on the ground ────── -->
+        <!-- ── the footer, outside the card, back on the ground ── -->
         <tr>
-          <td align="center" style="padding:24px 24px 8px;font-family:${FONT};
+          <td align="center" style="padding:26px 24px 4px;font-family:${FONT};
                      font-size:13px;line-height:1.6;color:${PALETTE.inkFaint};">
             ${footer}
           </td>
@@ -144,36 +204,102 @@ function layout({ preheader, blocks, footer }) {
 }
 
 /**
- * The site's button, flattened: a pill with ink on it. Built as a table
- * because Outlook ignores padding on an <a>, so an <a>-only button
- * collapses to a bare link there.
+ * The site's button, flattened: a pale resin pill with warm near-black on
+ * it. Built as a table because Outlook ignores padding on an <a>, so an
+ * <a>-only button collapses to a bare link there.
  *
- * Two weights, and the message only ever gets one of each: `primary` is
- * the violet fill, `secondary` is the same pill left clear. Two filled
- * violet buttons in one message read as two equal asks — and the survey
- * is explicitly the optional one.
+ * Two weights, and the message only ever gets one of each. `primary` is the
+ * pill with the violet already mixed into it at its rest value — on the site
+ * that light follows the cursor, and a mail has no cursor, so it is frozen
+ * where the site leaves it. `secondary` is the same pill left clear, with the
+ * accent moved into the label. Two primaries in one message read as two
+ * equal asks, and the survey is explicitly the optional one.
+ *
+ * The arrow is the site's — every Min button that goes somewhere carries one.
  */
 function button(href, label, variant = 'primary') {
-  const fill = variant === 'primary' ? PALETTE.violetFill : PALETTE.card;
+  const fill = variant === 'primary' ? PALETTE.violetRest : PALETTE.pebble;
   const edge = variant === 'primary' ? PALETTE.violetEdge : PALETTE.hair;
   const ink = variant === 'primary' ? PALETTE.ink : PALETTE.violetInk;
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:4px 0 8px;">
+  // A real lift, not a slab: the site's buttons are objects with a lit top
+  // edge and a shadow under them. Outlook drops both and gets a flat pill.
+  const lift = variant === 'primary'
+    ? 'box-shadow:inset 0 1.5px 0 #FFFFFF, 0 2px 2px rgba(15,13,20,0.08), 0 10px 20px -10px rgba(15,13,20,0.28);'
+    : 'box-shadow:inset 0 1.5px 0 #FFFFFF;';
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:6px 0 4px;">
   <tr>
     <td align="center" bgcolor="${fill}"
-        style="border-radius:999px;border:1px solid ${edge};">
+        style="background-color:${fill};border-radius:999px;border:1px solid ${edge};${lift}">
       <a href="${href}" target="_blank"
-         style="display:inline-block;padding:14px 30px;font-family:${FONT};font-size:16px;
-                font-weight:700;color:${ink};text-decoration:none;border-radius:999px;">${label}</a>
+         style="display:inline-block;padding:15px 28px;font-family:${FONT};font-size:16px;
+                font-weight:600;letter-spacing:-0.01em;color:${ink};text-decoration:none;
+                border-radius:999px;white-space:nowrap;">${label}&nbsp;&nbsp;<span style="color:${ink};">&rarr;</span></a>
     </td>
   </tr>
 </table>`;
 }
 
 // A quiet horizontal rule — the divider the site uses between a card's
-// content and the aside underneath it.
+// content and the aside underneath it. Inside resin, so it is the warm hair
+// line, not the cream one the dark ground uses.
 const RULE = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
-  style="margin:28px 0;"><tr><td style="height:1px;line-height:1px;font-size:0;
+  style="margin:30px 0;"><tr><td style="height:1px;line-height:1px;font-size:0;
   background:${PALETTE.hair};">&nbsp;</td></tr></table>`;
+
+/**
+ * The greeting, which has to work with and without a name. A waitlist row
+ * can have none (see index.js — the QR page asks only for an address), so
+ * this never leans on one.
+ */
+function greeting(name) {
+  const raw = name ? String(name).trim() : '';
+  return { hi: raw ? `Hi ${escapeHtml(raw)},` : 'Hi,', hiText: raw ? `Hi ${raw},` : 'Hi,' };
+}
+
+/**
+ * The body both welcome mails share: hello, you're on the list, one line
+ * about what happens next, and the way on to the site. Deliberately short —
+ * somebody who has just handed over an address wants confirmation, not a
+ * briefing, and the site is one tap away for the rest.
+ *
+ * `aside` is raw HTML appended inside the card, under a rule. The plain
+ * welcome passes nothing; the survey version passes its ask.
+ */
+function welcomeBody({ hi, aside = '' }) {
+  return `
+      <p style="margin:0 0 10px;font-size:16px;line-height:1.5;letter-spacing:-0.01em;
+                color:${PALETTE.inkSoft};">${hi}</p>
+
+      <!-- The heading the done-view on /waitlist/ ends on, so the mail picks
+           up mid-sentence from the screen they just left. -->
+      <h1 style="margin:0 0 14px;font-size:24px;line-height:1.25;font-weight:600;
+                 letter-spacing:-0.03em;color:${PALETTE.ink};">You&rsquo;re on the list.</h1>
+
+      <p style="${P_SOFT}">Thanks for signing up. We&rsquo;ll let you know the moment Min launches
+        &mdash; and nothing before that.</p>
+
+      ${button(SITE, 'See what Min does')}
+      ${aside}
+    `;
+}
+
+const FOOTER = `You&rsquo;re getting this because you joined the waitlist at
+  <a href="${SITE}" style="color:${PALETTE.inkSoft};text-decoration:underline;">hellomin.app</a>.<br>
+  <a href="${SITE}/privacy-policy/" style="color:${PALETTE.inkFaint};text-decoration:underline;">Privacy policy</a>`;
+
+// The line under the mark, out on the world. Word for word the one on
+// /waitlist/, because somebody who is not a Helsinki student should learn
+// that in the first second, here as there.
+const STANDFIRST = 'Launching for all Helsinki area students in early 2027';
+
+const PREHEADER = "You're in. Min opens for Helsinki area students in early 2027.";
+
+const SUBJECT = "You're on the Min waitlist";
+
+const TEXT_FOOTER = `— the Min team
+
+You're getting this because you joined the waitlist at hellomin.app.
+Privacy policy: ${SITE}/privacy-policy/`;
 
 /**
  * The catalogue. Key it by a short slug; that slug is what callers pass to
@@ -183,92 +309,85 @@ const RULE = `<table role="presentation" width="100%" cellpadding="0" cellspacin
 export const TEMPLATES = {
   /**
    * Sent the moment a real new row lands in `signups` (see index.js). Says
-   * three things and stops: thank you, when Min opens, and — only if a
-   * survey is configured — one optional way to help shape it.
-   *
-   * `surveyUrl` is optional on purpose. index.js passes env.SURVEY_URL, so
-   * with nothing configured the section simply isn't rendered and the mail
-   * is still complete.
+   * one thing and stops: you're on the list, and we'll write when it opens.
    */
-  welcome: ({ name, surveyUrl }) => {
-    // A waitlist row can have no name (see index.js — the QR page asks only
-    // for an address), so the greeting has to stand on its own without one.
-    const rawName = name ? String(name).trim() : '';
-    const hi = rawName ? `Hi ${escapeHtml(rawName)},` : 'Hi,';
-    const hiText = rawName ? `Hi ${rawName},` : 'Hi,';
-
-    const survey = surveyUrl
-      ? `${RULE}
-      <p style="margin:0 0 6px;font-size:13px;font-weight:700;letter-spacing:0.06em;
-                text-transform:uppercase;color:${PALETTE.violetInk};">If you have two minutes</p>
-      <p style="${P}">We're still deciding what Min should do first. A few questions — completely optional, and it genuinely changes what we build.</p>
-      ${button(escapeHtml(surveyUrl), 'Answer a few questions', 'secondary')}`
-      : '';
-
+  welcome: ({ name }) => {
+    const { hi, hiText } = greeting(name);
     return {
-      subject: "You're on the Min waitlist",
+      subject: SUBJECT,
 
       // The plain-text half. Not a fallback nobody reads — it is what a
       // watch, a screen reader and a text-only client show, so it carries
-      // the same three things in the same order.
+      // the same thing in the same order.
       text: `${hiText}
 
-Thanks for joining the Min waitlist. You're in.
+You're on the list.
 
-WHEN
-Min opens for Helsinki area students in early 2027. You'll get one email the moment early beta spots open — nothing before that.
+Thanks for signing up. We'll let you know the moment Min launches — and
+nothing before that.
 
-WHAT MIN IS
-An introduction, not a feed. Min notices the people, groups and moments already around you, and quietly makes the introduction.
+An introduction, not a feed. Min notices the people, groups and moments
+already around you, and quietly makes the introduction.
 ${SITE}
-${surveyUrl ? `
-IF YOU HAVE TWO MINUTES
-We're still deciding what Min should do first. A few questions — completely optional, and it genuinely changes what we build.
-${surveyUrl}
-` : ''}
-— the Min team
 
-You're getting this because you joined the waitlist at hellomin.app.
-Privacy policy: ${SITE}/privacy-policy/`,
+${TEXT_FOOTER}`,
 
       html: layout({
-        preheader: "You're in. Min opens for Helsinki area students in early 2027.",
-        blocks: `
-      <p style="${P}">${hi}</p>
+        preheader: PREHEADER,
+        standfirst: STANDFIRST,
+        blocks: welcomeBody({ hi }),
+        footer: FOOTER,
+      }),
+    };
+  },
 
-      <p style="margin:0 0 18px;font-size:22px;line-height:1.35;font-weight:700;
-                letter-spacing:-0.02em;color:${PALETTE.ink};">Thanks for joining — you're on the list.</p>
+  /**
+   * The same mail with one thing added: the survey, and the patch that comes
+   * with it. index.js picks this key only when SURVEY_URL is configured, so
+   * the ask can never link somewhere broken.
+   *
+   * The ask sits under a rule, in the secondary button weight, and the patch
+   * is named in it — a physical thing you collect on your own campus is the
+   * whole reason somebody answers, so it does not get buried in a postscript.
+   */
+  welcomeWithSurvey: ({ name, surveyUrl }) => {
+    const { hi, hiText } = greeting(name);
+    const url = escapeHtml(surveyUrl);
+    return {
+      subject: SUBJECT,
 
-      <p style="${P}">You're one of the first, and that's the part that matters: the early list is who Min gets built around.</p>
+      text: `${hiText}
 
-      <!-- ── the when ────────────────────────────────────────
-           The single fact somebody opens this email for, given
-           its own tinted panel so it survives a three-second
-           read on a phone. -->
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
-             style="margin:6px 0 22px;">
-        <tr>
-          <td style="background:#F4EEF8;border:1px solid #E7DBF0;border-radius:20px;padding:20px 22px;">
-            <p style="margin:0 0 4px;font-size:13px;font-weight:700;letter-spacing:0.06em;
-                      text-transform:uppercase;color:${PALETTE.violetInk};">Launching</p>
-            <p style="margin:0 0 6px;font-size:19px;line-height:1.35;font-weight:700;
-                      color:${PALETTE.ink};">Early 2027, Helsinki</p>
-            <p style="margin:0;font-size:15px;line-height:1.6;color:${PALETTE.inkSoft};">
-              For students across the Helsinki area first. We'll email you the moment early beta spots
-              open — and not before.</p>
-          </td>
-        </tr>
-      </table>
+You're on the list.
 
-      <p style="${P}">Until then, nothing is expected of you. Min is an introduction, not a feed: it notices
-        the people, groups and moments already around you, and quietly makes the introduction.</p>
+Thanks for signing up. We'll let you know the moment Min launches — and
+nothing before that.
 
-      ${button(SITE, 'See what Min does')}
-      ${survey}
-    `,
-        footer: `You're getting this because you joined the waitlist at
-          <a href="${SITE}" style="color:${PALETTE.inkSoft};text-decoration:underline;">hellomin.app</a>.<br>
-          <a href="${SITE}/privacy-policy/" style="color:${PALETTE.inkFaint};text-decoration:underline;">Privacy policy</a>`,
+An introduction, not a feed. Min notices the people, groups and moments
+already around you, and quietly makes the introduction.
+${SITE}
+
+HELP SHAPE HOW MIN WILL WORK
+If you're interested in helping us make this product better, please fill in
+this survey. As a thanks you'll get a special Min patch, which you can pick
+up from your campus.
+${surveyUrl}
+
+${TEXT_FOOTER}`,
+
+      html: layout({
+        preheader: PREHEADER,
+        standfirst: STANDFIRST,
+        blocks: welcomeBody({
+          hi,
+          aside: `${RULE}
+      <p style="${EYEBROW}">Help shape how Min will work</p>
+      <p style="${P_SOFT}">If you&rsquo;re interested in helping us make this product better, please fill in
+        this survey. As a thanks you&rsquo;ll get a special Min patch, which you can pick up from
+        your campus.</p>
+      ${button(url, 'Fill in the survey', 'secondary')}`,
+        }),
+        footer: FOOTER,
       }),
     };
   },

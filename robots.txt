@@ -1,7 +1,7 @@
 # hellomin.app
 #
-# Everything is crawlable on purpose. /qr/ and /business/ are kept out of
-# search with a `noindex` meta tag on the pages themselves, NOT with a
+# Everything is crawlable on purpose. /qr/, /business/ and /survey/ are kept
+# out of search with a `noindex` meta tag on the pages themselves, NOT with a
 # Disallow here — a disallowed page is never fetched, so a crawler would
 # never read the noindex and the URL can still surface as a bare link.
 

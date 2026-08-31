@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Min — Help shape how Min will work</title>
+<meta name="description" content="Three questions about screens, apps and the people around you. Two minutes, and a Min patch to pick up on your campus.">
+<meta name="theme-color" content="#2A2320">
+<!-- Reached from a button in the welcome email, not from search. noindex
+     stops indexing but keeps the link preview when someone forwards it. -->
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://hellomin.app/survey/">
+
+<meta property="og:title" content="Help shape how Min will work">
+<meta property="og:description" content="Three questions about screens, apps and the people around you. Two minutes, and a Min patch to pick up on your campus.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hellomin.app/survey/">
+<meta property="og:site_name" content="Min">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://hellomin.app/assets/img/og-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Min: a softly glowing pebble with two lit eyes, floating in dusk light.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hellomin.app/assets/img/og-cover.jpg">
+
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/landing.css">
+<link rel="stylesheet" href="/assets/css/business.css">
+<link rel="stylesheet" href="/assets/css/survey.css">
+
+<!-- Arms the scroll-reveal before first paint. If this never runs, the
+     questions simply render visible instead of waiting for an observer
+     that isn't coming (see "reveal fail-safe" in business.css). -->
+<script>document.documentElement.classList.add('reveal-armed');</script>
+</head>
+
+<!-- ══════════════════════════════════════════════════════════
+     THE SURVEY
+     ──────────────────────────────────────────────────────────
+     Reached from the welcome email's "Fill in the survey" button
+     (SURVEY_URL in worker/wrangler.toml → welcomeWithSurvey in
+     worker/src/emails.js).
+
+     Three questions, in the order they can honestly be asked:
+
+       1. what you already do — sliders, one per app, because a
+          number people drag is a truer answer than a bracket
+          they pick out of a list;
+       2. whether you think any of it is good for people — the
+          only opinion question, yes or no, with room to say why;
+       3. how often you actually talk to somebody near you —
+          the number Min exists to move.
+
+     Nothing is required. A survey that blocks on a field people
+     don't want to answer gets abandoned, and a partial answer is
+     worth more than no answer.
+
+     The world, the cards and every control come from landing.css
+     and business.css. This page stays at cave throughout, so it
+     never stamps .js-ready — that's what keeps the cards on their
+     opaque material instead of a pale wash over a dark floor.
+     ══════════════════════════════════════════════════════════ -->
+
+<body class="biz survey">
+
+<!-- the world: light pooling to the floor, slow banks of fog above it -->
+<div class="env" aria-hidden="true">
+  <span class="fog fog--1"></span>
+  <span class="fog fog--2"></span>
+  <span class="fog fog--3"></span>
+</div>
+
+<main>
+
+  <!-- ── hero ─────────────────────────────────────────────── -->
+  <section class="biz-hero" data-reveal>
+    <div class="shell">
+      <h1 class="visually-hidden">Help shape how Min will work</h1>
+
+      <div class="wordmark--hero" role="img" aria-label="min">
+        <span class="wordmark__bloom" aria-hidden="true"></span>
+        <span class="wordmark__glass wordmark__glass--shadow" aria-hidden="true"></span>
+        <span class="wordmark__glass" aria-hidden="true"></span>
+        <div class="wordmark__min" aria-hidden="true">
+          <div class="min min--hero" data-min data-phase="1.9"></div>
+        </div>
+      </div>
+
+      <div class="biz-eyebrow rise" data-delay="1">The survey</div>
+
+      <h2 class="rise" data-delay="2">Three questions, and you've shaped it.</h2>
+
+      <p class="lede rise" data-delay="3">
+        Min is being built around how people actually spend their days — not
+        around how we imagine they do. So: your screens, your honest opinion
+        of them, and the people you talk to.
+      </p>
+
+      <p class="survey-patch rise" data-delay="4">
+        <b>A Min patch for finishing</b> — pick it up on your campus
+      </p>
+
+      <p class="fineprint rise" data-delay="4">
+        About two minutes. Nothing here is required.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── the questions ────────────────────────────────────── -->
+  <section class="biz-form-section">
+    <form id="survey-form" class="biz-form" novalidate>
+
+      <!-- 1 ─ the apps ─────────────────────────────────────
+           Sliders rather than buckets. Asking "how many hours"
+           makes people round to a number they can defend; a rail
+           they drag gets a feel, which is closer to the truth and
+           much faster across eleven apps.
+
+           The rows are built by survey.js from one list (APPS), so
+           adding or retiring an app is an edit there and in the
+           Worker's allowlist — not a block of markup here. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 1 of 3</span>
+          <h2 class="rise" data-delay="1">Where do your hours go?</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            Roughly how long you spend on each, on a normal day. Leave the ones
+            you don't use at zero — a guess is fine, we're after the shape.
+          </p>
+        </div>
+
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend>Social media</legend>
+          <div class="slider-group" data-sliders="social"></div>
+          <div class="slider-scale" aria-hidden="true"><span>Never</span><span>5h+ a day</span></div>
+        </fieldset>
+
+        <fieldset class="fieldset rise" data-delay="4">
+          <legend>Dating &amp; matching apps</legend>
+          <div class="slider-group" data-sliders="matching"></div>
+          <div class="slider-scale" aria-hidden="true"><span>Never</span><span>5h+ a day</span></div>
+        </fieldset>
+
+        <div class="field rise" data-delay="4">
+          <label for="apps_other">Anything big we've missed? <span class="opt">(optional)</span></label>
+          <input class="input" type="text" id="apps_other" name="apps_other"
+                 placeholder="Another app you're on more than these" maxlength="150">
+        </div>
+      </div>
+
+      <!-- 2 ─ the opinion ──────────────────────────────────
+           The only question on the page with a side to take, so it
+           gets a clean yes/no and then a box. The box is where the
+           actual finding is: "no, because…" from a hundred people
+           is the brief for what Min must not become. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 2 of 3</span>
+          <h2 class="rise" data-delay="1">Are they making life better?</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            Social media and matching apps, taken together. First instinct —
+            there's no right answer here, and we'd rather have the blunt one.
+          </p>
+        </div>
+
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend>Do you feel they make people's lives better?</legend>
+          <div class="option-group yesno">
+            <label class="option"><input type="radio" name="apps_verdict" value="yes"><span>Yes</span></label>
+            <label class="option"><input type="radio" name="apps_verdict" value="no"><span>No</span></label>
+          </div>
+
+          <div class="field why-field">
+            <label for="apps_verdict_why">Why? <span class="opt">(optional)</span></label>
+            <textarea class="textarea" id="apps_verdict_why" name="apps_verdict_why"
+                      maxlength="1000"
+                      placeholder="Whatever came to mind when you picked"></textarea>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 3 ─ the number Min is for ────────────────────────
+           Same rail as question 1, on purpose: the page ends by
+           asking you to compare the two numbers yourself. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 3 of 3</span>
+          <h2 class="rise" data-delay="1">And the people around you?</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            A real conversation with someone you didn't already know — a
+            neighbour, someone at a bus stop, someone at the next table.
+            Not a "hi", not a transaction.
+          </p>
+        </div>
+
+        <div class="fieldset rise" data-delay="3">
+          <div class="slider-group" data-sliders="strangers"></div>
+          <div class="slider-scale" aria-hidden="true"><span>Never</span><span>20+ a week</span></div>
+        </div>
+      </div>
+
+      <!-- 4 ─ the patch ────────────────────────────────────
+           Optional, and last. Asking for the address before the
+           questions would turn a two-minute survey into a signup
+           form, and the answers matter more than the delivery. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Your patch</span>
+          <h2 class="rise" data-delay="1">Where do we send the word?</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            The same email you joined the waitlist with. We'll tell you when
+            and where on your campus to pick the patch up — that's all it's
+            used for. Skip it and your answers still count.
+          </p>
+        </div>
+
+        <div class="field rise" data-delay="3">
+          <label for="email">Email <span class="opt">(optional)</span></label>
+          <input class="input" type="email" id="email" name="email"
+                 placeholder="you@example.com" autocomplete="email"
+                 inputmode="email" maxlength="254">
+          <div class="field-error" id="email-error"></div>
+        </div>
+
+        <div class="field rise" data-delay="4">
+          <label for="campus">Which campus? <span class="opt">(optional)</span></label>
+          <input class="input" type="text" id="campus" name="campus"
+                 placeholder="e.g. Otaniemi, Viikki, Hanken" maxlength="100">
+        </div>
+      </div>
+
+      <!-- Honeypot: hidden from humans, bots tend to fill it. Leave empty. -->
+      <input class="visually-hidden" type="text" id="website" name="website"
+             tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <div class="biz-submit" data-reveal>
+        <button type="submit" class="btn btn--primary btn--lg submit rise">
+          <span class="btn__fill" aria-hidden="true"></span>
+          <span class="btn__label">Send my answers</span>
+          <svg class="btn__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <p class="consent rise" data-delay="1">
+          By sending this you agree to our <a href="/privacy-policy/">Privacy Policy</a>.
+          Your answers are only used to decide what Min becomes.
+        </p>
+        <div class="status" id="form-status" role="status"></div>
+      </div>
+    </form>
+
+    <div id="success-view" class="resin biz-success">
+      <div class="min" data-min data-phase="0.6" aria-hidden="true"></div>
+      <h2>That's genuinely useful — thank you</h2>
+      <p>
+        If you left your email, we'll write when the patches are on your
+        campus. Either way your answers are now part of what Min turns into.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer__row">
+    <span>© 2026 Min</span>
+    <span>
+      <a href="/privacy-policy/">Privacy Policy</a> ·
+      <a href="/">About Min</a>
+    </span>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/survey.js"></script>
+
+</body>
+</html>

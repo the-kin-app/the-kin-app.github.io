@@ -10,6 +10,7 @@ One Worker now backs two forms, on two tables in the same D1 database:
 | Consumer waitlist | `/waitlist/` | `POST /waitlist` | `signups` | `0001_init.sql` |
 | Business interest form | `/business/` | `POST /business` | `business_signups` | `0002_business_signups.sql`, `0003_business_type_other.sql` |
 | Poster tracking | printed QR codes | `GET /<location>/<poster>` | `poster_scans` | `0004_poster_tracking.sql` |
+| Waitlist survey | `/survey/` | `POST /survey` | `survey_responses` | `0005_survey.sql` |
 
 - **Compute:** Cloudflare Workers (`src/index.js`)
 - **Storage:** Cloudflare D1 — serverless SQLite (`migrations/`)
@@ -17,8 +18,10 @@ One Worker now backs two forms, on two tables in the same D1 database:
   name + location (required), plus optional contact info and questionnaire
   answers (business type, current marketing, slow hours, concept reaction,
   pricing preference, pilot interest). Poster scans — a location, a poster id
-  and a timestamp, nothing else. No IP address, no user agent, any of the
-  three.
+  and a timestamp, nothing else. Survey — app usage per app, a yes/no on
+  whether those apps help, how often the person talks to somebody new, and an
+  optional email + campus for posting the patch. No IP address, no user agent,
+  any of the four.
 
 ```
 Browser ──HTTPS──> GitHub Pages   (hellomin.app)      static site
@@ -134,6 +137,11 @@ curl -X POST https://api.hellomin.app/business \
   -d '{"business_name":"Test Cafe","location":"Kallio, Helsinki"}'
 # -> {"ok":true}
 
+curl -X POST https://api.hellomin.app/survey \
+  -H 'Content-Type: application/json' \
+  -d '{"app_usage":{"instagram":90},"apps_verdict":"no","strangers_per_week":3}'
+# -> {"ok":true}
+
 curl -si https://api.hellomin.app/otaniemi/unclesam | head -4
 # -> HTTP/2 302 ... location: https://hellomin.app/waitlist/?l=otaniemi&p=unclesam
 ```
@@ -147,6 +155,7 @@ Then submit the real forms at `hellomin.app/waitlist/` and
 curl -H 'Authorization: Bearer <ADMIN_TOKEN>' https://api.hellomin.app/admin/signups
 curl -H 'Authorization: Bearer <ADMIN_TOKEN>' https://api.hellomin.app/admin/business-signups
 curl -H 'Authorization: Bearer <ADMIN_TOKEN>' https://api.hellomin.app/admin/posters
+curl -H 'Authorization: Bearer <ADMIN_TOKEN>' https://api.hellomin.app/admin/survey
 ```
 
 `/admin/posters` is the scoreboard — scans, signups and the ratio, pooled per
@@ -173,7 +182,33 @@ npx wrangler d1 execute kin-waitlist --remote \
 
 npx wrangler d1 execute kin-waitlist --remote \
   --command "SELECT created_at, business_name, location, concept_interest, pilot_interest FROM business_signups ORDER BY id DESC;"
+
+npx wrangler d1 execute kin-waitlist --remote \
+  --command "SELECT created_at, apps_verdict, strangers_per_week, app_usage FROM survey_responses ORDER BY id DESC;"
 ```
+
+## The survey
+
+`/survey/` is the page the welcome email's "Fill in the survey" button points
+at, and `SURVEY_URL` in `wrangler.toml` is what wires the two together: set,
+and new signups get `welcomeWithSurvey` (the ask plus the patch); unset, and
+they get the plain `welcome` rather than a button pointing at nothing.
+
+Every field is optional, so a response can be partial. Two consequences worth
+knowing when you read the table:
+
+- `app_usage` is JSON, minutes a day, and holds **only the sliders somebody
+  moved** — a missing app means "not answered", not "uses it none". The app
+  list lives in `APP_KEYS` (`src/index.js`) and, with display names, in
+  `assets/js/survey.js`; the two must stay in step, and anything the Worker
+  doesn't recognise is dropped rather than rejected.
+- The tops of both rails are ceilings: `300` minutes means "5h or more", and
+  `strangers_per_week` of `20` means "20 or more".
+
+A submission with nothing answered at all is accepted and *not* stored, so a
+stray tap on the button can't pad the counts. `/admin/survey` returns the
+latest 100 rows plus the yes/no split and the average conversations a week,
+both computed over the people who answered that question only.
 
 ## Poster test
 
