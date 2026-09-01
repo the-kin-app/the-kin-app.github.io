@@ -1,0 +1,11 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="132" height="132" viewBox="0 0 132 132" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle id="Eye halo L" cx="66" cy="66" r="66" fill="url(#paint0_radial_0_206)"/>
+<defs>
+<radialGradient id="paint0_radial_0_206" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(66 66) scale(66)">
+<stop stop-color="#FFD9A0" stop-opacity="0.95"/>
+<stop offset="0.3" stop-color="#FFCE8C" stop-opacity="0.55"/>
+<stop offset="0.62" stop-color="#FFCE8C" stop-opacity="0.2"/>
+<stop offset="1" stop-color="#FFCE8C" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>

@@ -37,16 +37,33 @@ export function buttons(root = document) {
       ripple.addEventListener('animationend', () => ripple.remove());
     });
 
+    // Violet is a hint, never a resting colour (MOTION.md) — `.is-active`
+    // floods the accent in, but it has to drain back out on its own timer,
+    // same as the emerge flash. Without this it only cleared on blur/
+    // pointerleave, so a click followed by the pointer just sitting there
+    // (the common case — nothing forces the mouse to move afterwards) left
+    // the button a static violet slab indefinitely.
+    let drainTimer = null;
     const surface = () => {
       if (!btn.classList.contains('is-submerged')) return;
       btn.classList.remove('is-submerged');
-      // emerging: the accent floods in and settles
+      // emerging: the accent floods in, holds briefly, then settles back
       btn.classList.add('is-active');
+      clearTimeout(drainTimer);
+      if (!reduced) {
+        drainTimer = setTimeout(() => btn.classList.remove('is-active'), 900);
+      } else {
+        btn.classList.remove('is-active');
+      }
     };
     btn.addEventListener('pointerup', surface);
     btn.addEventListener('pointerleave', () => {
       btn.classList.remove('is-submerged', 'is-active');
+      clearTimeout(drainTimer);
     });
-    btn.addEventListener('blur', () => btn.classList.remove('is-active'));
+    btn.addEventListener('blur', () => {
+      btn.classList.remove('is-active');
+      clearTimeout(drainTimer);
+    });
   }
 }

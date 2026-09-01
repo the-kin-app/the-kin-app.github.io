@@ -99,6 +99,13 @@ function buildRamps() {
 
   const problem = pp(top('#problem'));
   const closerPx = top('#closer');
+  /* Room actually left to scroll once #closer's top comes into view — the
+     footer below it is short, so this is nowhere near a full viewport.
+     The closing "cave again" stops are spaced as fractions of THIS, not of
+     vh: fixed vh offsets past closerPx routinely overshot `max` and got
+     clamped to the same ~0.995, which collapsed two colour stops into the
+     last 1.6% of scroll and made the darkening snap instead of ease. */
+  const afterCloser = Math.max(1, max - closerPx);
 
   /* The dawn is now the constellation's scroll track, several viewports
      tall, so its keyframes are fractions of its own height rather than of
@@ -119,14 +126,15 @@ function buildRamps() {
       [pp(dawnPx + dawnH * 0.80), [214, 197, 172]], // first light, with the links
       [pp(dawnPx + dawnH * 0.99), [240, 235, 226]], // #F0EBE2 — daylight, as it unpins
       [pp(closerPx - vh * 0.10), [246, 236, 226]],
-      [pp(closerPx + vh * 0.30), [70, 58, 49]],    // cave again
+      [pp(closerPx + afterCloser * 0.45), [158, 128, 103]], // dusk — midway down, not skipped
+      [pp(closerPx + afterCloser * 0.85), [70, 58, 49]],    // cave again
       [1, [42, 35, 32]],
     ],
     /* the field diffuses away in the daylight and returns in the cave */
     alpha: [
       [0, 1], [problem + 0.04, 0.95],
-      [pp(dawnPx + dawnH * 0.96), 0], [pp(closerPx + vh * 0.05), 0],
-      [pp(closerPx + vh * 0.45), 1], [1, 1],
+      [pp(dawnPx + dawnH * 0.96), 0], [pp(closerPx + afterCloser * 0.10), 0],
+      [pp(closerPx + afterCloser * 0.85), 1], [1, 1],
     ],
     /* how strongly people pull toward the people near them */
     gather: [

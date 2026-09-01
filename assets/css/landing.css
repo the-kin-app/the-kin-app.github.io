@@ -248,6 +248,93 @@ p { margin: 0; }
 .in [data-delay="4"] { transition-delay: calc(4 * var(--stagger-cascade)); }
 .in [data-delay="5"] { transition-delay: calc(5 * var(--stagger-cascade)); }
 
+/* ---- button emerge -------------------------------------------
+   Ported from KinButton.swift's playEmerge(): a control floats up and
+   settles with a slight overshoot pop, its label trails in on its own
+   beat 200ms later, and the fill briefly flashes brighter before
+   draining to its resting value — a surface arriving, not text fading
+   in. Deliberately its own thing, not `.rise` (blur+scale-down is a
+   read for copy and cards; a button gets a firmer float + a bounce).
+
+   Gated on .in exactly like `.rise`, but as a paused keyframe animation
+   rather than a transition — a transition can't express the overshoot
+   (opacity 0→1→settle isn't monotonic, so a single eased transition
+   can't produce it), and pausing/resuming the animation on the .in
+   class keeps it synced with the rest of the reveal choreography
+   instead of firing on page load regardless of scroll position. */
+.btn-emerge {
+  animation: btn-emerge-body 620ms var(--ease-emergence) both paused;
+}
+.in .btn-emerge { animation-play-state: running; }
+/* Stagger, reusing the same slots as `.rise` — primary leads secondary
+   by one stagger step, same ~80ms-per-step gap MOTION.md uses between a
+   primary and a secondary control arriving together. */
+.in .btn-emerge[data-delay="4"] { animation-delay: calc(4 * var(--stagger-cascade)); }
+.in .btn-emerge[data-delay="5"] { animation-delay: calc(4.5 * var(--stagger-cascade)); }
+
+.btn-emerge > :not(.btn__fill):not(.btn__flash):not(.btn__ripple) {
+  animation: btn-emerge-label 320ms var(--ease-emergence) 200ms both paused;
+}
+.in .btn-emerge > :not(.btn__fill):not(.btn__flash):not(.btn__ripple) {
+  animation-play-state: running;
+}
+/* Label/flash delays are relative to their OWN button's stagger slot —
+   the container's data-delay pushes its whole local timeline back, so
+   its children have to carry that same offset plus their own beat, or
+   the label would arrive before its still-delayed container has. */
+.in .btn-emerge[data-delay="4"] > :not(.btn__fill):not(.btn__flash):not(.btn__ripple) {
+  animation-delay: calc(4 * var(--stagger-cascade) + 200ms);
+}
+.in .btn-emerge[data-delay="5"] > :not(.btn__fill):not(.btn__flash):not(.btn__ripple) {
+  animation-delay: calc(4.5 * var(--stagger-cascade) + 200ms);
+}
+.in .btn-emerge[data-delay="4"] .btn__flash { animation-delay: calc(4 * var(--stagger-cascade) + 260ms); }
+.in .btn-emerge[data-delay="5"] .btn__flash { animation-delay: calc(4.5 * var(--stagger-cascade) + 260ms); }
+
+/* A dedicated flash layer, separate from `.btn__fill` — it fades in and
+   fully back OUT rather than settling at a held value, so it can't fight
+   `.btn__fill`'s own rest/hover opacity rules once the emerge is done
+   (an animation with `forwards` holding a nonzero opacity would otherwise
+   keep outranking `:hover` forever). Only meaningful on buttons that
+   carry a fill — `.btn--quiet` doesn't get one. */
+.btn__flash {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: var(--gradient-interactive);
+  opacity: 0;
+}
+.btn-emerge .btn__flash {
+  animation: btn-emerge-flash 900ms cubic-bezier(0.33, 0, 0.15, 1) 260ms both paused;
+}
+.in .btn-emerge .btn__flash { animation-play-state: running; }
+
+@keyframes btn-emerge-body {
+  0%   { opacity: 0; transform: translateY(16px) scale(0.94); }
+  55%  { opacity: 1; transform: translateY(0) scale(1.015); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes btn-emerge-label {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes btn-emerge-flash {
+  0%   { opacity: 0; }
+  30%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-emerge,
+  .btn-emerge > :not(.btn__fill):not(.btn__flash):not(.btn__ripple),
+  .btn-emerge .btn__flash {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* ---- optical resin ----------------------------------------
    A thick translucent object: you see the environment through it, the top
    edge catches the light, and there is a bloom inside the body. Because the
@@ -339,13 +426,17 @@ p { margin: 0; }
 }
 .btn:hover .btn__fill { opacity: 0.45; }
 
-/* The primary carries a little of the light at rest, so it reads as the main
-   action without becoming a slab of violet. */
-.btn--primary .btn__fill { opacity: 0.34; }
+/* Violet is a transient hint, never a resting colour (MOTION.md, "the
+   violet emerge hint" — it rises with the emerge flash and the press-wet,
+   then drains; "if you notice it as a colour rather than a property of
+   the surface, it is too strong"). Primary used to carry a static 0.34
+   rest opacity here — that read as a permanent violet slab, not a hint.
+   Rest is 0; the emerge flash and hover/press are the only times it
+   shows, same as secondary/quiet. */
 .btn--primary:hover .btn__fill { opacity: 0.62; }
 
 /* the label and arrow ride above both the fill and the ripple */
-.btn > :not(.btn__fill):not(.btn__ripple) { position: relative; z-index: 2; }
+.btn > :not(.btn__fill):not(.btn__flash):not(.btn__ripple) { position: relative; z-index: 2; }
 
 .btn:hover {
   transform: translateY(-2px);
@@ -489,6 +580,62 @@ p { margin: 0; }
   transform: none;
   filter: none;
   pointer-events: auto;
+  transition-delay: 80ms;
+}
+
+/* ---- the floating CTA, docked above the nav pill -------------
+   Its own object, not a row item: gated on the same .dock-armed/
+   .is-docked pair as the nav so the two rise together, but it's a
+   control, not chrome — arriving uses the same btn-emerge keyframes the
+   hero buttons use (float + overshoot pop, trailing label, fill flash),
+   and it leads the nav pill by 80ms — primary emphasis surfacing before
+   secondary, the same gap the button spec uses between the two arriving
+   together.
+
+   Unlike the hero (which plays once and holds), this docks and undocks
+   repeatedly as you scroll, so the animation is only ASSIGNED while
+   `.is-docked` — that forces a fresh play every time it surfaces, rather
+   than a play/pause toggle that would resume mid-animation on a second
+   scroll. Undocking removes the animation outright, so the element falls
+   back to this rule's plain hidden values — which is also why they're
+   declared with a `transition`: that's what animates the graceful exit,
+   since nothing else is left running to fight it. */
+.dock-cta {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--dock-gap) + var(--dock-h) + var(--space-3));
+  translate: -50% 0;
+  z-index: 21;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(calc(100% + var(--dock-gap) + var(--space-8))) scale(1.04);
+  filter: blur(5px);
+  transition:
+    opacity var(--duration-emergence) ease,
+    transform var(--duration-emergence) cubic-bezier(0.4, 0, 1, 1),
+    filter var(--duration-emergence) ease;
+}
+.dock-armed.is-docked .dock-cta {
+  pointer-events: auto;
+  filter: none;
+  animation: btn-emerge-body 620ms var(--ease-emergence) both;
+}
+.dock-cta > :not(.btn__fill):not(.btn__flash):not(.btn__ripple) { opacity: 0; }
+.dock-armed.is-docked .dock-cta > :not(.btn__fill):not(.btn__flash):not(.btn__ripple) {
+  animation: btn-emerge-label 320ms var(--ease-emergence) 200ms both;
+}
+.dock-armed.is-docked .dock-cta .btn__flash {
+  animation: btn-emerge-flash 900ms cubic-bezier(0.33, 0, 0.15, 1) 260ms both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dock-armed.is-docked .dock-cta,
+  .dock-armed.is-docked .dock-cta > :not(.btn__fill):not(.btn__flash):not(.btn__ripple),
+  .dock-armed.is-docked .dock-cta .btn__flash {
+    animation: none;
+  }
+  .dock-armed.is-docked .dock-cta > :not(.btn__fill):not(.btn__flash):not(.btn__ripple) {
+    opacity: 1;
+  }
 }
 
 .nav__brand {
@@ -535,6 +682,112 @@ p { margin: 0; }
   width: min(300px, 52vw);
   aspect-ratio: 138 / 68;
   margin-bottom: var(--space-10);
+}
+
+/* ---- the resin wordmark (homepage hero only) ----------------
+   The baked "Min · Resin" artwork, dropped in whole rather than rebuilt as a
+   CSS mask+backdrop-filter effect. Its own viewBox (182×107) carries a wider
+   margin than the flat 138×68 letterforms — that's headroom for its filter
+   shadows, not part of the mark — so this box uses that ratio instead, and
+   Min's position/size below are recomputed against it (same 22,15-unit
+   offset the artwork adds around the flat letterforms). Other pages keep the
+   CSS-built glass wordmark for now. */
+.wordmark--hero-resin {
+  aspect-ratio: 182 / 107;
+  /* the whole mark rises into its parked position — dramatic decel, no
+     bounce — and the outline only starts appearing once it's nearly
+     landed, matching the app splash's own logo-forming beat (shade/ground
+     first, mark arrives and settles, THEN forms) rather than forming
+     while still travelling. */
+  animation: wm-park 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes wm-park {
+  from { translate: 0 120px; }
+  to   { translate: 0 0; }
+}
+.wordmark-resin-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* opacity/blur are owned by the sub-groups below (rim, fill) now — each
+     forms on its own beat, so the SVG itself no longer fades as one piece. */
+}
+
+/* ---- logo forming, once on load --------------------------------
+   Matches the app splash's own beat: edge, then fill, then glow — as ONE
+   mark, not staggered letter by letter. Starts once the rise above is
+   nearly parked (~78% through its 900ms travel). */
+
+.wordmark-letter > path {
+  opacity: 0;
+  animation: wm-fade-in 500ms cubic-bezier(0.33, 0, 0.15, 1) 700ms forwards;
+}
+.wordmark-letter > g {
+  opacity: 0;
+  animation: wm-fade-in 800ms cubic-bezier(0.33, 0, 0.15, 1) 950ms forwards;
+}
+
+/* the glow: a blurred duplicate of the letterforms (see the SVG markup),
+   not an ellipse — light off the mark's own shape, kept slight (0.38 peak,
+   well short of "a colour of its own"). Follows the fill in. */
+.wordmark-glow-group {
+  opacity: 0;
+  animation: wm-glow-in 700ms cubic-bezier(0.42, 0, 0.30, 1) 1550ms forwards;
+}
+@keyframes wm-fade-in { to { opacity: 1; } }
+@keyframes wm-glow-in { to { opacity: 0.38; } }
+
+/* Min sits in the resin artwork's i-dot gap: centre 57.64% / 22.71% of the
+   182×107 box (the 60.08%/13.68% flat-box position, carried through the
+   artwork's added margin). Sized down to match — the resin box is wider
+   relative to the letters than the flat one, so the percentage shrinks even
+   though the on-screen size is the same.
+
+   He drops in rather than fading — falls from above, overshoots his
+   landing spot, and settles with a small bounce back up, like something
+   actually landing rather than an object cross-fading into place.
+
+   The fall animates the INNER .min, not this wrapper: this wrapper still
+   owns the static left/top/translate(-50%,-50%) centring, and a keyframe
+   `translate` on the same element would replace that centring outright
+   instead of adding to it (a keyframe property wins over the static
+   declaration for as long as the animation holds). Animating a child
+   keeps the two concerns — "where his slot is" vs. "how he arrives" —
+   from fighting over the same property. */
+.wordmark__min.wordmark__min--resin {
+  left: 57.64%;
+  top: 22.71%;
+  width: 11.5%;
+}
+.wordmark__min--resin .min {
+  opacity: 0;
+}
+/* combined with float-min (below) as one comma-list: a plain `.min--hero`
+   rule elsewhere would lose outright to this one on specificity, dropping
+   the float entirely rather than the two composing. */
+.wordmark__min--resin .min--hero {
+  animation:
+    wm-min-drop 700ms cubic-bezier(0.32, 0.62, 0.3, 1) 1850ms forwards,
+    float-min 9s ease-in-out infinite 2550ms;
+}
+@keyframes wm-min-drop {
+  0%   { opacity: 0; translate: 0 -260%; }
+  8%   { opacity: 1; translate: 0 -220%; }
+  62%  { opacity: 1; translate: 0 6%; }   /* overshoot past rest, the "landing" */
+  80%  { opacity: 1; translate: 0 -3%; }  /* small bounce back up */
+  100% { opacity: 1; translate: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wordmark--hero-resin { animation: none; }
+  .wordmark-letter > path,
+  .wordmark-letter > g,
+  .wordmark-glow-group {
+    animation: none;
+    opacity: 1;
+  }
+  .wordmark-glow-group { opacity: 0.38; }
+  .wordmark__min--resin .min { animation: none; opacity: 1; translate: 0 0; }
 }
 
 /* Cast-glass letterforms: the environment is blurred *through* them, with a
@@ -662,18 +915,19 @@ p { margin: 0; }
   left: 60.08%;
   top: 13.68%;
   width: 21.2%;
-  aspect-ratio: 1;
+  aspect-ratio: 332 / 306;
   translate: -50% -50%;
   opacity: 0;
   animation: surface 750ms var(--ease-emergence) 700ms forwards;
 }
 
 /* ---- Min ---------------------------------------------------
-   A small creature cast in warm opal resin and lit from the inside: a dome
-   body, two ear flaps hanging down his sides, two foot nubs, two hot eyes.
-   min.js writes his outline every frame — body, ears and a volume-conserving
-   settle — so everything here is the light around him, never his shape.
-   He does not blink. */
+   Exact geometry + motion from Figma "MIN · idle breathe" (node 598:356,
+   file PmauZKhA4iyowYabC3XOJE) — a dome body, two ear flaps, two foot pads,
+   two hot eyes that blink. min.js stamps the markup once; everything below
+   is transform/opacity only, matched to that file's 4s keyframe tracks
+   (percentages kept as authored, radians converted to degrees). Colour is
+   the exported warm cream-to-tan gradient — no departure needed there. */
 
 .min {
   position: relative;
@@ -681,20 +935,20 @@ p { margin: 0; }
   place-items: center;
   width: 100%;
   height: 100%;
+  --min-phase: 0s;
 }
 .min svg { position: relative; width: 100%; height: 100%; overflow: visible; display: block; }
 
-.min--hero { animation: float 9s ease-in-out infinite; }
+/* a floating blob being — gravity doesn't apply to him, so even at rest
+   he drifts: a slow bob plus a faint rotation, never fully still. */
+.min--hero {
+  animation: float-min 9s ease-in-out infinite;
+}
 
 .min--dawn {
   width: clamp(150px, 23vw, 232px);
   margin-inline: auto;
-  aspect-ratio: 1;
-  animation: float 8s ease-in-out infinite;
-}
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-11px); }
+  aspect-ratio: 332 / 306;
 }
 
 /* Restrained luminescence: a soft warm diffusion, not a glow effect. */
@@ -712,25 +966,140 @@ p { margin: 0; }
   50%      { opacity: 1;   transform: scale(1.05); }
 }
 
-/* the eyes' own slow pulse — matched to Min's 5s idle */
-.min__glow { animation: eye-glow 5s ease-in-out infinite; }
-@keyframes eye-glow {
-  0%, 100% { opacity: 0.28; }
-  50%      { opacity: 0.85; }
+/* ---- the idle-breathe rig, 4s loop, every part sharing --min-phase so a
+   page with several Mins doesn't have them all breathing in lockstep. */
+
+/* Translate values below are the exact Figma numbers, unconverted: since
+   this SVG's viewBox was cropped (not rescaled) from the export, one CSS
+   "px" of translate on an SVG element resolves to one user-unit of the
+   viewBox — the same coordinate space the path data itself is in — so the
+   authored pixel amounts carry over directly with no percentage math. */
+.min__body {
+  transform-origin: 166px 306px; /* his feet — settling should push down, not shrink toward centre */
+  animation: min-breathe 4s linear infinite;
+  animation-delay: var(--min-phase);
+}
+@keyframes min-breathe {
+  0%     { translate: 0 0;    scale: 1 1; }
+  37.5%  { translate: 0 -16px; }
+  39%    { scale: 0.978 1.026; }
+  48.75% { translate: 0 -16px; scale: 0.978 1.026; }
+  50.25% { scale: 1 1; }
+  100%   { translate: 0 0; scale: 1 1; }
 }
 
-/* Awareness, once, in the hero: the eyes rotate in from the sphere's left
-   edge and un-squeeze into a forward gaze. The dot itself never moves. */
-.min--hero .min__eyes {
+.min__foot { animation-delay: var(--min-phase); animation-iteration-count: infinite; }
+.min__foot[data-side="-1"] { animation-name: min-foot-l; animation-duration: 4s; animation-timing-function: linear; }
+.min__foot[data-side="1"]  { animation-name: min-foot-r; animation-duration: 4s; animation-timing-function: linear; }
+@keyframes min-foot-l {
+  0%     { translate: 0 0; }
+  6.5%   { translate: 0 3px; }
+  41.5%  { translate: 0 -7px; }
+  52.75% { translate: 0 -7px; }
+  100%   { translate: 0 0; }
+}
+@keyframes min-foot-r {
+  0%     { translate: 0 0; }
+  8.5%   { translate: 0 2.4px; }
+  44.5%  { translate: 0 -5.6px; }
+  55.75% { translate: 0 -5.6px; }
+  100%   { translate: 0 0; }
+}
+
+/* the ears: bend at the shoulder, not swing from a hinge — pivot near
+   where each flap meets the torso (viewBox user-units, same crop as the
+   path data), plus a stretch at the peak of the sway so the tip reads as
+   trailing the body rather than rigidly pinned. */
+.min__limb-pivot { animation-delay: var(--min-phase); animation-iteration-count: infinite; animation-timing-function: linear; }
+.min__limb-pivot[data-side="-1"] { transform-origin: 60px 85px; animation-name: min-limb-l; animation-duration: 4s; }
+.min__limb-pivot[data-side="1"]  { transform-origin: 272px 85px; animation-name: min-limb-r; animation-duration: 4s; }
+@keyframes min-limb-l {
+  0%     { rotate: 0deg; scale: 1 1; }
+  7.5%   { rotate: -1.8deg; }
+  40.5%  { rotate: 7.5deg; scale: 1 1.05; }
+  51.75% { rotate: 7.5deg; scale: 1 1.05; }
+  88.75% { rotate: -1.2deg; scale: 1 1; }
+  100%   { rotate: 0deg; scale: 1 1; }
+}
+@keyframes min-limb-r {
+  0%     { rotate: 0deg; scale: 1 1; }
+  9.5%   { rotate: 1.3deg; }
+  43.5%  { rotate: -6.2deg; scale: 1 1.04; }
+  54.75% { rotate: -6.2deg; scale: 1 1.04; }
+  90.5%  { rotate: 0.8deg; scale: 1 1; }
+  100%   { rotate: 0deg; scale: 1 1; }
+}
+
+/* the specular catchlight, floating up with the dome as it breathes */
+.min__spec {
   transform-box: fill-box;
   transform-origin: center;
-  opacity: 0;
-  animation: aware 600ms var(--ease-emergence) 1500ms forwards;
+  animation: min-spec 4s linear infinite;
+  animation-delay: var(--min-phase);
 }
-@keyframes aware {
-  from { opacity: 0; transform: translateX(-40%) scaleX(0.12); }
-  60%  { opacity: 1; }
-  to   { opacity: 1; transform: translateX(0) scaleX(1); }
+@keyframes min-spec {
+  0%     { opacity: 1; translate: 0 0; }
+  40%    { opacity: 0.86; translate: 0 -9px; }
+  51.25% { opacity: 0.86; translate: 0 -9px; }
+  100%   { opacity: 1; translate: 0 0; }
+}
+
+/* the eyes: halo + screen-blended bloom breathe together, and both carry
+   the blink dip at ~65-72% — a near-zero flicker, not a fade, so it reads
+   as a shutter rather than a pulse. */
+.min__halo, .min__bloom {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: min-eye-glow 4s linear infinite;
+  animation-delay: var(--min-phase);
+}
+@keyframes min-eye-glow {
+  0%     { opacity: 1;    scale: 1 1; }
+  21.5%  { scale: 1.09 1.09; }
+  45.5%  { scale: 0.95 0.95; }
+  55%    { opacity: 0.93; }
+  64.75% { opacity: 1; }
+  66.75% { opacity: 0.18; }
+  71.75% { opacity: 1; }
+  84%    { scale: 0.98 0.98; }
+  100%   { opacity: 1; scale: 1 1; }
+}
+.min__core {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: min-eye-core 4s linear infinite;
+  animation-delay: var(--min-phase);
+}
+@keyframes min-eye-core {
+  0%     { scale: 1 1; }
+  18.75% { scale: 1.055 1.06; }
+  42.5%  { scale: 0.965 0.965; }
+  61.25% { scale: 1.03 1.03; }
+  81.25% { scale: 0.98 0.98; }
+  100%   { scale: 1 1; }
+}
+
+/* the blink: lids slide in from off-socket, meet, and slide back out.
+   63.75-69.75% of the 4s loop, same beat on both eyes. */
+.min__lid { animation: min-blink-in 4s linear infinite; animation-delay: var(--min-phase); }
+.min__lid--up  { animation-name: min-blink-up; }
+.min__lid--low { animation-name: min-blink-low; }
+@keyframes min-blink-up {
+  0%, 63.75% { translate: 0 0; }
+  65.75%     { translate: 0 28px; }
+  69.75%, 100% { translate: 0 0; }
+}
+@keyframes min-blink-low {
+  0%, 63.75% { translate: 0 0; }
+  65.75%     { translate: 0 -28px; }
+  69.75%, 100% { translate: 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .min__body, .min__foot, .min__limb-pivot, .min__spec,
+  .min__halo, .min__bloom, .min__core, .min__lid {
+    animation: none;
+  }
 }
 
 /* ---- hero -------------------------------------------------- */
@@ -938,13 +1307,13 @@ p { margin: 0; }
   position: absolute;
   left: 50%; top: 50%;
   translate: -50% -50%;
-  width: 38%;
-  aspect-ratio: 1;
+  width: 26%;
+  aspect-ratio: 332 / 306;
   animation: float-min 8s ease-in-out infinite;
 }
 @keyframes float-min {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-5px); }
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-5px) rotate(-2.5deg); }
 }
 
 /* ---- the caption -------------------------------------------
