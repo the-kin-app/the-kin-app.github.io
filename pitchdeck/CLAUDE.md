@@ -8,10 +8,91 @@ repo). No financials, no metrics, no ask — that's the investor deck.
 Read the brand rules in the root `README.md` ("Brand rules it is built to")
 before changing anything visual. They are constraints, not preferences.
 
-`pitchdeck/short/` is the three-minute version: six pages, one hook ("when
-did you last talk to a stranger?"), built from these same figures and
-exported to `min-3-minute.pdf`. It is a paged document, not a deck — no
-script, nothing moving — and its own file explains how to re-export it.
+There are two paged, printable three-minute versions. Both are documents
+rather than decks — no script, nothing moving — and each one's own file
+explains how to re-export it.
+
+| Folder | Hook | Pages | PDF |
+| --- | --- | --- | --- |
+| `pitchdeck/short/` | "when did you last talk to a stranger?" | 6 | `min-3-minute.pdf` |
+| `pitchdeck/strangers/` | a village talks, a city doesn't | 10 | `min-strangers-3min.pdf` |
+
+`strangers/` loads `pitchdeck-short.css` for the print layer and then
+`pitchdeck-strangers.css` for its own figures — `.places`, `.layers`,
+`.stats`, `.cats`, `.flow`, `.map`, `.money`. Its speaker notes live in an
+HTML comment above each page: **every page is a picture**, there is no
+explanatory paragraph anywhere in it, and the paragraph is what gets said
+out loud. The only small type in the whole deck is a diagram label and the
+two citation lines on pages 3 and 4.
+
+Four of its pages are deliberate pairs, and the rhyme is the argument:
+1/6 (the same crowd, cold then warm), 3/4 (the same rings **in the same
+place, at the same radii**, one colour gone — the bands widen outward,
+32 · 28 · 38 · 48, because a social layer holds more people the further
+out it sits, and it puts the widest band on the one that vanishes), 5/6 (the same columns, the hole filled) and
+5/6 → 8 (a hole, and Min standing in it, a third time). Move a body, a ring
+or a column on one and you must move it on its partner. Pages 3 and 4 share
+one `.split` layout for exactly this reason, and pages 5 and 6 carry
+**two-line headlines of the same length** so the diagram under them does not
+jump when you page across.
+
+Two things in it are unlike anything else on the site:
+
+- **Real App Store icons** (`assets/img/apps/*.png`, 128px, pulled from the
+  iTunes Search API) are the only saturated colour in the deck. That is a
+  deliberate exception on pages 5, 6 and 8 — a room recognises Instagram in
+  a way it never recognises the words "social apps" — and not a licence to
+  add more. To add one: search the iTunes API for it, take
+  `artworkUrl512`, and resize to 128px.
+- **Page 8 stays on the intimacy axis.** It reuses pages 3/4/5's own line
+  — stranger · familiar stranger · casual friend · friend · date or
+  partner — and shows three matching apps leaping off it to a landing
+  spot you had to pick *before meeting anybody*, against Min's single
+  step drawn ON the line. That shared axis is the whole reason this page
+  is allowed to exist next to page 5: page 5 asks which point nobody
+  serves, page 8 asks how far each app makes you travel and when it makes
+  you decide.
+
+  Two earlier versions had to go, and neither should come back. A
+  scheduled-vs-spontaneous quadrant: a second positioning map on axes
+  that didn't reconcile with page 5's, with Tinder in a tidy box one page
+  after page 5 showed Tinder leaping the layer. Then a five-row "find a
+  date / find a friend / find a place" list: right argument, but a table
+  on a deck where every other page has a shape.
+- **`.cats` (pages 5 and 6) reads in three bands**: row 3 is social
+  media, row 4 is Min's slot, row 5 is matching apps and the straight run
+  they make across the board. Every category sits in the same kind of
+  bubble, including matching apps — they are one more category on the
+  diagram, not an annotation on it. The run used to be an arc leaping the
+  middle column; a lone curve on a page of straight lines read as
+  decoration, and its length says the same thing without the flourish.
+- **Pages 8 and 9 are one argument in two halves** — why we are not a
+  matching app, and why we are not social media — so both carry the real
+  marks of the thing they are arguing against. Page 8: the intimacy axis
+  with Tinder/Bumble/Hinge/Meetup/Meet5/Timeleft leaping off it. Page 9:
+  the revenue lines with Instagram/TikTok/Snapchat on the line that
+  climbs with your screen time. Neither page carries a caption; both
+  arguments are said out loud.
+- **`.app-min` is Min as an App Store icon** — the platform's own ~23%
+  corner ratio, on a violet-into-cave gradient, sized a step above his
+  neighbours. Use it anywhere Min stands in a row of real app marks
+  (pages 6 and 8): loose, he reads as a mascot that wandered into a
+  chart. It also solves the next line for free.
+- **Min needs a dark ground, always.** He is warm opal lit from the
+  inside, so on the deck's daylight tones he is a pale creature on a pale
+  page and disappears. Page 7 sits on `--resin-volume` (#6b5c4d) for
+  exactly this reason, and page 8's last row puts him in a `--world-cave`
+  well — a well sunk into the row, not another pebble stacked on it.
+  That is a legibility constraint, not a palette preference.
+- **The closing QR has no plate**, so it is generated from the `cave`
+  palette (cream modules, transparent ground) rather than `mono`. It is
+  therefore an INVERTED code: current phone cameras read those, but test
+  it live before presenting. If it ever fails, put page 10 on a light
+  ground and regenerate at `mono` — don't bring the plate back.
+- **`assets/img/qr-waitlist.svg`** is generated with `logo: false`, unlike
+  the poster codes. The wordmark is already on the page above it, and a
+  badge in the middle spends error correction on a logo nobody needs twice.
+  Regenerate it through `qr-encode.js` + `qr-style.js`, never by hand.
 
 ## Where things live
 
@@ -120,11 +201,17 @@ For static screenshots, the headless Chromium that ships with Playwright works
 without the npm package:
 
 ```bash
-# $(echo …) because a bare assignment doesn't expand the version glob
-SH=$(echo ~/Library/Caches/ms-playwright/chromium_headless_shell-*/chrome-mac/headless_shell)
+# The layout inside the download changed: it is chrome-headless-shell in a
+# chrome-headless-shell-mac-<arch> directory now, not headless_shell in
+# chrome-mac. $(echo …) because a bare assignment doesn't expand the glob.
+SH=$(echo ~/Library/Caches/ms-playwright/chromium_headless_shell-*/chrome-headless-shell-mac-*/chrome-headless-shell)
 "$SH" --headless --disable-gpu --hide-scrollbars --virtual-time-budget=3000 \
       --window-size=390,844 --screenshot=out.png "http://localhost:8000/pitchdeck/#4"
 ```
+
+For a paged deck, one tall screenshot of the whole stack is faster than ten:
+in `@media screen` the pages are a 40px-gapped column, so page *n* starts at
+`40 + n * 760`. Shoot `--window-size=1280,7700` and slice it up.
 
 Two things to know about that: WebGL fails in headless, and the console
 warning is the atmosphere degrading exactly as designed — not a bug. And

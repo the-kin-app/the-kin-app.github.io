@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Min — talking to strangers</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="The three-minute Min pitch about talking to strangers. The source of min-strangers-3min.pdf.">
+
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/landing.css">
+<link rel="stylesheet" href="/assets/css/pitchdeck.css">
+<link rel="stylesheet" href="/assets/css/pitchdeck-short.css">
+<link rel="stylesheet" href="/assets/css/pitchdeck-strangers.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     TALKING TO STRANGERS — the three-minute deck
+     the source of min-strangers-3min.pdf
+     ──────────────────────────────────────────────────────────
+     Ten pages, ~18 seconds each. The arc:
+
+       1  a town talks, a city doesn't            (the feeling)
+       2  the UX of talking to a stranger sucks   (the line)
+       3  the four social layers, one popped      (the evidence)
+       4  smartphones are making it worse         (the cost)
+       5  every layer has a product but that one  (the gap)
+       6  Introducing Min                         (the fill)
+       7  talk, introduce, meet                   (the product)
+       8  not a matching app                      (the leap vs the step)
+       9  not social media                        (the two revenue lines)
+       10 the waitlist                            (the ask)
+
+     EVERY PAGE IS A PICTURE. There is no explanatory paragraph on any
+     slide — the paragraph is what you say. The only small type in the
+     deck is a diagram label and the two citation lines. If you find
+     yourself adding a sentence to a page, it belongs in the notes.
+
+     Four pairs do the arguing, and the rhyme IS the argument:
+       1 <-> 6   the same crowd, cold then warm
+       3 <-> 4   the same rings in the same place, one colour gone
+       5 <-> 6   the same columns, the hole filled
+       5/6 <-> 8 a hole, and Min standing in it, a third time
+     Move a body, a ring or a column on one and you must move it on its
+     partner. Pages 3 and 4 in particular share one layout on purpose:
+     the whole point is that ONLY the violet disappears.
+
+     · Nothing animates. pitchdeck-short.css pins every looping figure
+       to one frame, because a PDF only gets one.
+     · --bg and --ink are set inline per page. The ramp is the site's:
+       dusk -> plum -> first light -> daylight -> dusk.
+     · SPEAKER NOTES live in the comment above each page. They stay in
+       comments and never on a slide: this file is the projected artifact.
+
+     To re-export:
+         python3 -m http.server 8000        # from the repo root
+         SH=$(echo ~/Library/Caches/ms-playwright/chromium_headless_shell-*/chrome-headless-shell-mac-*/chrome-headless-shell)
+         "$SH" --headless --disable-gpu --no-pdf-header-footer \
+               --print-to-pdf=pitchdeck/strangers/min-strangers-3min.pdf \
+               --virtual-time-budget=5000 \
+               "http://localhost:8000/pitchdeck/strangers/"
+     ══════════════════════════════════════════════════════════ -->
+
+<main class="deck">
+
+  <!-- ══ 1. two places ══════════════════════════════════════
+       SPEAKER NOTES (~25s)
+
+       "I'm from Lappeenranta. A smaller town, where talking to your
+       neighbour is just what you do — you don't decide to do it, it's
+       the norm. I miss that.
+
+       In Helsinki that norm is gone. Same people, same streets — but
+       our faces are glued to our phones and our ears are plugged with
+       AirPods."
+
+       Let the picture compare. Both panels hold the same crowd; only
+       the buildings, the distance and the light change. Don't narrate
+       the diagram.
+       ═══════════════════════════════════════════════════════ -->
+  <section class="slide" style="--bg: #1e1b2e; --ink: #f8f2ea">
+    <div class="env" aria-hidden="true">
+      <span class="fog fog--1"></span>
+      <span class="fog fog--2"></span>
+      <span class="fog fog--3"></span>
+    </div>
+
+    <span class="slide__tag">Where I'm from</span>
+    <div class="slide__inner">
+      <h2>Back home you say hello. Here, nobody does.</h2>
+
+      <div class="places">
+        <!-- the town: low roofs, warm windows, people close enough to reach -->
+        <div class="place place--village">
+          <div class="place__field" role="img"
+               aria-label="A row of small pitched-roof houses with warm lit windows, and six people standing close together in front of them in a warm light, connected to their neighbours by thin threads.">
+            <svg class="place__skyline" viewBox="0 0 200 60" preserveAspectRatio="none" aria-hidden="true">
+              <!-- four houses: a body and a pitched roof each, all of them
+                   short, and none of them touching its neighbour -->
+              <path class="bldg" d="M18 60V40h26v20zM15 41l16-13 16 13z"/>
+              <path class="bldg" d="M62 60V36h30v24zM58 37l19-15 19 15z"/>
+              <path class="bldg" d="M112 60V42h24v18zM109 43l15-12 15 12z"/>
+              <path class="bldg" d="M152 60V38h30v22zM148 39l19-14 19 14z"/>
+              <!-- lit windows -->
+              <rect class="win" x="25" y="46" width="6" height="6" rx="1"/>
+              <rect class="win" x="70" y="43" width="7" height="7" rx="1"/>
+              <rect class="win" x="81" y="43" width="7" height="7" rx="1"/>
+              <rect class="win" x="120" y="48" width="6" height="6" rx="1"/>
+              <rect class="win" x="159" y="45" width="7" height="7" rx="1"/>
+              <rect class="win" x="170" y="45" width="7" height="7" rx="1"/>
+              <path class="horizon" d="M0 60h200"/>
+            </svg>
+
+            <span class="place__glow" aria-hidden="true"></span>
+            <svg class="place__links" viewBox="0 0 100 62.5" preserveAspectRatio="none" aria-hidden="true">
+              <line x1="32.83" y1="42.46" x2="37.17" y2="41.29"/>
+              <line x1="46.71" y1="41.68" x2="51.29" y2="43.32"/>
+              <line x1="60.62" y1="43.08" x2="63.38" y2="41.92"/>
+              <line x1="45.00" y1="53.75" x2="53.00" y2="53.75"/>
+            </svg>
+            <span class="blob" style="--x: 28%; --y: 70%"></span>
+            <span class="blob" style="--x: 42%; --y: 64%"></span>
+            <span class="blob" style="--x: 56%; --y: 72%"></span>
+            <span class="blob" style="--x: 68%; --y: 64%"></span>
+            <span class="blob" style="--x: 40%; --y: 86%"></span>
+            <span class="blob" style="--x: 58%; --y: 86%"></span>
+          </div>
+          <p class="place__name">Villages &amp; towns</p>
+        </div>
+
+        <span class="places__seam" aria-hidden="true"></span>
+
+        <!-- the city: packed towers, cold windows, the same crowd spread
+             too far apart for any of it to matter -->
+        <div class="place place--city">
+          <div class="place__field" role="img"
+               aria-label="A packed skyline of tall towers with cold lit windows, and eleven people spread far apart in front of them, each lit from below by their own screen, none of them connected.">
+            <svg class="place__skyline" viewBox="0 0 200 60" preserveAspectRatio="none" aria-hidden="true">
+              <!-- eight towers, shoulder to shoulder and much taller than
+                   anything on the left. The silhouette is the argument. -->
+              <path class="bldg" d="M6 60V18h22v42z"/>
+              <path class="bldg" d="M32 60V4h18v56z"/>
+              <path class="bldg" d="M54 60V26h24v34z"/>
+              <path class="bldg" d="M82 60V10h20v50z"/>
+              <path class="bldg" d="M106 60V20h26v40z"/>
+              <path class="bldg" d="M136 60V2h18v58z"/>
+              <path class="bldg" d="M158 60V28h22v32z"/>
+              <path class="bldg" d="M184 60V14h14v46z"/>
+              <!-- window grids, cold -->
+              <g class="win">
+                <rect x="11" y="24" width="4" height="4"/><rect x="19" y="24" width="4" height="4"/>
+                <rect x="11" y="34" width="4" height="4"/><rect x="19" y="34" width="4" height="4"/>
+                <rect x="37" y="12" width="4" height="4"/><rect x="37" y="24" width="4" height="4"/>
+                <rect x="37" y="36" width="4" height="4"/><rect x="44" y="18" width="4" height="4"/>
+                <rect x="44" y="30" width="4" height="4"/>
+                <rect x="60" y="32" width="4" height="4"/><rect x="70" y="32" width="4" height="4"/>
+                <rect x="60" y="44" width="4" height="4"/>
+                <rect x="87" y="18" width="4" height="4"/><rect x="95" y="18" width="4" height="4"/>
+                <rect x="87" y="30" width="4" height="4"/><rect x="95" y="42" width="4" height="4"/>
+                <rect x="112" y="27" width="4" height="4"/><rect x="122" y="27" width="4" height="4"/>
+                <rect x="112" y="39" width="4" height="4"/><rect x="122" y="51" width="4" height="4"/>
+                <rect x="141" y="10" width="4" height="4"/><rect x="148" y="10" width="4" height="4"/>
+                <rect x="141" y="22" width="4" height="4"/><rect x="148" y="34" width="4" height="4"/>
+                <rect x="141" y="46" width="4" height="4"/>
+                <rect x="163" y="35" width="4" height="4"/><rect x="172" y="35" width="4" height="4"/>
+                <rect x="163" y="47" width="4" height="4"/>
+                <rect x="188" y="22" width="4" height="4"/><rect x="188" y="36" width="4" height="4"/>
+              </g>
+              <path class="horizon" d="M0 60h200"/>
+            </svg>
+
+            <span class="blob" style="--x: 8%;  --y: 64%"></span>
+            <span class="blob" style="--x: 22%; --y: 80%"></span>
+            <span class="blob" style="--x: 34%; --y: 66%"></span>
+            <span class="blob" style="--x: 48%; --y: 84%"></span>
+            <span class="blob" style="--x: 58%; --y: 68%"></span>
+            <span class="blob" style="--x: 72%; --y: 82%"></span>
+            <span class="blob" style="--x: 84%; --y: 66%"></span>
+            <span class="blob" style="--x: 94%; --y: 80%"></span>
+            <span class="blob" style="--x: 16%; --y: 94%"></span>
+            <span class="blob" style="--x: 64%; --y: 94%"></span>
+            <span class="blob" style="--x: 90%; --y: 94%"></span>
+          </div>
+          <p class="place__name">Cities</p>
+        </div>
+      </div>
+
+      <p class="slot"></p>
+    </div>
+    <span class="pg">1</span>
+  </section>
+
+  <!-- ══ 2. the line ════════════════════════════════════════
+       SPEAKER NOTES (~10s)
+
+       "Simply put: the UX of talking to a stranger sucks."
+
+       Say it, pause, then: "And the numbers agree." Nothing else is on
+       the page, so the pause has somewhere to sit. Resist adding a
+       sentence — the next page is the evidence.
+       ═══════════════════════════════════════════════════════ -->
+  <section class="slide axiom" style="--bg: #201d33; --ink: #f8f2ea">
+    <div class="env" aria-hidden="true">
+      <span class="fog fog--1"></span>
+      <span class="fog fog--3"></span>
+    </div>
+
+    <span class="slide__tag">Simply put</span>
+    <div class="slide__inner">
+      <h2>The <b>UX</b> of talking to a stranger <b>sucks</b>.</h2>
+      <p class="lede">And the numbers agree.</p>
+      <p class="slot"></p>
+    </div>
+    <span class="pg">2</span>
+  </section>
+
+  <!-- ══ 3. the layers ══════════════════════════════════════
+       SPEAKER NOTES (~28s)
+
+       "We all live in social layers. Family and close friends in the
+       middle. Casual friends around them. Then a layer sociologists
+       actually have a name for: familiar strangers — your neighbour,
+       the person at the shop, the regular on your tram. Then
+       strangers.
+
+       Several landmark studies find that this layer — the weak one —
+       gives you more daily well-being and belonging than time with
+       your closest ties does."
+
+       Point at the violet band once. The sources are printed for
+       anyone reading the PDF; don't read them out.
+       ═══════════════════════════════════════════════════════ -->
+  <section class="slide" style="--bg: #262041; --ink: #f8f2ea">
+    <div class="env" aria-hidden="true">
+      <span class="fog fog--1"></span>
+      <span class="fog fog--2"></span>
+      <span class="fog fog--3"></span>
+    </div>
+
+    <span class="slide__tag">What the research says</span>
+    <div class="slide__inner">
+      <h2>Your “weak” ties do the heavy lifting.</h2>
+
+      <!-- Four bands, largest painted first, cold on the outside and warm
+           at the centre. The familiar-stranger ring is the only violet
+           thing on the page. The names are in the legend, not in the
+           bands — see .layers-fig. Page 4 is this figure again with that
+           ring cut out; keep the geometry identical. -->
+      <div class="split">
+        <svg class="layers" viewBox="120 0 320 300" style="width: 400px" role="img"
+             aria-label="Four concentric social layers. From the outside in: strangers, familiar strangers, casual friends, and family and close friends. The familiar-stranger band is highlighted in violet.">
+          <circle class="ly ly--out"  cx="280" cy="150" r="146"/>
+          <circle class="ly ly--fam"  cx="280" cy="150" r="98"/>
+          <circle class="ly ly--cas"  cx="280" cy="150" r="60"/>
+          <circle class="ly ly--near" cx="280" cy="150" r="32"/>
+        </svg>
+
+        <div class="legend" aria-hidden="true">
+          <span class="legend__row"><span class="legend__sw legend__sw--out"></span>Strangers</span>
+          <span class="legend__row legend__row--fam"><span class="legend__sw legend__sw--fam"></span>Familiar strangers</span>
+          <span class="legend__row"><span class="legend__sw legend__sw--cas"></span>Casual friends</span>
+          <span class="legend__row"><span class="legend__sw legend__sw--near"></span>Family · close friends</span>
+        </div>
+      </div>
+
+      <p class="cite">
+        Sandstrom &amp; Dunn (2014), “Social Interactions and Well-Being: The
+        Surprising Power of Weak Ties” · Böger &amp; Huxhold (2020), “The
+        Strength of Weaker Ties”
+      </p>
+      <p class="slot"></p>
+    </div>
+    <span class="pg">3</span>
+  </section>
+
+  <!-- ══ 4. the layer we lost ═══════════════════════════════
+       SPEAKER NOTES (~25s)
+
+       "And that is exactly the layer the smartphone took out. In
+       cities the familiar stranger is disappearing — the layer with
+       the best return on a two-minute conversation is the one we
+       stopped having.
+
+       Loneliness and social isolation are now a global public health
+       concern. One in four people. Billions a year in healthcare costs
+       and lost productivity."
+
+       Every other ring keeps its colour; only that one is a hole. If
+       someone was looking at the violet a moment ago, they'll see it.
+       ═══════════════════════════════════════════════════════ -->
+  <section class="slide" style="--bg: #322a48; --ink: #f8f2ea">
+    <div class="env" aria-hidden="true">
+      <span class="fog fog--1"></span>
+      <span class="fog fog--2"></span>
+      <span class="fog fog--3"></span>
+    </div>
+
+    <span class="slide__tag">And then, phones</span>
+    <div class="slide__inner">
+      <h2>And smartphones are<br>making it worse.</h2>
+
+      <div class="split">
+        <!-- page 3's figure with one band dropped to the page's own
+             background: a literal hole in an otherwise intact diagram -->
+        <svg class="layers layers--gone" viewBox="120 0 320 300" style="width: 400px" role="img"
+             aria-label="The same four social layers as before, every ring keeping its colour except the familiar-stranger band, which is now an empty dotted hole.">
+          <circle class="ly ly--out"  cx="280" cy="150" r="146"/>
+          <circle class="ly ly--fam"  cx="280" cy="150" r="98"/>
+          <circle class="ly ly--cas"  cx="280" cy="150" r="60"/>
+          <circle class="ly ly--near" cx="280" cy="150" r="32"/>
+        </svg>
+
+        <div class="stats">
+          <p class="stat"><b>1 in 4</b><span>people</span></p>
+          <p class="stat"><b>Billions</b><span>lost per year</span></p>
+        </div>
+      </div>
+
+      <p class="cite">
+        Paulos &amp; Goodman (2004), “The Familiar Stranger: Anxiety, Comfort,
+        and Play in Public Places” (CHI 2004)
+      </p>
+      <p class="slot"></p>
+    </div>
+    <span class="pg">4</span>
+  </section>
+
+  <!-- ══ 5. the gap ═════════════════════════════════════════
+       SPEAKER NOTES (~25s)
+
+       "So what serves that layer? Nothing.
+
+       Instagram, WhatsApp, Messenger — those sit on the two innermost
+       layers, people you already know. Tinder and Bumble start at a
+       stranger and land somewhere past casual friend. Look at what
+       they go over: they skip this layer entirely. That's not how
+       humans meet each other.
+
+       The layer in between has no product at all."
+
+       Trace the arc with a finger, then land on the empty box. The
+       empty box is the pitch.
+       ═══════════════════════════════════════════════════════ -->
+  <section class="slide" style="--bg: #443a53; --ink: #f8f2ea">
+    <div class="env" aria-hidden="true">
+      <span class="fog fog--1"></span>
+      <span class="fog fog--2"></span>
+      <span class="fog fog--3"></span>
+    </div>
+
+    <span class="slide__tag">The gap</span>
+    <div class="slide__inner">
+      <h2>So many social apps.<br>None of them fill the void.</h2>
+
+      <!-- Same grid as page 6; page 6 only changes what sits in column 2.
+           Keep the columns and the spans identical. -->
+      <div class="cats" role="img"
+           aria-label="The four social layers as columns. Jodel and Reddit serve strangers as anonymous feeds; social feeds serve casual friends; messaging apps serve close ties. A straight arrow labelled with Tinder, Bumble and Hinge runs from the strangers column all the way to between casual friends and close ties, stopping nowhere in between. The familiar-stranger column holds only a question mark.">
+        <p class="cat">Strangers</p>
+        <p class="cat cat--fam">Familiar<br>strangers</p>
+        <p class="cat">Casual<br>friends</p>
+        <p class="cat">Close<br>ties</p>
+
+        <span class="cats__axis" aria-hidden="true"></span>
+
+        <!-- matching apps, in the same kind of bubble as every other
+             category, and the straight run they make across the board -->
+        <p class="serve serve--match">
+          <span class="icos">
+            <img class="ico" src="/assets/img/apps/tinder.png" alt="Tinder" width="44" height="44">
+            <img class="ico" src="/assets/img/apps/bumble.png" alt="Bumble" width="44" height="44">
+            <img class="ico" src="/assets/img/apps/hinge.png" alt="Hinge" width="44" height="44">
+          </span>
+          Matching apps
+        </p>
+
+        <span class="reach" aria-hidden="true">
+          <span class="reach__line"></span>
+          <span class="reach__head"></span>
+        </span>
+
+        <div class="cats__gap" aria-hidden="true">?</div>
+
+        <p class="serve serve--str">
+          <span class="icos">
+            <img class="ico" src="/assets/img/apps/jodel.png" alt="Jodel" width="44" height="44">
+            <img class="ico" src="/assets/img/apps/reddit.png" alt="Reddit" width="44" height="44">
+          </span>
+          Anonymous feeds
+        </p>
+
+        <p class="serve serve--cas">
+          <span class="icos">
+            <img class="ico" src="/assets/img/apps/instagram.png" alt="Instagram" width="44" height="44">
+            <img class="ico" src="/assets/img/apps/tiktok.png" alt="TikTok" width="44" height="44">
+            <img class="ico" src="/assets/img/apps/snapchat.png" alt="Snapchat" width="44" height="44">
+          </span>
+          Social feeds
+        </p>
+
+        <p class="serve serve--close">
+          <span class="icos">
+            <img class="ico" src="/assets/img/apps/whatsapp.png" alt="WhatsApp" width="44" height="44">
+            <img class="ico" src="/assets/img/apps/messenger.png" alt="Messenger" width="44" height="44">
+            <img class="ico" src="/assets/img/apps/telegram.png" alt="Telegram" width="44" height="44">
+          </span>
+          Messaging
+        </p>
+      </div>
+
+      <p class="slot"></p>
+    </div>
+    <span class="pg">5</span>
+  </section>
+
+  <!-- ══ 6. Introducing Min ═════════════════════════════════
+       SPEAKER NOTES (~20s)
+
+       "So we're fixing it. This is Min — the tool that makes saying
+       hello to a stranger easy.
+
+       One step across, not a leap inward. A stranger becomes someone
+       you know by sight. We call those people your Kin."
+
+       This is the first time the product is named, six pages in. Say
+       the name once and move on; the room doesn't need the character
+       explained.
+       ═══════════════════════════════════════════════════════ -->
+  <section class="slide" style="--bg: #5c4a5e; --ink: #f8f2ea">
+    <div class="env" aria-hidden="true">
+      <span class="fog fog--1"></span>
+      <span class="fog fog--2"></span>
+      <span class="fog fog--3"></span>
+    </div>
+
+    <span class="slide__tag">Introducing Min</span>
+    <div class="slide__inner">
+      <h2>So we made one.<br>Min fills the void.</h2>
+
+      <div class="cats cats--filled" role="img"
+           aria-label="The same four columns as before, with the competitors faded back. The familiar-stranger column now holds Min, lit, with an arrow reaching into it from strangers.">
+        <p class="cat">Strangers</p>
+        <p class="cat cat--fam">Familiar<br>strangers</p>
+        <p class="cat">Casual<br>friends</p>
+        <p class="cat">Close<br>ties</p>
+
+        <span class="cats__axis" aria-hidden="true"></span>
+
+        <!-- matching apps, in the same kind of bubble as every other
+             category, and the straight run they make across the board -->
+        <p class="serve serve--match">
+          <span class="icos">
+            <img class="ico" src="/assets/img/apps/tinder.png" alt="Tinder" width="44" height="44">
+            <img class="ico" src="/assets/img/apps/bumble.png" alt="Bumble" width="44" height="44">
+            <img class="ico" src="/assets/img/apps/hinge.png" alt="Hinge" width="44" height="44">
+          </span>
+          Matching apps
+        </p>
+
+        <span class="reach" aria-hidden="true">
+          <span class="reach__line"></span>
+          <span class="reach__head"></span>
+        </span>
+
+        <div class="cats__min">
+          <!-- the one step Min asks anyone to make, reaching back into the
+               stranger column — the deliberate opposite of the leap above -->
+          <span class="cats__step" aria-hidden="true"></span>
+          <span class="app-min" aria-hidden="true">
+            <div class="min" data-min data-phase="1.6"></div>
+          </span>
+          <b>Min</b>
+        </div>
+
+        <p class="serve serve--str">
+          <span class="icos">
+            <img class="ico" src="/assets/img/apps/jodel.png" alt="Jodel" width="44" height="44">
+            <img class="ico" src="/assets/img/apps/reddit.png" alt="Reddit" width="44" height="44">
+          </span>
+          Anonymous feeds
+        </p>
+
+        <p class="serve serve--cas">
+          <span class="icos">
+            <img class="ico" src="/assets/img/apps/instagram.png" alt="Instagram" width="44" height="44">
+            <img class="ico" src="/assets/img/apps/tiktok.png" alt="TikTok" width="44" height="44">
+            <img class="ico" src="/assets/img/apps/snapchat.png" alt="Snapchat" width="44" height="44">
+          </span>
+          Social feeds
+        </p>
+
+        <p class="serve serve--close">
+          <span class="icos">
+            <img class="ico" src="/assets/img/apps/whatsapp.png" alt="WhatsApp" width="44" height="44">
+            <img class="ico" src="/assets/img/apps/messenger.png" alt="Messenger" width="44" height="44">
+            <img class="ico" src="/assets/img/apps/telegram.png" alt="Telegram" width="44" height="44">
+          </span>
+          Messaging
+        </p>
+      </div>
+
+      <p class="slot"></p>
+    </div>
+    <span class="pg">6</span>
+  </section>
+
+  <!-- ══ 7. how it works ════════════════════════════════════
+       SPEAKER NOTES (~32s)
+
+       "The UX is simple, and as far as I know nobody has done it this
+       way. You talk to Min — just talk, no profile to fill in. Min
+       finds people and moments around you that you'd actually resonate
+       with, and sends both of you an introduction. If you both say
+       yes, you walk over and meet.
+
+       Underneath it is our own memory model, on modern LLMs. That's
+       what gets us past matching on interests to real compatibility
+       over time — no swiping, no reading profile prompts."
+
+       The memory model deliberately isn't on the slide. It's the one
+       claim on this page you have to say out loud, so don't skip it.
+       ═══════════════════════════════════════════════════════ -->
+  <!-- --resin-volume: the deepest warm surface in the system. Min is warm
+       opal lit from inside, and on the daylight tones he vanished. -->
+  <section class="slide" style="--bg: #6b5c4d; --ink: #f8f2ea">
+    <div class="env" aria-hidden="true">
+      <span class="fog fog--1"></span>
+      <span class="fog fog--3"></span>
+    </div>
+
+    <span class="slide__tag">How it works</span>
+    <div class="slide__inner">
+      <h2>So simple, and yet<br>nobody has built it.</h2>
+
+      <div class="flow">
+        <!-- 1. you talk to Min. Min is the live character; the words
+             arriving at him are flat ink. -->
+        <div class="step">
+          <h3>Talk to Min</h3>
+          <div class="step__fig" role="img"
+               aria-label="Someone's words, drawn as a speech bubble, arriving at Min.">
+            <svg class="fig" viewBox="0 14 160 72" fill="none">
+              <rect x="4" y="22" width="96" height="56" rx="17"
+                    fill="#f8f2ea" fill-opacity=".09"
+                    stroke="#f8f2ea" stroke-opacity=".3" stroke-width="1.4"/>
+              <!-- the tail, open on its left leg so the rect's own stroke
+                   doesn't draw a seam across it -->
+              <path d="M98 44L115 52L98 60" fill="#f8f2ea" fill-opacity=".09"
+                    stroke="#f8f2ea" stroke-opacity=".3" stroke-width="1.4"
+                    stroke-linejoin="round"/>
+              <path d="M22 38h60M22 50h46M22 62h30" stroke="#f8f2ea" stroke-opacity=".38"
+                    stroke-width="4" stroke-linecap="round"/>
+            </svg>
+            <div class="min talk__min" data-min data-phase="0.4" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <span class="flow__arrow" aria-hidden="true">
+          <svg viewBox="0 0 30 12"><path d="M1 6h24M21 1.5 25.5 6 21 10.5"/></svg>
+        </span>
+
+        <!-- 2. the introduction. The long deck's live markup, restyled for
+             a page with no dark stage under it. -->
+        <div class="step">
+          <h3>Min introduces you</h3>
+          <div class="step__fig" role="img"
+               aria-label="A phone notification from Min: someone nearby shoots film too, want an intro? 120 metres away, leaving in ten minutes, with a Yes button.">
+            <div class="notif">
+              <span class="min" data-min data-phase="0.7"></span>
+              <span>
+                <b>Someone nearby shoots film too. Want an intro?</b>
+                <i>120 m · leaving in 10 min</i>
+              </span>
+              <span class="notif__yes">Yes</span>
+            </div>
+          </div>
+        </div>
+
+        <span class="flow__arrow" aria-hidden="true">
+          <svg viewBox="0 0 30 12"><path d="M1 6h24M21 1.5 25.5 6 21 10.5"/></svg>
+        </span>
+
+        <!-- 3. both of you walk in. Drawn as flat SVG rather than as the
+             live deck's positioned divs: those are elliptical border-radii
+             and gradients a few pixels across inside a backdrop-filter
+             layer, and Chrome's PDF backend drops them. Vector shapes with
+             flat fills always survive. -->
+        <div class="step">
+          <h3>You both walk over</h3>
+          <div class="step__fig" role="img"
+               aria-label="Two people on opposite sides walking inwards along dotted paths towards one marked spot in the middle.">
+            <svg class="fig" viewBox="0 26 160 48" fill="none">
+              <!-- the spot they are both heading for -->
+              <circle cx="80" cy="50" r="19" stroke="#C9A8E0" stroke-opacity=".7"
+                      stroke-width="1.8" stroke-dasharray="4 5"/>
+              <circle cx="80" cy="50" r="5" fill="#C9A8E0" fill-opacity=".95"/>
+              <!-- you, walking in from the left -->
+              <ellipse cx="11" cy="50" rx="11" ry="12.5" fill="#f8f2ea" fill-opacity=".22"
+                       stroke="#f8f2ea" stroke-opacity=".34" stroke-width="1.2"/>
+              <path d="M26 50h26" stroke="#f8f2ea" stroke-opacity=".38" stroke-width="3"
+                    stroke-linecap="round" stroke-dasharray="0.5 8"/>
+              <path d="M54 44.5 59.5 50 54 55.5" stroke="#f8f2ea" stroke-opacity=".5"
+                    stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- them, walking in from the right -->
+              <ellipse cx="149" cy="50" rx="11" ry="12.5" fill="#f8f2ea" fill-opacity=".22"
+                       stroke="#f8f2ea" stroke-opacity=".34" stroke-width="1.2"/>
+              <path d="M134 50h-26" stroke="#f8f2ea" stroke-opacity=".38" stroke-width="3"
+                    stroke-linecap="round" stroke-dasharray="0.5 8"/>
+              <path d="M106 44.5 100.5 50 106 55.5" stroke="#f8f2ea" stroke-opacity=".5"
+                    stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <p class="slot"></p>
+    </div>
+    <span class="pg">7</span>
+  </section>
+
+  <!-- ══ 8. the leap, and the step ═════════════════════════
+       SPEAKER NOTES (~30s) — this page IS the script, so say it:
+
+       "A fair question one might ask is what makes us different from
+       other companies. For one, we're in a category of our own.
+
+       Look at where every matching app is trying to take you. Straight
+       from stranger to a date, or a friend, or a wife — and it asks you
+       to pick which one BEFORE you've met anybody. That's not how
+       humans work. Nobody decides what a person will be to them before
+       they've said a word to them.
+
+       We just introduce two compatible strangers to one another. One
+       step. Spontaneous, with no artificial feel to it. What it becomes
+       after that is not our business."
+
+       Trace the biggest arc with a finger, then drop to the violet
+       segment. The lengths are the argument; you only have to name the
+       last one.
+
+       If pushed: Bumble BFF moved from 1:1 friend-swiping to Groups in
+       Feb 2026 — third-party proof that picking the destination up
+       front has a cringe ceiling (business plan §6.5).
+       ═══════════════════════════════════════════════════════ -->
+  <!-- warm and dark, like page 7 and for the same reason: Min stands
+       bare on this one, at the end of his own segment. -->
+  <section class="slide" style="--bg: #6f5f52; --ink: #f8f2ea">
+    <div class="env" aria-hidden="true">
+      <span class="fog fog--1"></span>
+      <span class="fog fog--3"></span>
+    </div>
+
+    <span class="slide__tag">Not a matching app</span>
+    <div class="slide__inner">
+      <h2>We just introduce two strangers.</h2>
+
+      <!-- Pages 3, 4 and 5's axis, one more time. Three matching apps
+           spring off it and land far down the line; ours is a single step
+           drawn ON the line. Geometry, not adjectives. -->
+      <div class="leap" role="img"
+           aria-label="An axis running from stranger through familiar stranger, casual friend and friend to date or partner. Three long arcs leap from the stranger point: Tinder, Bumble and Hinge all the way to date or partner; Meetup and Meet5 to friend; Timeleft to casual friend. Min is a single short step along the axis, from stranger to familiar stranger.">
+        <svg class="leap__svg" viewBox="0 0 1040 400">
+          <!-- the leaps, longest first -->
+          <path class="jump" d="M90 340 Q520 -240 950 340"/>
+          <path class="head" d="M0 0 L-17 -9 L-17 9 Z" transform="translate(950 340) rotate(53.4)"/>
+
+          <path class="jump" d="M90 340 Q412 -60 735 340"/>
+          <path class="head" d="M0 0 L-17 -9 L-17 9 Z" transform="translate(735 340) rotate(51.1)"/>
+
+          <path class="jump" d="M90 340 Q305 110 520 340"/>
+          <path class="head" d="M0 0 L-17 -9 L-17 9 Z" transform="translate(520 340) rotate(46.9)"/>
+
+          <!-- the axis, drawn over the arcs so the line stays unbroken -->
+          <path class="axis" d="M90 340H950"/>
+          <circle class="tick" cx="90"  cy="340" r="5.5"/>
+          <circle class="tick" cx="305" cy="340" r="5.5"/>
+          <circle class="tick" cx="520" cy="340" r="5.5"/>
+          <circle class="tick" cx="735" cy="340" r="5.5"/>
+          <circle class="tick" cx="950" cy="340" r="5.5"/>
+
+          <!-- our one step, on the line rather than over it -->
+          <path class="step" d="M90 340H287"/>
+          <path class="step-head" d="M0 0 L-19 -11 L-19 11 Z" transform="translate(305 340)"/>
+
+          <text class="tick-l" x="90"  y="374">Stranger</text>
+          <text class="tick-l" x="305" y="374">Familiar</text>
+          <text class="tick-l" x="305" y="392">stranger</text>
+          <text class="tick-l" x="520" y="374">Casual</text>
+          <text class="tick-l" x="520" y="392">friend</text>
+          <text class="tick-l" x="735" y="374">Friend</text>
+          <text class="tick-l" x="950" y="374">Date or</text>
+          <text class="tick-l" x="950" y="392">partner</text>
+        </svg>
+
+        <!-- each set of marks rides its own arc's apex, so no leader
+             lines are needed to say which leap belongs to whom -->
+        <span class="leap__at icos" style="left: 50%;   top: 5.5%"><img class="ico" src="/assets/img/apps/tinder.png" alt="Tinder" width="40" height="40"><img class="ico" src="/assets/img/apps/bumble.png" alt="Bumble" width="40" height="40"><img class="ico" src="/assets/img/apps/hinge.png" alt="Hinge" width="40" height="40"></span>
+        <span class="leap__at icos" style="left: 39.6%; top: 28%"><img class="ico" src="/assets/img/apps/meetup.png" alt="Meetup" width="40" height="40"><img class="ico" src="/assets/img/apps/meet5.png" alt="Meet5" width="40" height="40"></span>
+        <span class="leap__at icos" style="left: 29.3%; top: 49.3%"><img class="ico" src="/assets/img/apps/timeleft.png" alt="Timeleft" width="40" height="40"></span>
+
+        <!-- Min, standing at the end of his own step -->
+        <span class="leap__at" style="left: 19%; top: 77.5%">
+          <span class="app-min leap__min" aria-hidden="true">
+            <div class="min" data-min data-phase="1.6"></div>
+          </span>
+        </span>
+      </div>
+
+      <p class="slot"></p>
+    </div>
+    <span class="pg">8</span>
+  </section>
+
+  <!-- ══ 9. how we make money ═══════════════════════════════
+       SPEAKER NOTES (~28s)
+
+       "And our incentives are the other way round from everyone
+       else's. Social media's revenue is that line: the more hours you
+       spend in the app, the more they make. So of course the app is
+       built to keep you there.
+
+       Ours is the other one. We make money when someone puts the
+       phone down and says hello. If you're still in our app, we've
+       failed. Nothing to farm, no streaks, no manufactured urgency —
+       and no reason for us to want your attention at all."
+
+       Then, briefly: "It's also built privacy-first. I'm a computer
+       science major focused on cyber security, and I find big tech's
+       data harvesting revolting — we don't sell data, and that's an
+       architecture, not a policy."
+
+       This is the page investors remember. Slow down, and trace both
+       lines with a finger.
+       ═══════════════════════════════════════════════════════ -->
+  <section class="slide" style="--bg: #e8d3c4; --ink: #21212d">
+    <div class="env" aria-hidden="true">
+      <span class="fog fog--1"></span>
+      <span class="fog fog--2"></span>
+      <span class="fog fog--3"></span>
+    </div>
+
+    <span class="slide__tag">Not social media</span>
+    <div class="slide__inner">
+      <h2>Their revenue needs your attention. Ours doesn't.</h2>
+
+      <!-- One axis pair, two lines. Screen time along the bottom, revenue
+           up the side. Theirs climbs with your hours; ours climbs as they
+           fall. Drawn rather than written, because the sentence version of
+           this is a promise and the chart version is a mechanism. -->
+      <div class="money" role="img"
+           aria-label="A chart with your screen time along the bottom and revenue up the side. The social media line, marked with Instagram, TikTok and Snapchat, rises as screen time rises. The Min line rises as screen time falls, running the opposite way.">
+        <svg class="money__svg" viewBox="0 0 720 340">
+          <!-- the frame -->
+          <path class="frame" d="M96 74V292H690"/>
+          <text class="lbl" x="96" y="318">Your screen time →</text>
+          <text class="lbl" x="86" y="250" transform="rotate(-90 86 250)">Revenue →</text>
+
+          <!-- Each curve is labelled at the end where it is HIGH, and the
+               two are mirror images. Labelled in the middle instead, the
+               text sits on the other curve. -->
+
+          <!-- theirs: up and to the right -->
+          <path class="curve curve--them" d="M120 280 C300 272 440 220 664 98"/>
+
+          <!-- ours: up and to the LEFT, which is the whole argument -->
+          <path class="curve curve--us" d="M120 98 C344 220 484 272 664 280"/>
+        </svg>
+
+        <span class="money__tag money__tag--us">
+          <span class="app-min" aria-hidden="true"><div class="min" data-min data-phase="1.6"></div></span>
+          <b>Min</b>
+        </span>
+
+        <span class="money__tag money__tag--them">
+          <span class="icos"><img class="ico" src="/assets/img/apps/instagram.png" alt="Instagram" width="40" height="40"><img class="ico" src="/assets/img/apps/tiktok.png" alt="TikTok" width="40" height="40"><img class="ico" src="/assets/img/apps/snapchat.png" alt="Snapchat" width="40" height="40"></span>
+          <b>Social media</b>
+        </span>
+      </div>
+
+      <p class="slot"></p>
+    </div>
+    <span class="pg">9</span>
+  </section>
+
+  <!-- ══ 10. the ask ════════════════════════════════════════
+       SPEAKER NOTES (~15s)
+
+       "Our waitlist is live — scan the code. No spam email, ever.
+       Thank you."
+
+       Then stop talking and leave the code up. Everything that used to
+       be printed on this page is now something you say, so the code is
+       the only thing competing for the room's eyes. Stand to the side
+       of the screen, not in front of it.
+       ═══════════════════════════════════════════════════════ -->
+  <section class="slide close" style="--bg: #241f36; --ink: #f8f2ea">
+    <div class="env" aria-hidden="true">
+      <span class="fog fog--1"></span>
+      <span class="fog fog--2"></span>
+      <span class="fog fog--3"></span>
+    </div>
+
+    <div class="slide__inner">
+      <!-- The static mark, not the live one. The hero wordmark is cast
+           glass: it refracts the fog behind it with a backdrop-filter, and
+           a print has no backdrop to filter — the letters come out grey
+           and muddy. This is the same logo, already resolved. -->
+      <img class="mark" src="/assets/img/min-logo-resin.svg"
+           alt="min" width="190" height="112">
+
+      <div class="close__scan">
+        <div class="close__plate">
+          <!-- Generated with logo:false and the `cave` palette: no badge in
+               the middle (the wordmark is already above it) and cream
+               modules, because with the plate gone there is no white behind
+               it — see the caveat in pitchdeck-strangers.css. -->
+          <img src="/assets/img/qr-waitlist.svg" alt="QR code linking to the Min waitlist"
+               width="320" height="320">
+        </div>
+        <p class="close__line">Coming early 2027 to all Helsinki students.</p>
+      </div>
+      <p class="slot"></p>
+    </div>
+    <span class="pg">10</span>
+  </section>
+
+</main>
+
+<!-- Min only. The long deck's script pages and lerps the palette, and
+     there is nothing here to page. -->
+<script type="module">
+  import { minBodies } from '/assets/js/min.js';
+  minBodies();
+</script>
+</body>
+</html>

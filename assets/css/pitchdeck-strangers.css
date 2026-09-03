@@ -1,0 +1,919 @@
+/* ============================================================
+   Min — "Talking to strangers", the three-minute deck (figures)
+   ------------------------------------------------------------
+   Ten pages. This file loads *last*, on top of:
+
+     tokens -> landing -> pitchdeck -> pitchdeck-short -> here
+
+   pitchdeck-short.css already owns the print layer — the 1280x720
+   page, the per-page atmosphere, the page numbers, and the rule that
+   freezes every looping figure on one frame. None of that is
+   re-decided here.
+
+   THE RULE THIS DECK IS BUILT TO: a page is a picture. There is no
+   explanatory paragraph anywhere in it, because the paragraph is the
+   thing being said out loud. The only small type that survives is a
+   diagram label and the two citation lines — everything else is a
+   figure or a headline.
+
+   What this file adds is the figures this argument needs and the other
+   decks don't:
+
+     .places   page 1    a town that talks, a city that doesn't
+     .layers   page 3-4  the four social layers, coloured, one popped,
+                         then the same rings with that band cut out
+     .stats    page 4    two numbers and their units
+     .cats     page 5-6  who serves which layer — with the competitors'
+                         real marks, and an arc that visibly LEAPS the
+                         familiar-stranger column
+     .flow     page 7    three beats joined by arrows, no cards
+
+   Two print rules govern the shapes below, both learned the hard way
+   in pitchdeck-short.css:
+
+     1. Flat SVG fills and strokes always survive Chrome's PDF backend.
+        Small elliptical radii inside a backdrop-filter layer do not.
+     2. Every band in .layers is OPAQUE — mixed against var(--bg)
+        rather than laid on as alpha. Stacked translucent circles read
+        as one muddy disc instead of four rings, in ink and on screen.
+   ============================================================ */
+
+/* ---- page 2: the line said at size ------------------------
+   No figure at all. The page is one sentence, and the sentence is the
+   figure — so it gets the cover's type size on a body page. */
+
+.axiom h2 {
+  font-size: 76px;
+  line-height: 1.04;
+  max-width: 19ch;
+  letter-spacing: -0.03em;
+}
+/* h1/h2 are semibold across the site, so a <b> at 700 is a real step up
+   rather than a repeat of the weight already there. The two words are the
+   sentence; everything else is grammar. */
+.axiom h2 b { font-weight: var(--font-weight-bold); }
+.axiom .lede { font-size: 21px; }
+
+/* ---- page 1: two places -----------------------------------
+   The same number of people twice, each crowd standing in front of the
+   place it lives in: low pitched roofs on the left, packed towers on
+   the right. The buildings are what makes the panels read as *places*
+   rather than as two abstract fields of dots — and the windows are the
+   other half of the argument, warm on the left and cold on the right,
+   the same two lights the people are standing in. */
+
+.places {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 40px;
+  align-items: end;
+  width: 100%;
+}
+
+/* a hairline, not a border: it fades out at both ends so the panels
+   read as one field with a seam rather than as two boxes */
+.places__seam {
+  align-self: stretch;
+  background: linear-gradient(180deg,
+    transparent,
+    color-mix(in srgb, var(--ink) 16%, transparent) 24%,
+    color-mix(in srgb, var(--ink) 16%, transparent) 76%,
+    transparent);
+}
+
+.place { display: grid; justify-items: center; gap: 20px; }
+.place__field {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+}
+.place__name {
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* the skyline sits in the upper half and the people stand on the ground
+   below it, so the buildings are scenery rather than something the
+   crowd is standing inside */
+.place__skyline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 4%;
+  height: 48%;
+  width: 100%;
+  /* the horizon is a straight line the width of the panel, so the
+     buildings may stretch with it — they are silhouettes, and the
+     aspect this distorts by is under 10% */
+  preserveAspectRatio: none;
+}
+.place__skyline .bldg {
+  fill: color-mix(in srgb, var(--ink) 15%, transparent);
+  stroke: color-mix(in srgb, var(--ink) 26%, transparent);
+  stroke-width: 0.6;
+}
+/* the ground they all stand on */
+.place__skyline .horizon {
+  stroke: color-mix(in srgb, var(--ink) 22%, transparent);
+  stroke-width: 0.6;
+}
+/* lit windows: the same warm/cold pair as the people, so the buildings
+   are making the same point the crowd is */
+.place--village .place__skyline .win { fill: #FFF2D4; fill-opacity: 0.72; }
+.place--city    .place__skyline .win { fill: #96B2CD; fill-opacity: 0.5; }
+
+.place .blob { width: 40px; }
+
+/* the town: everyone under the same warm light, and near enough to reach */
+.place--village .blob { --cold: 0; --warm: 1; }
+
+/* the city: the same people, their own screens, and too far apart for any
+   of it to matter. They recede because that is what the panel is about. */
+.place--city .blob {
+  --cold: 1;
+  --warm: 0;
+  width: 32px;
+  opacity: 0.6;
+}
+
+/* the light the town stands in — the page's one warm pool, borrowed note
+   for note from .moment__glow in pitchdeck-short.css */
+.place__glow {
+  position: absolute;
+  left: 50%;
+  top: 62%;
+  translate: -50% -50%;
+  width: 78%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255, 242, 212, 0.34),
+    rgba(201, 168, 224, 0.16) 46%,
+    transparent 72%);
+  filter: blur(26px);
+}
+
+/* threads between neighbours. 1px by definition, per the brand rule — a
+   whole field of them has to stay delicate, not become a network graph. */
+.place__links {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.place__links line {
+  stroke: color-mix(in srgb, var(--color-accent-soft) 70%, transparent);
+  stroke-width: 0.5;
+  stroke-linecap: round;
+}
+
+/* ---- pages 3 and 4: the social layers ---------------------
+   Four rings, outermost = strangers. Each band is one filled circle
+   painted over the last, largest first, so the banding is painting
+   order rather than four annulus paths.
+
+   THE COLOUR IS THE WORLD'S OWN RAMP, not four decorative hues: cold
+   desaturated blue at the outside — the same #96B2CD that lights a face
+   from a screen everywhere else in this deck — through violet, into warm
+   sand, into the gold at the centre. Cold outside, warm inside. Nothing
+   saturated, and violet is still the only cool accent, sitting exactly
+   on the band the whole deck is about. */
+
+/* One definition of the four layer colours, used by the rings on both
+   pages AND by page 3's legend swatches. Two copies of a colour is two
+   colours waiting to disagree. */
+.slide {
+  /* Four clearly separate hues, and the ramp is the world's own: cold
+     desaturated blue outside — the same #96B2CD that lights a face from a
+     screen everywhere else in this deck — through violet, into warm sand,
+     into gold at the centre. They sit at near-full strength rather than
+     as washes over --bg, because page 4's whole argument is that ONE of
+     them is missing, and a difference you have to look for is not one the
+     back of the room will see. */
+  --c-out:  color-mix(in srgb, #96B2CD 52%, var(--bg));
+  --c-fam:  color-mix(in srgb, var(--violet) 88%, var(--bg));
+  --c-cas:  color-mix(in srgb, var(--world-sand) 94%, var(--bg));
+  --c-near: color-mix(in srgb, var(--status-good) 92%, var(--bg));
+}
+
+.layers { display: block; height: auto; }
+
+/* ---- the legend --------------------------------------------
+   The layer names USED to sit inside their own bands, and that is a trap:
+   the bands run from cold dark to warm gold, so no single ink is legible
+   on all four, and a name wide enough to read crosses the ring above it.
+   The names moved out to a legend and the rings carry no type at all.
+
+   PAGES 3 AND 4 SHARE ONE LAYOUT (`.split`), and the rings are the same
+   size in the same cell on both. That is load-bearing: the argument is
+   that one colour vanishes between the two pages, and it only lands if
+   nothing else on the figure moves by a pixel. The right-hand cell is
+   what changes — the legend on page 3, the numbers on page 4.
+*/
+
+.legend { display: grid; gap: 20px; justify-items: start; text-align: left; }
+.legend__row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 15px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.legend__sw {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 9px;
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+.legend__sw--out  { background: var(--c-out); }
+.legend__sw--fam  { background: var(--c-fam); border-color: color-mix(in srgb, var(--violet-light) 90%, transparent); }
+.legend__sw--cas  { background: var(--c-cas); }
+.legend__sw--near { background: var(--c-near); }
+
+/* the legend sits in the right-hand cell of .split, like the numbers do */
+.split .legend { align-self: center; }
+
+/* the row the whole deck is about */
+.legend__row--fam {
+  font-size: 19px;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+.legend__row--fam .legend__sw { width: 32px; height: 32px; border-width: 2px; }
+/* page 4's copy sits in a grid cell next to the numbers. An <svg> with an
+   explicit width is a replaced element, so `stretch` does nothing to it
+   and it lands at the start of its cell — which opened a gap between the
+   rings and the statistics they belong to. */
+.split .layers { justify-self: center; }
+
+.ly { stroke-width: 1.2; }
+.ly--out  { fill: var(--c-out);  stroke: color-mix(in srgb, #96B2CD 46%, transparent); }
+.ly--cas  { fill: var(--c-cas);  stroke: color-mix(in srgb, var(--world-sand) 92%, transparent); }
+.ly--near { fill: var(--c-near); stroke: color-mix(in srgb, var(--status-good) 95%, transparent); }
+
+/* popped: the one band that is lit, and the only stroke on the page with
+   any weight to it */
+.ly--fam {
+  fill: var(--c-fam);
+  stroke: color-mix(in srgb, var(--violet-light) 95%, transparent);
+  stroke-width: 2.6;
+}
+
+
+/* page 4: the same rings, in the same place, with ONE COLOUR GONE. Every
+   other band is untouched — same radius, same fill, same position on the
+   page — and the familiar-stranger band drops to the page's own
+   background with the violet off its edge too. Nothing is added: no dash,
+   no marker, no label. A colour left the diagram, which is exactly the
+   claim, and it only lands because nothing else moved. */
+.layers--gone .ly--fam {
+  fill: var(--bg);
+  stroke: color-mix(in srgb, var(--ink) 26%, transparent);
+  stroke-width: 1.2;
+}
+
+/* ---- page 4: the numbers ----------------------------------
+   The number and its unit, and nothing else. A statistic inside a
+   sentence is a sentence; at 76px with a unit under it, it is the thing
+   somebody repeats afterwards. */
+
+.split {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 48px;
+  align-items: center;
+  width: 100%;
+}
+
+.stats { display: grid; gap: 40px; justify-items: start; text-align: left; }
+.stat b {
+  display: block;
+  font-size: 76px;
+  line-height: 0.94;
+  letter-spacing: -0.04em;
+  font-weight: var(--font-weight-bold);
+}
+.stat span {
+  display: block;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+/* one hairline between them, the same seam as page 1 */
+.stat + .stat {
+  padding-top: 40px;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  width: 100%;
+}
+
+/* ---- pages 5 and 6: who serves which layer ----------------
+   The four layers as columns, an axis under them, and below it the
+   things that actually serve each one — carrying the competitors' own
+   marks, because "social apps" is a category and Instagram is a fact.
+
+   Everything is identical between the two pages except what sits in
+   column 2: a hole on page 5, Min on page 6. The hole is the argument. */
+
+.cats {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 14px;
+  row-gap: 12px;
+  align-items: center;
+}
+
+.cat {
+  grid-row: 1;
+  text-align: center;
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+/* the column the deck is about, named a little louder than its neighbours */
+.cat--fam { color: var(--ink); font-size: 14px; }
+
+/* Explicit columns for the headers, and they stay explicit. Auto-placed
+   items skip any cell a definitely-placed item already holds, so the
+   moment anything else claims a cell in row 1 the second header jumps to
+   column 3 and the whole diagram shears one column right. That is how it
+   broke last time. These four are the first four children of .cats —
+   keep them there. */
+.cats > .cat:nth-child(1) { grid-column: 1; }
+.cats > .cat:nth-child(2) { grid-column: 2; }
+.cats > .cat:nth-child(3) { grid-column: 3; }
+.cats > .cat:nth-child(4) { grid-column: 4; }
+
+/* the line the four columns stand on */
+.cats__axis {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  height: 1px;
+  background: color-mix(in srgb, var(--ink) 20%, transparent);
+}
+
+/* ---- the reach --------------------------------------------
+   Matching apps start at a stranger and land somewhere past casual
+   friend. This was an arc leaping over the middle column, and the leap
+   read as a flourish rather than a fact — a lone curve on a page of
+   straight lines looks like decoration. It is a straight run now, in its
+   own row below Min's slot, and its LENGTH does the work: it starts in
+   the stranger column and doesn't stop until it is most of the way to
+   close ties. Nobody gets off in the middle.
+
+   The line spans all four columns as one grid item and is drawn between
+   percentages inside it, because its two ends have to land on column
+   BOUNDARIES (25% and 75%) rather than on columns. */
+.reach {
+  grid-row: 5;
+  grid-column: 1 / 5;
+  align-self: center;
+  position: relative;
+  height: 3px;
+}
+.reach__line {
+  position: absolute;
+  left: 25.5%;
+  right: 26.5%;
+  top: 0;
+  height: 100%;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--ink) 52%, transparent);
+}
+.reach__head {
+  position: absolute;
+  left: 73.5%;
+  top: 50%;
+  translate: 0 -50%;
+  width: 0;
+  height: 0;
+  border-left: 15px solid color-mix(in srgb, var(--ink) 62%, transparent);
+  border-top: 9.5px solid transparent;
+  border-bottom: 9.5px solid transparent;
+}
+
+/* What serves the two innermost layers — and they get ONE PILL EACH.
+   Spanning both columns with a single "social & messaging" bar said that
+   casual friends and close ties are the same customer, and they are not:
+   a feed you scroll is not the four people you actually message. The
+   split is also what makes the column gap between them visible, which is
+   where the matching-app arc has to land.
+
+   Flat washes, not resin: these are diagram elements sitting on a
+   diagram, and a translucent object here would claim to be a surface.
+   The pill groups a category and gives its label something to belong to
+   — it is doing work, unlike the per-icon plate that used to sit behind
+   each individual mark.
+
+   Row 3 is the social-media band, row 4 is Min's slot, row 5 is matching
+   apps. Top to bottom: what people already use for the people they have,
+   the hole in the middle, and the one product that reaches across
+   strangers — and misses. */
+.serve {
+  grid-row: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 16px 14px;
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  border-radius: var(--radius-2xl);
+  background: color-mix(in srgb, var(--ink) 9%, transparent);
+  font-size: 13.5px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3;
+  text-align: center;
+  color: var(--ink);
+}
+/* Strangers ARE served — by anonymous feeds. Leaving that column empty
+   overstated the case and invited the obvious "what about Jodel?", which
+   in Helsinki is not a hypothetical: it is the incumbent in the launch
+   market. Naming it makes the actual hole narrower and far more
+   credible — a stranger feed is not an introduction. */
+.serve--str   { grid-column: 1; }
+.serve--cas   { grid-column: 3; }
+.serve--close { grid-column: 4; }
+/* matching apps get the same kind of bubble as everything else — they are
+   one more category on this diagram, not an annotation on it */
+.serve--match { grid-column: 1; grid-row: 5; }
+
+/* The competitors' real app icons, pulled from the App Store artwork and
+   held at 128px in /assets/img/apps/. They are the only saturated things
+   in the whole deck, which is a deliberate exception and not a licence to
+   add more: a room recognises Instagram in a way it never recognises the
+   phrase "social apps", and that recognition is the entire job of pages 5
+   and 6. Rounded to the platform squircle radius and given a hairline, so
+   seven different icon backgrounds still read as one row of objects. */
+.ico {
+  display: block;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  /* The squircle is the artwork's own shape, so it stays. What came off
+     is the hairline ring and the drop shadow that used to sit under each
+     mark: they read as a plate behind every icon, and the icons already
+     carry their own opaque grounds. */
+  border-radius: 11px;
+}
+.icos { display: flex; align-items: center; gap: 10px; }
+
+/* ---- Min, as an app icon ----------------------------------
+   Wherever Min stands in a row of real App Store marks he has to be one
+   of them, or he reads as a mascot that wandered into a chart. Same
+   squircle, same optical weight — on the platform's own corner ratio
+   (~23% of the side), which is what makes a tile read as an app icon
+   rather than as a rounded box.
+
+   The ground is the brand's own ramp, violet into cave, and it is not
+   decoration: Min is warm opal lit from the inside, so he needs
+   something dark behind him at any size. This tile is how he gets it in
+   a row of light icons without a plate under the whole row.
+
+   He sits a little larger than his neighbours on purpose. He is the
+   answer in both figures he appears in. */
+.app-min {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border-radius: 23%;
+  background:
+    radial-gradient(88% 76% at 50% 6%, rgba(228, 210, 240, 0.42), transparent 62%),
+    linear-gradient(158deg, #5B4569 0%, #33283A 52%, #241F2C 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 0 0 1.5px color-mix(in srgb, var(--violet-deep) 80%, transparent);
+}
+.app-min .min {
+  /* .min is width/height:100% and beats aspect-ratio, so both dimensions
+     have to be written out — see rule 7 in pitchdeck/CLAUDE.md */
+  width: 72%;
+  height: 72%;
+}
+
+/* Not every quadrant has an app in it — the top left is a habit, not a
+   product, and it gets a drawn glyph so all four corners read as marked.
+   Ink, not colour: it is the one thing on this page nobody is selling. */
+.glyph {
+  display: block;
+  width: 30px;
+  height: 30px;
+  color: var(--ink-faint);
+}
+.glyph path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* the hole. A dashed well rather than a card: it is the absence of an
+   object, so it must not look like one. */
+.cats__gap {
+  grid-column: 2;
+  grid-row: 4;
+  justify-self: center;
+  display: grid;
+  place-items: center;
+  width: 168px;
+  height: 104px;
+  border: 1.5px dashed color-mix(in srgb, var(--ink) 34%, transparent);
+  border-radius: var(--radius-2xl);
+  font-size: 58px;
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  color: color-mix(in srgb, var(--ink) 52%, transparent);
+}
+
+/* page 6: the same slot, filled. Min stands in it under his own light,
+   and this is the only lit object on the page. */
+.cats__min {
+  grid-column: 2;
+  grid-row: 4;
+  justify-self: center;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 168px;
+  height: 104px;
+  border: 1.5px solid color-mix(in srgb, var(--color-accent) 85%, transparent);
+  border-radius: var(--radius-2xl);
+  background: color-mix(in srgb, var(--color-accent-soft) 16%, transparent);
+}
+/* the object that fills the hole is an APP, the same species as the marks
+   in the three pills below it */
+.cats__min .app-min { width: 76px; height: 76px; }
+.cats__min b {
+  position: absolute;
+  bottom: -26px;
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--ink);
+}
+/* the warmth he is standing in, so the filled slot reads as lit rather
+   than merely outlined */
+.cats__min::before {
+  content: '';
+  position: absolute;
+  inset: -30% -14%;
+  border-radius: inherit;
+  background: radial-gradient(60% 60% at 50% 46%,
+    rgba(255, 242, 212, 0.22),
+    rgba(201, 168, 224, 0.12) 52%,
+    transparent 72%);
+  filter: blur(16px);
+  pointer-events: none;
+}
+
+/* page 6: the competitors stay on the page — the hole only means
+   something next to them — but they step back so Min's slot is what the
+   eye lands on. */
+.cats--filled .serve,
+.cats--filled .reach { opacity: 0.4; }
+
+/* page 6: one step, drawn. Stranger -> familiar stranger, the only move
+   Min asks anyone to make, and the deliberate opposite of the leap above
+   it.
+
+   It lives INSIDE .cats__min and reaches leftwards out of it, rather than
+   sitting in column 1 as its own grid cell. That is the only way to keep
+   the arrowhead touching the slot's edge now that the slot is narrower
+   than its column — a grid cell would have to hard-code the column width
+   to know where to stop. */
+.cats__step {
+  position: absolute;
+  right: calc(100% + 9px);
+  top: 50%;
+  translate: 0 -50%;
+  width: 210px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg,
+    transparent,
+    color-mix(in srgb, var(--color-accent-soft) 92%, transparent) 88%);
+}
+.cats__step::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  translate: 0 -50%;
+  width: 0;
+  height: 0;
+  border-left: 9px solid color-mix(in srgb, var(--color-accent-soft) 95%, transparent);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+}
+
+/* ---- page 7: the flow ------------------------------------
+   Three beats, each a title over a bare figure, joined left to right by
+   arrows. No cards: a resin card around a diagram makes three objects
+   out of one sentence, and the sentence is the point.
+
+   With the cards went the dark stage they played on, so every figure
+   here is drawn in INK on the page's own daylight. The one exception is
+   the notification, which is a phone's own dark surface and has to stay
+   dark to read as one. */
+
+.flow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: center;
+  gap: 0 20px;
+  width: 100%;
+}
+
+.step { display: grid; justify-items: center; gap: 14px; }
+.step h3 {
+  font-size: 21px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.step__fig {
+  position: relative;
+  width: 100%;
+  /* the box hugs the drawing. At 16/8 each figure floated in the middle of
+     its own empty box and the whole row read as three small marks. */
+  aspect-ratio: 16 / 6;
+}
+.step__fig .fig { display: block; width: 100%; height: 100%; }
+
+/* the joins. They sit on the figures' centre line, not the titles'. */
+.flow__arrow { align-self: center; margin-top: 30px; color: var(--ink-faint); }
+.flow__arrow svg { display: block; width: 30px; height: auto; }
+.flow__arrow path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Min, inside beat 1's figure. He is on the right because the words
+   arrive from the left: the picture reads "you -> Min", which is what
+   the beat says. */
+.talk__min {
+  position: absolute;
+  left: 84%;
+  top: 50%;
+  translate: -50% -50%;
+  /* both dimensions, again — see .cats__min */
+  width: 78px;
+  height: 78px;
+}
+
+/* ---- the notification, off its stage ----------------------
+   Page 7 sits on --resin-volume, the deepest warm surface in the system,
+   because Min is warm opal lit from inside and on the daylight tones he
+   simply disappeared — a pale creature on a pale page. On this one he
+   glows, which is the whole reason he is drawn rather than described.
+
+   That also means the notification is back on a dark ground, so it goes
+   back to its native form: a translucent pale pill, blurred, the way it
+   looks in the app and on the long deck. */
+.step__fig .notif {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  translate: 0 -50%;
+  padding: 15px 17px;
+  gap: 13px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.11);
+  box-shadow: 0 14px 30px -14px rgba(15, 13, 20, 0.4);
+  color: #FAF7F2;
+  opacity: 1;
+}
+.step__fig .notif i { color: rgba(250, 247, 242, 0.6); }
+.step__fig .notif .min { width: 34px; height: 34px; }
+.step__fig .notif b { font-size: 14.5px; }
+.step__fig .notif i { font-size: 12px; margin-top: 2px; }
+
+/* The Yes was a small flat lilac lozenge with dark text, which read as a
+   tag rather than as something you press. It becomes the site's actual
+   button: the violet pair, a lit top edge and a bottom edge in shadow,
+   and the accent glow underneath — the same recipe as .btn, at pill
+   size. */
+.step__fig .notif__yes {
+  padding: 9px 19px;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  color: #23211E;
+  background: var(--gradient-brand);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -1px 0 rgba(15, 13, 20, 0.12),
+    0 2px 2px rgba(15, 13, 20, 0.14),
+    0 0 16px 2px rgba(201, 168, 224, 0.3);
+}
+
+/* ---- page 8: the leap, and the step ----------------------
+   THE SAME AXIS AS PAGES 3, 4 AND 5 — stranger, familiar stranger,
+   casual friend, friend, date or partner — which is exactly why this
+   page is allowed to exist next to page 5. Page 5 asks which point on
+   that axis nobody serves. Page 8 asks how far each app asks you to
+   travel along it, and when it makes you decide.
+
+   Every matching app springs from the stranger dot and lands somewhere
+   far down the line, and it asks you to pick that landing spot BEFORE
+   you have met anybody. Humans don't move like that. Ours is one step
+   along the axis, drawn on the line rather than over it — the whole
+   argument is that we're the only one not leaving the ground.
+
+   An earlier version of this page was a five-row list of "find a date /
+   find a friend / find a place". It said the right thing and looked like
+   a table; before that it was a scheduled-vs-spontaneous quadrant, which
+   was a second positioning map on axes that didn't reconcile with page
+   5's. Don't go back to either. If this page changes again it has to
+   stay on the intimacy axis. */
+
+.leap {
+  position: relative;
+  width: 100%;
+  /* the viewBox is 1040x400 and .slide__inner caps at 1040, so one SVG
+     unit is one pixel and the arrowheads are drawn, not scaled */
+  aspect-ratio: 1040 / 400;
+}
+.leap__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+
+.leap .axis { stroke: color-mix(in srgb, var(--ink) 26%, transparent); stroke-width: 1.5; }
+.leap .tick { fill: color-mix(in srgb, var(--ink) 34%, transparent); }
+.leap .tick-l {
+  fill: var(--ink-faint);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  text-anchor: middle;
+}
+
+/* the leaps. Muted: they are the default everyone lives in, not a
+   villain, and the point is their LENGTH. */
+.leap .jump {
+  fill: none;
+  stroke: color-mix(in srgb, var(--ink) 52%, transparent);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+/* Filled triangles, not stroked chevrons. A chevron at this size reads as
+   a tick mark and it was ambiguous which way each one pointed — which is
+   fatal on a figure whose entire argument is direction and distance. */
+.leap .head { fill: color-mix(in srgb, var(--ink) 62%, transparent); }
+
+/* ...and the step. On the axis, not over it, in the one accent — the
+   only mark on the page that never leaves the ground. */
+.leap .step {
+  stroke: var(--violet-deep);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+.leap .step-head { fill: var(--violet-deep); }
+
+/* the app marks ride their own arc's apex, so each set of icons is
+   attached to the leap it belongs to without a leader line */
+.leap__at {
+  position: absolute;
+  translate: -50% -50%;
+}
+.leap .ico { width: 40px; height: 40px; border-radius: 10px; }
+
+/* Min stands on his own segment, as an app icon among app icons — a
+   little larger than the marks riding the arcs above him, because he is
+   what the figure is for. */
+.leap__min { width: 54px; height: 54px; }
+
+/* ---- page 9: the two revenue lines ------------------------
+   One chart, one axis pair: your screen time along the bottom, our
+   revenue up the side. Theirs climbs with your screen time. Ours climbs
+   as it falls. Two lines is the entire business-model argument, and it
+   cannot be argued with the way a sentence about "healthy dopamine"
+   can. */
+
+/* Pages 8 and 9 are a pair — why we are not a matching app, and why we
+   are not social media — so page 9 carries the marks it is arguing
+   against, exactly as page 8 does. The chart geometry is SVG; the app
+   marks and the two line names are HTML on top of it, because Min has to
+   be a live element and a live element cannot live inside an <svg>. */
+.money {
+  position: relative;
+  width: 820px;
+  margin-inline: auto;
+  aspect-ratio: 720 / 340;
+}
+.money__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+
+/* each line's name, with the apps it stands for above it, parked at the
+   end where that line is HIGH */
+.money__tag {
+  position: absolute;
+  top: 3%;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.money__tag--us   { left: 16.7%; align-items: flex-start; }
+.money__tag--them { right: 7.8%; align-items: flex-end; }
+.money__tag b {
+  font-size: 21px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.02em;
+}
+.money__tag--us b   { color: #7A5A94; }
+.money__tag--them b { color: color-mix(in srgb, var(--ink) 62%, transparent); }
+.money__tag .ico { width: 40px; height: 40px; border-radius: 10px; }
+.money__tag .app-min { width: 44px; height: 44px; }
+.money .frame {
+  fill: none;
+  stroke: color-mix(in srgb, var(--ink) 22%, transparent);
+  stroke-width: 1;
+}
+.money .lbl {
+  fill: var(--ink-faint);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.money .curve { fill: none; stroke-width: 3; stroke-linecap: round; }
+/* theirs: the ink of the page, because it is the default everyone lives
+   in and it should not look like a villain */
+.money .curve--them { stroke: color-mix(in srgb, var(--ink) 42%, transparent); }
+/* ours: the one accent */
+.money .curve--us   { stroke: #7A5A94; }
+
+
+
+
+/* ---- the sources line -------------------------------------
+   The only small type left in the deck, and it is here so the two
+   research claims are checkable in the PDF — not to be read from the
+   back of a room. */
+
+.cite {
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+/* ---- page 10: the ask -------------------------------------
+   The mark, the code, one line. Nothing else — the page is up while you
+   say thank you and while the room finds its cameras, and every word on
+   it is a word competing with the code.
+
+   The QR is vector rather than raster, because a printed code is the one
+   thing on the page somebody has to point a camera at from across a room,
+   and it is generated WITHOUT the wordmark badge in the middle: the logo
+   is already six inches above it, and every module the badge covers is
+   error correction spent on nothing.
+
+   With the white plate gone the code sits straight on the page, so it is
+   generated from the `cave` palette — cream modules, no ground — rather
+   than mono. Black modules on a dusk-plum page would not have been a
+   design problem, it would have been an unscannable code.
+
+   ONE CAVEAT, and it is worth a live test before you present: this is an
+   inverted code (light on dark). Current iOS and Android cameras read
+   those, but not every scanner app does. If it ever fails in a room, the
+   fix is to put page 10 on a light ground and regenerate at `mono`, not
+   to bring the plate back. */
+.close__plate {
+  background: none;
+  padding: 0;
+  box-shadow: none;
+}
+.close__plate img { width: 320px; height: 320px; }
+.close .mark { width: 180px; }
+
+/* .close__scan is a flex column with its own gap, and the closing line
+   used to be a sibling of it — two gaps stacking, then the line landing
+   under a 320px code with nothing between them. It joins the stack. */
+.close .slide__inner { gap: 34px; }
+.close__scan { gap: 26px; }
+.close__line {
+  font-size: 19px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--ink-soft);
+  letter-spacing: -0.01em;
+  text-align: center;
+}
