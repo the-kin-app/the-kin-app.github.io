@@ -25,10 +25,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/tokens.css">
-<link rel="stylesheet" href="/assets/css/landing.css?v=7">
-<link rel="stylesheet" href="/assets/css/waitlist.css">
-<link rel="stylesheet" href="/assets/css/waitlist-hero.css?v=7">
+<!-- ?v= is a cache bust, and it is not optional. GitHub Pages serves CSS
+     with a long max-age and no fingerprint in the filename, so without it a
+     returning visitor gets last deploy's stylesheet against this deploy's
+     markup — which renders as a subtly broken page rather than an obviously
+     broken one. Bump the date on any release that touches these files. -->
+<link rel="stylesheet" href="/assets/css/tokens.css?v=20260904">
+<link rel="stylesheet" href="/assets/css/landing.css?v=20260904">
+<link rel="stylesheet" href="/assets/css/waitlist.css?v=20260904">
+<link rel="stylesheet" href="/assets/css/waitlist-hero.css?v=20260904">
 </head>
 
 <!-- ══════════════════════════════════════════════════════════
@@ -362,10 +367,19 @@
     </div>
   </div>
 
+  <!-- Three resin pebbles, and one light. The light does not slide along the
+       row — it goes out where it was and comes on in the next pebble a beat
+       later. See "the pebbles" in waitlist-hero.css. -->
   <div class="hdots" role="tablist" aria-label="Choose a slide">
-    <button class="hdot" type="button" role="tab" aria-selected="true"  aria-label="Slide 1: the near-miss"></button>
-    <button class="hdot" type="button" role="tab" aria-selected="false" aria-label="Slide 2: what Min is"></button>
-    <button class="hdot" type="button" role="tab" aria-selected="false" aria-label="Slide 3: how it works"></button>
+    <button class="hdot" type="button" role="tab" aria-selected="true"  aria-label="Slide 1: the near-miss">
+      <span class="hdot__orb" aria-hidden="true"><span class="hdot__glow"></span></span>
+    </button>
+    <button class="hdot" type="button" role="tab" aria-selected="false" aria-label="Slide 2: what Min is">
+      <span class="hdot__orb" aria-hidden="true"><span class="hdot__glow"></span></span>
+    </button>
+    <button class="hdot" type="button" role="tab" aria-selected="false" aria-label="Slide 3: how it works">
+      <span class="hdot__orb" aria-hidden="true"><span class="hdot__glow"></span></span>
+    </button>
   </div>
 </div>
 

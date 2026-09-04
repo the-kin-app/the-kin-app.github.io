@@ -49,8 +49,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/tokens.css">
-<link rel="stylesheet" href="/assets/css/landing.css?v=7">
+<!-- ?v= is a cache bust — see the note on the same links in /waitlist/. -->
+<link rel="stylesheet" href="/assets/css/tokens.css?v=20260904">
+<link rel="stylesheet" href="/assets/css/landing.css?v=20260904">
 
 <script type="importmap">
 { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js" } }
@@ -470,11 +471,10 @@
   </div>
 </footer>
 
-<!-- Docked to the bottom of the viewport (see .nav), and last in the source
-     so the page's content comes before it for keyboard and screen readers. -->
-<!-- Its own floating pill, not another item in the nav row — it surfaces
-     centred above the links, arriving fractionally before them (primary
-     leads secondary chrome, per the button motion spec). -->
+<!-- The only docked chrome: a floating pill at the bottom of the viewport
+     (see .dock-cta), last in the source so the page's content comes before
+     it for keyboard and screen readers. It surfaces once the hero is behind
+     you — landing.js, section 7. -->
 <a class="dock-cta btn btn--primary" href="/waitlist/">
   <span class="btn__fill" aria-hidden="true"></span>
   <span class="btn__flash" aria-hidden="true"></span>
@@ -483,6 +483,6 @@
     <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>
 </a>
-<script type="module" src="/assets/js/landing.js?v=7"></script>
+<script type="module" src="/assets/js/landing.js?v=20260904"></script>
 </body>
 </html>

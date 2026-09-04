@@ -43,7 +43,11 @@
      thumb. Anything that would otherwise end up underneath it reserves
      --dock-clear at the foot of the page. */
   --dock-h: 57px;
-  --dock-gap: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+  /* max(), not a bare inset: Safari reports safe-area-inset-bottom as 0px
+     whenever its own bottom bar is up, and on a home-button-less iPhone that
+     puts a docked pill straight onto the home indicator. 12px is the floor
+     that keeps it clear in either state. */
+  --dock-gap: calc(var(--space-4) + max(env(safe-area-inset-bottom, 0px), 12px));
   --dock-clear: calc(var(--dock-h) + var(--dock-gap) + var(--space-5));
 
   /* the wordmark letterforms, minus the i-dot — Min occupies that himself */
@@ -603,7 +607,10 @@ p { margin: 0; }
 .dock-cta {
   position: fixed;
   left: 50%;
-  bottom: var(--dock-gap);
+  /* a thumb's width above the dock gap on top of that: this is the one thing
+     on the page that gets tapped, so it should not share an edge with the
+     home indicator even once the safe-area inset is accounted for. */
+  bottom: calc(var(--dock-gap) + var(--space-3));
   translate: -50% 0;
   z-index: 21;
   pointer-events: none;

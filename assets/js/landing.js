@@ -369,23 +369,22 @@ function constellation() {
 }
 
 /* ---------- 7. the dock -------------------------------------
-   The nav surfaces once the hero is behind you and sinks again when you
-   come back up to it. The two thresholds are deliberately apart — one
-   shared threshold would let a scroll that settles right on it flutter
-   the nav in and out. */
+   The waitlist CTA surfaces once the hero is behind you and sinks again when
+   you come back up to it. The two thresholds are deliberately apart — one
+   shared threshold would let a scroll that settles right on it flutter the
+   CTA in and out. */
 
 function dock() {
-  // .nav (the links pill) was removed — .dock-cta (Join waitlist) is the
-  // only thing left docking, but it drives off the same .dock-armed /
-  // .is-docked classes, so this still has to run without .nav present.
+  const cta = document.querySelector('.dock-cta');
+  if (!cta) return;
   const root = document.documentElement;
   const hero = document.querySelector('.hero');
 
-  // Only from here is the nav allowed to be hidden, so anything that throws
+  // Only from here is the CTA allowed to be hidden, so anything that throws
   // earlier leaves a visible, working CTA instead of none at all.
   root.classList.add('dock-armed');
 
-  // The last stretch of the hero is empty space below its CTA, so the nav is
+  // The last stretch of the hero is empty space below its CTA, so the dock is
   // allowed to arrive slightly before the section technically ends.
   let surface = 56;
   let sink = 12;
@@ -411,7 +410,7 @@ function dock() {
   addEventListener('resize', remeasure);
   addEventListener('load', remeasure);
   addEventListener('scroll', sync, { passive: true });
-  sync();   // reloading mid-page should not require a scroll to get the nav back
+  sync();   // reloading mid-page should not require a scroll to get the CTA back
 }
 
 /* ---------- 8. the dwell scroll cue -------------------------

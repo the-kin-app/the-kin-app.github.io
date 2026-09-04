@@ -183,7 +183,7 @@
      why ?l= and ?p= stay in the address bar: with nothing persisted,
      the URL *is* the attribution.
 
-     Only the shape is checked here. worker/src/index.js holds the
+     Only the shape is checked here. min-waitlist-worker src/index.js holds the
      authoritative allowlists and stores anything it doesn't recognise
      as NULL, so the vocabulary lives in one place rather than two. */
   const SLUG_RE = /^[a-z0-9-]{1,32}$/;

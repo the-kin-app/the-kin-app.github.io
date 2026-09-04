@@ -27,7 +27,7 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ---------- the apps ----------------------------------------
    Keys are what the Worker stores, so they are lowercase slugs and
-   they must stay in step with APP_KEYS in worker/src/index.js —
+   they must stay in step with APP_KEYS in min-waitlist-worker src/index.js —
    anything it doesn't recognise is dropped on the way in.
 
    The list is deliberately short. Every extra rail is another thing
