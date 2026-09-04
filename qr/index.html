@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Min — Scan to join</title>
 <meta name="description" content="A QR code pointing at the Min waitlist, for printing and pinning up.">
 <meta name="theme-color" content="#2A2320">
@@ -17,31 +17,283 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/tokens.css">
-<link rel="stylesheet" href="/assets/css/base.css">
-<link rel="stylesheet" href="/assets/css/components.css">
+<!-- ?v= is a cache bust, and it is not optional. GitHub Pages serves CSS
+     with a long max-age and no fingerprint in the filename. -->
+<link rel="stylesheet" href="/assets/css/tokens.css?v=20260904">
+
+<!-- ══════════════════════════════════════════════════════════
+     Page-scoped on purpose.
+
+     This page is one screen with one job, and it is the only page that
+     draws a QR plaque. Its styles live here rather than in landing.css /
+     components.css so that re-skinning it can never disturb the pages
+     being worked on alongside it. Everything below is composed from
+     tokens.css — no literal colours — so it re-themes with the rest of
+     the site.
+     ══════════════════════════════════════════════════════════ -->
+<style>
+  * { box-sizing: border-box; }
+
+  /* The world, same stop as the landing page and /waitlist/: the back of
+     the cave, warm and dim. Painted on the root too, so an overscroll
+     bounce reveals the same colour rather than white. */
+  html { background: var(--world-cave); -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-8) var(--space-6);
+    background: var(--world-cave);
+    color: var(--ink-inverse);
+    font-family: var(--font-rounded);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    font-synthesis-weight: none;
+    overflow-x: clip;
+  }
+
+  /* ---- the environment ----------------------------------------
+     Light pooling toward the floor and slow banks of fog above it, at the
+     same sizes, colours and periods as landing.css's .env/.fog. Copied
+     rather than imported: this page must not break when that file moves. */
+  .env {
+    position: fixed;
+    inset: 0;
+    /* Sized to the LARGE viewport — the one with the toolbar retracted —
+       so the layer already covers the space a retracting iOS toolbar is
+       about to reveal. Same value landing.css uses, deliberately: this
+       page should behave exactly like the rest of the site. */
+    height: 100lvh;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .env::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(125% 72% at 50% 118%, rgba(214, 197, 172, 0.4), transparent 70%),
+      linear-gradient(180deg, rgba(15, 13, 20, 0.07) 0%, transparent 32%);
+  }
+
+  .fog {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    will-change: transform;
+  }
+  .fog--1 {
+    width: 62vw; height: 42vw;
+    left: -14vw; top: 8vh;
+    background: radial-gradient(circle, rgba(214, 197, 172, 0.24), transparent 68%);
+    animation: fog-drift-1 68s ease-in-out infinite;
+  }
+  .fog--2 {
+    width: 54vw; height: 38vw;
+    right: -12vw; top: 34vh;
+    background: radial-gradient(circle, rgba(201, 168, 224, 0.2), transparent 68%);
+    animation: fog-drift-2 84s ease-in-out infinite;
+  }
+  .fog--3 {
+    width: 76vw; height: 40vw;
+    left: 12vw; bottom: -14vh;
+    background: radial-gradient(circle, rgba(255, 242, 212, 0.18), transparent 70%);
+    animation: fog-drift-3 96s ease-in-out infinite;
+  }
+  @keyframes fog-drift-1 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    50%      { transform: translate3d(9vw, -5vh, 0) scale(1.14); }
+  }
+  @keyframes fog-drift-2 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1.08); }
+    50%      { transform: translate3d(-11vw, 6vh, 0) scale(1); }
+  }
+  @keyframes fog-drift-3 {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    50%      { transform: translate3d(-7vw, -4vh, 0) scale(1.12); }
+  }
+
+  /* Fine film grain — keeps these very soft gradients from banding. */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: -50%;
+    z-index: 9;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: grain 6s steps(6) infinite;
+  }
+  @keyframes grain {
+    0%   { transform: translate(0, 0); }
+    20%  { transform: translate(-3%, 2%); }
+    40%  { transform: translate(2%, -3%); }
+    60%  { transform: translate(-2%, -2%); }
+    80%  { transform: translate(3%, 1%); }
+    100% { transform: translate(0, 0); }
+  }
+
+  /* ---- the column --------------------------------------------- */
+  main {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+  }
+
+  .mark {
+    width: min(168px, 44vw);
+    height: auto;
+    margin: 0 auto var(--space-3);
+    display: block;
+  }
+
+  .tagline {
+    color: color-mix(in srgb, var(--ink-inverse) 62%, transparent);
+    font-size: var(--text-base);
+    margin: 0 0 var(--space-10);
+  }
+
+  /* ---- the plaque ---------------------------------------------
+     The QR is drawn in ink, so it needs a light surface under it. This is
+     the resin card recipe from tokens.css at full strength: the material,
+     its lit top edge and dimmer bottom edge, and the internal bloom that
+     is what actually reads as translucency. */
+  .plaque {
+    position: relative;
+    display: inline-block;
+    padding: var(--space-6);
+    border-radius: var(--radius-2xl);
+    background: var(--resin-light);
+    background-image: var(--gradient-resin);
+    box-shadow: var(--edge-resin), var(--bloom-resin), var(--shadow-media);
+    line-height: 0;
+  }
+
+  .plaque img {
+    display: block;
+    width: 232px;
+    height: 232px;
+    max-width: 100%;
+  }
+
+  .title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--tracking-tight);
+    margin: var(--space-8) 0 var(--space-1);
+  }
+
+  .sub {
+    color: color-mix(in srgb, var(--ink-inverse) 58%, transparent);
+    font-size: 14px;
+    margin: 0 0 var(--space-5);
+  }
+
+  /* The address in full, for anyone who cannot scan — read it and type it. */
+  .url {
+    font-size: var(--text-sm);
+    word-break: break-all;
+    margin: 0;
+  }
+  .url a {
+    color: var(--violet-light);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--violet-light) 35%, transparent);
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+  }
+  .url a:hover {
+    color: var(--ink-inverse);
+    border-bottom-color: color-mix(in srgb, var(--ink-inverse) 55%, transparent);
+  }
+
+  .back {
+    display: inline-block;
+    margin-top: var(--space-9);
+    font-size: var(--text-sm);
+    color: color-mix(in srgb, var(--ink-inverse) 48%, transparent);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  .back:hover { color: var(--ink-inverse); }
+
+  /* ---- arrival -------------------------------------------------
+     The reveal recipe from tokens.css: opacity, scale, y and blur
+     resolving together, like something rising to the surface. Two beats,
+     one --stagger-cascade apart — the mark, then the plaque and its text. */
+  .rise {
+    animation: rise var(--duration-emergence) var(--ease-emergence) both;
+  }
+  .rise--2 { animation-delay: var(--stagger-cascade); }
+
+  @keyframes rise {
+    0%   { opacity: 0; transform: translateY(8px) scale(1.06); filter: blur(5px); }
+    100% { opacity: 1; transform: translateY(0)   scale(1);    filter: blur(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fog, body::after, .rise {
+      animation: none;
+    }
+    .rise { opacity: 1; transform: none; filter: none; }
+  }
+
+  /* ---- print ---------------------------------------------------
+     This page exists to be pinned to a wall, so printing it should produce
+     the code and the address on white — not a sheet of cave. */
+  @media print {
+    html, body { background: #FFFFFF; color: #000000; }
+    .env, body::after { display: none; }
+    body { padding: 0; min-height: auto; }
+    .plaque {
+      background: none;
+      box-shadow: none;
+      padding: 0;
+    }
+    .tagline, .sub { color: #000000; }
+    .url a { color: #000000; border-bottom: none; }
+    .back { display: none; }
+    .rise { animation: none; opacity: 1; transform: none; filter: none; }
+  }
+</style>
 </head>
-<body class="center">
 
-<div class="container text-center" style="max-width:380px;">
-  <img class="logo" src="/assets/img/min-logo-flat.svg" alt="Min" width="138" height="68">
-  <div class="tagline">Where strangers become kin</div>
+<body>
 
-  <div class="card">
-    <h1 class="card__title">Scan to join the waitlist</h1>
-    <p class="card__sub">Point your camera at the code below.</p>
+<!-- the world: light pooling to the floor, slow banks of fog above it -->
+<div class="env" aria-hidden="true">
+  <span class="fog fog--1"></span>
+  <span class="fog fog--2"></span>
+  <span class="fog fog--3"></span>
+</div>
 
-    <div class="qr-box">
-      <img src="/assets/img/qr-waitlist.png" alt="QR code linking to the Min waitlist page" width="220" height="220">
+<main>
+  <!-- The flat wordmark in cream, not the animated resin lockup: this page
+       is read at arm's length off a wall or a phone held up to it, and the
+       forming animation is the homepage's entrance, not a label. -->
+  <img class="mark rise" src="/assets/img/min-logo-flat-white.svg" alt="Min" width="138" height="68">
+  <p class="tagline rise">Where strangers become kin</p>
+
+  <div class="rise rise--2">
+    <div class="plaque">
+      <img src="/assets/img/qr-waitlist-ink.svg"
+           alt="QR code linking to the Min waitlist page"
+           width="232" height="232">
     </div>
 
-    <div class="url">
-      <a href="https://hellomin.app/waitlist/">hellomin.app/waitlist</a>
-    </div>
+    <h1 class="title">Scan to join the waitlist</h1>
+    <p class="sub">Point your camera at the code.</p>
+    <p class="url"><a href="https://hellomin.app/waitlist/">hellomin.app/waitlist</a></p>
   </div>
 
-  <a class="back-link" href="/waitlist/">← Back to the waitlist page</a>
-</div>
+  <a class="back" href="/waitlist/">← Back to the waitlist page</a>
+</main>
 
 </body>
 </html>
