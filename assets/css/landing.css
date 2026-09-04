@@ -246,11 +246,21 @@ p { margin: 0; }
     filter var(--duration-emergence) ease;
 }
 .in .rise, .rise.in { opacity: 1; transform: none; filter: none; }
-.in [data-delay="1"] { transition-delay: calc(1 * var(--stagger-cascade)); }
-.in [data-delay="2"] { transition-delay: calc(2 * var(--stagger-cascade)); }
-.in [data-delay="3"] { transition-delay: calc(3 * var(--stagger-cascade)); }
-.in [data-delay="4"] { transition-delay: calc(4 * var(--stagger-cascade)); }
-.in [data-delay="5"] { transition-delay: calc(5 * var(--stagger-cascade)); }
+/* --rise-hold: a per-section offset added to every stagger slot. 0 everywhere
+   except the hero, which holds its whole cascade until the logo has finished
+   forming (see .hero below). Set on the SECTION so it inherits only to that
+   section's children — other sections are scroll-revealed and unaffected. */
+.in [data-delay="1"] { transition-delay: calc(1 * var(--stagger-cascade) + var(--rise-hold, 0ms)); }
+.in [data-delay="2"] { transition-delay: calc(2 * var(--stagger-cascade) + var(--rise-hold, 0ms)); }
+.in [data-delay="3"] { transition-delay: calc(3 * var(--stagger-cascade) + var(--rise-hold, 0ms)); }
+.in [data-delay="4"] { transition-delay: calc(4 * var(--stagger-cascade) + var(--rise-hold, 0ms)); }
+.in [data-delay="5"] { transition-delay: calc(5 * var(--stagger-cascade) + var(--rise-hold, 0ms)); }
+
+/* The hero waits for the mark. The logo parks at 2900ms and its material is
+   revealing from ~2320ms; holding the cascade to 2250ms means the headline
+   arrives INTO that reveal rather than a second and a half before it.
+   Everything below it follows on the existing 180ms cascade. */
+.hero { --rise-hold: 2250ms; }
 
 /* ---- button emerge -------------------------------------------
    Ported from KinButton.swift's playEmerge(): a control floats up and
@@ -273,8 +283,8 @@ p { margin: 0; }
 /* Stagger, reusing the same slots as `.rise` — primary leads secondary
    by one stagger step, same ~80ms-per-step gap MOTION.md uses between a
    primary and a secondary control arriving together. */
-.in .btn-emerge[data-delay="4"] { animation-delay: calc(4 * var(--stagger-cascade)); }
-.in .btn-emerge[data-delay="5"] { animation-delay: calc(4.5 * var(--stagger-cascade)); }
+.in .btn-emerge[data-delay="4"] { animation-delay: calc(4 * var(--stagger-cascade) + var(--rise-hold, 0ms)); }
+.in .btn-emerge[data-delay="5"] { animation-delay: calc(4.5 * var(--stagger-cascade) + var(--rise-hold, 0ms)); }
 
 .btn-emerge > :not(.btn__fill):not(.btn__flash):not(.btn__ripple) {
   animation: btn-emerge-label 320ms var(--ease-emergence) 200ms both paused;
@@ -287,13 +297,13 @@ p { margin: 0; }
    its children have to carry that same offset plus their own beat, or
    the label would arrive before its still-delayed container has. */
 .in .btn-emerge[data-delay="4"] > :not(.btn__fill):not(.btn__flash):not(.btn__ripple) {
-  animation-delay: calc(4 * var(--stagger-cascade) + 200ms);
+  animation-delay: calc(4 * var(--stagger-cascade) + var(--rise-hold, 0ms) + 200ms);
 }
 .in .btn-emerge[data-delay="5"] > :not(.btn__fill):not(.btn__flash):not(.btn__ripple) {
-  animation-delay: calc(4.5 * var(--stagger-cascade) + 200ms);
+  animation-delay: calc(4.5 * var(--stagger-cascade) + var(--rise-hold, 0ms) + 200ms);
 }
-.in .btn-emerge[data-delay="4"] .btn__flash { animation-delay: calc(4 * var(--stagger-cascade) + 260ms); }
-.in .btn-emerge[data-delay="5"] .btn__flash { animation-delay: calc(4.5 * var(--stagger-cascade) + 260ms); }
+.in .btn-emerge[data-delay="4"] .btn__flash { animation-delay: calc(4 * var(--stagger-cascade) + var(--rise-hold, 0ms) + 260ms); }
+.in .btn-emerge[data-delay="5"] .btn__flash { animation-delay: calc(4.5 * var(--stagger-cascade) + var(--rise-hold, 0ms) + 260ms); }
 
 /* A dedicated flash layer, separate from `.btn__fill` — it fades in and
    fully back OUT rather than settling at a held value, so it can't fight
@@ -706,17 +716,17 @@ p { margin: 0; }
      landed, matching the app splash's own logo-forming beat (shade/ground
      first, mark arrives and settles, THEN forms) rather than forming
      while still travelling. */
-  animation: wm-park 1500ms ease-out forwards;
+  animation: wm-park 2900ms cubic-bezier(0.45, 0, 0.15, 1) forwards;
 }
-/* Explicit stops, not a two-point from/to on a single easing curve —
-   some cubic-bezier shapes read as barely-moving for their first ~25% of
-   duration, which at a glance looks like nothing is happening at all.
-   These stops force real, visible displacement early, then settle. */
+/* ONE authored curve, not hand-picked stops. cubic-bezier(0.45,0,0.15,1)
+   is deliberately gentler out of the gate than the standard arrival ease:
+   an expo-out finishes its visible travel in the first third, which left
+   the mark already parked before the border showed up. This keeps real,
+   perceptible displacement running underneath the whole forming sequence
+   and lands at 2900ms — as the flash clears and the material reveals. */
 @keyframes wm-park {
-  0%   { translate: 0 220px; }
-  45%  { translate: 0 62px; }
-  75%  { translate: 0 14px; }
-  100% { translate: 0 0; }  /* no overshoot — settles smoothly, no snap */
+  from { translate: 0 220px; }
+  to   { translate: 0 0; }
 }
 .wordmark-resin-svg {
   position: absolute;
@@ -734,11 +744,11 @@ p { margin: 0; }
 
 .wordmark-letter > path {
   opacity: 0;
-  animation: wm-fade-in 500ms cubic-bezier(0.33, 0, 0.15, 1) 700ms forwards;
+  animation: wm-fade-in 420ms cubic-bezier(0.33, 0, 0.15, 1) 1400ms forwards;
 }
 .wordmark-letter > g {
   opacity: 0;
-  animation: wm-fade-in 800ms cubic-bezier(0.33, 0, 0.15, 1) 950ms forwards;
+  animation: wm-fade-in 760ms cubic-bezier(0.33, 0, 0.15, 1) 2320ms forwards;
 }
 
 /* the glow: a blurred duplicate of the letterforms (see the SVG markup),
@@ -746,14 +756,18 @@ p { margin: 0; }
    well short of "a colour of its own"). Follows the fill in. */
 .wordmark-glow-group {
   opacity: 0;
-  animation: wm-glow-in 700ms cubic-bezier(0.42, 0, 0.30, 1) 1550ms forwards;
+  animation: wm-glow-in 700ms cubic-bezier(0.42, 0, 0.30, 1) 2700ms forwards;
 }
-/* the flash: after the outline, a white pass over the whole mark that
-   quickly fades out to reveal the real material fill underneath —
-   painted last (on top) so it visibly washes over the forming letters. */
+/* the flash: the outline appears ALONE first and holds ~380ms with nothing
+   else on screen, THEN this white pass washes over and fades, revealing the
+   material fill underneath. Painted last (on top).
+   Timeline: park 0–2200 · border in 1400–1820 · border holds alone to 2200
+   · flash 2200–2720 (Min flashes on the same frame) · fill 2320–3020
+   · glow 2700–3400. Previously the flash fired at 750ms — 50ms after the
+   border STARTED fading in — so it read as the flash coming first. */
 .wordmark-flash {
   opacity: 0;
-  animation: wm-flash 400ms ease-out 750ms forwards;
+  animation: wm-flash 520ms ease-out 2200ms forwards;
 }
 @keyframes wm-fade-in { to { opacity: 1; } }
 @keyframes wm-glow-in { to { opacity: 0.38; } }
@@ -791,8 +805,11 @@ p { margin: 0; }
    holds his own entrance back until the wordmark has settled, so he
    doesn't start forming while the letters are still arriving. */
 .wordmark__min--resin .min--hero {
-  animation: float-min 9s ease-in-out infinite 2550ms;
-  --min-entry: 1700ms;
+  animation: float-min 9s ease-in-out infinite 3600ms;
+  /* 1030 + 1170 = 2200ms — still exactly when .wordmark-flash fires, so the
+     two flashes stay ONE wash. Pulled back from 1650 so the eyes open well
+     before the border pass, instead of landing on top of it. */
+  --min-entry: 1030ms;
 }
 @media (prefers-reduced-motion: reduce) {
   .wordmark--hero-resin { animation: none; }
@@ -952,19 +969,31 @@ p { margin: 0; }
    whenever a Min mounts; composes with whatever the parent context
    does to reveal him (a container fade, the fall-and-bounce, etc.) —
    this is his own arrival, independent of theirs. */
-/* Order: eyes → outline appears and holds ALONE (~400ms, nothing else
-   showing) → flash washes in over the outline and fades it → flash itself
-   clears (eased) → material is revealed underneath as the flash clears.
-   ~1.15s total — slower than the first pass on purpose, so each stage
-   actually reads before the next starts. */
-.min__face       { opacity: 0; animation: min-in 200ms ease-out var(--min-entry, 0ms) forwards; }
+/* Order: eyes fade up and OPEN (lids part) → ~450ms of nothing → outline
+   appears and holds ALONE → flash washes over and fades it → material is
+   revealed underneath as the flash clears. ~1.6s total.
+   Offsets from --min-entry (E):
+     E+0     face fades in (280ms)
+     E+90    lids part, eye opens (460ms)   → open by E+550
+     E+620   border pass begins             → 70ms clear gap after the eyes
+     E+1170  flash  (= 2200ms, same frame as the wordmark's flash)
+     E+1320  material reveals */
+.min__face       { opacity: 0; animation: min-in 280ms cubic-bezier(0.33, 0, 0.15, 1) var(--min-entry, 0ms) forwards; }
 /* the outline is a PASS, not a resting state — it fades in, holds
    briefly, then fades back out as the material takes over. Previously
    it only faded in ("forwards" held it at 1 forever), which left a
    permanent white rim around Min — not the intent. */
-.min__outline    { opacity: 0; animation: min-outline-pulse 750ms ease var(--min-entry, 0ms) forwards; }
-.min__flash      { opacity: 0; animation: min-flash 500ms ease calc(var(--min-entry, 0ms) + 550ms) forwards; }
-.min__material   { opacity: 0; animation: min-in-material 450ms ease-out calc(var(--min-entry, 0ms) + 700ms) forwards; }
+.min__outline    { opacity: 0; animation: min-outline-pulse 860ms ease calc(var(--min-entry, 0ms) + 620ms) forwards; }
+.min__flash      { opacity: 0; animation: min-flash 520ms ease calc(var(--min-entry, 0ms) + 1170ms) forwards; }
+.min__material   { opacity: 0; animation: min-in-material 480ms ease-out calc(var(--min-entry, 0ms) + 1320ms) forwards; }
+
+/* EYE OPEN — the lids start met in the middle and part. Runs on `transform`
+   while the idle blink runs on `translate`; they are independent CSS
+   properties, so the one-shot open and the forever-blink compose instead of
+   overwriting each other (one `animation` shorthand on both would not). */
+@keyframes min-eye-open-up  { from { transform: translateY(28px); }  to { transform: translateY(0); } }
+@keyframes min-eye-open-low { from { transform: translateY(-28px); } to { transform: translateY(0); } }
+@keyframes min-core-open    { from { transform: scaleY(0.12); }      to { transform: scaleY(1); } }
 @keyframes min-in { to { opacity: 1; } }
 @keyframes min-in-material { to { opacity: 0.72; } }
 @keyframes min-outline-pulse {
@@ -1122,8 +1151,12 @@ p { margin: 0; }
 .min__core {
   transform-box: fill-box;
   transform-origin: center;
-  animation: min-eye-core 4s linear infinite;
-  animation-delay: var(--min-phase);
+  animation-name: min-eye-core, min-core-open;
+  animation-duration: 4s, 460ms;
+  animation-timing-function: linear, cubic-bezier(0.22, 0.9, 0.28, 1);
+  animation-iteration-count: infinite, 1;
+  animation-fill-mode: none, both;
+  animation-delay: var(--min-phase), calc(var(--min-entry, 0ms) + 90ms);
 }
 @keyframes min-eye-core {
   0%     { scale: 1 1; }
@@ -1136,9 +1169,15 @@ p { margin: 0; }
 
 /* the blink: lids slide in from off-socket, meet, and slide back out.
    63.75-69.75% of the 4s loop, same beat on both eyes. */
-.min__lid { animation: min-blink-in 4s linear infinite; animation-delay: var(--min-phase); }
-.min__lid--up  { animation-name: min-blink-up; }
-.min__lid--low { animation-name: min-blink-low; }
+.min__lid {
+  animation-duration: 4s, 460ms;
+  animation-timing-function: linear, cubic-bezier(0.22, 0.9, 0.28, 1);
+  animation-iteration-count: infinite, 1;
+  animation-fill-mode: none, both;
+  animation-delay: var(--min-phase), calc(var(--min-entry, 0ms) + 90ms);
+}
+.min__lid--up  { animation-name: min-blink-up,  min-eye-open-up; }
+.min__lid--low { animation-name: min-blink-low, min-eye-open-low; }
 @keyframes min-blink-up {
   0%, 63.75% { translate: 0 0; }
   65.75%     { translate: 0 28px; }

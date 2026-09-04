@@ -80,16 +80,18 @@ export const minFigure = (n) => `
       <stop stop-color="#FFC97A" stop-opacity=".9"/><stop offset=".34" stop-color="#FFC97A" stop-opacity=".42"/><stop offset="1" stop-color="#FFC97A" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="gspec${n}" gradientUnits="userSpaceOnUse" gradientTransform="translate(66 36) scale(66 36)" cx="0" cy="0" r="1">
-      <stop stop-color="#fff" stop-opacity=".92"/><stop offset=".42" stop-color="#fff" stop-opacity=".34"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+      <stop stop-color="#fff" stop-opacity=".74"/><stop offset=".30" stop-color="#fff" stop-opacity=".40"/>
+      <stop offset=".62" stop-color="#fff" stop-opacity=".14"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
     </radialGradient>
-    <filter id="fcore${n}" x="-90%" y="-90%" width="280%" height="280%"><feGaussianBlur stdDeviation="6"/></filter>
-    <filter id="fspec${n}" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4"/></filter>
-    <filter id="minOutline${n}" x="-20%" y="-20%" width="140%" height="140%">
-      <feMorphology in="SourceAlpha" operator="dilate" radius="2.4" result="grown"/>
-      <feComposite in="grown" in2="SourceAlpha" operator="out" result="ring"/>
-      <feFlood flood-color="#fff" flood-opacity="0.9"/>
-      <feComposite in2="ring" operator="in"/>
-    </filter>
+    <!-- NO SVG FILTERS ANYWHERE. feGaussianBlur / feMorphology / feComposite are
+         raster ops: the browser rasterises the filter region at the element's
+         RENDERED size, and Min renders at 35px in the hero. That produced hard
+         aliased stair-steps on every silhouette edge. Every effect below is a
+         gradient or a stroked path instead, so it stays vector at any size. -->
+    <radialGradient id="gcore${n}" gradientUnits="objectBoundingBox" cx=".5" cy=".5" r=".5">
+      <stop offset=".52" stop-color="#fff"/><stop offset=".74" stop-color="#fff" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
     <clipPath id="ceyeL${n}"><circle cx="111" cy="161.8" r="26.5"/></clipPath>
     <clipPath id="ceyeR${n}"><circle cx="221" cy="161.8" r="26.5"/></clipPath>
   </defs>
@@ -102,15 +104,11 @@ export const minFigure = (n) => `
          feet vanish into one continuous alpha shape with no seams — then
          minOutline dilates that shape and subtracts the original,
          leaving only a ring around the true outer boundary. -->
-    <g class="min__outline" filter="url(#minOutline${n})">
-      <g transform="translate(${SHELL_DX} ${SHELL_DY})" fill="#fff">
-        <path d="M63.6248 262.8C55.6248 282.8 61.6248 306.8 87.6248 313.8C117.625 321.8 151.625 306.8 163.625 282.8C169.625 268.8 167.625 260.8 157.625 256.8L63.6248 262.8Z"/>
-        <path d="M288.376 262.8C296.376 282.8 290.376 306.8 264.376 313.8C234.376 321.8 200.376 306.8 188.376 282.8C182.376 268.8 184.376 260.8 194.376 256.8L288.376 262.8Z"/>
-        <path d="M70.4817 99.8C54.4817 103.8 34.4817 125.8 24.4817 155.8C17.4817 177.8 14.4817 195.8 19.4817 203.8C26.4817 210.8 41.4817 203.8 51.4817 186.8C62.4817 166.8 71.4817 133.8 70.4817 99.8Z"/>
-        <path d="M281.518 99.8C297.518 103.8 317.518 125.8 327.518 155.8C334.518 177.8 337.518 195.8 332.518 203.8C325.518 210.8 310.518 203.8 300.518 186.8C289.518 166.8 280.518 133.8 281.518 99.8Z"/>
-        <path d="M36 196.8C36 91.8 86 25.8 176 25.8C266 25.8 316 91.8 316 196.8C316 241.8 302 279.8 274 297.8C250 312.8 102 312.8 78 297.8C50 279.8 36 241.8 36 196.8Z"/>
-      </g>
-    </g>
+    <!-- the border pass: ONE continuous stroked path, the boolean union of all
+         five shapes, exported from Figma (see assets/img/min-character/outline.svg).
+         Was a feMorphology filter; that is what made Min look rasterised. -->
+    <path class="min__outline" transform="translate(7 7.8)" d="M 159.00 0.00 C 222.05 0.00 265.46 32.39 285.81 87.88 C 295.59 97.95 304.73 112.63 310.52 130.00 C 317.52 152.00 320.52 170.00 315.52 178.00 C 311.67 181.84 305.42 181.46 298.90 177.53 C 297.93 209.12 289.83 236.82 274.61 255.93 C 273.81 270.12 265.40 283.15 247.38 288.00 C 230.53 292.49 212.41 289.73 197.65 282.19 C 173.07 283.60 144.93 283.60 120.36 282.19 C 105.59 289.73 87.48 292.49 70.63 288.00 C 52.60 283.15 44.19 270.12 43.39 255.93 C 28.17 236.82 20.07 209.12 19.10 177.53 C 12.58 181.46 6.33 181.84 2.48 178.00 C -2.52 170.00 0.48 152.00 7.48 130.00 C 13.27 112.63 22.41 97.95 32.19 87.88 C 52.54 32.39 95.96 0.00 159.00 0.00 Z"
+          fill="none" stroke="#fff" stroke-width="2.6" stroke-opacity=".9" stroke-linejoin="round"/>
     <rect class="min__flash" x="-20" y="-20" width="${VB_W + 40}" height="${VB_H + 40}" mask="url(#mshell${n})" fill="#fff"/>
     <g class="min__material" mask="url(#mshell${n})">
       <rect x="-20" y="-20" width="${VB_W + 40}" height="${VB_H + 40}" fill="url(#gmat${n})"/>
@@ -119,14 +117,14 @@ export const minFigure = (n) => `
     </g>
 
     <!-- the specular catchlight on the crown of the dome -->
-    <ellipse class="min__spec" cx="134" cy="75" rx="66" ry="28" fill="url(#gspec${n})" filter="url(#fspec${n})" transform="rotate(-10 134 75)"/>
+    <ellipse class="min__spec" cx="134" cy="75" rx="66" ry="28" fill="url(#gspec${n})" transform="rotate(-10 134 75)"/>
 
     <g class="min__face">
       <g class="min__eye" data-side="-1">
         <circle class="min__halo" cx="111" cy="161.8" r="66" fill="url(#ghalo${n})"/>
         <circle class="min__bloom" cx="111" cy="161.8" r="52" fill="url(#gbloom${n})" style="mix-blend-mode:screen"/>
         <g class="min__lid-clip" clip-path="url(#ceyeL${n})">
-          <circle class="min__core" cx="111" cy="161.8" r="26.5" fill="#fff" filter="url(#fcore${n})"/>
+          <circle class="min__core" cx="111" cy="161.8" r="26.5" fill="url(#gcore${n})"/>
           <rect class="min__lid min__lid--up" x="68.5" y="71.3" width="85" height="64" fill="#fbe7d2"/>
           <rect class="min__lid min__lid--low" x="68.5" y="188.3" width="85" height="64" fill="#fbe7d2"/>
         </g>
@@ -135,7 +133,7 @@ export const minFigure = (n) => `
         <circle class="min__halo" cx="221" cy="161.8" r="66" fill="url(#ghalo${n})"/>
         <circle class="min__bloom" cx="221" cy="161.8" r="52" fill="url(#gbloom${n})" style="mix-blend-mode:screen"/>
         <g class="min__lid-clip" clip-path="url(#ceyeR${n})">
-          <circle class="min__core" cx="221" cy="161.8" r="26.5" fill="#fff" filter="url(#fcore${n})"/>
+          <circle class="min__core" cx="221" cy="161.8" r="26.5" fill="url(#gcore${n})"/>
           <rect class="min__lid min__lid--up" x="178.5" y="71.3" width="85" height="64" fill="#fbe7d2"/>
           <rect class="min__lid min__lid--low" x="178.5" y="188.3" width="85" height="64" fill="#fbe7d2"/>
         </g>
