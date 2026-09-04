@@ -375,8 +375,9 @@ function constellation() {
    the nav in and out. */
 
 function dock() {
-  const nav = document.querySelector('.nav');
-  if (!nav) return;
+  // .nav (the links pill) was removed — .dock-cta (Join waitlist) is the
+  // only thing left docking, but it drives off the same .dock-armed /
+  // .is-docked classes, so this still has to run without .nav present.
   const root = document.documentElement;
   const hero = document.querySelector('.hero');
 

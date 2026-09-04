@@ -17,6 +17,9 @@
 
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // lands dim, lightens once — see the .wlq-lit rule in waitlist-hero.css
+  setTimeout(() => document.body.classList.add('wlq-lit'), reduced ? 0 : 2200);
+
   /* ==========================================================
      1. the banner
      ========================================================== */
@@ -32,7 +35,7 @@
 
     // Long enough to read a headline and its line underneath, short
     // enough that somebody standing in a bar sees all three.
-    const DWELL = reduced ? 8000 : 5200;
+    const DWELL = reduced ? 8000 : 13000;
 
     let i = 0;
     let timer = null;

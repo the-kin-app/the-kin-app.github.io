@@ -43,6 +43,15 @@ const SHELL_DY = -18;
 export const minFigure = (n) => `
 <svg class="min__rig" viewBox="0 0 ${VB_W} ${VB_H}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
   <defs>
+    <!-- mask, not clipPath: clipPath geometry that carries CSS animations
+         on its content (the feet/ear pivots need to) rendered as an EMPTY
+         clip in testing here, despite valid, measurable path geometry —
+         hiding the whole material fill behind it. Confirmed by diffing
+         with clip-path removed: the fill painted correctly on its own.
+         mask handles the exact same animated content correctly, so this
+         reverts that swap. The small-size edge quality complaint this was
+         meant to fix turned out to be the old per-shape stroked outline's
+         seams (fixed separately below via minOutline), not the mask. -->
     <mask id="mshell${n}" maskUnits="userSpaceOnUse" x="-20" y="-20" width="380" height="620">
       <g transform="translate(${SHELL_DX} ${SHELL_DY})">
         <path class="min__foot" data-side="-1" d="M63.6248 262.8C55.6248 282.8 61.6248 306.8 87.6248 313.8C117.625 321.8 151.625 306.8 163.625 282.8C169.625 268.8 167.625 260.8 157.625 256.8L63.6248 262.8Z" fill="#fff"/>
@@ -75,13 +84,36 @@ export const minFigure = (n) => `
     </radialGradient>
     <filter id="fcore${n}" x="-90%" y="-90%" width="280%" height="280%"><feGaussianBlur stdDeviation="6"/></filter>
     <filter id="fspec${n}" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4"/></filter>
+    <filter id="minOutline${n}" x="-20%" y="-20%" width="140%" height="140%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="2.4" result="grown"/>
+      <feComposite in="grown" in2="SourceAlpha" operator="out" result="ring"/>
+      <feFlood flood-color="#fff" flood-opacity="0.9"/>
+      <feComposite in2="ring" operator="in"/>
+    </filter>
     <clipPath id="ceyeL${n}"><circle cx="111" cy="161.8" r="26.5"/></clipPath>
     <clipPath id="ceyeR${n}"><circle cx="221" cy="161.8" r="26.5"/></clipPath>
   </defs>
 
   <g class="min__body">
-    <g mask="url(#mshell${n})" opacity="0.72">
-      <rect x="0" y="0" width="${VB_W}" height="${VB_H}" fill="url(#gmat${n})"/>
+    <!-- entrance: border (just the OUTER edge of the whole silhouette,
+         not each part's own boundary — see the filter below) → flash →
+         real material. The 5 shapes below are painted as one SOLID fill
+         (not individually stroked), so their overlaps at the shoulders/
+         feet vanish into one continuous alpha shape with no seams — then
+         minOutline dilates that shape and subtracts the original,
+         leaving only a ring around the true outer boundary. -->
+    <g class="min__outline" filter="url(#minOutline${n})">
+      <g transform="translate(${SHELL_DX} ${SHELL_DY})" fill="#fff">
+        <path d="M63.6248 262.8C55.6248 282.8 61.6248 306.8 87.6248 313.8C117.625 321.8 151.625 306.8 163.625 282.8C169.625 268.8 167.625 260.8 157.625 256.8L63.6248 262.8Z"/>
+        <path d="M288.376 262.8C296.376 282.8 290.376 306.8 264.376 313.8C234.376 321.8 200.376 306.8 188.376 282.8C182.376 268.8 184.376 260.8 194.376 256.8L288.376 262.8Z"/>
+        <path d="M70.4817 99.8C54.4817 103.8 34.4817 125.8 24.4817 155.8C17.4817 177.8 14.4817 195.8 19.4817 203.8C26.4817 210.8 41.4817 203.8 51.4817 186.8C62.4817 166.8 71.4817 133.8 70.4817 99.8Z"/>
+        <path d="M281.518 99.8C297.518 103.8 317.518 125.8 327.518 155.8C334.518 177.8 337.518 195.8 332.518 203.8C325.518 210.8 310.518 203.8 300.518 186.8C289.518 166.8 280.518 133.8 281.518 99.8Z"/>
+        <path d="M36 196.8C36 91.8 86 25.8 176 25.8C266 25.8 316 91.8 316 196.8C316 241.8 302 279.8 274 297.8C250 312.8 102 312.8 78 297.8C50 279.8 36 241.8 36 196.8Z"/>
+      </g>
+    </g>
+    <rect class="min__flash" x="-20" y="-20" width="${VB_W + 40}" height="${VB_H + 40}" mask="url(#mshell${n})" fill="#fff"/>
+    <g class="min__material" mask="url(#mshell${n})">
+      <rect x="-20" y="-20" width="${VB_W + 40}" height="${VB_H + 40}" fill="url(#gmat${n})"/>
       <ellipse cx="166" cy="172" rx="134" ry="106" fill="url(#gsub${n})"/>
       <ellipse cx="166" cy="40" rx="113" ry="66" fill="url(#gcrown${n})"/>
     </g>
