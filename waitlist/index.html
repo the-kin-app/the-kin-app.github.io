@@ -25,10 +25,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/tokens.css">
-<link rel="stylesheet" href="/assets/css/landing.css">
-<link rel="stylesheet" href="/assets/css/waitlist.css">
-<link rel="stylesheet" href="/assets/css/waitlist-hero.css">
+<!-- ?v= is a cache bust, and it is not optional. GitHub Pages serves CSS
+     with a long max-age and no fingerprint in the filename, so without it a
+     returning visitor gets last deploy's stylesheet against this deploy's
+     markup — which renders as a subtly broken page rather than an obviously
+     broken one. Bump the date on any release that touches these files. -->
+<link rel="stylesheet" href="/assets/css/tokens.css?v=20260901">
+<link rel="stylesheet" href="/assets/css/landing.css?v=20260901">
+<link rel="stylesheet" href="/assets/css/waitlist.css?v=20260901">
+<link rel="stylesheet" href="/assets/css/waitlist-hero.css?v=20260901">
 </head>
 
 <!-- ══════════════════════════════════════════════════════════
@@ -65,11 +70,15 @@
      not a Helsinki student should learn that in the first second,
      not after reading three slides and filling in a field. -->
 <div class="wlq-row wlq-head">
-  <div class="wordmark--hero" role="img" aria-label="min">
-    <span class="wordmark__bloom" aria-hidden="true"></span>
-    <span class="wordmark__glass wordmark__glass--shadow" aria-hidden="true"></span>
-    <span class="wordmark__glass" aria-hidden="true"></span>
-    <div class="wordmark__min" aria-hidden="true">
+  <!-- The resin mark, same as the homepage hero. Dropped in as the baked
+       artwork rather than the CSS-built glass wordmark: the glass version
+       needs a backdrop to refract, and at this size on this ground it came
+       out grey. The `-no-dot` file is the mark minus its i-dot, because Min
+       himself sits in that gap. -->
+  <div class="wordmark--hero wordmark--hero-resin" role="img" aria-label="min">
+    <img class="wordmark__resin" src="/assets/img/min-logo-resin-no-dot.svg"
+         alt="" width="182" height="107" aria-hidden="true">
+    <div class="wordmark__min wordmark__min--resin" aria-hidden="true">
       <div class="min min--hero" data-min data-phase="1.9"></div>
     </div>
   </div>
@@ -250,10 +259,19 @@
     </div>
   </div>
 
+  <!-- Three resin pebbles, and one light. The light does not slide along the
+       row — it goes out where it was and comes on in the next pebble a beat
+       later. See "the pebbles" in waitlist-hero.css. -->
   <div class="hdots" role="tablist" aria-label="Choose a slide">
-    <button class="hdot" type="button" role="tab" aria-selected="true"  aria-label="Slide 1: the near-miss"></button>
-    <button class="hdot" type="button" role="tab" aria-selected="false" aria-label="Slide 2: what Min is"></button>
-    <button class="hdot" type="button" role="tab" aria-selected="false" aria-label="Slide 3: how it works"></button>
+    <button class="hdot" type="button" role="tab" aria-selected="true"  aria-label="Slide 1: the near-miss">
+      <span class="hdot__orb" aria-hidden="true"><span class="hdot__glow"></span></span>
+    </button>
+    <button class="hdot" type="button" role="tab" aria-selected="false" aria-label="Slide 2: what Min is">
+      <span class="hdot__orb" aria-hidden="true"><span class="hdot__glow"></span></span>
+    </button>
+    <button class="hdot" type="button" role="tab" aria-selected="false" aria-label="Slide 3: how it works">
+      <span class="hdot__orb" aria-hidden="true"><span class="hdot__glow"></span></span>
+    </button>
   </div>
 </div>
 
@@ -310,7 +328,7 @@
   </div>
 </div>
 
-<script src="/assets/js/waitlist-hero.js"></script>
+<script src="/assets/js/waitlist-hero.js?v=20260901"></script>
 <script type="module">
   import { minBodies } from '/assets/js/min.js';
   import { buttons } from '/assets/js/press.js';

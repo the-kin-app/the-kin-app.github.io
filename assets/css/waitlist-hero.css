@@ -37,7 +37,10 @@ body.wlq {
   padding:
     calc(var(--space-5) + env(safe-area-inset-top, 0px))
     var(--space-5)
-    calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+    /* floored, for the same reason as --dock-gap in landing.css: Safari
+       reports a 0px inset while its own bottom bar is up, which would sit the
+       join button on the iPhone home indicator. */
+    calc(var(--space-4) + max(env(safe-area-inset-bottom, 0px), 12px));
 }
 
 /* every row shares one column, so the wordmark, the slides and the
@@ -60,9 +63,61 @@ body.wlq {
   gap: var(--space-3);
 }
 
+/* The resin artwork's viewBox is 182×107, and it wraps the 138×68
+   letterforms in margin that is filter headroom, not part of the mark: 22
+   units each side, 15 above, 24 below. Two consequences, both handled here.
+
+   1. SIZE. Only 138/182 of the box is letters, so the flat mark's 148px box
+      renders the resin letters ~24% small. 196px puts them back at the size
+      this row was laid out for.
+   2. POSITION. Left in the flow, that headroom reads as a logo sitting high
+      in a box of dead space — which is the "aligned weirdly". The vertical
+      margin is pulled back out so .wlq-head's own gap is the only spacing
+      between the mark and the line under it. Horizontal needs no
+      compensation: it is symmetric, and the row centres.
+
+   Everything derives from --mark-w so the short-screen sizes below only have
+   to set that one value. */
 .wlq .wordmark--hero {
-  width: min(148px, 34vw);
-  margin: 0 auto;
+  --mark-w: min(196px, 45vw);
+  /* Min's float, in proportion: the hero's -5px on its 300px box is the
+     ratio, and at this size the unscaled amplitude lifts him clean out of
+     the i-dot he is supposed to be sitting in. */
+  --min-lift: calc(var(--mark-w) * 0.017);
+
+  width: var(--mark-w);
+  margin:
+    calc(var(--mark-w) * -15 / 182) auto
+    calc(var(--mark-w) * -24 / 182);
+}
+/* the baked artwork fills the box; the box already carries the artwork's own
+   182/107 ratio from .wordmark--hero-resin in landing.css */
+.wordmark__resin {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+/* Min lands just behind the mark, which surfaces at 120ms here (see the
+   reveal block at the foot of this file). The homepage's 1850ms is timed to
+   its slow letter-by-letter forming beat, and this page has four seconds of
+   attention in total — he'd arrive after the reader had already moved on.
+
+   wm-min-drop animates `translate` and the float animates `transform`, which
+   is what lets the two run as one comma-list without overwriting each other
+   (see the note on this pair in landing.css). */
+.wlq .wordmark__min--resin .min--hero {
+  animation:
+    wm-min-drop 700ms cubic-bezier(0.32, 0.62, 0.3, 1) 420ms forwards,
+    float-min-mark 9s ease-in-out infinite 1120ms;
+}
+@keyframes float-min-mark {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(calc(var(--min-lift, 5px) * -1)) rotate(-2.5deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wlq .wordmark__min--resin .min--hero { animation: none; }
 }
 
 .wlq-when {
@@ -228,39 +283,113 @@ body.wlq {
 }
 .hslide--problem .hslide__say { gap: var(--space-3); }
 
-/* ---- the dots ----------------------------------------------
+/* ---- the pebbles -------------------------------------------
    Also the control. They are real buttons with a hit area larger
-   than the dot they draw, because this page is only ever touched
-   with a thumb. */
+   than the pebble they draw, because this page is only ever
+   touched with a thumb.
+
+   Three pebbles of the same resin as every other surface here, and
+   ONE light. The light never slides along the row: it goes out in
+   the pebble it was in, and a beat later comes on in the next one.
+   A teleport, not a journey — which is why the two halves are
+   deliberately different curves. Going out is fast and linear (a
+   light switching off has no easing); arriving is a flash that
+   overshoots and settles, so the eye reads it as igniting in place
+   rather than having travelled there.
+
+   The whole thing runs off `aria-selected`, which the carousel in
+   waitlist-hero.js already writes — no extra script, and with no
+   script at all the first pebble is simply the lit one. */
 
 .hdots {
   display: flex;
   justify-content: center;
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
 .hdot {
-  width: 26px;
-  height: 22px;
+  width: 30px;
+  height: 26px;
   padding: 0;
   border: 0;
   background: none;
   cursor: pointer;
   display: grid;
   place-items: center;
+  -webkit-tap-highlight-color: transparent;
 }
-.hdot::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--ink) 26%, transparent);
-  transition: width 320ms var(--ease-emergence), background 320ms ease;
+
+/* the pebble: a sphere, not a disc — the light comes from up and to the
+   left, the bottom edge is the dimmer return, and it casts its own small
+   contact shadow. Same three ingredients as --edge-resin, at 13px. */
+.hdot__orb {
+  position: relative;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background:
+    radial-gradient(74% 74% at 32% 26%,
+      rgba(255, 255, 255, var(--alpha-pebble-top)) 0%,
+      rgba(255, 255, 255, var(--alpha-pebble-bottom)) 58%,
+      rgba(255, 255, 255, 0.12) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.26),
+    0 1px 2px rgba(var(--shadow-ink), 0.3);
+  transition: box-shadow 300ms ease, transform 300ms var(--ease-emergence);
 }
-.hdot[aria-selected="true"]::before {
-  width: 18px;
-  background: var(--color-accent-soft);
-  box-shadow: 0 0 10px 1px color-mix(in srgb, var(--world-halo) 45%, transparent);
+.hdot:hover .hdot__orb { transform: scale(1.08); }
+.hdot:focus-visible { outline: none; }
+.hdot:focus-visible .hdot__orb {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 0 3px color-mix(in srgb, var(--world-halo) 40%, transparent);
+}
+
+/* the light, on its own layer so the pebble's material stays put while only
+   the light changes. --world-halo is the token for exactly this. */
+.hdot__glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(50% 50% at 50% 46%,
+      #FFFDF6 0%,
+      var(--world-halo) 40%,
+      rgba(255, 242, 212, 0) 100%);
+  opacity: 0;
+  transform: scale(0.3);
+  transition: opacity 110ms linear, transform 110ms linear;
+}
+.hdot[aria-selected="true"] .hdot__glow {
+  animation: orb-ignite 420ms cubic-bezier(0.16, 1, 0.3, 1) 130ms both;
+}
+/* The 130ms delay is the teleport: the pebble it left has already gone dark
+   by then, so at no point are two of them lit. */
+@keyframes orb-ignite {
+  0%   { opacity: 0;    transform: scale(0.3); }
+  36%  { opacity: 1;    transform: scale(1.2); }   /* the flash of arrival */
+  100% { opacity: 0.95; transform: scale(1); }
+}
+
+/* the pebble holding the light glows through its own shell, and throws a
+   little of it onto the ground around itself */
+.hdot[aria-selected="true"] .hdot__orb {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 0 6px 1px rgba(255, 242, 212, 0.7),
+    0 0 12px 2px color-mix(in srgb, var(--world-halo) 40%, transparent),
+    0 1px 2px rgba(var(--shadow-ink), 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hdot__orb { transition: none; }
+  .hdot:hover .hdot__orb { transform: none; }
+  .hdot[aria-selected="true"] .hdot__glow {
+    animation: none;
+    opacity: 0.95;
+    transform: none;
+  }
 }
 
 /* ============================================================
@@ -549,7 +678,9 @@ body.wlq {
      the opener, where it is the other half of the sentence and dropping
      it would leave three verbs and no point. */
   .hslide:not(.hslide--problem) p { display: none; }
-  .wlq .wordmark--hero { width: min(120px, 30vw); }
+  /* --mark-w, not width: the box's headroom compensation and Min's float
+     amplitude both derive from it. */
+  .wlq .wordmark--hero { --mark-w: min(158px, 40vw); }
   .wlq-head { gap: var(--space-2); }
 
 }
@@ -567,7 +698,7 @@ body.wlq {
   .hslide__fig { display: none; }
   /* the tick is confirmation of something the words already say */
   .wlq-done__tick { display: none; }
-  .wlq .wordmark--hero { width: min(104px, 26vw); }
+  .wlq .wordmark--hero { --mark-w: min(137px, 34vw); }
 }
 
 @media (prefers-reduced-motion: reduce) {
