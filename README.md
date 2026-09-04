@@ -44,7 +44,6 @@ waitlist submissions.
 │   │   ├── bg-world.jpg     The world — the app's own warm backdrop (far + near plates, composited)
 │   │   └── bg-waitlist.jpg  Previous hero photo (unused; kept for reference)
 │   └── favicon.svg          Placeholder favicon
-├── worker/                 Cloudflare Worker + D1 waitlist API (see worker/README.md)
 └── CNAME
 ```
 
@@ -307,7 +306,7 @@ artwork worked and where. A code aimed at `hellomin.app/<location>/<poster>`
 instead just 404s on Pages and counts nothing, so the page flags that shape
 as an error rather than a warning. **The codes are measurement instruments** — the
 location and poster lists in `assets/js/qrgenerator.js` must match
-`worker/src/index.js`, or a scan lands on the fallback redirect and the
+`min-waitlist-worker src/index.js`, or a scan lands on the fallback redirect and the
 scoreboard row it should have filled stays empty. Adding a poster is an edit
 in both files.
 
@@ -368,10 +367,15 @@ python3 -m http.server 8000      # from the repo root
 ```
 
 For the waitlist form to submit locally, run the Worker and point the form at
-it (see `worker/README.md`): set `window.KIN_API_BASE` before
+it (see the `min-waitlist-worker` repo): set `window.KIN_API_BASE` before
 `waitlist-hero.js` loads.
 
 ## Backend
 
 The waitlist API (validation, D1 storage, rate limiting, and other security
-measures) is a Cloudflare Worker in `worker/`. See `worker/README.md`.
+measures) is a Cloudflare Worker, and it lives in its own private repo:
+**`the-kin-app/min-waitlist-worker`**. It used to be the `worker/` directory
+here, and moved out on 2026-09-03 — this repo is public and GitHub Pages
+serves every file in it, so the API source was on the open web at
+`hellomin.app/worker/src/index.js`. Its README is the reference for the
+endpoints, the D1 schema and the admin API.

@@ -6,7 +6,7 @@
    as a ZIP.
 
    The location and poster lists are the same vocabulary the Worker
-   accepts (worker/src/index.js). They are duplicated here rather
+   accepts (min-waitlist-worker src/index.js). They are duplicated here rather
    than fetched because this page has to work with no network, and a
    fetch that quietly fails would generate codes pointing at URLs
    the Worker rejects — the scan would still land on /waitlist/, so
@@ -21,7 +21,7 @@
   // The scan URL is on the WORKER's host, not the site's. hellomin.app is
   // GitHub Pages and knows nothing about /<location>/<poster> — a code
   // pointing there 404s without the scan ever being counted. The Worker
-  // lives at api.hellomin.app (worker/wrangler.toml `routes`), counts the
+  // lives at api.hellomin.app (min-waitlist-worker wrangler.toml `routes`), counts the
   // hit, and 302s to hellomin.app/waitlist/?l=&p= itself.
   const API = 'https://api.hellomin.app';
   const SITE = 'https://hellomin.app';
@@ -197,7 +197,7 @@
       const known = LOCATIONS.includes(l) && POSTERS.some((x) => x.slug === p);
       notes.push(!known
         ? { kind: 'warn', text: `The Worker does not know "${l}/${p}". A scan will still reach the waitlist, ` +
-            'but it will not be counted — add the slug to worker/src/index.js first.' }
+            'but it will not be counted — add the slug to min-waitlist-worker src/index.js first.' }
         : legacy
           ? { kind: 'warn', text: 'Tracked, but on the old api.kinapp.social host. That route stays live for posters ' +
               'already printed — anything new should point at api.hellomin.app.' }
