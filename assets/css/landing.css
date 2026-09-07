@@ -263,7 +263,7 @@ p { margin: 0; }
 /* Waits for the WORDMARK (formed at ~3050ms), not for Min. Min deliberately
    runs on past this, finishing at ~4850ms, so the copy is not held for six
    seconds waiting on a 35px character. */
-.hero { --rise-hold: 2500ms; }
+.hero { --rise-hold: 2200ms; }
 
 /* ---- button emerge -------------------------------------------
    Ported from KinButton.swift's playEmerge(): a control floats up and
@@ -719,7 +719,7 @@ p { margin: 0; }
      landed, matching the app splash's own logo-forming beat (shade/ground
      first, mark arrives and settles, THEN forms) rather than forming
      while still travelling. */
-  animation: wm-park 2900ms cubic-bezier(0.45, 0, 0.15, 1) forwards;
+  animation: wm-park 2100ms cubic-bezier(0.16, 0.82, 0.22, 1) forwards;
 }
 /* ONE authored curve, not hand-picked stops. cubic-bezier(0.45,0,0.15,1)
    is deliberately gentler out of the gate than the standard arrival ease:
@@ -747,11 +747,11 @@ p { margin: 0; }
 
 .wordmark-letter > path {
   opacity: 0;
-  animation: wm-fade-in 420ms cubic-bezier(0.33, 0, 0.15, 1) 1400ms forwards;
+  animation: wm-fade-in 900ms cubic-bezier(0.33, 0, 0.25, 1) 850ms forwards;
 }
 .wordmark-letter > g {
   opacity: 0;
-  animation: wm-fade-in 760ms cubic-bezier(0.33, 0, 0.15, 1) 2320ms forwards;
+  animation: wm-fade-in 800ms cubic-bezier(0.33, 0, 0.25, 1) 1650ms forwards;
 }
 
 /* the glow: a blurred duplicate of the letterforms (see the SVG markup),
@@ -759,7 +759,7 @@ p { margin: 0; }
    well short of "a colour of its own"). Follows the fill in. */
 .wordmark-glow-group {
   opacity: 0;
-  animation: wm-glow-in 700ms cubic-bezier(0.42, 0, 0.30, 1) 2700ms forwards;
+  animation: wm-glow-in 700ms cubic-bezier(0.42, 0, 0.30, 1) 2450ms forwards;
 }
 /* the flash: the outline appears ALONE first and holds ~380ms with nothing
    else on screen, THEN this white pass washes over and fades, revealing the
@@ -789,7 +789,7 @@ p { margin: 0; }
           mask-size: 260% 100%;
   -webkit-mask-repeat: no-repeat;
           mask-repeat: no-repeat;
-  animation: wm-sweep 760ms cubic-bezier(0.42, 0, 0.28, 1) 2200ms both;
+  animation: wm-sweep 800ms cubic-bezier(0.42, 0, 0.58, 1) 1450ms both;
 }
 @keyframes wm-fade-in { to { opacity: 1; } }
 @keyframes wm-glow-in { to { opacity: 0.38; } }
@@ -823,22 +823,36 @@ p { margin: 0; }
   top: 22.71%;
   width: 11.5%;
 }
-/* No fall, no drop — he just emerges in place, at the dot's spot, the
-   same way he does everywhere else: eyes → outline → flash → material
-   (see --min-entry below). Only the TIMING differs here: --min-entry
-   holds his own entrance back until the wordmark has settled, so he
-   doesn't start forming while the letters are still arriving. */
+/* Min DESCENDS into the dot's spot while the wordmark is still rising.
+   The two are made of the same resin, so they resolve together rather than
+   taking turns — the wordmark's outline-only window and Min's orb-outline
+   window are deliberately the SAME moment (0.85–1.75s), and the two park
+   within 100ms of each other. An earlier version ran them sequentially and
+   took 7.6s; it read as two animations queued up.
+
+   Source of truth: Figma "WEB · logo emerge" (QR landing page, 679:404),
+   4.60s. Full beat sheet in claude/min-logo-emerge-spec.md.
+
+     0.70  Min starts descending          2.30  flash rolls up
+     0.85  BOTH outlines begin            2.40  morph starts (100ms behind)
+     1.10  eyes open                      2.65  limbs · 2.80 feet
+     1.75  BOTH are empty shells          3.00  flash full
+     2.10  wordmark parks                 3.35  morph complete
+     2.20  Min parks                      4.40  flash rolled off
+
+   The descent runs on `transform` and the idle float on `translate` — two
+   independent CSS properties, so the one-shot arrival and the forever-float
+   compose instead of overwriting each other. */
 .wordmark__min--resin .min--hero {
-  animation: float-min 9s ease-in-out infinite 5000ms;
-  /* 1030 + 1170 = 2200ms — still exactly when .wordmark-flash fires, so the
-     two flashes stay ONE wash. Pulled back from 1650 so the eyes open well
-     before the border pass, instead of landing on top of it. */
-  /* Deliberately NOT synced to the wordmark any more. The wordmark finishes
-     forming at ~3050ms; Min then runs his own sequence after it. Extracted from
-     Figma "WEB · logo emerge" (QR landing page, node 679:404) — 5.2s timeline:
-     eyes 2.60-3.00 · border 3.10-3.85 holding to 4.20 · flash 4.20-4.72 ·
-     material 4.35-4.85. */
-  --min-entry: 2600ms;
+  animation: min-descend 1500ms cubic-bezier(0.16, 0.82, 0.22, 1) 700ms both,
+             float-min 9s ease-in-out infinite 2400ms;
+  --min-entry: 1100ms;
+}
+/* ~0.9x his own height, the same proportion as Figma's 150px against a 167px
+   Min. Expressed in em so it tracks the mark at every size it is used at. */
+@keyframes min-descend {
+  from { transform: translateY(-0.95em); }
+  to   { transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .wordmark--hero-resin { animation: none; }
@@ -1007,14 +1021,21 @@ p { margin: 0; }
      E+620   border pass begins             → 70ms clear gap after the eyes
      E+1170  flash  (= 2200ms, same frame as the wordmark's flash)
      E+1320  material reveals */
-.min__face       { opacity: 0; animation: min-in 400ms cubic-bezier(0.33, 0, 0.15, 1) var(--min-entry, 0ms) forwards; }
+.min__face       { opacity: 0; animation: min-in 550ms cubic-bezier(0.33, 0, 0.25, 1) var(--min-entry, 0ms) forwards; }
 /* the outline is a PASS, not a resting state — it fades in, holds
    briefly, then fades back out as the material takes over. Previously
    it only faded in ("forwards" held it at 1 forever), which left a
    permanent white rim around Min — not the intent. */
-.min__outline    { opacity: 0; animation: min-outline-pulse 1450ms cubic-bezier(0.33, 0, 0.15, 1) calc(var(--min-entry, 0ms) + 500ms) forwards; }
-.min__flash      { opacity: 0; animation: min-flash 520ms ease calc(var(--min-entry, 0ms) + 1600ms) forwards; }
-.min__material   { opacity: 0; animation: min-in-material 500ms ease-out calc(var(--min-entry, 0ms) + 1750ms) forwards; }
+/* The orb border rides the SAME window as the wordmark's outline — both
+   marks are an empty shell at 1.75s, then both fill. That shared beat is
+   the whole point of the sequence. */
+.min__outline    { opacity: 0; animation: min-outline-pulse 2300ms linear calc(var(--min-entry, 0ms) - 250ms) forwards; }
+/* Rolls, never spikes: 700ms up, 1400ms down. Four earlier versions were
+   rejected as a broken halogen lamp. Down must be roughly twice up. */
+.min__flash      { opacity: 0; animation: min-flash 2100ms linear calc(var(--min-entry, 0ms) + 1200ms) forwards; }
+/* The morph rides INSIDE the flash, 100ms behind it — a gap between them
+   exposes the crossfade and reads as two separate events. */
+.min__material   { opacity: 0; animation: min-in-material 1200ms linear calc(var(--min-entry, 0ms) + 1250ms) forwards; }
 
 /* EYE OPEN — the lids start met in the middle and part. Runs on `transform`
    while the idle blink runs on `translate`; they are independent CSS
@@ -1024,17 +1045,22 @@ p { margin: 0; }
 @keyframes min-eye-open-low { from { transform: translateY(-28px); } to { transform: translateY(0); } }
 @keyframes min-core-open    { from { transform: scaleY(0.12); }      to { transform: scaleY(1); } }
 @keyframes min-in { to { opacity: 1; } }
-@keyframes min-in-material { to { opacity: 0.72; } }
-@keyframes min-outline-pulse {
+@keyframes min-in-material {
   0%     { opacity: 0; }
-  51.7%  { opacity: 0.9; }   /* 750ms to arrive — it was popping in in ~150ms */
-  75.9%  { opacity: 0.9; }   /* holds ~350ms */
-  100%   { opacity: 0; }     /* out as the flash takes over */
+  33.3%  { opacity: 0.30; animation-timing-function: cubic-bezier(0.33, 0, 0.25, 1); }
+  58.3%  { opacity: 0.30; }
+  100%   { opacity: 0.72; }
+}
+@keyframes min-outline-pulse {
+  0%     { opacity: 0; animation-timing-function: cubic-bezier(0.33, 0, 0.25, 1); }
+  39.1%  { opacity: 0.92; }  /* full at 1.75s, with the wordmark's outline */
+  71.7%  { opacity: 0.92; animation-timing-function: cubic-bezier(0.16, 1, 0.30, 1); }
+  100%   { opacity: 0; }     /* gone by 3.15s, as the material lands */
 }
 @keyframes min-flash {
-  0%   { opacity: 0; }
-  30%  { opacity: 0.95; }
-  100% { opacity: 0; }
+  0%    { opacity: 0;    animation-timing-function: cubic-bezier(0.40, 0, 0.38, 1); }  /* ROLLUP  */
+  33.3% { opacity: 0.95; animation-timing-function: cubic-bezier(0.30, 0, 0.45, 1); }  /* ROLLDN  */
+  100%  { opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .min__face, .min__material { animation: none; opacity: 1; }
@@ -1102,7 +1128,7 @@ p { margin: 0; }
 }
 
 .min__foot {
-  animation-delay: var(--min-phase), calc(var(--min-entry, 0ms) + 1960ms);
+  animation-delay: var(--min-phase), calc(var(--min-entry, 0ms) + 1700ms);
   animation-iteration-count: infinite, 1;
   animation-fill-mode: none, both;
 }
@@ -1128,7 +1154,7 @@ p { margin: 0; }
    path data), plus a stretch at the peak of the sway so the tip reads as
    trailing the body rather than rigidly pinned. */
 .min__limb-pivot {
-  animation-delay: var(--min-phase), calc(var(--min-entry, 0ms) + 1820ms);
+  animation-delay: var(--min-phase), calc(var(--min-entry, 0ms) + 1550ms);
   animation-iteration-count: infinite, 1;
   animation-fill-mode: none, both;
   animation-timing-function: linear, cubic-bezier(0.34, 1.28, 0.52, 1);
@@ -1443,9 +1469,12 @@ p { margin: 0; }
   aspect-ratio: 332 / 306;
   animation: float-min 8s ease-in-out infinite;
 }
+/* On `translate`/`rotate`, NOT `transform` — min-descend owns `transform`,
+   and two animations on the same property means the last one wins rather
+   than the two composing. */
 @keyframes float-min {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50%      { transform: translateY(-5px) rotate(-2.5deg); }
+  0%, 100% { translate: 0 0;     rotate: 0deg; }
+  50%      { translate: 0 -5px;  rotate: -2.5deg; }
 }
 
 /* ---- the caption -------------------------------------------
