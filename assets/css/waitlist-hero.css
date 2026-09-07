@@ -851,7 +851,8 @@ body.wlq[data-scene="shore"] .world-ground--shore { opacity: 1; }
     radial-gradient(8.0px 8.0px at 57.4% 40.1%, rgba(255,244,224,0.314) 0%, rgba(255,244,224,0.157) 42%, rgba(255,244,224,0) 100%),
     radial-gradient(9.4px 9.4px at 84.4% 29.8%, rgba(255,244,224,0.206) 0%, rgba(255,244,224,0.103) 42%, rgba(255,244,224,0) 100%),
     radial-gradient(6.1px 6.1px at 31.6% 80.3%, rgba(255,244,224,0.214) 0%, rgba(255,244,224,0.107) 42%, rgba(255,244,224,0) 100%);
-  animation: wdust-drift-far 92s linear infinite;
+  /* animation is set in THE INTRO, below — it has to list the drift and
+     the entrance together or one cancels the other. */
 }
 .wdust--mid {
   background-size: 660px 660px;
@@ -863,7 +864,8 @@ body.wlq[data-scene="shore"] .world-ground--shore { opacity: 1; }
     radial-gradient(11.7px 11.7px at 78.3% 69.1%, rgba(255,244,224,0.193) 0%, rgba(255,244,224,0.097) 42%, rgba(255,244,224,0) 100%),
     radial-gradient(10.5px 10.5px at 52.4% 86.0%, rgba(255,244,224,0.223) 0%, rgba(255,244,224,0.112) 42%, rgba(255,244,224,0) 100%),
     radial-gradient(13.4px 13.4px at 96.1% 13.3%, rgba(255,244,224,0.192) 0%, rgba(255,244,224,0.096) 42%, rgba(255,244,224,0) 100%);
-  animation: wdust-drift-mid 61s linear infinite;
+  /* animation is set in THE INTRO, below — it has to list the drift and
+     the entrance together or one cancels the other. */
 }
 .wdust--near {
   background-size: 520px 520px;
@@ -875,7 +877,8 @@ body.wlq[data-scene="shore"] .world-ground--shore { opacity: 1; }
     radial-gradient(24.8px 24.8px at 68.7% 59.1%, rgba(255,244,224,0.125) 0%, rgba(255,244,224,0.062) 42%, rgba(255,244,224,0) 100%),
     radial-gradient(21.8px 21.8px at 82.6% 92.7%, rgba(255,244,224,0.136) 0%, rgba(255,244,224,0.068) 42%, rgba(255,244,224,0) 100%),
     radial-gradient(20.7px 20.7px at 7.8% 69.3%, rgba(255,244,224,0.153) 0%, rgba(255,244,224,0.076) 42%, rgba(255,244,224,0) 100%);
-  animation: wdust-drift-near 38s linear infinite;
+  /* animation is set in THE INTRO, below — it has to list the drift and
+     the entrance together or one cancels the other. */
 }
 
 @keyframes wdust-drift-far  { from { translate: 0 0; } to { translate: -760px 190px; } }
@@ -938,64 +941,77 @@ body.wlq .hslide__say em { color: var(--violet); }
 
 
 /* ═══════════════════════════════════════════════════════════════════
-   THE INTRO GATE
+   THE INTRO
 
-   Most people reach this page from a printed QR code, so the mark
-   forming is the first thing that happens and it happens ALONE: the
-   environment is not drawn, the dust is not animating, and no content
-   has arrived. That is both the art direction and the performance fix —
-   the page used to start the logo, three parallax dust layers, ten
-   infinite animations and the whole content tree in the same frame.
+   Most people reach this page off a printed QR code, so the mark forms
+   ALONE: nothing else is drawn and nothing else is animating until it
+   has landed. That is both the art direction and the reason the page
+   stopped lagging on open — it used to start the logo, three parallax
+   dust layers, ten infinite animations and the whole content tree in
+   the same frame.
 
-   `.is-intro` is on <body> from parse (set by an inline script so there
-   is no flash of the full page first). waitlist-hero.js removes it when
-   the mark has landed, and everything else arrives after.
+   ⚠️ THIS IS DELIBERATELY PURE CSS, WITH NO CLASS AND NO JS.
+
+   The first version gated it on a `.is-intro` class that JavaScript
+   removed. That put the entire page behind one script: the JS was
+   cache-busted separately from the CSS, an old copy got served against
+   the new stylesheet, the class was never removed, and the page shipped
+   with a frozen background and dead swiping. A visibility gate must not
+   have a failure mode where the page stays hidden.
+
+   `animation-delay` + `both` does the same job with no such mode: the
+   element is held at the `from` state through the delay, then arrives.
+   If everything else on the page fails to load, this still completes.
    ═══════════════════════════════════════════════════════════════════ */
 body.wlq { --intro-hold: 3200ms; }
 
-/* nothing behind the mark, and nothing running */
-body.wlq.is-intro .world-ground,
-body.wlq.is-intro .fog,
-body.wlq.is-intro .wdust {
-  opacity: 0 !important;
-  animation-play-state: paused;
+/* the world comes up first */
+.world-ground, .fog, .wdust {
+  animation-name: intro-world;
+  animation-duration: 900ms;
+  animation-timing-function: var(--cam-ease);
+  animation-delay: var(--intro-hold);
+  animation-fill-mode: both;
 }
-/* no content, and no layout shift when it arrives — it is hidden by
-   opacity, never by display, so the page never reflows */
-body.wlq.is-intro .wlq-banner,
-body.wlq.is-intro .wlq-row:not(.wlq-head),
-body.wlq.is-intro .wlq-when {
-  opacity: 0;
-  pointer-events: none;
-}
+/* the dust keeps its own infinite drift as a SECOND animation — listing
+   both names means the entrance does not cancel the drift. */
+.wdust--far  { animation-name: intro-world, wdust-drift-far;
+               animation-duration: 900ms, 92s;
+               animation-timing-function: var(--cam-ease), linear;
+               animation-delay: var(--intro-hold), var(--intro-hold);
+               animation-iteration-count: 1, infinite;
+               animation-fill-mode: both, none; }
+.wdust--mid  { animation-name: intro-world, wdust-drift-mid;
+               animation-duration: 900ms, 61s;
+               animation-timing-function: var(--cam-ease), linear;
+               animation-delay: var(--intro-hold), var(--intro-hold);
+               animation-iteration-count: 1, infinite;
+               animation-fill-mode: both, none; }
+.wdust--near { animation-name: intro-world, wdust-drift-near;
+               animation-duration: 900ms, 38s;
+               animation-timing-function: var(--cam-ease), linear;
+               animation-delay: var(--intro-hold), var(--intro-hold);
+               animation-iteration-count: 1, infinite;
+               animation-fill-mode: both, none; }
+@keyframes intro-world { from { opacity: 0; } }
 
-/* the environment comes up first, then the content sits down into it */
-body.wlq .world-ground,
-body.wlq .fog,
-body.wlq .wdust {
-  transition:
-    opacity   var(--cam-dur) var(--cam-ease) 140ms,
-    transform var(--cam-dur) var(--cam-ease);
+/* then the content sits down into it, on KinType */
+.wlq-banner,
+.wlq-row:not(.wlq-head),
+.wlq-when {
+  animation: intro-arrive 640ms cubic-bezier(0.16, 1, 0.30, 1)
+             calc(var(--intro-hold) + 260ms) both;
 }
-body.wlq .wlq-banner,
-body.wlq .wlq-row:not(.wlq-head),
-body.wlq .wlq-when {
-  transition: opacity 620ms cubic-bezier(0.20, 0, 0.20, 1) 260ms,
-              translate 700ms cubic-bezier(0.16, 1, 0.30, 1) 260ms;
+@keyframes intro-arrive {
+  from { opacity: 0; translate: 0 12px; pointer-events: none; }
+  to   { opacity: 1; translate: 0 0; }
 }
-/* KinType: copy barely moves, it resolves. 4pt in the app, a little more
-   here because the viewport is wider. */
-body.wlq.is-intro .wlq-banner   { translate: 0 10px; }
-body.wlq.is-intro .wlq-row:not(.wlq-head) { translate: 0 14px; }
-body.wlq.is-intro .wlq-when     { translate: 0 8px; }
-
-/* A visitor arriving from the homepage has already watched the mark form.
-   Replaying it makes the site feel like it restarted rather than moved. */
-body.wlq.intro-skip .wordmark--hero * { animation: none !important; }
-body.wlq.intro-skip .wordmark--hero    { opacity: 1 !important; }
 
 @media (prefers-reduced-motion: reduce) {
-  body.wlq.is-intro .wlq-banner,
-  body.wlq.is-intro .wlq-row:not(.wlq-head),
-  body.wlq.is-intro .wlq-when { translate: none; }
+  .world-ground, .fog, .wdust,
+  .wlq-banner, .wlq-row:not(.wlq-head), .wlq-when {
+    animation-delay: 0s, 0s;
+    animation-duration: 1ms, 92s;
+  }
+  @keyframes intro-arrive { from { opacity: 1; translate: none; } }
 }

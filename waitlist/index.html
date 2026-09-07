@@ -30,10 +30,10 @@
      returning visitor gets last deploy's stylesheet against this deploy's
      markup — which renders as a subtly broken page rather than an obviously
      broken one. Bump the date on any release that touches these files. -->
-<link rel="stylesheet" href="/assets/css/tokens.css?v=20260907a">
-<link rel="stylesheet" href="/assets/css/landing.css?v=20260907a">
-<link rel="stylesheet" href="/assets/css/waitlist.css?v=20260907a">
-<link rel="stylesheet" href="/assets/css/waitlist-hero.css?v=20260907a">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=20260907b">
+<link rel="stylesheet" href="/assets/css/landing.css?v=20260907b">
+<link rel="stylesheet" href="/assets/css/waitlist.css?v=20260907b">
+<link rel="stylesheet" href="/assets/css/waitlist-hero.css?v=20260907b">
 </head>
 
 <!-- ══════════════════════════════════════════════════════════
@@ -55,19 +55,7 @@
      is the same world as the landing page, not a lookalike.
      ══════════════════════════════════════════════════════════ -->
 
-<body class="wlq is-intro">
-<script>
-  /* Runs the instant <body> opens, before anything is painted. Anyone
-     arriving from the homepage has already watched the mark form; replaying
-     it makes the site feel like it restarted rather than moved, so it is
-     skipped for the rest of the session. `is-intro` itself stays either way
-     — the sequencing is the same, only the logo's own animation is cut. */
-  try {
-    if (sessionStorage.getItem('min-intro-seen')) {
-      document.body.classList.add('intro-skip');
-    }
-  } catch (e) {}
-</script>
+<body class="wlq">
 
 <!-- the world: light pooling to the floor, slow banks of fog above it -->
 <div class="env" aria-hidden="true">
@@ -459,10 +447,10 @@
   </div>
 </div>
 
-<script src="/assets/js/waitlist-hero.js?v=7"></script>
+<script src="/assets/js/waitlist-hero.js?v=20260907b"></script>
 <script type="module">
-  import { minBodies } from '/assets/js/min.js?v=8';
-  import { buttons } from '/assets/js/press.js?v=7';
+  import { minBodies } from '/assets/js/min.js?v=20260907b';
+  import { buttons } from '/assets/js/press.js?v=20260907b';
   minBodies();   // Min in the i-dot, and Min in the middle of the ring
   buttons();     // Join submerges and ripples like every other Min button
 </script>
