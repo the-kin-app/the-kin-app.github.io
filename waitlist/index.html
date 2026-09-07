@@ -55,14 +55,27 @@
      is the same world as the landing page, not a lookalike.
      ══════════════════════════════════════════════════════════ -->
 
-<body class="wlq">
+<body class="wlq is-intro">
+<script>
+  /* Runs the instant <body> opens, before anything is painted. Anyone
+     arriving from the homepage has already watched the mark form; replaying
+     it makes the site feel like it restarted rather than moved, so it is
+     skipped for the rest of the session. `is-intro` itself stays either way
+     — the sequencing is the same, only the logo's own animation is cut. */
+  try {
+    if (sessionStorage.getItem('min-intro-seen')) {
+      document.body.classList.add('intro-skip');
+    }
+  } catch (e) {}
+</script>
 
 <!-- the world: light pooling to the floor, slow banks of fog above it -->
 <div class="env" aria-hidden="true">
   <!-- two places in ONE space. The content change is a camera move between
        them, not a colour swap — see THE SCENE in waitlist-hero.css. -->
   <span class="world-ground world-ground--dusk"></span>
-  <span class="world-ground world-ground--dawn"></span>
+  <span class="world-ground world-ground--mouth"></span>
+  <span class="world-ground world-ground--shore"></span>
   <span class="fog fog--1"></span>
   <span class="fog fog--2"></span>
   <span class="fog fog--3"></span>
@@ -255,7 +268,7 @@
            heading calls him a little friend, the figure shows him, and
            the line under it says which one he is. Every page after
            this can just say "Min". -->
-      <section class="hslide" data-scene="dawn" aria-label="2 of 3: what Min is">
+      <section class="hslide" data-scene="mouth" aria-label="2 of 3: what Min is">
         <div class="hslide__fig">
           <div class="ring" style="--in: 1" role="img"
                aria-label="Eight people standing in a circle, connected to Min in the middle and to each other.">
@@ -300,7 +313,7 @@
            person can do, and there is no app that has ever asked you
            to do it. Both halves have to be in the line, or it reads
            as either a boast or a shrug. -->
-      <section class="hslide" data-scene="dawn" aria-label="3 of 3: how it works">
+      <section class="hslide" data-scene="shore" aria-label="3 of 3: how it works">
         <div class="hslide__fig">
           <div class="mbeats">
 
@@ -378,16 +391,18 @@
   <!-- Three resin pebbles, and one light. The light does not slide along the
        row — it goes out where it was and comes on in the next pebble a beat
        later. See "the pebbles" in waitlist-hero.css. -->
-  <div class="hdots" role="tablist" aria-label="Choose a slide">
-    <button class="hdot" type="button" role="tab" aria-selected="true"  aria-label="Slide 1: the near-miss">
-      <span class="hdot__orb" aria-hidden="true"><span class="hdot__glow"></span></span>
-    </button>
-    <button class="hdot" type="button" role="tab" aria-selected="false" aria-label="Slide 2: what Min is">
-      <span class="hdot__orb" aria-hidden="true"><span class="hdot__glow"></span></span>
-    </button>
-    <button class="hdot" type="button" role="tab" aria-selected="false" aria-label="Slide 3: how it works">
-      <span class="hdot__orb" aria-hidden="true"><span class="hdot__glow"></span></span>
-    </button>
+  <div class="hdots-pill">
+    <div class="hdots" role="tablist" aria-label="Choose a slide">
+      <button class="hdot" type="button" role="tab" aria-selected="true"  aria-label="Slide 1: the near-miss">
+        <span class="hdot__orb" aria-hidden="true"><span class="hdot__glow"></span></span>
+      </button>
+      <button class="hdot" type="button" role="tab" aria-selected="false" aria-label="Slide 2: what Min is">
+        <span class="hdot__orb" aria-hidden="true"><span class="hdot__glow"></span></span>
+      </button>
+      <button class="hdot" type="button" role="tab" aria-selected="false" aria-label="Slide 3: how it works">
+        <span class="hdot__orb" aria-hidden="true"><span class="hdot__glow"></span></span>
+      </button>
+    </div>
   </div>
 </div>
 

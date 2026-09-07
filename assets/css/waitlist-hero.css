@@ -310,6 +310,44 @@ body.wlq {
    waitlist-hero.js already writes — no extra script, and with no
    script at all the first pebble is simply the lit one. */
 
+/* The three dots read as debris on their own. They sit in a resin pill —
+   the same material as everything else on the page, at the smallest size it
+   is used, so the indicator is an OBJECT rather than three loose marks.
+   The pill is the surface; the dots are pebbles resting on it. */
+.hdots-pill {
+  display: inline-flex;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background:
+    linear-gradient(178deg,
+      rgba(255, 255, 255, 0.16) 0%,
+      rgba(255, 255, 255, 0.07) 46%,
+      rgba(255, 255, 255, 0.12) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.10),
+    0 1px 3px rgba(var(--shadow-ink), 0.18);
+  backdrop-filter: blur(7px) saturate(1.05);
+  -webkit-backdrop-filter: blur(7px) saturate(1.05);
+  transition: background var(--cam-dur) var(--cam-ease) 140ms,
+              box-shadow  var(--cam-dur) var(--cam-ease) 140ms;
+}
+/* On the shore the pill sits on light ground, so its own lit edges stop
+   reading. It picks up a faint ink edge instead of a light one. */
+body.wlq[data-scene="shore"] .hdots-pill {
+  background:
+    linear-gradient(178deg,
+      rgba(255, 255, 255, 0.52) 0%,
+      rgba(255, 255, 255, 0.30) 46%,
+      rgba(255, 255, 255, 0.44) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(38, 32, 25, 0.06),
+    0 1px 3px rgba(var(--shadow-ink), 0.12);
+}
+
 .hdots {
   display: flex;
   justify-content: center;
@@ -765,14 +803,27 @@ body.wlq {
     radial-gradient(90% 60% at 22% 16%, rgba(120, 96, 140, 0.20), transparent 76%),
     linear-gradient(178deg, #241E1C 0%, #2C2422 42%, #3B2E28 76%, #4A382C 100%);
 }
-.world-ground--dawn {
+/* THE MOUTH — the transitional light. Slide 2 used to be full dawn, which
+   blew out the artwork sitting on it. This is roughly a third of the way
+   from the cave to the shore: enough that the camera has clearly moved,
+   dark enough that light-on-light graphics still read. */
+.world-ground--mouth {
+  background:
+    radial-gradient(62% 44% at 52% 62%, rgba(255, 214, 158, 0.34), transparent 74%),
+    radial-gradient(86% 56% at 26% 12%, rgba(126, 104, 142, 0.16), transparent 76%),
+    linear-gradient(178deg, #4A3E36 0%, #5C4C40 40%, #77614E 76%, #93785C 100%);
+}
+.world-ground--shore {
   background:
     radial-gradient(64% 46% at 52% 26%, rgba(255, 250, 240, 0.92), transparent 74%),
     radial-gradient(80% 54% at 30% 92%, rgba(226, 214, 200, 0.55), transparent 78%),
     linear-gradient(178deg, #EDE7DF 0%, #E6DED6 40%, #DCD3CD 74%, #CFC6C4 100%);
 }
-body.wlq[data-scene="dawn"] .world-ground--dusk { opacity: 0; }
-body.wlq[data-scene="dawn"] .world-ground--dawn { opacity: 1; }
+body.wlq[data-scene="mouth"] .world-ground--dusk  { opacity: 0; }
+body.wlq[data-scene="mouth"] .world-ground--mouth { opacity: 1; }
+body.wlq[data-scene="shore"] .world-ground--dusk  { opacity: 0; }
+body.wlq[data-scene="shore"] .world-ground--mouth { opacity: 0; }
+body.wlq[data-scene="shore"] .world-ground--shore { opacity: 1; }
 
 /* ---- the dust we travel through ---------------------------------
    Three depths. `transform` carries the camera; `translate` carries each
@@ -780,7 +831,7 @@ body.wlq[data-scene="dawn"] .world-ground--dawn { opacity: 1; }
    stops while the camera moves and neither overwrites the other. */
 .wdust {
   position: absolute;
-  inset: -25%;
+  inset: -14%;
   background-repeat: repeat;
   pointer-events: none;
   will-change: transform, translate, opacity;
@@ -790,80 +841,40 @@ body.wlq[data-scene="dawn"] .world-ground--dawn { opacity: 1; }
 }
 
 .wdust--far {
-  background-size: 760px 760px;
-  opacity: 0.50;
+  background-size: 900px 900px;
+  opacity: 0.46;
   background-image:
-    radial-gradient(1.5px 1.5px at 45.2% 56.0%, rgba(255,244,224,0.416) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(0.9px 0.9px at 50.8% 58.7%, rgba(255,244,224,0.428) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(0.9px 0.9px at 63.0% 79.3%, rgba(255,244,224,0.376) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.4px 1.4px at 9.1% 81.0%, rgba(255,244,224,0.31) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.3px 1.3px at 98.2% 96.5%, rgba(255,244,224,0.454) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.2px 1.2px at 15.7% 1.5%, rgba(255,244,224,0.315) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(0.8px 0.8px at 19.0% 24.2%, rgba(255,244,224,0.416) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.2px 1.2px at 44.1% 84.2%, rgba(255,244,224,0.46) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.2px 1.2px at 50.0% 66.2%, rgba(255,244,224,0.37) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.5px 1.5px at 99.8% 99.6%, rgba(255,244,224,0.477) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.0px 1.0px at 31.5% 23.0%, rgba(255,244,224,0.318) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.5px 1.5px at 76.6% 40.0%, rgba(255,244,224,0.397) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(0.8px 0.8px at 95.8% 84.7%, rgba(255,244,224,0.352) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.6px 1.6px at 91.0% 47.0%, rgba(255,244,224,0.399) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.4px 1.4px at 7.3% 62.9%, rgba(255,244,224,0.367) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.6px 1.6px at 8.7% 33.3%, rgba(255,244,224,0.49) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(0.9px 0.9px at 11.8% 24.6%, rgba(255,244,224,0.315) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.2px 1.2px at 79.7% 17.8%, rgba(255,244,224,0.412) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(0.9px 0.9px at 19.1% 73.2%, rgba(255,244,224,0.461) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.0px 1.0px at 11.7% 42.1%, rgba(255,244,224,0.367) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.0px 1.0px at 97.1% 80.3%, rgba(255,244,224,0.521) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.5px 1.5px at 21.1% 39.4%, rgba(255,244,224,0.46) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.0px 1.0px at 10.0% 98.9%, rgba(255,244,224,0.365) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.0px 1.0px at 77.3% 32.9%, rgba(255,244,224,0.318) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.0px 1.0px at 9.0% 58.3%, rgba(255,244,224,0.45) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.6px 1.6px at 37.2% 45.3%, rgba(255,244,224,0.421) 0%, rgba(255,244,224,0) 100%);
+    radial-gradient(6.8px 6.8px at 64.5% 9.0%, rgba(255,244,224,0.218) 0%, rgba(255,244,224,0.109) 42%, rgba(255,244,224,0) 100%),
+    radial-gradient(7.6px 7.6px at 7.6% 50.7%, rgba(255,244,224,0.244) 0%, rgba(255,244,224,0.122) 42%, rgba(255,244,224,0) 100%),
+    radial-gradient(5.6px 5.6px at 8.7% 10.7%, rgba(255,244,224,0.252) 0%, rgba(255,244,224,0.126) 42%, rgba(255,244,224,0) 100%),
+    radial-gradient(7.2px 7.2px at 13.9% 23.4%, rgba(255,244,224,0.299) 0%, rgba(255,244,224,0.149) 42%, rgba(255,244,224,0) 100%),
+    radial-gradient(8.0px 8.0px at 57.4% 40.1%, rgba(255,244,224,0.314) 0%, rgba(255,244,224,0.157) 42%, rgba(255,244,224,0) 100%),
+    radial-gradient(9.4px 9.4px at 84.4% 29.8%, rgba(255,244,224,0.206) 0%, rgba(255,244,224,0.103) 42%, rgba(255,244,224,0) 100%),
+    radial-gradient(6.1px 6.1px at 31.6% 80.3%, rgba(255,244,224,0.214) 0%, rgba(255,244,224,0.107) 42%, rgba(255,244,224,0) 100%);
   animation: wdust-drift-far 92s linear infinite;
 }
 .wdust--mid {
-  background-size: 520px 520px;
-  opacity: 0.62;
+  background-size: 660px 660px;
+  opacity: 0.52;
   background-image:
-    radial-gradient(2.4px 2.4px at 54.8% 34.6%, rgba(255,244,224,0.421) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.9px 1.9px at 51.0% 34.4%, rgba(255,244,224,0.613) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.7px 1.7px at 10.4% 44.5%, rgba(255,244,224,0.438) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(2.1px 2.1px at 99.9% 32.9%, rgba(255,244,224,0.457) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.6px 1.6px at 73.0% 44.7%, rgba(255,244,224,0.461) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(2.1px 2.1px at 40.8% 79.3%, rgba(255,244,224,0.395) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(2.0px 2.0px at 67.4% 29.8%, rgba(255,244,224,0.402) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(2.0px 2.0px at 41.1% 78.6%, rgba(255,244,224,0.551) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(2.2px 2.2px at 75.7% 58.7%, rgba(255,244,224,0.451) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.5px 1.5px at 61.8% 77.7%, rgba(255,244,224,0.603) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.6px 1.6px at 36.7% 13.9%, rgba(255,244,224,0.435) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.9px 1.9px at 6.9% 39.8%, rgba(255,244,224,0.523) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(2.2px 2.2px at 46.7% 93.5%, rgba(255,244,224,0.43) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(2.6px 2.6px at 87.5% 69.9%, rgba(255,244,224,0.546) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.7px 1.7px at 96.6% 20.5%, rgba(255,244,224,0.612) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(2.5px 2.5px at 2.2% 92.4%, rgba(255,244,224,0.378) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(2.6px 2.6px at 15.1% 91.6%, rgba(255,244,224,0.584) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.8px 1.8px at 72.5% 76.0%, rgba(255,244,224,0.342) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(2.5px 2.5px at 62.8% 88.2%, rgba(255,244,224,0.484) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(1.9px 1.9px at 0.8% 17.4%, rgba(255,244,224,0.405) 0%, rgba(255,244,224,0) 100%);
+    radial-gradient(10.1px 10.1px at 63.3% 37.8%, rgba(255,244,224,0.224) 0%, rgba(255,244,224,0.112) 42%, rgba(255,244,224,0) 100%),
+    radial-gradient(12.3px 12.3px at 7.7% 21.8%, rgba(255,244,224,0.167) 0%, rgba(255,244,224,0.084) 42%, rgba(255,244,224,0) 100%),
+    radial-gradient(13.1px 13.1px at 32.2% 58.2%, rgba(255,244,224,0.207) 0%, rgba(255,244,224,0.103) 42%, rgba(255,244,224,0) 100%),
+    radial-gradient(11.7px 11.7px at 78.3% 69.1%, rgba(255,244,224,0.193) 0%, rgba(255,244,224,0.097) 42%, rgba(255,244,224,0) 100%),
+    radial-gradient(10.5px 10.5px at 52.4% 86.0%, rgba(255,244,224,0.223) 0%, rgba(255,244,224,0.112) 42%, rgba(255,244,224,0) 100%),
+    radial-gradient(13.4px 13.4px at 96.1% 13.3%, rgba(255,244,224,0.192) 0%, rgba(255,244,224,0.096) 42%, rgba(255,244,224,0) 100%);
   animation: wdust-drift-mid 61s linear infinite;
 }
 .wdust--near {
-  background-size: 380px 380px;
-  opacity: 0.42;
-  filter: blur(1.4px);            /* out of focus because it is close, not for effect */
+  background-size: 520px 520px;
+  opacity: 0.34;
+  filter: blur(2.2px);            /* genuinely out of focus, because it is close */
   background-image:
-    radial-gradient(3.5px 3.5px at 61.7% 89.0%, rgba(255,244,224,0.377) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(4.1px 4.1px at 93.7% 52.1%, rgba(255,244,224,0.38) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(2.9px 2.9px at 85.8% 3.7%, rgba(255,244,224,0.439) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(4.1px 4.1px at 74.7% 26.1%, rgba(255,244,224,0.257) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(3.1px 3.1px at 36.0% 44.1%, rgba(255,244,224,0.25) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(3.2px 3.2px at 50.8% 64.7%, rgba(255,244,224,0.365) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(3.2px 3.2px at 98.2% 5.5%, rgba(255,244,224,0.24) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(3.5px 3.5px at 67.7% 41.3%, rgba(255,244,224,0.274) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(3.5px 3.5px at 77.7% 75.9%, rgba(255,244,224,0.401) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(4.5px 4.5px at 23.1% 34.4%, rgba(255,244,224,0.27) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(3.9px 3.9px at 14.4% 3.2%, rgba(255,244,224,0.401) 0%, rgba(255,244,224,0) 100%),
-    radial-gradient(3.4px 3.4px at 5.2% 47.8%, rgba(255,244,224,0.292) 0%, rgba(255,244,224,0) 100%);
+    radial-gradient(20.2px 20.2px at 16.6% 48.9%, rgba(255,244,224,0.161) 0%, rgba(255,244,224,0.081) 42%, rgba(255,244,224,0) 100%),
+    radial-gradient(16.4px 16.4px at 75.4% 57.0%, rgba(255,244,224,0.153) 0%, rgba(255,244,224,0.076) 42%, rgba(255,244,224,0) 100%),
+    radial-gradient(24.8px 24.8px at 68.7% 59.1%, rgba(255,244,224,0.125) 0%, rgba(255,244,224,0.062) 42%, rgba(255,244,224,0) 100%),
+    radial-gradient(21.8px 21.8px at 82.6% 92.7%, rgba(255,244,224,0.136) 0%, rgba(255,244,224,0.068) 42%, rgba(255,244,224,0) 100%),
+    radial-gradient(20.7px 20.7px at 7.8% 69.3%, rgba(255,244,224,0.153) 0%, rgba(255,244,224,0.076) 42%, rgba(255,244,224,0) 100%);
   animation: wdust-drift-near 38s linear infinite;
 }
 
@@ -877,11 +888,19 @@ body.wlq[data-scene="dawn"] .world-ground--dawn { opacity: 1; }
    component was collapsing to zero — the camera was panning up but not
    across. vw/vh resolve against the viewport, which is what a camera
    actually moves relative to. */
-body.wlq[data-scene="dawn"] .world-ground { transform: translate3d(-0.4vw, -0.4vh, 0) scale(1.012); }
-body.wlq[data-scene="dawn"] .wdust--far     { transform: translate3d(-1.6vw, -1.4vh, 0) scale(1.03); opacity: 0.34; }
-body.wlq[data-scene="dawn"] .wdust--mid     { transform: translate3d(-4.5vw, -3.8vh, 0) scale(1.08); opacity: 0.40; }
-body.wlq[data-scene="dawn"] .wdust--near    { transform: translate3d(-10vw,  -8.5vh, 0) scale(1.17); opacity: 0.26; }
-body.wlq[data-scene="dawn"] .fog           { transform: translate3d(-6vw,   -5vh,   0) scale(1.11); opacity: 0.34; }
+/* Each scene change moves ONE step. The rate gap between depths IS the head
+   turn — near travels ~6x what far does. */
+body.wlq[data-scene="mouth"] .world-ground { transform: translate3d(-0.2vw, -0.2vh, 0) scale(1.006); }
+body.wlq[data-scene="mouth"] .wdust--far   { transform: translate3d(-0.8vw, -0.7vh, 0) scale(1.015); opacity: 0.40; }
+body.wlq[data-scene="mouth"] .wdust--mid   { transform: translate3d(-2.2vw, -1.9vh, 0) scale(1.04);  opacity: 0.46; }
+body.wlq[data-scene="mouth"] .wdust--near  { transform: translate3d(-5vw,   -4.2vh, 0) scale(1.085); opacity: 0.30; }
+body.wlq[data-scene="mouth"] .fog          { transform: translate3d(-3vw,   -2.5vh, 0) scale(1.055); opacity: 0.42; }
+
+body.wlq[data-scene="shore"] .world-ground { transform: translate3d(-0.4vw, -0.4vh, 0) scale(1.012); }
+body.wlq[data-scene="shore"] .wdust--far   { transform: translate3d(-1.6vw, -1.4vh, 0) scale(1.03); opacity: 0.30; }
+body.wlq[data-scene="shore"] .wdust--mid   { transform: translate3d(-4.5vw, -3.8vh, 0) scale(1.08); opacity: 0.34; }
+body.wlq[data-scene="shore"] .wdust--near  { transform: translate3d(-10vw,  -8.5vh, 0) scale(1.17); opacity: 0.20; }
+body.wlq[data-scene="shore"] .fog          { transform: translate3d(-6vw,   -5vh,   0) scale(1.11); opacity: 0.30; }
 
 .fog { transition: transform var(--cam-dur) var(--cam-ease), opacity var(--cam-dur) var(--cam-ease); }
 
@@ -893,7 +912,7 @@ body.wlq {
   --scene-ink-soft: rgba(244, 238, 230, 0.72);
   transition: color var(--cam-dur) var(--cam-ease) 140ms;
 }
-body.wlq[data-scene="dawn"] {
+body.wlq[data-scene="shore"] {
   --scene-ink:      #262019;
   --scene-ink-soft: rgba(38, 32, 25, 0.68);
 }
@@ -915,4 +934,68 @@ body.wlq .hslide__say em { color: var(--violet); }
 @media (prefers-reduced-motion: reduce) {
   .world-ground, .wdust, .fog { transition: opacity 300ms ease; transform: none !important; }
   .wdust { animation: none; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   THE INTRO GATE
+
+   Most people reach this page from a printed QR code, so the mark
+   forming is the first thing that happens and it happens ALONE: the
+   environment is not drawn, the dust is not animating, and no content
+   has arrived. That is both the art direction and the performance fix —
+   the page used to start the logo, three parallax dust layers, ten
+   infinite animations and the whole content tree in the same frame.
+
+   `.is-intro` is on <body> from parse (set by an inline script so there
+   is no flash of the full page first). waitlist-hero.js removes it when
+   the mark has landed, and everything else arrives after.
+   ═══════════════════════════════════════════════════════════════════ */
+body.wlq { --intro-hold: 3200ms; }
+
+/* nothing behind the mark, and nothing running */
+body.wlq.is-intro .world-ground,
+body.wlq.is-intro .fog,
+body.wlq.is-intro .wdust {
+  opacity: 0 !important;
+  animation-play-state: paused;
+}
+/* no content, and no layout shift when it arrives — it is hidden by
+   opacity, never by display, so the page never reflows */
+body.wlq.is-intro .wlq-banner,
+body.wlq.is-intro .wlq-row:not(.wlq-head),
+body.wlq.is-intro .wlq-when {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* the environment comes up first, then the content sits down into it */
+body.wlq .world-ground,
+body.wlq .fog,
+body.wlq .wdust {
+  transition:
+    opacity   var(--cam-dur) var(--cam-ease) 140ms,
+    transform var(--cam-dur) var(--cam-ease);
+}
+body.wlq .wlq-banner,
+body.wlq .wlq-row:not(.wlq-head),
+body.wlq .wlq-when {
+  transition: opacity 620ms cubic-bezier(0.20, 0, 0.20, 1) 260ms,
+              translate 700ms cubic-bezier(0.16, 1, 0.30, 1) 260ms;
+}
+/* KinType: copy barely moves, it resolves. 4pt in the app, a little more
+   here because the viewport is wider. */
+body.wlq.is-intro .wlq-banner   { translate: 0 10px; }
+body.wlq.is-intro .wlq-row:not(.wlq-head) { translate: 0 14px; }
+body.wlq.is-intro .wlq-when     { translate: 0 8px; }
+
+/* A visitor arriving from the homepage has already watched the mark form.
+   Replaying it makes the site feel like it restarted rather than moved. */
+body.wlq.intro-skip .wordmark--hero * { animation: none !important; }
+body.wlq.intro-skip .wordmark--hero    { opacity: 1 !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  body.wlq.is-intro .wlq-banner,
+  body.wlq.is-intro .wlq-row:not(.wlq-head),
+  body.wlq.is-intro .wlq-when { translate: none; }
 }

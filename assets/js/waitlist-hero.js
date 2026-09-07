@@ -17,10 +17,61 @@
 
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* The page opens in the dusk place; the camera only moves when the
-     content does. The old timed lighten is gone — it brightened on a
-     stopwatch rather than because anything happened. */
+  /* The page opens in the cave; the camera only moves when the content
+     does. The old timed lighten is gone — it brightened on a stopwatch
+     rather than because anything happened. */
   document.body.dataset.scene = 'dusk';
+
+  /* ==========================================================
+     0. the intro gate
+     ----------------------------------------------------------
+     Most people reach this page off a printed QR code, so the mark
+     forming is the first thing that happens and it happens ALONE —
+     no environment, no dust, no content. Then the world comes up,
+     then the content sits down into it.
+
+     This is also the performance fix. The page used to start the
+     logo, three parallax dust layers, ten infinite animations and
+     the whole content tree in the same frame, which is what made
+     it lag on open.
+     ========================================================== */
+
+  const INTRO_HOLD = introHold();
+  let released = false;
+
+  function introHold() {
+    // single source of truth: --intro-hold in waitlist-hero.css
+    const raw = getComputedStyle(document.body).getPropertyValue('--intro-hold').trim();
+    const ms = raw.endsWith('ms') ? parseFloat(raw)
+             : raw.endsWith('s')  ? parseFloat(raw) * 1000
+             : parseFloat(raw);
+    return Number.isFinite(ms) ? ms : 3200;
+  }
+
+  function releaseIntro() {
+    if (released) return;
+    released = true;
+    document.body.classList.remove('is-intro');
+    try { sessionStorage.setItem('min-intro-seen', '1'); } catch (e) {}
+    window.dispatchEvent(new Event('min-intro-done'));
+  }
+
+  // Skipped entirely for a returning visitor and under Reduce Motion:
+  // in both cases there is no forming animation to wait for.
+  if (reduced || document.body.classList.contains('intro-skip')) {
+    releaseIntro();
+  } else {
+    setTimeout(releaseIntro, INTRO_HOLD);
+    // Nobody should be held behind an animation they cannot see. A tab
+    // opened in the background finishes the intro the moment it is looked at.
+    document.addEventListener('visibilitychange', function once() {
+      if (document.hidden) return;
+      document.removeEventListener('visibilitychange', once);
+    });
+    // Any deliberate input means they are done looking at the logo.
+    ['pointerdown', 'keydown', 'wheel'].forEach((evt) =>
+      window.addEventListener(evt, releaseIntro, { once: true, passive: true }));
+  }
 
   /* ==========================================================
      1. the banner
@@ -153,7 +204,15 @@
     });
 
     paint();
-    play();
+    // The banner does not start counting until the page has actually
+    // arrived, otherwise the first slide gets less than its full read.
+    if (document.body.classList.contains('is-intro')) {
+      const start = () => setTimeout(play, 400);
+      window.addEventListener('min-intro-done', start, { once: true });
+      setTimeout(() => { if (!document.body.classList.contains('is-intro')) start(); }, INTRO_HOLD + 50);
+    } else {
+      play();
+    }
   }
 
   /* ==========================================================
