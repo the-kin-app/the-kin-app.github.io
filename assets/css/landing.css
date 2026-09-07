@@ -260,7 +260,10 @@ p { margin: 0; }
    revealing from ~2320ms; holding the cascade to 2250ms means the headline
    arrives INTO that reveal rather than a second and a half before it.
    Everything below it follows on the existing 180ms cascade. */
-.hero { --rise-hold: 2250ms; }
+/* Waits for the WORDMARK (formed at ~3050ms), not for Min. Min deliberately
+   runs on past this, finishing at ~4850ms, so the copy is not held for six
+   seconds waiting on a 35px character. */
+.hero { --rise-hold: 2500ms; }
 
 /* ---- button emerge -------------------------------------------
    Ported from KinButton.swift's playEmerge(): a control floats up and
@@ -765,16 +768,37 @@ p { margin: 0; }
    · flash 2200–2720 (Min flashes on the same frame) · fill 2320–3020
    · glow 2700–3400. Previously the flash fired at 750ms — 50ms after the
    border STARTED fading in — so it read as the flash coming first. */
+/* A gradient BAND travelling across the letterforms, not an opacity pulse on
+   the whole mark. The pulse read as a broken halogen lamp because every letter
+   lit and died at the same instant; a sweep has a direction and a soft edge,
+   so it reads as light moving over a surface.
+   Authored in Figma as "WM · sweep" (QR landing page, 679:404) — a masked
+   gradient rect on a TRANSLATION_X track — and expressed here as a CSS mask
+   whose position animates. Same thing, same 760ms. */
 .wordmark-flash {
-  opacity: 0;
-  animation: wm-flash 520ms ease-out 2200ms forwards;
+  opacity: 1;
+  -webkit-mask-image: linear-gradient(96deg,
+    transparent 0%, transparent 30%,
+    rgba(0,0,0,0.5) 41%, #000 50%, rgba(0,0,0,0.5) 59%,
+    transparent 70%, transparent 100%);
+          mask-image: linear-gradient(96deg,
+    transparent 0%, transparent 30%,
+    rgba(0,0,0,0.5) 41%, #000 50%, rgba(0,0,0,0.5) 59%,
+    transparent 70%, transparent 100%);
+  -webkit-mask-size: 260% 100%;
+          mask-size: 260% 100%;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  animation: wm-sweep 760ms cubic-bezier(0.42, 0, 0.28, 1) 2200ms both;
 }
 @keyframes wm-fade-in { to { opacity: 1; } }
 @keyframes wm-glow-in { to { opacity: 0.38; } }
-@keyframes wm-flash {
-  0%   { opacity: 0; }
-  30%  { opacity: 0.95; }
-  100% { opacity: 0; }
+/* 0% -> 100% walks the band left to right, with reading direction. The band sits at the
+   mask's centre, so at 100% it is parked past the right edge and at 0% past
+   the left — invisible at both ends, which is why no opacity track is needed. */
+@keyframes wm-sweep {
+  from { -webkit-mask-position:   0% 0; mask-position:   0% 0; }
+  to   { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
 }
 
 /* Min sits in the resin artwork's i-dot gap: centre 57.64% / 22.71% of the
@@ -805,11 +829,16 @@ p { margin: 0; }
    holds his own entrance back until the wordmark has settled, so he
    doesn't start forming while the letters are still arriving. */
 .wordmark__min--resin .min--hero {
-  animation: float-min 9s ease-in-out infinite 3600ms;
+  animation: float-min 9s ease-in-out infinite 5000ms;
   /* 1030 + 1170 = 2200ms — still exactly when .wordmark-flash fires, so the
      two flashes stay ONE wash. Pulled back from 1650 so the eyes open well
      before the border pass, instead of landing on top of it. */
-  --min-entry: 1030ms;
+  /* Deliberately NOT synced to the wordmark any more. The wordmark finishes
+     forming at ~3050ms; Min then runs his own sequence after it. Extracted from
+     Figma "WEB · logo emerge" (QR landing page, node 679:404) — 5.2s timeline:
+     eyes 2.60-3.00 · border 3.10-3.85 holding to 4.20 · flash 4.20-4.72 ·
+     material 4.35-4.85. */
+  --min-entry: 2600ms;
 }
 @media (prefers-reduced-motion: reduce) {
   .wordmark--hero-resin { animation: none; }
@@ -819,7 +848,7 @@ p { margin: 0; }
     animation: none;
     opacity: 1;
   }
-  .wordmark-flash { animation: none; opacity: 0; }
+  .wordmark-flash { animation: none; opacity: 0; }  /* reduced motion: no sweep at all */
   .wordmark-glow-group { opacity: 0.38; }
   .wordmark__min--resin .min--hero { animation: none; }
 }
@@ -978,14 +1007,14 @@ p { margin: 0; }
      E+620   border pass begins             → 70ms clear gap after the eyes
      E+1170  flash  (= 2200ms, same frame as the wordmark's flash)
      E+1320  material reveals */
-.min__face       { opacity: 0; animation: min-in 280ms cubic-bezier(0.33, 0, 0.15, 1) var(--min-entry, 0ms) forwards; }
+.min__face       { opacity: 0; animation: min-in 400ms cubic-bezier(0.33, 0, 0.15, 1) var(--min-entry, 0ms) forwards; }
 /* the outline is a PASS, not a resting state — it fades in, holds
    briefly, then fades back out as the material takes over. Previously
    it only faded in ("forwards" held it at 1 forever), which left a
    permanent white rim around Min — not the intent. */
-.min__outline    { opacity: 0; animation: min-outline-pulse 860ms ease calc(var(--min-entry, 0ms) + 620ms) forwards; }
-.min__flash      { opacity: 0; animation: min-flash 520ms ease calc(var(--min-entry, 0ms) + 1170ms) forwards; }
-.min__material   { opacity: 0; animation: min-in-material 480ms ease-out calc(var(--min-entry, 0ms) + 1320ms) forwards; }
+.min__outline    { opacity: 0; animation: min-outline-pulse 1450ms cubic-bezier(0.33, 0, 0.15, 1) calc(var(--min-entry, 0ms) + 500ms) forwards; }
+.min__flash      { opacity: 0; animation: min-flash 520ms ease calc(var(--min-entry, 0ms) + 1600ms) forwards; }
+.min__material   { opacity: 0; animation: min-in-material 500ms ease-out calc(var(--min-entry, 0ms) + 1750ms) forwards; }
 
 /* EYE OPEN — the lids start met in the middle and part. Runs on `transform`
    while the idle blink runs on `translate`; they are independent CSS
@@ -997,10 +1026,10 @@ p { margin: 0; }
 @keyframes min-in { to { opacity: 1; } }
 @keyframes min-in-material { to { opacity: 0.72; } }
 @keyframes min-outline-pulse {
-  0%   { opacity: 0; }
-  20%  { opacity: 0.9; }   /* fast fade in, ~150ms of this 750ms track */
-  73%  { opacity: 0.9; }   /* holds alone for ~400ms — nothing else showing */
-  100% { opacity: 0; }     /* fades out as the flash arrives */
+  0%     { opacity: 0; }
+  51.7%  { opacity: 0.9; }   /* 750ms to arrive — it was popping in in ~150ms */
+  75.9%  { opacity: 0.9; }   /* holds ~350ms */
+  100%   { opacity: 0; }     /* out as the flash takes over */
 }
 @keyframes min-flash {
   0%   { opacity: 0; }
@@ -1072,9 +1101,13 @@ p { margin: 0; }
   100%   { translate: 0 0; scale: 1 1; }
 }
 
-.min__foot { animation-delay: var(--min-phase); animation-iteration-count: infinite; }
-.min__foot[data-side="-1"] { animation-name: min-foot-l; animation-duration: 4s; animation-timing-function: linear; }
-.min__foot[data-side="1"]  { animation-name: min-foot-r; animation-duration: 4s; animation-timing-function: linear; }
+.min__foot {
+  animation-delay: var(--min-phase), calc(var(--min-entry, 0ms) + 1960ms);
+  animation-iteration-count: infinite, 1;
+  animation-fill-mode: none, both;
+}
+.min__foot[data-side="-1"] { animation-name: min-foot-l, min-sprout; animation-duration: 4s, 760ms; animation-timing-function: linear, cubic-bezier(0.34, 1.28, 0.52, 1); }
+.min__foot[data-side="1"]  { animation-name: min-foot-r, min-sprout; animation-duration: 4s, 760ms; animation-timing-function: linear, cubic-bezier(0.34, 1.28, 0.52, 1); }
 @keyframes min-foot-l {
   0%     { translate: 0 0; }
   6.5%   { translate: 0 3px; }
@@ -1094,9 +1127,14 @@ p { margin: 0; }
    where each flap meets the torso (viewBox user-units, same crop as the
    path data), plus a stretch at the peak of the sway so the tip reads as
    trailing the body rather than rigidly pinned. */
-.min__limb-pivot { animation-delay: var(--min-phase); animation-iteration-count: infinite; animation-timing-function: linear; }
-.min__limb-pivot[data-side="-1"] { transform-origin: 60px 85px; animation-name: min-limb-l; animation-duration: 4s; }
-.min__limb-pivot[data-side="1"]  { transform-origin: 272px 85px; animation-name: min-limb-r; animation-duration: 4s; }
+.min__limb-pivot {
+  animation-delay: var(--min-phase), calc(var(--min-entry, 0ms) + 1820ms);
+  animation-iteration-count: infinite, 1;
+  animation-fill-mode: none, both;
+  animation-timing-function: linear, cubic-bezier(0.34, 1.28, 0.52, 1);
+}
+.min__limb-pivot[data-side="-1"] { transform-origin: 60px 85px;  animation-name: min-limb-l, min-sprout; animation-duration: 4s, 820ms; }
+.min__limb-pivot[data-side="1"]  { transform-origin: 272px 85px; animation-name: min-limb-r, min-sprout; animation-duration: 4s, 820ms; }
 @keyframes min-limb-l {
   0%     { rotate: 0deg; scale: 1 1; }
   7.5%   { rotate: -1.8deg; }
@@ -1128,10 +1166,10 @@ p { margin: 0; }
   100%   { opacity: 1; translate: 0 0; }
 }
 
-/* the eyes: halo + screen-blended bloom breathe together, and both carry
+/* the eyes: socket + screen-blended bloom breathe together, and both carry
    the blink dip at ~65-72% — a near-zero flicker, not a fade, so it reads
    as a shutter rather than a pulse. */
-.min__halo, .min__bloom {
+.min__socket, .min__bloom {
   transform-box: fill-box;
   transform-origin: center;
   animation: min-eye-glow 4s linear infinite;
@@ -1191,7 +1229,7 @@ p { margin: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   .min__body, .min__foot, .min__limb-pivot, .min__spec,
-  .min__halo, .min__bloom, .min__core, .min__lid {
+  .min__socket, .min__bloom, .min__core, .min__lid {
     animation: none;
   }
 }
@@ -1930,3 +1968,45 @@ p { margin: 0; }
   }
   body::after, .fog { display: none; }
 }
+
+/* ---- ORB → MIN -------------------------------------------------------
+   Min arrives as an ORB, and only once the material has been revealed does
+   the shape settle and the limbs and feet grow out of the torso.
+
+   This is possible where the waving arm was not, and the difference is worth
+   recording: the torso is ONE closed path, and the orb below is authored with
+   the identical command structure (M + 5 C + Z) with its anchors at the same
+   five angles from centre, so the browser can interpolate it point-for-point.
+   The limbs and feet do not morph at all — they scale up from ~0 at their own
+   attachment points, INSIDE the shared silhouette mask, so they emerge out of
+   the body as one continuous surface instead of arriving as separate parts.
+
+   `d` interpolation is Chromium/WebKit; Firefox ignores it and simply starts
+   at the final shape, which is why the whole thing is behind @supports.
+   The morph runs on `transform` / `d`; the idle rig runs on the individual
+   `translate` / `scale` / `rotate` properties, so the two never collide. */
+
+@keyframes min-sprout { from { transform: scale(0.02); } to { transform: scale(1); } }
+
+@supports (d: path("M0 0Z")) {
+  @keyframes min-morph-body    { from { d: path("M73.59 190.14C62.31 126.44 111.31 68 176 68C240.69 68 289.69 126.44 278.41 190.14C273.92 215.47 260.21 238.24 239.91 254.04C202.33 283.32 149.67 283.32 112.09 254.04C91.79 238.24 78.08 215.47 73.59 190.14Z"); } to { d: path("M36 196.8C36 91.8 86 25.8 176 25.8C266 25.8 316 91.8 316 196.8C316 241.8 302 279.8 274 297.8C250 312.8 102 312.8 78 297.8C50 279.8 36 241.8 36 196.8Z"); } }
+  @keyframes min-morph-outline { from { d: path("M73.59 190.14C62.31 126.44 111.31 68 176 68C240.69 68 289.69 126.44 278.41 190.14C273.92 215.47 260.21 238.24 239.91 254.04C202.33 283.32 149.67 283.32 112.09 254.04C91.79 238.24 78.08 215.47 73.59 190.14Z"); } to { d: path("M 159.00 0.00 C 222.05 0.00 265.46 32.39 285.81 87.88 C 295.59 97.95 304.73 112.63 310.52 130.00 C 317.52 152.00 320.52 170.00 315.52 178.00 C 311.67 181.84 305.42 181.46 298.90 177.53 C 297.93 209.12 289.83 236.82 274.61 255.93 C 273.81 270.12 265.40 283.15 247.38 288.00 C 230.53 292.49 212.41 289.73 197.65 282.19 C 173.07 283.60 144.93 283.60 120.36 282.19 C 105.59 289.73 87.48 292.49 70.63 288.00 C 52.60 283.15 44.19 270.12 43.39 255.93 C 28.17 236.82 20.07 209.12 19.10 177.53 C 12.58 181.46 6.33 181.84 2.48 178.00 C -2.52 170.00 0.48 152.00 7.48 130.00 C 13.27 112.63 22.41 97.95 32.19 87.88 C 52.54 32.39 95.96 0.00 159.00 0.00 Z"); } }
+
+  .min__torso {
+    d: path("M73.59 190.14C62.31 126.44 111.31 68 176 68C240.69 68 289.69 126.44 278.41 190.14C273.92 215.47 260.21 238.24 239.91 254.04C202.33 283.32 149.67 283.32 112.09 254.04C91.79 238.24 78.08 215.47 73.59 190.14Z");
+    animation: min-morph-body 1100ms cubic-bezier(0.33, 0, 0.15, 1)
+               calc(var(--min-entry, 0ms) + 1750ms) forwards;
+  }
+  .min__outline {
+    d: path("M73.59 190.14C62.31 126.44 111.31 68 176 68C240.69 68 289.69 126.44 278.41 190.14C273.92 215.47 260.21 238.24 239.91 254.04C202.33 283.32 149.67 283.32 112.09 254.04C91.79 238.24 78.08 215.47 73.59 190.14Z");
+    animation-name: min-outline-pulse, min-morph-outline;
+    animation-duration: 1450ms, 1100ms;
+    animation-timing-function: cubic-bezier(0.33, 0, 0.15, 1), cubic-bezier(0.33, 0, 0.15, 1);
+    animation-fill-mode: forwards, forwards;
+    animation-delay: calc(var(--min-entry, 0ms) + 500ms), calc(var(--min-entry, 0ms) + 1750ms);
+  }
+}
+
+/* the limbs and feet sprout, staggered — limbs lead, feet follow 140ms later */
+.min__foot[data-side="-1"] { transform-origin: 115px 258px; }
+.min__foot[data-side="1"]  { transform-origin: 242px 258px; }

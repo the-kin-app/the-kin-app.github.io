@@ -30,13 +30,10 @@
    scroll-driven ramp compressed into a fixed beat — this page never
    scrolls, so there's no scroll position to drive it off. `.wlq-lit`
    is added by waitlist-hero.js a couple of seconds after load. */
-body.wlq {
-  background-color: #2A2320;
-  transition: background-color 1.8s ease;
-}
-body.wlq.wlq-lit {
-  background-color: #6E5843;
-}
+/* The page ground is now drawn by .world-ground (see THE SCENE, below):
+   a flat colour that brightened on a timer could not express "the camera
+   moved somewhere else". Kept as a paint-in fallback only. */
+body.wlq { background-color: #241E1C; }
 
 body.wlq {
   height: 100svh;
@@ -724,4 +721,198 @@ body.wlq {
     animation: none; opacity: 1; transform: none; filter: none;
   }
   .hslide.is-live * { animation: none !important; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   THE SCENE — one continuous 3D space, two places in it.
+
+   DUSK and DAWN are the two halves of the brand moodboard (603:1201):
+   dusk is sunset, luminescence, translucent resin; dawn is fog, off-white,
+   still liquid. The content change is not a colour swap — it is a CAMERA
+   MOVE from one to the other.
+
+   What sells it as a camera and not a crossfade is PARALLAX. The three dust
+   layers travel by different amounts (far 2%, mid 5.5%, near 12%) because
+   they are at different distances. The scale factors also differ
+   non-uniformly, which is what a small focal-length change actually looks
+   like — a uniform zoom would read as a zoom, not a lens.
+
+   The ground lags the dust by 140ms. Consequence never moves in lockstep
+   with cause; the dust is what the camera passes through, the ground is
+   what it arrives at.
+   ═══════════════════════════════════════════════════════════════════ */
+
+body.wlq {
+  --cam-dur:  1500ms;
+  --cam-ease: cubic-bezier(0.42, 0, 0.24, 1);
+}
+
+/* the two grounds, stacked and crossfading */
+.world-ground {
+  position: absolute;
+  inset: -12%;
+  opacity: 0;
+  will-change: transform, opacity;
+  transition:
+    opacity   var(--cam-dur) var(--cam-ease) 140ms,
+    transform var(--cam-dur) var(--cam-ease);
+}
+.world-ground--dusk {
+  opacity: 1;
+  background:
+    radial-gradient(58% 42% at 50% 92%, rgba(255, 196, 118, 0.30), transparent 72%),
+    radial-gradient(90% 60% at 22% 16%, rgba(120, 96, 140, 0.20), transparent 76%),
+    linear-gradient(178deg, #241E1C 0%, #2C2422 42%, #3B2E28 76%, #4A382C 100%);
+}
+.world-ground--dawn {
+  background:
+    radial-gradient(64% 46% at 52% 26%, rgba(255, 250, 240, 0.92), transparent 74%),
+    radial-gradient(80% 54% at 30% 92%, rgba(226, 214, 200, 0.55), transparent 78%),
+    linear-gradient(178deg, #EDE7DF 0%, #E6DED6 40%, #DCD3CD 74%, #CFC6C4 100%);
+}
+body.wlq[data-scene="dawn"] .world-ground--dusk { opacity: 0; }
+body.wlq[data-scene="dawn"] .world-ground--dawn { opacity: 1; }
+
+/* ---- the dust we travel through ---------------------------------
+   Three depths. `transform` carries the camera; `translate` carries each
+   layer's own idle drift — separate CSS properties, so the drift never
+   stops while the camera moves and neither overwrites the other. */
+.wdust {
+  position: absolute;
+  inset: -25%;
+  background-repeat: repeat;
+  pointer-events: none;
+  will-change: transform, translate, opacity;
+  transition:
+    transform var(--cam-dur) var(--cam-ease),
+    opacity   var(--cam-dur) var(--cam-ease);
+}
+
+.wdust--far {
+  background-size: 760px 760px;
+  opacity: 0.50;
+  background-image:
+    radial-gradient(1.5px 1.5px at 45.2% 56.0%, rgba(255,244,224,0.416) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(0.9px 0.9px at 50.8% 58.7%, rgba(255,244,224,0.428) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(0.9px 0.9px at 63.0% 79.3%, rgba(255,244,224,0.376) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.4px 1.4px at 9.1% 81.0%, rgba(255,244,224,0.31) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.3px 1.3px at 98.2% 96.5%, rgba(255,244,224,0.454) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.2px 1.2px at 15.7% 1.5%, rgba(255,244,224,0.315) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(0.8px 0.8px at 19.0% 24.2%, rgba(255,244,224,0.416) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.2px 1.2px at 44.1% 84.2%, rgba(255,244,224,0.46) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.2px 1.2px at 50.0% 66.2%, rgba(255,244,224,0.37) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.5px 1.5px at 99.8% 99.6%, rgba(255,244,224,0.477) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.0px 1.0px at 31.5% 23.0%, rgba(255,244,224,0.318) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.5px 1.5px at 76.6% 40.0%, rgba(255,244,224,0.397) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(0.8px 0.8px at 95.8% 84.7%, rgba(255,244,224,0.352) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.6px 1.6px at 91.0% 47.0%, rgba(255,244,224,0.399) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.4px 1.4px at 7.3% 62.9%, rgba(255,244,224,0.367) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.6px 1.6px at 8.7% 33.3%, rgba(255,244,224,0.49) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(0.9px 0.9px at 11.8% 24.6%, rgba(255,244,224,0.315) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.2px 1.2px at 79.7% 17.8%, rgba(255,244,224,0.412) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(0.9px 0.9px at 19.1% 73.2%, rgba(255,244,224,0.461) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.0px 1.0px at 11.7% 42.1%, rgba(255,244,224,0.367) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.0px 1.0px at 97.1% 80.3%, rgba(255,244,224,0.521) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.5px 1.5px at 21.1% 39.4%, rgba(255,244,224,0.46) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.0px 1.0px at 10.0% 98.9%, rgba(255,244,224,0.365) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.0px 1.0px at 77.3% 32.9%, rgba(255,244,224,0.318) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.0px 1.0px at 9.0% 58.3%, rgba(255,244,224,0.45) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.6px 1.6px at 37.2% 45.3%, rgba(255,244,224,0.421) 0%, rgba(255,244,224,0) 100%);
+  animation: wdust-drift-far 92s linear infinite;
+}
+.wdust--mid {
+  background-size: 520px 520px;
+  opacity: 0.62;
+  background-image:
+    radial-gradient(2.4px 2.4px at 54.8% 34.6%, rgba(255,244,224,0.421) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.9px 1.9px at 51.0% 34.4%, rgba(255,244,224,0.613) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.7px 1.7px at 10.4% 44.5%, rgba(255,244,224,0.438) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(2.1px 2.1px at 99.9% 32.9%, rgba(255,244,224,0.457) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.6px 1.6px at 73.0% 44.7%, rgba(255,244,224,0.461) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(2.1px 2.1px at 40.8% 79.3%, rgba(255,244,224,0.395) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(2.0px 2.0px at 67.4% 29.8%, rgba(255,244,224,0.402) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(2.0px 2.0px at 41.1% 78.6%, rgba(255,244,224,0.551) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(2.2px 2.2px at 75.7% 58.7%, rgba(255,244,224,0.451) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.5px 1.5px at 61.8% 77.7%, rgba(255,244,224,0.603) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.6px 1.6px at 36.7% 13.9%, rgba(255,244,224,0.435) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.9px 1.9px at 6.9% 39.8%, rgba(255,244,224,0.523) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(2.2px 2.2px at 46.7% 93.5%, rgba(255,244,224,0.43) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(2.6px 2.6px at 87.5% 69.9%, rgba(255,244,224,0.546) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.7px 1.7px at 96.6% 20.5%, rgba(255,244,224,0.612) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(2.5px 2.5px at 2.2% 92.4%, rgba(255,244,224,0.378) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(2.6px 2.6px at 15.1% 91.6%, rgba(255,244,224,0.584) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.8px 1.8px at 72.5% 76.0%, rgba(255,244,224,0.342) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(2.5px 2.5px at 62.8% 88.2%, rgba(255,244,224,0.484) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(1.9px 1.9px at 0.8% 17.4%, rgba(255,244,224,0.405) 0%, rgba(255,244,224,0) 100%);
+  animation: wdust-drift-mid 61s linear infinite;
+}
+.wdust--near {
+  background-size: 380px 380px;
+  opacity: 0.42;
+  filter: blur(1.4px);            /* out of focus because it is close, not for effect */
+  background-image:
+    radial-gradient(3.5px 3.5px at 61.7% 89.0%, rgba(255,244,224,0.377) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(4.1px 4.1px at 93.7% 52.1%, rgba(255,244,224,0.38) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(2.9px 2.9px at 85.8% 3.7%, rgba(255,244,224,0.439) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(4.1px 4.1px at 74.7% 26.1%, rgba(255,244,224,0.257) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(3.1px 3.1px at 36.0% 44.1%, rgba(255,244,224,0.25) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(3.2px 3.2px at 50.8% 64.7%, rgba(255,244,224,0.365) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(3.2px 3.2px at 98.2% 5.5%, rgba(255,244,224,0.24) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(3.5px 3.5px at 67.7% 41.3%, rgba(255,244,224,0.274) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(3.5px 3.5px at 77.7% 75.9%, rgba(255,244,224,0.401) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(4.5px 4.5px at 23.1% 34.4%, rgba(255,244,224,0.27) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(3.9px 3.9px at 14.4% 3.2%, rgba(255,244,224,0.401) 0%, rgba(255,244,224,0) 100%),
+    radial-gradient(3.4px 3.4px at 5.2% 47.8%, rgba(255,244,224,0.292) 0%, rgba(255,244,224,0) 100%);
+  animation: wdust-drift-near 38s linear infinite;
+}
+
+@keyframes wdust-drift-far  { from { translate: 0 0; } to { translate: -760px 190px; } }
+@keyframes wdust-drift-mid  { from { translate: 0 0; } to { translate:  520px 260px; } }
+@keyframes wdust-drift-near { from { translate: 0 0; } to { translate: -380px 300px; } }
+
+/* ---- the move ---------------------------------------------------- */
+/* Viewport units, not percentages: a percentage translate resolves against
+   the element's own box, and these layers are inset -25% so the horizontal
+   component was collapsing to zero — the camera was panning up but not
+   across. vw/vh resolve against the viewport, which is what a camera
+   actually moves relative to. */
+body.wlq[data-scene="dawn"] .world-ground { transform: translate3d(-0.4vw, -0.4vh, 0) scale(1.012); }
+body.wlq[data-scene="dawn"] .wdust--far     { transform: translate3d(-1.6vw, -1.4vh, 0) scale(1.03); opacity: 0.34; }
+body.wlq[data-scene="dawn"] .wdust--mid     { transform: translate3d(-4.5vw, -3.8vh, 0) scale(1.08); opacity: 0.40; }
+body.wlq[data-scene="dawn"] .wdust--near    { transform: translate3d(-10vw,  -8.5vh, 0) scale(1.17); opacity: 0.26; }
+body.wlq[data-scene="dawn"] .fog           { transform: translate3d(-6vw,   -5vh,   0) scale(1.11); opacity: 0.34; }
+
+.fog { transition: transform var(--cam-dur) var(--cam-ease), opacity var(--cam-dur) var(--cam-ease); }
+
+/* ---- what the copy does about it ---------------------------------
+   Arriving somewhere bright means the ink has to invert. Scoped to the
+   waitlist body so nothing else in the token layer is disturbed. */
+body.wlq {
+  --scene-ink:      #F4EEE6;
+  --scene-ink-soft: rgba(244, 238, 230, 0.72);
+  transition: color var(--cam-dur) var(--cam-ease) 140ms;
+}
+body.wlq[data-scene="dawn"] {
+  --scene-ink:      #262019;
+  --scene-ink-soft: rgba(38, 32, 25, 0.68);
+}
+/* The slide copy sits directly on the ground, so it is the one thing that
+   MUST invert when the camera arrives somewhere bright. Targeted at the
+   heading and paragraph rather than redefining --ink, because the card and
+   the button sit on light resin in BOTH places and their ink never changes. */
+body.wlq .hslide__say h2,
+body.wlq .wlq-when {
+  color: var(--scene-ink);
+  transition: color var(--cam-dur) var(--cam-ease) 140ms;
+}
+body.wlq .hslide__say p {
+  color: var(--scene-ink-soft);
+  transition: color var(--cam-dur) var(--cam-ease) 140ms;
+}
+body.wlq .hslide__say em { color: var(--violet); }
+
+@media (prefers-reduced-motion: reduce) {
+  .world-ground, .wdust, .fog { transition: opacity 300ms ease; transform: none !important; }
+  .wdust { animation: none; }
 }

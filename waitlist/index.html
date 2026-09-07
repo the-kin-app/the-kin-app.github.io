@@ -30,10 +30,10 @@
      returning visitor gets last deploy's stylesheet against this deploy's
      markup — which renders as a subtly broken page rather than an obviously
      broken one. Bump the date on any release that touches these files. -->
-<link rel="stylesheet" href="/assets/css/tokens.css?v=20260904d">
-<link rel="stylesheet" href="/assets/css/landing.css?v=20260904d">
-<link rel="stylesheet" href="/assets/css/waitlist.css?v=20260904d">
-<link rel="stylesheet" href="/assets/css/waitlist-hero.css?v=20260904d">
+<link rel="stylesheet" href="/assets/css/tokens.css?v=20260907a">
+<link rel="stylesheet" href="/assets/css/landing.css?v=20260907a">
+<link rel="stylesheet" href="/assets/css/waitlist.css?v=20260907a">
+<link rel="stylesheet" href="/assets/css/waitlist-hero.css?v=20260907a">
 </head>
 
 <!-- ══════════════════════════════════════════════════════════
@@ -59,9 +59,17 @@
 
 <!-- the world: light pooling to the floor, slow banks of fog above it -->
 <div class="env" aria-hidden="true">
+  <!-- two places in ONE space. The content change is a camera move between
+       them, not a colour swap — see THE SCENE in waitlist-hero.css. -->
+  <span class="world-ground world-ground--dusk"></span>
+  <span class="world-ground world-ground--dawn"></span>
   <span class="fog fog--1"></span>
   <span class="fog fog--2"></span>
   <span class="fog fog--3"></span>
+  <!-- the dust the camera travels through, at three depths -->
+  <span class="wdust wdust--far"></span>
+  <span class="wdust wdust--mid"></span>
+  <span class="wdust wdust--near"></span>
 </div>
 
 <!-- ── the mark, and the when ──────────────────────────────
@@ -207,7 +215,7 @@
            Name the habit first — swiping, scrolling, texting — then
            turn it. The four arcs are what is being missed: each one
            starts, gets most of the way to somebody, and stops. -->
-      <section class="hslide hslide--problem is-live" aria-label="1 of 3: the near-miss">
+      <section class="hslide hslide--problem is-live" data-scene="dusk" aria-label="1 of 3: the near-miss">
         <div class="hslide__fig">
           <div class="crowd" role="img"
                aria-label="A room full of people, each one lit from below by their own screen. A few connections start between them and stop before they land.">
@@ -247,7 +255,7 @@
            heading calls him a little friend, the figure shows him, and
            the line under it says which one he is. Every page after
            this can just say "Min". -->
-      <section class="hslide" aria-label="2 of 3: what Min is">
+      <section class="hslide" data-scene="dawn" aria-label="2 of 3: what Min is">
         <div class="hslide__fig">
           <div class="ring" style="--in: 1" role="img"
                aria-label="Eight people standing in a circle, connected to Min in the middle and to each other.">
@@ -292,7 +300,7 @@
            person can do, and there is no app that has ever asked you
            to do it. Both halves have to be in the line, or it reads
            as either a boast or a shrug. -->
-      <section class="hslide" aria-label="3 of 3: how it works">
+      <section class="hslide" data-scene="dawn" aria-label="3 of 3: how it works">
         <div class="hslide__fig">
           <div class="mbeats">
 
@@ -438,7 +446,7 @@
 
 <script src="/assets/js/waitlist-hero.js?v=7"></script>
 <script type="module">
-  import { minBodies } from '/assets/js/min.js?v=7';
+  import { minBodies } from '/assets/js/min.js?v=8';
   import { buttons } from '/assets/js/press.js?v=7';
   minBodies();   // Min in the i-dot, and Min in the middle of the ring
   buttons();     // Join submerges and ripples like every other Min button

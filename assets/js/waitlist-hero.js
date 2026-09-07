@@ -17,8 +17,10 @@
 
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // lands dim, lightens once — see the .wlq-lit rule in waitlist-hero.css
-  setTimeout(() => document.body.classList.add('wlq-lit'), reduced ? 0 : 2200);
+  /* The page opens in the dusk place; the camera only moves when the
+     content does. The old timed lighten is gone — it brightened on a
+     stopwatch rather than because anything happened. */
+  document.body.dataset.scene = 'dusk';
 
   /* ==========================================================
      1. the banner
@@ -50,6 +52,11 @@
       dots.forEach((d, n) => {
         d.setAttribute('aria-selected', n === i ? 'true' : 'false');
       });
+      /* THE CAMERA. Each slide declares the place it happens in; the body
+         carries it so the ground, the dust and the ink can all respond to
+         one attribute. Falls back to dusk if a slide forgets to say. */
+      const shown = slides[i];
+      document.body.dataset.scene = (shown && shown.dataset.scene) || 'dusk';
     }
 
     function go(n) {
