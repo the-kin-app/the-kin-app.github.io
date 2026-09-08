@@ -23,8 +23,12 @@
 
 .pcascade {
   position: relative;
-  width: 100%;
-  max-width: 1440px;
+  /* HEIGHT-first, not width-first. The cluster is 1440x1900 — taller than
+     it is wide — so sizing it off the viewport width makes it enormous on a
+     desktop and pushes the bottom pebble off-screen. Fit it to the stage
+     height and let width follow. */
+  width: min(92vw, 780px, calc(88svh * 1440 / 1900));
+  max-width: 100%;
   margin: 0 auto;
   aspect-ratio: 1440 / 1900;
   /* one em = 16px at the design width, so type and spacing scale with
@@ -34,6 +38,17 @@
 }
 
 /* ---- a pebble ---------------------------------------------------- */
+/* A full-size transparent layer, NOT `display: contents`. With contents the
+   wrapper generates no box, and the absolutely-positioned copy blocks inside
+   it resolved their containing block somewhere else entirely — they ended up
+   thousands of pixels down the page. An explicit inset:0 layer means the
+   children position against exactly the same box as .pcascade. */
+.pcd-item {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
 .pcd {
   position: absolute;
   left: var(--x);
@@ -100,6 +115,7 @@
      the homepage's cream ground, where pale copy vanishes; it was authored
      in Figma against a dark ground. Inheriting means it stays legible if the
      section is ever moved onto a dark surface. */
+  text-align: center;
   color: var(--ink, #262019);
   /* a light halo, not a drop shadow: the copy reads as a hologram sitting in
      the air over the lens, and there is no floor for a shadow to fall on */
@@ -137,10 +153,11 @@
 @keyframes pcd-line-move { from { translate: 0 10px; } to { translate: 0 0; } }
 @keyframes pcd-line-fade { to { opacity: 1; } }
 
-/* ---- the trigger ------------------------------------------------- */
-/* Everything is `paused` until the section is actually on screen, so a
-   visitor who never scrolls this far never pays for the animation and
-   never arrives to find it already over. */
+/* ---- how it runs -------------------------------------------------
+   Everything is authored `paused`. On DESKTOP pebbles.js leaves it paused
+   and sets currentTime from scroll position, so the section scrubs instead
+   of playing on a stopwatch the reader can scroll straight past. On a PHONE
+   the section is not pinned, so `.is-in` releases them to play once. */
 .pcascade.is-in .pcd__rise,
 .pcascade.is-in .pcd__outline,
 .pcascade.is-in .pcd__mat,
@@ -164,8 +181,73 @@
    Full-bleed rather than inside the reading column: the cluster is a piece
    of environment, and at column width the three lenses collapse on top of
    one another. */
-.pcascade-row {
-  width: 100%;
-  padding: clamp(40px, 9vh, 130px) clamp(16px, 4vw, 64px);
+.pcascade-scroll {
+  position: relative;
+  /* the scroll distance the animation is spread across. Long enough that
+     the cascade reads as deliberate, short enough not to feel like a wall. */
+  height: 300vh;
+}
+.pcascade-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 3vh clamp(16px, 4vw, 64px);
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   PHONE — the cluster is abandoned, not shrunk.
+
+   The desktop composition is a fixed set of percentage positions across a
+   1440x1900 frame. At phone width those overlap into an unreadable pile:
+   each heading lands on the next pebble down. Below 760px each pebble
+   becomes its own block with its copy centred above it, and the section
+   stops being pinned — a 300vh pin on a phone is a trap.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 760px) {
+  .pcascade-scroll { height: auto; }
+  .pcascade-stage {
+    position: static;
+    height: auto;
+    display: block;
+    padding: clamp(32px, 8vh, 72px) 20px;
+    overflow: visible;
+  }
+  .pcascade {
+    width: 100%;
+    aspect-ratio: auto;
+    font-size: clamp(13px, 3.6vw, 17px);
+    overflow: visible;
+  }
+  .pcd-item {
+    position: static;
+    inset: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: clamp(28px, 7vw, 56px);
+  }
+  .pcd-item:last-child { margin-bottom: 0; }
+
+  .pcd, .pcd-holo {
+    position: static;
+    width: 100%;
+    max-width: 420px;
+  }
+  /* The lens occupies only y≈38%–75% of its own artboard; the rest is
+     transparent headroom the desktop composition needs. Stacked, that
+     headroom reads as enormous empty gaps between pebbles, so it is
+     pulled back in here. */
+  .pcd { order: 2; margin-top: -26%; margin-bottom: -22%; }
+  .pcd-holo { order: 1; }
+
+  .pcd-holo h3 { font-size: 1.5em; }
+  .pcd-holo p  { font-size: 1em; }
+
+  /* shorter travel: 62vh on a phone overshoots the whole screen */
+  @keyframes pcd-rise { from { transform: translateY(26vh); } to { transform: translateY(0); } }
 }
