@@ -2304,3 +2304,77 @@ p { margin: 0; }
   .wordmark--hero-resin .min__orb { opacity: 0; }
   .wordmark--hero-resin .min__material { opacity: 1; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   THE RING — Min belongs AT the hub
+
+   The eight links are drawn from a radius of ~15 units out to each person,
+   so they all point at the centre of the ring. But .min--dawn is an in-flow
+   block with `margin-inline: auto`, which centres it horizontally and leaves
+   its vertical position to the document flow — so Min sat below the hub and
+   eight lines converged on empty space. He is placed explicitly now.
+   ═══════════════════════════════════════════════════════════════════════ */
+.ring .min--dawn,
+.ring .min {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: 22%;
+  min-width: 0;
+  margin: 0;
+  z-index: 2;   /* the links run underneath him, never across his body */
+  /* ⚠️ The idle float MUST run on `transform` here, not `translate`.
+     `translate` is carrying the -50%/-50% that centres him on the hub, and
+     an animation on the same property overwrites it outright — which is
+     exactly why he kept sitting below the hub with eight lines pointing at
+     nothing. The two are independent CSS properties, so they compose. */
+  animation: float-min-hub 9s ease-in-out infinite;
+}
+@keyframes float-min-hub {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-5px) rotate(-2.5deg); }
+}
+
+/* ---- the people ------------------------------------------------------
+   They were flat grey discs with a hard edge: one tone, one size, no lit
+   edge. Kin is optical resin — a body reads as a solid object because light
+   collects on its crown and returns along its rim, not because it has a
+   border. Same three ingredients as every other pebble in the system. */
+.ring .blob {
+  border: 0;
+  background:
+    /* the crown: light landing on top */
+    radial-gradient(64% 44% at 50% 16%,
+      color-mix(in srgb, #FFFDF7 62%, transparent),
+      transparent 72%),
+    /* the body */
+    linear-gradient(172deg,
+      color-mix(in srgb, var(--ink) 20%, transparent),
+      color-mix(in srgb, var(--ink) 9%, transparent) 58%,
+      color-mix(in srgb, var(--ink) 15%, transparent));
+  box-shadow:
+    /* rim: brightest where the resin is thinnest */
+    inset 0 1px 0 color-mix(in srgb, #FFFDF7 72%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, #FFFDF7 22%, transparent),
+    /* the underside gathering its own light */
+    inset 0 -6px 10px -6px color-mix(in srgb, var(--ink) 26%, transparent);
+}
+
+/* No two alike — eight identical discs read as a diagram, not as people.
+   Small variation only; this is a crowd, not a set of characters. */
+.ring .blob:nth-child(2)  { width: clamp(30px, 11.8%, 66px); }
+.ring .blob:nth-child(3)  { width: clamp(28px, 10.2%, 58px); }
+.ring .blob:nth-child(4)  { width: clamp(31px, 11.4%, 64px); }
+.ring .blob:nth-child(5)  { width: clamp(28px, 10.6%, 60px); }
+.ring .blob:nth-child(6)  { width: clamp(30px, 11.6%, 65px); }
+.ring .blob:nth-child(7)  { width: clamp(28px, 10.4%, 59px); }
+.ring .blob:nth-child(8)  { width: clamp(31px, 11.2%, 63px); }
+.ring .blob:nth-child(9)  { width: clamp(29px, 10.8%, 61px); }
+
+/* the links: they should fade INTO the bodies they reach, not butt against
+   them with a hard end */
+.ring .ring__links line {
+  stroke-linecap: round;
+  opacity: 0.5;
+}
