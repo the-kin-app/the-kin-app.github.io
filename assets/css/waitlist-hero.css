@@ -965,14 +965,34 @@ body.wlq .hslide__say em { color: var(--violet); }
    ═══════════════════════════════════════════════════════════════════ */
 body.wlq { --intro-hold: 3200ms; }
 
-/* the world comes up first */
-.world-ground, .fog, .wdust {
+/* the world comes up first.
+   ⚠️ animation-iteration-count is NOT optional here. `.fog` declares its
+   drift with the `animation` SHORTHAND, which sets iteration-count:infinite.
+   Overriding only name and duration leaves that `infinite` in place, so this
+   900ms fade looped forever and three large fog blobs pulsed on a 0.9s
+   cycle — a low-opacity light going up and down, over the whole page. Any
+   longhand override of a shorthand has to cover every property the
+   shorthand set. */
+.world-ground, .wdust {
   animation-name: intro-world;
   animation-duration: 900ms;
   animation-timing-function: var(--cam-ease);
   animation-delay: var(--intro-hold);
   animation-fill-mode: both;
+  animation-iteration-count: 1;
 }
+/* the fog keeps its own slow drift; the entrance is listed alongside it so
+   one does not cancel the other */
+.fog--1, .fog--2, .fog--3 {
+  animation-name: intro-world, var(--fog-drift);
+  animation-timing-function: var(--cam-ease), ease-in-out;
+  animation-delay: var(--intro-hold), var(--intro-hold);
+  animation-fill-mode: both, none;
+  animation-iteration-count: 1, infinite;
+}
+.fog--1 { --fog-drift: fog-drift-1; animation-duration: 900ms, 68s; }
+.fog--2 { --fog-drift: fog-drift-2; animation-duration: 900ms, 84s; }
+.fog--3 { --fog-drift: fog-drift-3; animation-duration: 900ms, 96s; }
 /* the dust keeps its own infinite drift as a SECOND animation — listing
    both names means the entrance does not cancel the drift. */
 .wdust--far  { animation-name: intro-world, wdust-drift-far;

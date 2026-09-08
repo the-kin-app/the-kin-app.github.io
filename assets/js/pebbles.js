@@ -50,21 +50,24 @@ const ART = {
   }
 };
 
-/* Layout is the END FORMATION from the Figma reference, as percentages of
-   the 1440x1900 frame. It is fixed — the cluster is composed, not stacked.
+/* Layout is the END FORMATION from the Figma reference, as percentages of a
+   1440x1240 frame — the Figma artboard is 1900 tall but its content only
+   spans y 232-1371, and that dead space made the pinned cluster too narrow
+   for its own copy. Vertical values are re-based on the crop; x and width
+   are unchanged fractions of 1440. It is fixed — the cluster is composed, not stacked.
    t = when this pebble starts. Land is t + 1.85s; its copy follows 150ms
    after its OWN landing, never after all three. */
 const DISCS = [
-  { k: 'p3', t: 0.00, x: 30.56, y: 12.21, w: 50.07,
-    cx: 32.60, cy: 19.00, cw: 46.00,
+  { k: 'p3', t: 0.00, x: 30.56, y:  5.00, w: 50.07,
+    cx: 32.60, cy: 15.43, cw: 46.00,
     h: 'Min, always with you',
     l: ['A companion that understands', 'and grows with you'] },
-  { k: 'p1', t: 0.55, x: 17.15, y: 29.16, w: 45.69,
-    cx: 17.00, cy: 34.75, cw: 46.00,
+  { k: 'p1', t: 0.55, x: 17.15, y: 30.97, w: 45.69,
+    cx: 17.00, cy: 39.59, cw: 46.00,
     h: 'Private by design',
     l: ['Your world stays yours.', 'Always encrypted.'] },
-  { k: 'p2', t: 1.10, x: 36.46, y: 43.84, w: 40.56,
-    cx: 33.74, cy: 48.07, cw: 46.00,
+  { k: 'p2', t: 1.10, x: 36.46, y: 53.47, w: 40.56,
+    cx: 33.74, cy: 60.01, cw: 46.00,
     h: 'Real connection',
     l: ['For the moments that', 'matter most.'] }
 ];

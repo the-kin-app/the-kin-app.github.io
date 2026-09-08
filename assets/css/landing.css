@@ -2041,6 +2041,22 @@ p { margin: 0; }
 .min__foot[data-side="1"]  { transform-origin: 242px 258px; }
 
 /* ═══════════════════════════════════════════════════════════════════════
+   ORB AND BORDER ARE HERO-ONLY — GLOBAL DEFAULT IS HIDDEN
+
+   Both belong to the forming sequence and to nothing else. Without this
+   block they leak into every other Min on the site:
+
+   · .min__orb is a mask contributor, so at full opacity it unions a big
+     circle into the silhouette — every Min renders as a round blob with
+     limbs stuck on the sides rather than as his own shape.
+   · .min__border draws a hard ring around him, everywhere.
+
+   They are switched ON only by the hero's animation below.
+   ═══════════════════════════════════════════════════════════════════════ */
+.min__orb,
+.min__border { opacity: 0; }
+
+/* ═══════════════════════════════════════════════════════════════════════
    THE HERO MARK — GENERATED FROM FIGMA MOTION DATA. DO NOT HAND-TUNE.
 
    Source: Figma "WEB · logo emerge" (QR landing page, 679:404), extracted

@@ -27,14 +27,24 @@
      it is wide — so sizing it off the viewport width makes it enormous on a
      desktop and pushes the bottom pebble off-screen. Fit it to the stage
      height and let width follow. */
-  width: min(92vw, 780px, calc(88svh * 1440 / 1900));
+  width: min(96vw, 1080px, calc(90svh * 1440 / 1240));
   max-width: 100%;
   margin: 0 auto;
-  aspect-ratio: 1440 / 1900;
-  /* one em = 16px at the design width, so type and spacing scale with
-     the cluster instead of stepping at breakpoints */
-  font-size: clamp(9px, 1.111vw, 16px);
-  overflow: hidden;
+  /* The Figma frame is 1440x1900, but the content only spans y 232-1371 —
+     the rest is dead space. Cropping to it makes the cluster far less tall,
+     which matters because the section is PINNED: a tall composition fitted
+     to viewport height ends up narrow, and the copy then has no room. */
+  aspect-ratio: 1440 / 1240;
+
+  /* ⚠️ Type is sized in CONTAINER units, not viewport units. It was
+     `1.111vw` — 16px on a 1440-wide window — while the cluster itself is
+     fitted to viewport HEIGHT and is only ~940px wide there. The copy came
+     out ~2.4x too large for the composition it sits in, which is why the
+     headings collided with the block above. cqw ties it to the cluster, so
+     the proportion holds at every window shape. */
+  container-type: inline-size;
+  font-size: clamp(12px, 1.3cqw, 17px);
+  overflow: visible;
 }
 
 /* ---- a pebble ---------------------------------------------------- */
