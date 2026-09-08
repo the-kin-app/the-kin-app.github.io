@@ -52,6 +52,7 @@
 <!-- ?v= is a cache bust — see the note on the same links in /waitlist/. -->
 <link rel="stylesheet" href="/assets/css/tokens.css?v=20260907c">
 <link rel="stylesheet" href="/assets/css/landing.css?v=20260907c">
+<link rel="stylesheet" href="/assets/css/pebbles.css?v=20260907c">
 
 <script type="importmap">
 { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js" } }
@@ -332,6 +333,23 @@
   </section>
 
   <!-- ── memos ────────────────────────────────────────────── -->
+  <!-- ══════════════════════════════════════════════════════════
+       THE PEBBLE CASCADE
+
+       Three resin lenses that rise from below the fold and park
+       overlapping, so they read as one cluster rather than three
+       cards. Each pebble's copy arrives off its OWN landing, not
+       after all three have finished.
+
+       Stamped by pebbles.js; the lens artwork is exported from
+       Figma untouched (WEB · pebble cascade, 706:374). It renders
+       nothing without the script, which is deliberate — this is an
+       atmospheric section, not content anyone needs to read.
+       ══════════════════════════════════════════════════════════ -->
+  <section class="pcascade-row" aria-label="What Min is for">
+    <div data-pebbles></div>
+  </section>
+
   <section id="memos" data-reveal>
     <div class="shell">
       <h2 class="rise" style="max-width: 22ch">
@@ -484,5 +502,9 @@
   </svg>
 </a>
 <script type="module" src="/assets/js/landing.js?v=20260907c"></script>
+<script type="module">
+  import { pebbleCascade } from '/assets/js/pebbles.js?v=20260907c';
+  pebbleCascade();   // the three lenses, revealed on scroll
+</script>
 </body>
 </html>

@@ -1,0 +1,171 @@
+/* ═══════════════════════════════════════════════════════════════════
+   PEBBLE CASCADE  —  three resin lenses that rise into one cluster
+
+   Source of truth: Figma "WEB · pebble cascade" (QR landing page,
+   706:374), 7.0s. Written spec: "SPEC · Pebble section" (616:366).
+
+   The pebbles are NOT present at rest. They rise from below the fold as
+   the section scrolls in, park overlapping so they read as one cluster
+   rather than three cards, and each one's copy arrives off its OWN
+   landing rather than after all three are done.
+
+   The lens artwork is Santeri's, exported from Figma untouched. The 5px
+   INSIDE gradient stroke (transparent at the top, warm white at the
+   base) is what reads as 3D — it must survive any re-export.
+
+   NOT interactive. No violet wet state: coral is reserved for things
+   that respond to touch, and these are atmosphere. No drop shadow -
+   there is no floor for one to land on; the warm underglow inside the
+   artwork is the only grounding. No axial rotation - the "unscrewing"
+   spin cannot be faked with a 2D squash, it needs a rendered 3D frame
+   sequence.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.pcascade {
+  position: relative;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  aspect-ratio: 1440 / 1900;
+  /* one em = 16px at the design width, so type and spacing scale with
+     the cluster instead of stepping at breakpoints */
+  font-size: clamp(9px, 1.111vw, 16px);
+  overflow: hidden;
+}
+
+/* ---- a pebble ---------------------------------------------------- */
+.pcd {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+}
+.pcd svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+/* Long visible travel - they should read as arriving from somewhere,
+   not fading up in place. MAGNET: magnetic arrival, no overshoot.
+   An earlier version scaled up from small and read as elastic. */
+.pcd__rise {
+  animation: pcd-rise 1850ms cubic-bezier(0.16, 0.82, 0.22, 1) var(--t) both paused;
+}
+@keyframes pcd-rise {
+  from { transform: translateY(62vh); }
+  to   { transform: translateY(0); }
+}
+
+/* the outline reads FIRST, alone */
+.pcd__outline {
+  fill: none;
+  stroke: #FFF3E2;
+  stroke-width: 9;
+  opacity: 0;
+  animation: pcd-outline 1250ms linear calc(var(--t) + 100ms) both paused;
+}
+@keyframes pcd-outline {
+  0%    { opacity: 0; animation-timing-function: cubic-bezier(0.33, 0, 0.25, 1); }
+  30.4% { opacity: 0.95; }
+  64%   { opacity: 0.95; animation-timing-function: cubic-bezier(0.16, 1, 0.30, 1); }
+  100%  { opacity: 0; }
+}
+
+/* the true material arrives WHILE the pebble is still moving - it must
+   not wait for the park */
+.pcd__mat {
+  opacity: 0;
+  animation: pcd-mat 650ms cubic-bezier(0.33, 0, 0.25, 1) calc(var(--t) + 500ms) both paused;
+}
+@keyframes pcd-mat { to { opacity: 1; } }
+
+/* old camera flash: an even roll up to full, then a slower roll back.
+   Never a spike - that reads as a fault in the page, not as light. */
+.pcd__flash {
+  fill: #fff;
+  opacity: 0;
+  animation: pcd-flash 1600ms linear calc(var(--t) + 1200ms) both paused;
+}
+@keyframes pcd-flash {
+  0%    { opacity: 0; animation-timing-function: cubic-bezier(0.40, 0, 0.38, 1); }
+  34.4% { opacity: 1; animation-timing-function: cubic-bezier(0.30, 0, 0.45, 1); }
+  100%  { opacity: 0; }
+}
+
+/* ---- the copy, sitting on the lens like a hologram ---------------- */
+.pcd-holo {
+  position: absolute;
+  left: var(--x);
+  width: var(--w);
+  /* bottom-anchored to its own lens so the text touches the pebble */
+  top: var(--y);
+  /* Takes the PAGE's ink rather than hardcoding a tone. The cluster sits on
+     the homepage's cream ground, where pale copy vanishes; it was authored
+     in Figma against a dark ground. Inheriting means it stays legible if the
+     section is ever moved onto a dark surface. */
+  color: var(--ink, #262019);
+  /* a light halo, not a drop shadow: the copy reads as a hologram sitting in
+     the air over the lens, and there is no floor for a shadow to fall on */
+  text-shadow: 0 1px 16px rgba(255, 250, 242, 0.85);
+}
+/* ONE size for all three. The pebbles vary; the voice does not. */
+.pcd-holo h3 {
+  margin: 0;
+  font-size: 1.94em;      /* 31px at 1440 */
+  line-height: 1.24;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+.pcd-holo p {
+  margin: 0.75em 0 0;
+  font-size: 1.06em;      /* 17px at 1440 */
+  line-height: 1.52;
+  font-weight: 400;
+  opacity: 0.74;
+}
+.pcd-holo p + p { margin-top: 0; }
+
+/* KinType — the app's one spec for copy arriving. translateY 4pt at
+   phone scale; a little more here because the viewport is wider, but
+   the character is the same: copy barely moves, it resolves.
+   70ms PER LINE - a two-line block that arrives as one loses the
+   cascade, which is the whole feel of it. */
+.pcd-line {
+  display: block;
+  opacity: 0;
+  animation:
+    pcd-line-move 320ms cubic-bezier(0.16, 1, 0.30, 1) var(--ct) both paused,
+    pcd-line-fade 280ms cubic-bezier(0.20, 0, 0.20, 1) var(--ct) both paused;
+}
+@keyframes pcd-line-move { from { translate: 0 10px; } to { translate: 0 0; } }
+@keyframes pcd-line-fade { to { opacity: 1; } }
+
+/* ---- the trigger ------------------------------------------------- */
+/* Everything is `paused` until the section is actually on screen, so a
+   visitor who never scrolls this far never pays for the animation and
+   never arrives to find it already over. */
+.pcascade.is-in .pcd__rise,
+.pcascade.is-in .pcd__outline,
+.pcascade.is-in .pcd__mat,
+.pcascade.is-in .pcd__flash,
+.pcascade.is-in .pcd-line { animation-play-state: running; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pcd__rise, .pcd__outline, .pcd__mat, .pcd__flash, .pcd-line {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+    translate: none;
+  }
+  .pcd__outline, .pcd__flash { opacity: 0; }
+}
+
+/* The cascade lives on the HOMEPAGE, not the waitlist page: body.wlq is a
+   fixed-height grid with overflow:hidden — a deliberate single screen — so
+   a scroll-revealed section there would be clipped and unreachable.
+
+   Full-bleed rather than inside the reading column: the cluster is a piece
+   of environment, and at column width the three lenses collapse on top of
+   one another. */
+.pcascade-row {
+  width: 100%;
+  padding: clamp(40px, 9vh, 130px) clamp(16px, 4vw, 64px);
+  box-sizing: border-box;
+}
