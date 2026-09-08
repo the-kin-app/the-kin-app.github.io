@@ -65,6 +65,13 @@ export const minFigure = (n) => `
         <g class="min__limb-pivot" data-side="1"><path d="M281.518 99.8C297.518 103.8 317.518 125.8 327.518 155.8C334.518 177.8 337.518 195.8 332.518 203.8C325.518 210.8 310.518 203.8 300.518 186.8C289.518 166.8 280.518 133.8 281.518 99.8Z" fill="#fff"/></g>
         <path class="min__torso" d="M36 196.8C36 91.8 86 25.8 176 25.8C266 25.8 316 91.8 316 196.8C316 241.8 302 279.8 274 297.8C250 312.8 102 312.8 78 297.8C50 279.8 36 241.8 36 196.8Z" fill="#fff"/>
       </g>
+      <!-- THE ORB. Sits OUTSIDE the translated/stroked group so it keeps its
+           true circle: inside it, the 14px round stroke would swell it and the
+           translate would shift it off the eyes. It is a mask contributor, so
+           the silhouette during the orb stage is orb ∪ shrunken-torso — one
+           continuous alpha shape with no seam, which is the whole reason the
+           Figma rig uses a masked union rather than crossfading two shapes. -->
+      <circle class="min__orb" cx="166" cy="161.8" r="135" fill="#fff"/>
     </mask>
     <linearGradient id="gmat${n}" x1="166" y1="0" x2="166" y2="306" gradientUnits="userSpaceOnUse">
       <stop stop-color="#F7F1E8"/><stop offset=".24" stop-color="#F3E6D4"/><stop offset=".52" stop-color="#EBD6B8"/>
@@ -109,6 +116,12 @@ export const minFigure = (n) => `
       <stop offset=".52" stop-color="#fff"/><stop offset=".74" stop-color="#fff" stop-opacity=".55"/>
       <stop offset="1" stop-color="#fff" stop-opacity="0"/>
     </radialGradient>
+    <!-- the orb's rim: brightest where the resin is thinnest, at the edge -->
+    <linearGradient id="gborder${n}" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#FFFDF7" stop-opacity=".98"/>
+      <stop offset=".34" stop-color="#FFF6E6" stop-opacity=".62"/>
+      <stop offset="1" stop-color="#FFE9C8" stop-opacity=".9"/>
+    </linearGradient>
     <clipPath id="ceyeL${n}"><circle cx="111" cy="161.8" r="26.5"/></clipPath>
     <clipPath id="ceyeR${n}"><circle cx="221" cy="161.8" r="26.5"/></clipPath>
   </defs>
@@ -121,12 +134,13 @@ export const minFigure = (n) => `
          feet vanish into one continuous alpha shape with no seams — then
          minOutline dilates that shape and subtracts the original,
          leaving only a ring around the true outer boundary. -->
-    <!-- the border pass: ONE continuous stroked path, the boolean union of all
-         five shapes, exported from Figma (see assets/img/min-character/outline.svg).
-         Was a feMorphology filter; that is what made Min look rasterised. -->
-    <path class="min__outline" transform="translate(7 7.8)" d="M 159.00 0.00 C 222.05 0.00 265.46 32.39 285.81 87.88 C 295.59 97.95 304.73 112.63 310.52 130.00 C 317.52 152.00 320.52 170.00 315.52 178.00 C 311.67 181.84 305.42 181.46 298.90 177.53 C 297.93 209.12 289.83 236.82 274.61 255.93 C 273.81 270.12 265.40 283.15 247.38 288.00 C 230.53 292.49 212.41 289.73 197.65 282.19 C 173.07 283.60 144.93 283.60 120.36 282.19 C 105.59 289.73 87.48 292.49 70.63 288.00 C 52.60 283.15 44.19 270.12 43.39 255.93 C 28.17 236.82 20.07 209.12 19.10 177.53 C 12.58 181.46 6.33 181.84 2.48 178.00 C -2.52 170.00 0.48 152.00 7.48 130.00 C 13.27 112.63 22.41 97.95 32.19 87.88 C 52.54 32.39 95.96 0.00 159.00 0.00 Z"
-          fill="none" stroke="#fff" stroke-width="18" stroke-opacity=".9" stroke-linejoin="round"
-          mask="url(#mshell${n})"/>
+    <!-- THE ORB BORDER — the empty shell Min forms inside, and the exact
+         counterpart of the wordmark's outline-only stage. Deliberately NOT
+         masked by mshell: a ring clipped by the silhouette renders as a
+         crescent, which is the bug this replaced. Same centre and radius as
+         .min__orb so the two can never drift apart. -->
+    <circle class="min__border" cx="166" cy="161.8" r="135"
+            fill="none" stroke="url(#gborder${n})" stroke-width="16"/>
     <g class="min__material" mask="url(#mshell${n})">
       <rect x="-20" y="-20" width="${VB_W + 40}" height="${VB_H + 40}" fill="url(#gmat${n})"/>
       <ellipse cx="166" cy="172" rx="147" ry="117" fill="url(#gdens${n})"/>

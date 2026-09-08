@@ -2039,3 +2039,268 @@ p { margin: 0; }
 /* the limbs and feet sprout, staggered — limbs lead, feet follow 140ms later */
 .min__foot[data-side="-1"] { transform-origin: 115px 258px; }
 .min__foot[data-side="1"]  { transform-origin: 242px 258px; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   THE HERO MARK — GENERATED FROM FIGMA MOTION DATA. DO NOT HAND-TUNE.
+
+   Source: Figma "WEB · logo emerge" (QR landing page, 679:404), extracted
+   with get_motion_context. One cohort, 4600ms, 16 tracks. Every percentage
+   and easing below is copied verbatim from that extraction — nothing here
+   was computed by hand, because hand-computed delays are what drifted out
+   of sync with the design three times.
+
+   To re-sync after editing the Figma timeline: re-run get_motion_context on
+   679:404 with recursive:true and replace the percentages. Do not adjust
+   them to taste here; adjust them in Figma and re-extract.
+
+   This block deliberately comes LAST and is scoped under
+   .wordmark--hero-resin so it wins over every earlier rule. The previous
+   animation is superseded, not merged.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.wordmark--hero-resin {
+  --T: 4600ms;
+  --E: linear;   /* per-keyframe easing lives inside the keyframes */
+}
+
+/* ---- 679:405 Lockup — the mark rises and parks at 45.652% (2100ms) ---- */
+.wordmark--hero-resin {
+  animation: wmx-lockup var(--T) linear both;
+}
+@keyframes wmx-lockup {
+  0%      { animation-timing-function: cubic-bezier(0.16, 0.82, 0.22, 1); translate: 0 220px; }
+  45.652% { translate: 0 0; }
+  100%    { translate: 0 0; }
+}
+
+/* ---- 686:449 WM · outline — the empty shell, 18.478% → 38.043% -------- */
+.wordmark--hero-resin .wordmark-letter > path {
+  opacity: 0;
+  animation: wmx-outline var(--T) linear both;
+}
+@keyframes wmx-outline {
+  0%      { opacity: 0; }
+  18.478% { animation-timing-function: cubic-bezier(0.33, 0, 0.25, 1); opacity: 0; }
+  38.043% { opacity: 1; }
+  100%    { opacity: 1; }
+}
+
+/* ---- 679:415 WM · fill — the material, 35.87% → 53.261% --------------- */
+.wordmark--hero-resin .wordmark-letter > g {
+  opacity: 0;
+  animation: wmx-fill var(--T) linear both;
+}
+@keyframes wmx-fill {
+  0%      { opacity: 0; }
+  35.87%  { animation-timing-function: cubic-bezier(0.33, 0, 0.25, 1); opacity: 0; }
+  53.261% { opacity: 1; }
+  100%    { opacity: 1; }
+}
+
+/* the glow follows the FILL, never the outline — light comes off material */
+.wordmark--hero-resin .wordmark-glow-group {
+  opacity: 0;
+  animation: wmx-glow var(--T) linear both;
+}
+@keyframes wmx-glow {
+  0%      { opacity: 0; }
+  53.261% { animation-timing-function: cubic-bezier(0.42, 0, 0.30, 1); opacity: 0; }
+  68%     { opacity: 0.38; }
+  100%    { opacity: 0.38; }
+}
+
+/* ---- 686:477 sweep band ----------------------------------------------
+   ⚠️ This was painting at opacity 1 from frame 0 to the end — a solid white
+   copy of the letterforms that the mask never hid. That is the "visible
+   gradient from frame one" bug. The opacity gate below is not optional. */
+.wordmark--hero-resin .wordmark-flash {
+  opacity: 0;
+  animation: wmx-sweep-fade var(--T) linear both,
+             wmx-sweep-move var(--T) linear both;
+}
+@keyframes wmx-sweep-fade {
+  0%      { opacity: 0; }
+  29.348% { animation-timing-function: cubic-bezier(0.33, 0, 0.25, 1); opacity: 0; }
+  33.696% { opacity: 1; }
+  45.652% { animation-timing-function: cubic-bezier(0.33, 0, 0.25, 1); opacity: 1; }
+  51.087% { opacity: 0; }
+  100%    { opacity: 0; }
+}
+@keyframes wmx-sweep-move {
+  0%      { -webkit-mask-position: 0% 0; mask-position: 0% 0; }
+  31.522% { animation-timing-function: ease-in-out; -webkit-mask-position: 0% 0; mask-position: 0% 0; }
+  48.913% { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+  100%    { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+}
+
+/* ---- 679:433 Min — falls from above, parks at 47.826% (2200ms) --------
+   translateY in PERCENT, so it scales with the rendered mark. Figma's
+   −150px against a 167-tall Min is −90%. It was authored as −0.95em, which
+   resolves against font-size (16px), not Min's height (21px) — Min barely
+   moved, which is why he did not read as arriving from above. */
+.wordmark--hero-resin .min--hero {
+  animation: wmx-min-fall var(--T) linear both,
+             float-min 9s ease-in-out infinite 2400ms;
+}
+@keyframes wmx-min-fall {
+  0%      { transform: translateY(-90%); }
+  15.217% { animation-timing-function: cubic-bezier(0.16, 0.82, 0.22, 1); transform: translateY(-90%); }
+  47.826% { transform: translateY(0); }
+  100%    { transform: translateY(0); }
+}
+
+/* ---- 690:392 Orb — dissolves OUTWARD, it never shrinks ---------------- */
+.wordmark--hero-resin .min__orb,
+.wordmark--hero-resin .min__border {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.wordmark--hero-resin .min__orb {
+  animation: wmx-orb-fade var(--T) linear both,
+             wmx-orb-move var(--T) linear both;
+}
+@keyframes wmx-orb-fade {
+  0%      { opacity: 1; scale: 1; }
+  54.348% { animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); opacity: 1; scale: 1; }
+  71.739% { opacity: 0; scale: 1.06; }
+  100%    { opacity: 0; scale: 1.06; }
+}
+@keyframes wmx-orb-move {
+  0%      { translate: 0 3.28px; }
+  52.174% { animation-timing-function: cubic-bezier(0.16, 0.82, 0.22, 1); translate: 0 3.28px; }
+  72.826% { translate: 0 0; }
+  100%    { translate: 0 0; }
+}
+
+/* ---- 715:374 Min · border — the SAME window as the wordmark's outline -
+   both marks are an empty shell at 38.043%, then both fill. That shared
+   beat is the whole point of the sequence. */
+.wordmark--hero-resin .min__border {
+  opacity: 0;
+  animation: wmx-border var(--T) linear both,
+             wmx-orb-move var(--T) linear both;
+}
+@keyframes wmx-border {
+  0%      { opacity: 0; scale: 1; }
+  18.478% { animation-timing-function: cubic-bezier(0.33, 0, 0.25, 1); opacity: 0; scale: 1; }
+  38.043% { opacity: 0.92; }
+  54.348% { animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); opacity: 0.92; scale: 1; }
+  68.478% { opacity: 0; }
+  71.739% { scale: 1.06; }
+  100%    { opacity: 0; scale: 1.06; }
+}
+
+/* ---- 679:443 Torso · pivot — hidden inside the orb, then grows -------- */
+.wordmark--hero-resin .min__torso {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: wmx-torso var(--T) linear both;
+}
+@keyframes wmx-torso {
+  0%      { translate: 0 -7.2px; scale: 0.48; }
+  52.174% { animation-timing-function: cubic-bezier(0.16, 0.82, 0.22, 1); translate: 0 -7.2px; scale: 0.48; }
+  72.826% { translate: 0 0; scale: 1; }
+  100%    { translate: 0 0; scale: 1; }
+}
+
+/* ---- limbs and feet sprout from TRUE ZERO, inside the flash ----------
+   Not 0.02: a limb's pivot is at the shoulder, outside the orb, so any
+   non-zero scale shows a speck floating in mid-air before the limb exists.
+   Opacity is gated ~90ms behind the scale for the same reason. */
+.wordmark--hero-resin .min__limb-pivot,
+.wordmark--hero-resin .min__foot {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.wordmark--hero-resin .min__limb-pivot[data-side="-1"] { animation: wmx-sprout-a var(--T) linear both; }
+.wordmark--hero-resin .min__limb-pivot[data-side="1"]  { animation: wmx-sprout-b var(--T) linear both; }
+.wordmark--hero-resin .min__foot[data-side="-1"]       { animation: wmx-sprout-c var(--T) linear both; }
+.wordmark--hero-resin .min__foot[data-side="1"]        { animation: wmx-sprout-d var(--T) linear both; }
+
+@keyframes wmx-sprout-a {
+  0%      { opacity: 0; scale: 0; }
+  57.609% { animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); opacity: 0; scale: 0; }
+  59.565% { opacity: 1; }
+  72.826% { scale: 1; }
+  100%    { opacity: 1; scale: 1; }
+}
+@keyframes wmx-sprout-b {
+  0%      { opacity: 0; scale: 0; }
+  59.348% { animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); opacity: 0; scale: 0; }
+  61.304% { opacity: 1; }
+  74.565% { scale: 1; }
+  100%    { opacity: 1; scale: 1; }
+}
+@keyframes wmx-sprout-c {
+  0%      { opacity: 0; scale: 0; }
+  60.87%  { animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); opacity: 0; scale: 0; }
+  62.826% { opacity: 1; }
+  76.087% { scale: 1; }
+  100%    { opacity: 1; scale: 1; }
+}
+@keyframes wmx-sprout-d {
+  0%      { opacity: 0; scale: 0; }
+  62.391% { animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); opacity: 0; scale: 0; }
+  64.348% { opacity: 1; }
+  77.609% { scale: 1; }
+  100%    { opacity: 1; scale: 1; }
+}
+
+/* ---- 680:390 material · 679:457 eyes · 680:391 flash · 679:470 spec --- */
+.wordmark--hero-resin .min__material {
+  opacity: 0;
+  animation: wmx-material var(--T) linear both;
+}
+@keyframes wmx-material {
+  0%      { opacity: 0; }
+  51.087% { animation-timing-function: cubic-bezier(0.33, 0, 0.25, 1); opacity: 0; }
+  59.783% { opacity: 0.42; }
+  66.304% { animation-timing-function: cubic-bezier(0.33, 0, 0.25, 1); opacity: 0.42; }
+  77.174% { opacity: 1; }
+  100%    { opacity: 1; }
+}
+.wordmark--hero-resin .min__face {
+  opacity: 0;
+  animation: wmx-eyes var(--T) linear both;
+}
+@keyframes wmx-eyes {
+  0%      { opacity: 0; }
+  23.913% { animation-timing-function: cubic-bezier(0.33, 0, 0.25, 1); opacity: 0; }
+  35.87%  { opacity: 1; }
+  100%    { opacity: 1; }
+}
+/* the flash ROLLS: 700ms up, 1400ms down. Never a spike. */
+.wordmark--hero-resin .min__flash {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: wmx-flash var(--T) linear both;
+}
+@keyframes wmx-flash {
+  0%      { opacity: 0; scale: 1; }
+  44.565% { animation-timing-function: ease-in-out; scale: 1; }
+  50%     { animation-timing-function: cubic-bezier(0.4, 0, 0.38, 1); opacity: 0; }
+  65.217% { animation-timing-function: cubic-bezier(0.3, 0, 0.45, 1); opacity: 1; }
+  88.043% { scale: 1.18; }
+  95.652% { opacity: 0; }
+  100%    { opacity: 0; scale: 1.18; }
+}
+.wordmark--hero-resin .min__spec {
+  opacity: 0;
+  animation: wmx-spec var(--T) linear both;
+}
+@keyframes wmx-spec {
+  0%      { opacity: 0; }
+  77.174% { animation-timing-function: cubic-bezier(0.33, 0, 0.25, 1); opacity: 0; }
+  86.957% { opacity: 1; }
+  100%    { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wordmark--hero-resin,
+  .wordmark--hero-resin * { animation: none !important; opacity: 1; scale: 1; translate: none; transform: none; }
+  .wordmark--hero-resin .min__flash,
+  .wordmark--hero-resin .min__border { opacity: 0; }
+  .wordmark--hero-resin .min__orb { opacity: 0; }
+  .wordmark--hero-resin .min__material { opacity: 1; }
+}
