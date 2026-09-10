@@ -175,6 +175,26 @@ body.wlq {
   /* the drag never leaves the track, so nothing here should also
      be trying to scroll the page sideways */
   touch-action: pan-y;
+
+  /* A HARD CLIP IS THE WRONG EDGE. `overflow` + `contain: paint` cut the
+     outgoing slide off mid-letter, which reads as damage rather than as
+     motion. The mask keeps the same clip but lands it over ~a gutter of
+     alpha, so the neighbouring slide dissolves into the page instead of
+     hitting a wall. Feather is measured in the same gutter the slides pad
+     themselves with, so the soft band sits in the room the copy never uses. */
+  /* The ramp is anchored to the SCREEN edge, not to this box: the row is a
+     gutter wider than the viewport on each side, so a band measured from
+     0 lands entirely in the overhang and never shows. Alpha hits zero at
+     the gutter — exactly where the screen ends — and reaches full --ramp
+     further in, so the fade happens on screen where it can be seen. */
+  --ramp: 56px;
+  --mask-fade: linear-gradient(90deg,
+    transparent 0, transparent var(--gutter),
+    #000 calc(var(--gutter) + var(--ramp)),
+    #000 calc(100% - var(--gutter) - var(--ramp)),
+    transparent calc(100% - var(--gutter)), transparent 100%);
+  -webkit-mask-image: var(--mask-fade);
+          mask-image: var(--mask-fade);
 }
 
 .hslides__track {
@@ -184,6 +204,25 @@ body.wlq {
   transition: transform 620ms var(--ease-emergence);
 }
 .hslides__track.is-dragging { transition: none; }
+
+/* THE CROSSFADE. The track alone moves the words sideways past the feather,
+   which still leaves the outgoing slide legible on its way out — two
+   headlines competing for the same beat. Dropping the opacity of everything
+   that isn't the live slide means only one thing is ever readable, and the
+   feather then only has to soften what's left. Shorter than the 620ms
+   travel on purpose: the words should be gone before the slide is. */
+.hslide {
+  opacity: 0;
+  transition: opacity 380ms var(--ease-emergence);
+}
+.hslide.is-live { opacity: 1; }
+/* A finger on the track is asking to SEE the next slide arrive, so the
+   fade steps aside for the duration of the drag and the feather carries
+   the edge on its own. */
+.hslides__track.is-dragging .hslide { opacity: 1; transition: none; }
+/* If the script never runs, nothing is is-live and the row would be blank.
+   Show everything rather than nothing; the track still parks on slide 0. */
+.hslides__track:not(:has(.is-live)) .hslide { opacity: 1; }
 
 .hslide {
   flex: 0 0 100%;
@@ -755,6 +794,7 @@ body.wlq[data-scene="shore"] .hdots-pill {
 
 @media (prefers-reduced-motion: reduce) {
   .hslides__track { transition: none; }
+  .hslide { transition: none; }
   .wlq .wordmark--hero, .wlq-when, .wlq-banner, .wlq-card {
     animation: none; opacity: 1; transform: none; filter: none;
   }
