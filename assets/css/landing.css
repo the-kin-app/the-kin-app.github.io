@@ -2083,8 +2083,14 @@ p { margin: 0; }
 .wordmark--hero-resin {
   animation: wmx-lockup var(--T) linear both;
 }
+/* PERCENT of the mark's own height, not Figma's raw pixels. 220px was taken
+   straight from the artboard, where the lockup is several times larger than
+   it renders here — against a 111px-tall mark that is TWICE its own height of
+   travel, which is why the rise read as a long journey rather than the mark
+   settling into place. 40% is ~44px: enough displacement to run underneath
+   the whole forming sequence, not a commute. */
 @keyframes wmx-lockup {
-  0%      { animation-timing-function: cubic-bezier(0.16, 0.82, 0.22, 1); translate: 0 220px; }
+  0%      { animation-timing-function: cubic-bezier(0.16, 0.82, 0.22, 1); translate: 0 40%; }
   45.652% { translate: 0 0; }
   100%    { translate: 0 0; }
 }
@@ -2158,9 +2164,14 @@ p { margin: 0; }
   animation: wmx-min-fall var(--T) linear both,
              float-min 9s ease-in-out infinite 2400ms;
 }
+/* Min falls 150px in Figma, where he is 93 units wide. He renders 22px wide
+   here, so the faithful travel is 150 x (22/93) = ~35px — and against his own
+   21px height that is 170%, not the 90% I had. At 90% he moved 19px, which is
+   under half, and read as fading in at the dot rather than landing on it.
+   He parks on MAGNET: magnetic arrival, no overshoot. */
 @keyframes wmx-min-fall {
-  0%      { transform: translateY(-90%); }
-  15.217% { animation-timing-function: cubic-bezier(0.16, 0.82, 0.22, 1); transform: translateY(-90%); }
+  0%      { transform: translateY(-170%); }
+  15.217% { animation-timing-function: cubic-bezier(0.16, 0.82, 0.22, 1); transform: translateY(-170%); }
   47.826% { transform: translateY(0); }
   100%    { transform: translateY(0); }
 }

@@ -59,12 +59,24 @@
   pointer-events: none;
 }
 
+/* ---- the composition ---------------------------------------------------
+   The END FORMATION from the Figma reference. Held in CSS rather than in
+   inline styles so a phone can re-compose it — an inline style beats a media
+   query, and that is why the phone previously had to opt out of the pinned
+   cluster altogether. */
 .pcd {
   position: absolute;
   left: var(--x);
   top: var(--y);
   width: var(--w);
 }
+/* landscape cluster, on a 1440x1240 frame */
+.pcd-item[data-p="3"] .pcd      { --x: 30.56%; --y:  5.00%; --w: 50.07%; }
+.pcd-item[data-p="1"] .pcd      { --x: 17.15%; --y: 30.97%; --w: 45.69%; }
+.pcd-item[data-p="2"] .pcd      { --x: 36.46%; --y: 53.47%; --w: 40.56%; }
+.pcd-item[data-p="3"] .pcd-holo { --x: 32.60%; --y: 15.43%; --w: 46.00%; }
+.pcd-item[data-p="1"] .pcd-holo { --x: 17.00%; --y: 39.59%; --w: 46.00%; }
+.pcd-item[data-p="2"] .pcd-holo { --x: 33.74%; --y: 60.01%; --w: 46.00%; }
 .pcd svg { display: block; width: 100%; height: auto; overflow: visible; }
 
 /* Long visible travel - they should read as arriving from somewhere,
@@ -119,7 +131,6 @@
   position: absolute;
   left: var(--x);
   width: var(--w);
-  /* bottom-anchored to its own lens so the text touches the pebble */
   top: var(--y);
   /* Takes the PAGE's ink rather than hardcoding a tone. The cluster sits on
      the homepage's cream ground, where pale copy vanishes; it was authored
@@ -193,9 +204,11 @@
    one another. */
 .pcascade-scroll {
   position: relative;
-  /* the scroll distance the animation is spread across. Long enough that
-     the cascade reads as deliberate, short enough not to feel like a wall. */
-  height: 300vh;
+  /* The scroll distance the timeline is spread across. 300vh was ~2.5 phone
+     screens for a 4.2s animation, which read as a wall. This is roughly one
+     and a half screens: long enough to feel deliberate, short enough that
+     you are never stuck. */
+  height: 210vh;
 }
 .pcascade-stage {
   position: sticky;
@@ -218,46 +231,305 @@
    becomes its own block with its copy centred above it, and the section
    stops being pinned — a 300vh pin on a phone is a trap.
    ═══════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   PHONE — a portrait composition, still pinned and still scrubbed.
+
+   The landscape cluster is 1440x1240; on a 390-wide screen that is 390x336
+   with two thirds of the screen empty, and the copy collides. So the three
+   pebbles are re-composed down a portrait frame that fills the phone. The
+   MECHANISM is unchanged — pinned stage, scroll drives the timeline — so
+   the animation cannot be scrolled past here either.
+   ═══════════════════════════════════════════════════════════════════ */
 @media (max-width: 760px) {
-  .pcascade-scroll { height: auto; }
-  .pcascade-stage {
-    position: static;
-    height: auto;
-    display: block;
-    padding: clamp(32px, 8vh, 72px) 20px;
-    overflow: visible;
-  }
+  .pcascade-scroll { height: 190vh; }
   .pcascade {
-    width: 100%;
-    aspect-ratio: auto;
-    font-size: clamp(13px, 3.6vw, 17px);
-    overflow: visible;
+    width: min(94vw, calc(86svh * 1000 / 1560));
+    aspect-ratio: 1000 / 1560;
+    font-size: clamp(11px, 3.05cqw, 16px);
   }
-  .pcd-item {
-    position: static;
-    inset: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: clamp(28px, 7vw, 56px);
-  }
-  .pcd-item:last-child { margin-bottom: 0; }
+  .pcd-item[data-p="3"] .pcd      { --x:  9%; --y:  7.5%; --w: 82%; }
+  .pcd-item[data-p="1"] .pcd      { --x:  5%; --y: 37.0%; --w: 78%; }
+  .pcd-item[data-p="2"] .pcd      { --x: 16%; --y: 65.0%; --w: 72%; }
+  .pcd-item[data-p="3"] .pcd-holo { --x:  6%; --y: 15.0%; --w: 88%; }
+  .pcd-item[data-p="1"] .pcd-holo { --x:  6%; --y: 44.0%; --w: 88%; }
+  .pcd-item[data-p="2"] .pcd-holo { --x:  6%; --y: 71.5%; --w: 88%; }
 
-  .pcd, .pcd-holo {
-    position: static;
-    width: 100%;
-    max-width: 420px;
-  }
-  /* The lens occupies only y≈38%–75% of its own artboard; the rest is
-     transparent headroom the desktop composition needs. Stacked, that
-     headroom reads as enormous empty gaps between pebbles, so it is
-     pulled back in here. */
-  .pcd { order: 2; margin-top: -26%; margin-bottom: -22%; }
-  .pcd-holo { order: 1; }
-
-  .pcd-holo h3 { font-size: 1.5em; }
+  .pcd-holo h3 { font-size: 1.62em; }
   .pcd-holo p  { font-size: 1em; }
 
-  /* shorter travel: 62vh on a phone overshoots the whole screen */
-  @keyframes pcd-rise { from { transform: translateY(26vh); } to { transform: translateY(0); } }
+  /* shorter travel: 62vh overshoots a phone screen entirely */
+  @keyframes pcd-rise { from { transform: translateY(30vh); } to { transform: translateY(0); } }
+}
+
+@media (max-width: 760px) and (orientation: landscape) {
+  /* a phone on its side is short — fall back to the landscape cluster */
+  .pcascade { aspect-ratio: 1440 / 1240; width: min(94vw, calc(84svh * 1440 / 1240)); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PEBBLE CASCADE  —  three resin lenses that rise into one cluster
+
+   Source of truth: Figma "WEB · pebble cascade" (QR landing page,
+   706:374), 7.0s. Written spec: "SPEC · Pebble section" (616:366).
+
+   The pebbles are NOT present at rest. They rise from below the fold as
+   the section scrolls in, park overlapping so they read as one cluster
+   rather than three cards, and each one's copy arrives off its OWN
+   landing rather than after all three are done.
+
+   The lens artwork is Santeri's, exported from Figma untouched. The 5px
+   INSIDE gradient stroke (transparent at the top, warm white at the
+   base) is what reads as 3D — it must survive any re-export.
+
+   NOT interactive. No violet wet state: coral is reserved for things
+   that respond to touch, and these are atmosphere. No drop shadow -
+   there is no floor for one to land on; the warm underglow inside the
+   artwork is the only grounding. No axial rotation - the "unscrewing"
+   spin cannot be faked with a 2D squash, it needs a rendered 3D frame
+   sequence.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.pcascade {
+  position: relative;
+  /* HEIGHT-first, not width-first. The cluster is 1440x1900 — taller than
+     it is wide — so sizing it off the viewport width makes it enormous on a
+     desktop and pushes the bottom pebble off-screen. Fit it to the stage
+     height and let width follow. */
+  width: min(96vw, 1080px, calc(90svh * 1440 / 1240));
+  max-width: 100%;
+  margin: 0 auto;
+  /* The Figma frame is 1440x1900, but the content only spans y 232-1371 —
+     the rest is dead space. Cropping to it makes the cluster far less tall,
+     which matters because the section is PINNED: a tall composition fitted
+     to viewport height ends up narrow, and the copy then has no room. */
+  aspect-ratio: 1440 / 1240;
+
+  /* ⚠️ Type is sized in CONTAINER units, not viewport units. It was
+     `1.111vw` — 16px on a 1440-wide window — while the cluster itself is
+     fitted to viewport HEIGHT and is only ~940px wide there. The copy came
+     out ~2.4x too large for the composition it sits in, which is why the
+     headings collided with the block above. cqw ties it to the cluster, so
+     the proportion holds at every window shape. */
+  container-type: inline-size;
+  font-size: clamp(12px, 1.3cqw, 17px);
+  overflow: visible;
+}
+
+/* ---- a pebble ---------------------------------------------------- */
+/* A full-size transparent layer, NOT `display: contents`. With contents the
+   wrapper generates no box, and the absolutely-positioned copy blocks inside
+   it resolved their containing block somewhere else entirely — they ended up
+   thousands of pixels down the page. An explicit inset:0 layer means the
+   children position against exactly the same box as .pcascade. */
+.pcd-item {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* ---- the composition ---------------------------------------------------
+   The END FORMATION from the Figma reference. Held in CSS rather than in
+   inline styles so a phone can re-compose it — an inline style beats a media
+   query, and that is why the phone previously had to opt out of the pinned
+   cluster altogether. */
+.pcd {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+}
+/* landscape cluster, on a 1440x1240 frame */
+.pcd-item[data-p="3"] .pcd      { --x: 30.56%; --y:  5.00%; --w: 50.07%; }
+.pcd-item[data-p="1"] .pcd      { --x: 17.15%; --y: 30.97%; --w: 45.69%; }
+.pcd-item[data-p="2"] .pcd      { --x: 36.46%; --y: 53.47%; --w: 40.56%; }
+.pcd-item[data-p="3"] .pcd-holo { --x: 32.60%; --y: 15.43%; --w: 46.00%; }
+.pcd-item[data-p="1"] .pcd-holo { --x: 17.00%; --y: 39.59%; --w: 46.00%; }
+.pcd-item[data-p="2"] .pcd-holo { --x: 33.74%; --y: 60.01%; --w: 46.00%; }
+.pcd svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+/* Long visible travel - they should read as arriving from somewhere,
+   not fading up in place. MAGNET: magnetic arrival, no overshoot.
+   An earlier version scaled up from small and read as elastic. */
+.pcd__rise {
+  animation: pcd-rise 1850ms cubic-bezier(0.16, 0.82, 0.22, 1) var(--t) both paused;
+}
+@keyframes pcd-rise {
+  from { transform: translateY(62vh); }
+  to   { transform: translateY(0); }
+}
+
+/* the outline reads FIRST, alone */
+.pcd__outline {
+  fill: none;
+  stroke: #FFF3E2;
+  stroke-width: 9;
+  opacity: 0;
+  animation: pcd-outline 1250ms linear calc(var(--t) + 100ms) both paused;
+}
+@keyframes pcd-outline {
+  0%    { opacity: 0; animation-timing-function: cubic-bezier(0.33, 0, 0.25, 1); }
+  30.4% { opacity: 0.95; }
+  64%   { opacity: 0.95; animation-timing-function: cubic-bezier(0.16, 1, 0.30, 1); }
+  100%  { opacity: 0; }
+}
+
+/* the true material arrives WHILE the pebble is still moving - it must
+   not wait for the park */
+.pcd__mat {
+  opacity: 0;
+  animation: pcd-mat 650ms cubic-bezier(0.33, 0, 0.25, 1) calc(var(--t) + 500ms) both paused;
+}
+@keyframes pcd-mat { to { opacity: 1; } }
+
+/* old camera flash: an even roll up to full, then a slower roll back.
+   Never a spike - that reads as a fault in the page, not as light. */
+.pcd__flash {
+  fill: #fff;
+  opacity: 0;
+  animation: pcd-flash 1600ms linear calc(var(--t) + 1200ms) both paused;
+}
+@keyframes pcd-flash {
+  0%    { opacity: 0; animation-timing-function: cubic-bezier(0.40, 0, 0.38, 1); }
+  34.4% { opacity: 1; animation-timing-function: cubic-bezier(0.30, 0, 0.45, 1); }
+  100%  { opacity: 0; }
+}
+
+/* ---- the copy, sitting on the lens like a hologram ---------------- */
+.pcd-holo {
+  position: absolute;
+  left: var(--x);
+  width: var(--w);
+  top: var(--y);
+  /* Takes the PAGE's ink rather than hardcoding a tone. The cluster sits on
+     the homepage's cream ground, where pale copy vanishes; it was authored
+     in Figma against a dark ground. Inheriting means it stays legible if the
+     section is ever moved onto a dark surface. */
+  text-align: center;
+  color: var(--ink, #262019);
+  /* a light halo, not a drop shadow: the copy reads as a hologram sitting in
+     the air over the lens, and there is no floor for a shadow to fall on */
+  text-shadow: 0 1px 16px rgba(255, 250, 242, 0.85);
+}
+/* ONE size for all three. The pebbles vary; the voice does not. */
+.pcd-holo h3 {
+  margin: 0;
+  font-size: 1.94em;      /* 31px at 1440 */
+  line-height: 1.24;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+.pcd-holo p {
+  margin: 0.75em 0 0;
+  font-size: 1.06em;      /* 17px at 1440 */
+  line-height: 1.52;
+  font-weight: 400;
+  opacity: 0.74;
+}
+.pcd-holo p + p { margin-top: 0; }
+
+/* KinType — the app's one spec for copy arriving. translateY 4pt at
+   phone scale; a little more here because the viewport is wider, but
+   the character is the same: copy barely moves, it resolves.
+   70ms PER LINE - a two-line block that arrives as one loses the
+   cascade, which is the whole feel of it. */
+.pcd-line {
+  display: block;
+  opacity: 0;
+  animation:
+    pcd-line-move 320ms cubic-bezier(0.16, 1, 0.30, 1) var(--ct) both paused,
+    pcd-line-fade 280ms cubic-bezier(0.20, 0, 0.20, 1) var(--ct) both paused;
+}
+@keyframes pcd-line-move { from { translate: 0 10px; } to { translate: 0 0; } }
+@keyframes pcd-line-fade { to { opacity: 1; } }
+
+/* ---- how it runs -------------------------------------------------
+   Everything is authored `paused`. On DESKTOP pebbles.js leaves it paused
+   and sets currentTime from scroll position, so the section scrubs instead
+   of playing on a stopwatch the reader can scroll straight past. On a PHONE
+   the section is not pinned, so `.is-in` releases them to play once. */
+.pcascade.is-in .pcd__rise,
+.pcascade.is-in .pcd__outline,
+.pcascade.is-in .pcd__mat,
+.pcascade.is-in .pcd__flash,
+.pcascade.is-in .pcd-line { animation-play-state: running; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pcd__rise, .pcd__outline, .pcd__mat, .pcd__flash, .pcd-line {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+    translate: none;
+  }
+  .pcd__outline, .pcd__flash { opacity: 0; }
+}
+
+/* The cascade lives on the HOMEPAGE, not the waitlist page: body.wlq is a
+   fixed-height grid with overflow:hidden — a deliberate single screen — so
+   a scroll-revealed section there would be clipped and unreachable.
+
+   Full-bleed rather than inside the reading column: the cluster is a piece
+   of environment, and at column width the three lenses collapse on top of
+   one another. */
+.pcascade-scroll {
+  position: relative;
+  /* The scroll distance the timeline is spread across. 300vh was ~2.5 phone
+     screens for a 4.2s animation, which read as a wall. This is roughly one
+     and a half screens: long enough to feel deliberate, short enough that
+     you are never stuck. */
+  height: 210vh;
+}
+.pcascade-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 3vh clamp(16px, 4vw, 64px);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   PHONE — the cluster is abandoned, not shrunk.
+
+   The desktop composition is a fixed set of percentage positions across a
+   1440x1900 frame. At phone width those overlap into an unreadable pile:
+   each heading lands on the next pebble down. Below 760px each pebble
+   becomes its own block with its copy centred above it, and the section
+   stops being pinned — a 300vh pin on a phone is a trap.
+   ═══════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   PHONE — a portrait composition, still pinned and still scrubbed.
+
+   The landscape cluster is 1440x1240; on a 390-wide screen that is 390x336
+   with two thirds of the screen empty, and the copy collides. So the three
+   pebbles are re-composed down a portrait frame that fills the phone. The
+   MECHANISM is unchanged — pinned stage, scroll drives the timeline — so
+   the animation cannot be scrolled past here either.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 760px) {
+  .pcascade-scroll { height: 190vh; }
+  .pcascade {
+    width: min(94vw, calc(86svh * 1000 / 1560));
+    aspect-ratio: 1000 / 1560;
+    font-size: clamp(11px, 3.05cqw, 16px);
+  }
+  .pcd-item[data-p="3"] .pcd      { --x:  9%; --y:  7.5%; --w: 82%; }
+  .pcd-item[data-p="1"] .pcd      { --x:  5%; --y: 37.0%; --w: 78%; }
+  .pcd-item[data-p="2"] .pcd      { --x: 16%; --y: 65.0%; --w: 72%; }
+  .pcd-item[data-p="3"] .pcd-holo { --x:  6%; --y: 15.0%; --w: 88%; }
+  .pcd-item[data-p="1"] .pcd-holo { --x:  6%; --y: 44.0%; --w: 88%; }
+  .pcd-item[data-p="2"] .pcd-holo { --x:  6%; --y: 71.5%; --w: 88%; }
+
+  .pcd-holo h3 { font-size: 1.62em; }
+  .pcd-holo p  { font-size: 1em; }
+
+  /* shorter travel: 62vh overshoots a phone screen entirely */
+  @keyframes pcd-rise { from { transform: translateY(30vh); } to { transform: translateY(0); } }
+}
+
+@media (max-width: 760px) and (orientation: landscape) {
+  /* a phone on its side is short — fall back to the landscape cluster */
+  .pcascade { aspect-ratio: 1440 / 1240; width: min(94vw, calc(84svh * 1440 / 1240)); }
 }

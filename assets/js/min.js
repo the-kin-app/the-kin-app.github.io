@@ -81,25 +81,22 @@ export const minFigure = (n) => `
          CENTRE of the body is the densest, darkest part. This used to be a bright
          warm pool (#FFE7C0) - inverted optics, and the direct cause of the eyes
          vanishing: it lit the exact region the eyes have to read against. -->
-    <radialGradient id="gdens${n}" gradientUnits="userSpaceOnUse" gradientTransform="translate(166 172) scale(147 117)" cx="0" cy="0" r="1">
-      <stop stop-color="#6B4D2E" stop-opacity=".36"/><stop offset=".38" stop-color="#7A5C3E" stop-opacity=".25"/>
-      <stop offset=".72" stop-color="#8A6B4A" stop-opacity=".08"/><stop offset="1" stop-color="#8A6B4A" stop-opacity="0"/>
+    <radialGradient id="gdens${n}" gradientUnits="userSpaceOnUse" gradientTransform="translate(166 168) scale(178 152)" cx="0" cy="0" r="1">
+      <stop stop-color="#6B4D2E" stop-opacity=".44"/><stop offset=".34" stop-color="#725434" stop-opacity=".37"/>
+      <stop offset=".64" stop-color="#7F613D" stop-opacity=".20"/><stop offset=".85" stop-color="#8A6B4A" stop-opacity=".07"/>
+      <stop offset="1" stop-color="#8A6B4A" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="gcrown${n}" gradientUnits="userSpaceOnUse" gradientTransform="translate(166 40) scale(113 66)" cx="0" cy="0" r="1">
       <stop stop-color="#fff" stop-opacity=".58"/><stop offset=".48" stop-color="#FFF9EE" stop-opacity=".16"/><stop offset="1" stop-color="#FFF9EE" stop-opacity="0"/>
     </radialGradient>
-    <!-- EYE SOCKET, not a halo. A halo ADDS light; this REMOVES it. The eyes are
-         bright inclusions sitting in the densest part of the resin, so they need a
-         pool of density underneath to read against. Keep it a CONTINUOUS pool -
-         clearing the centre makes a donut and reads as goggles.
-         objectBoundingBox, not userSpaceOnUse: one gradient serves both eyes, and
-         a userSpace transform can only ever centre on one of them. The old
-         translate(66 66) put the origin nowhere near either circle (111/221,161.8),
-         so this layer was painting almost empty. Same bug was in gbloom and gspec. -->
-    <radialGradient id="gsocket${n}" gradientUnits="objectBoundingBox" cx=".5" cy=".5" r=".5">
-      <stop stop-color="#553B22" stop-opacity=".34"/><stop offset=".36" stop-color="#563C23" stop-opacity=".27"/>
-      <stop offset=".68" stop-color="#5A3F26" stop-opacity=".11"/><stop offset="1" stop-color="#5A3F26" stop-opacity="0"/>
-    </radialGradient>
+    <!-- ⚠️ THERE IS NO PER-EYE SOCKET, deliberately.
+         An earlier version put a dense r62 pool behind each eye. It gave the
+         contrast but read as a drop shadow painted in the eye area — a local
+         patch, not a property of the material. The darkening now comes ENTIRELY
+         from gdens, the body-wide core density above: Min is translucent, light
+         bends to his edges, and the middle of his body is simply thick. The eyes
+         are bright inclusions sitting in that thickness. If the eyes ever need
+         more contrast, deepen gdens — do not reintroduce a local pool. -->
     <radialGradient id="gbloom${n}" gradientUnits="objectBoundingBox" cx=".5" cy=".5" r=".5">
       <stop stop-color="#FFC97A" stop-opacity=".52"/><stop offset=".34" stop-color="#FFC97A" stop-opacity=".20"/><stop offset="1" stop-color="#FFC97A" stop-opacity="0"/>
     </radialGradient>
@@ -143,7 +140,7 @@ export const minFigure = (n) => `
             fill="none" stroke="url(#gborder${n})" stroke-width="16"/>
     <g class="min__material" mask="url(#mshell${n})">
       <rect x="-20" y="-20" width="${VB_W + 40}" height="${VB_H + 40}" fill="url(#gmat${n})"/>
-      <ellipse cx="166" cy="172" rx="147" ry="117" fill="url(#gdens${n})"/>
+      <ellipse cx="166" cy="168" rx="178" ry="152" fill="url(#gdens${n})"/>
       <ellipse cx="166" cy="40" rx="113" ry="66" fill="url(#gcrown${n})"/>
     </g>
 
@@ -152,7 +149,6 @@ export const minFigure = (n) => `
 
     <g class="min__face">
       <g class="min__eye" data-side="-1">
-        <circle class="min__socket" cx="111" cy="161.8" r="62" fill="url(#gsocket${n})"/>
         <circle class="min__bloom" cx="111" cy="161.8" r="52" fill="url(#gbloom${n})" style="mix-blend-mode:screen"/>
         <g class="min__lid-clip" clip-path="url(#ceyeL${n})">
           <circle class="min__core" cx="111" cy="161.8" r="26.5" fill="url(#gcore${n})"/>
@@ -161,7 +157,6 @@ export const minFigure = (n) => `
         </g>
       </g>
       <g class="min__eye" data-side="1">
-        <circle class="min__socket" cx="221" cy="161.8" r="62" fill="url(#gsocket${n})"/>
         <circle class="min__bloom" cx="221" cy="161.8" r="52" fill="url(#gbloom${n})" style="mix-blend-mode:screen"/>
         <g class="min__lid-clip" clip-path="url(#ceyeR${n})">
           <circle class="min__core" cx="221" cy="161.8" r="26.5" fill="url(#gcore${n})"/>

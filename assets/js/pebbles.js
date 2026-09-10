@@ -58,15 +58,15 @@ const ART = {
    t = when this pebble starts. Land is t + 1.85s; its copy follows 150ms
    after its OWN landing, never after all three. */
 const DISCS = [
-  { k: 'p3', t: 0.00, x: 30.56, y:  5.00, w: 50.07,
+  { k: 'p3', p: 3, t: 0.00, x: 30.56, y:  5.00, w: 50.07,
     cx: 32.60, cy: 15.43, cw: 46.00,
     h: 'Min, always with you',
     l: ['A companion that understands', 'and grows with you'] },
-  { k: 'p1', t: 0.55, x: 17.15, y: 30.97, w: 45.69,
+  { k: 'p1', p: 1, t: 0.55, x: 17.15, y: 30.97, w: 45.69,
     cx: 17.00, cy: 39.59, cw: 46.00,
     h: 'Private by design',
     l: ['Your world stays yours.', 'Always encrypted.'] },
-  { k: 'p2', t: 1.10, x: 36.46, y: 53.47, w: 40.56,
+  { k: 'p2', p: 2, t: 1.10, x: 36.46, y: 53.47, w: 40.56,
     cx: 33.74, cy: 60.01, cw: 46.00,
     h: 'Real connection',
     l: ['For the moments that', 'matter most.'] }
@@ -125,95 +125,62 @@ export function pebbleCascade(root) {
        paint order — the copy has to sit ON the lens, not under it. On a
        phone .pcd-item becomes a flex column and `order` puts the copy
        above its own pebble instead. */
+    /* Position comes from CSS, not from inline styles. Inline styles beat a
+       media query, so a phone could never re-compose the cluster without a
+       pile of !important — which is why the phone got its own un-pinned
+       layout and you could scroll straight past the animation. */
     return `
-  <div class="pcd-item">
-    <div class="pcd" style="--x:${s.x}%;--y:${s.y}%;--w:${s.w}%;--t:${t}">
+  <div class="pcd-item" data-p="${s.p}">
+    <div class="pcd" style="--t:${t}">
       <div class="pcd__rise" style="--t:${t}">${art(ART[s.k], id)}</div>
     </div>
-    <div class="pcd-holo" style="--x:${s.cx}%;--y:${s.cy}%;--w:${s.cw}%">${lines.join('')}</div>
+    <div class="pcd-holo">${lines.join('')}</div>
   </div>`;
   }).join('');
 
   host.insertAdjacentHTML('beforeend', html);
 
   /* ---- HOW IT PLAYS ------------------------------------------------
-     Two mechanisms, because a phone and a desktop want different things.
+     Pinned and SCRUBBED, on every screen size. The section is tall, the
+     stage inside it is sticky, and scroll position drives the timeline
+     directly: every animation is paused and we set currentTime on it. The
+     page cannot move past the cluster before it has played, because the
+     animation IS the scroll — and scrubbing backwards works for free.
 
-     DESKTOP — scrubbed. The cluster is pinned (tall section, sticky stage)
-     and scroll position drives the timeline directly, so the page cannot
-     move past the section before the animation has run. That is the fix for
-     "it feels natural to keep scrolling and the animation doesn't finish" —
-     the animation IS the scroll. Every animation is paused and we set
-     currentTime on it: exact, no delay arithmetic, and scrubbing backwards
-     works for free.
-
-     PHONE — plays on its own. A 300vh pin on a phone is a trap, so the
-     section is un-pinned there and the pebbles simply play once when they
-     come into view. ⚠️ The JS must NOT pause them in that case: `pause()`
-     overrides the stylesheet, which is what left the phone frozen mid-
-     animation with half-faded copy.
-
-     Native `animation-timeline: view()` would be tidier than either but is
-     Chromium/Safari-26 only, so this stays the mechanism.
+     The phone used to get a separate un-pinned "play once when visible"
+     path. That is what let you scroll straight past a 4.2s animation that
+     had barely started. There is one mechanism now; only the composition
+     differs, and that lives in CSS.
      ------------------------------------------------------------------ */
   const TOTAL = 4200;                    // ms — the longest track's end
-  const PHONE = matchMedia('(max-width: 760px)');
-  const REDUCED = matchMedia('(prefers-reduced-motion: reduce)');
 
-  if (REDUCED.matches) { host.classList.add('is-in'); return; }
-
-  let teardown = null;
-
-  function playOnce() {
-    // let the stylesheet run them; do not touch currentTime
-    const io = new IntersectionObserver((es) => {
-      es.forEach((e) => { if (e.isIntersecting) { host.classList.add('is-in'); io.disconnect(); } });
-    }, { threshold: 0.12 });
-    io.observe(host);
-    return () => io.disconnect();
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    host.classList.add('is-in');
+    return;
   }
 
-  function scrub() {
-    const scroller = host.closest('.pcascade-scroll') || host.parentElement;
-    /* Re-queried every frame rather than cached. The browser recreates an
-       animation whenever its element's styles change, and a cached list
-       silently stops covering the new ones — that is what left the copy
-       blocks frozen at currentTime 0 while the pebbles scrubbed correctly.
-       ~30 animations, only while scrolling; the cost is nothing next to
-       being wrong. */
-    let ticking = false;
-    function paint() {
-      ticking = false;
-      const r = scroller.getBoundingClientRect();
-      const span = r.height - window.innerHeight;
-      if (span <= 0) return;
-      const p = Math.min(1, Math.max(0, -r.top / span));
-      const t = p * TOTAL;
-      const anims = host.getAnimations({ subtree: true });
-      for (let i = 0; i < anims.length; i++) {
-        try { anims[i].pause(); anims[i].currentTime = t; } catch (e) {}
-      }
+  const scroller = host.closest('.pcascade-scroll') || host.parentElement;
+  let ticking = false;
+
+  function paint() {
+    ticking = false;
+    const r = scroller.getBoundingClientRect();
+    const span = r.height - window.innerHeight;
+    if (span <= 0) return;
+    const p = Math.min(1, Math.max(0, -r.top / span));
+    const t = p * TOTAL;
+    /* Re-queried every frame: the browser recreates an animation whenever
+       its element's styles change, and a cached list silently stops
+       covering the new ones. */
+    const anims = host.getAnimations({ subtree: true });
+    for (let i = 0; i < anims.length; i++) {
+      try { anims[i].pause(); anims[i].currentTime = t; } catch (e) {}
     }
-    const collect = () => paint();
-    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(paint); } };
-    const onResize = () => { collect(); paint(); };
-    collect();
-    addEventListener('scroll', onScroll, { passive: true });
-    addEventListener('resize', onResize, { passive: true });
-    // animations are created asynchronously after the markup lands
-    requestAnimationFrame(() => { collect(); paint(); });
-    paint();
-    return () => {
-      removeEventListener('scroll', onScroll);
-      removeEventListener('resize', onResize);
-      anims.forEach((a) => { try { a.play(); } catch (e) {} });
-    };
   }
+  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(paint); } };
 
-  const mount = () => {
-    if (teardown) teardown();
-    teardown = PHONE.matches ? playOnce() : scrub();
-  };
-  mount();
-  PHONE.addEventListener('change', mount);
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', paint, { passive: true });
+  requestAnimationFrame(paint);
+  paint();
 }

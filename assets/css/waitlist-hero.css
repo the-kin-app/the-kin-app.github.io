@@ -932,7 +932,16 @@ body.wlq .hslide__say p {
   color: var(--scene-ink-soft);
   transition: color var(--cam-dur) var(--cam-ease) 140ms;
 }
-body.wlq .hslide__say em { color: var(--violet); }
+/* ⚠️ NO ACCENT ON STATIC TEXT. Violet marks things that can be pressed
+   below the surface — buttons, the shutter, the shutter platform. A word in
+   a sentence cannot be pressed, so colouring it violet teaches the affordance
+   wrong and spends the one signal the system has. Emphasis here is weight and
+   full-strength ink, the same as .term on the homepage. */
+body.wlq .hslide__say em {
+  color: var(--scene-ink);
+  font-style: normal;
+  font-weight: var(--font-weight-semibold, 600);
+}
 
 @media (prefers-reduced-motion: reduce) {
   .world-ground, .wdust, .fog { transition: opacity 300ms ease; transform: none !important; }
