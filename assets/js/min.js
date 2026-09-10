@@ -59,17 +59,11 @@ export const minFigure = (n) => `
            the shape reads sharp and cut-out at small sizes. -->
       <g transform="translate(${SHELL_DX} ${SHELL_DY})"
          stroke="#fff" stroke-width="14" stroke-linejoin="round" stroke-linecap="round">
-        <!-- APPENDAGES ARE SIZED TO THE BODY THEY HANG OFF, which is the small
-             dome above — not the wide one the old feet and nubs were drawn for.
-             That mismatch (205 units of body, 280 units of limb) is what read
-             as a mushroom cap with wings. Canon: two small rounded nub feet at
-             the bottom edge, close together and centred; two small rounded side
-             nubs LOW on the flanks, hugging the body. No arms, no ears. -->
-        <path class="min__foot" data-side="-1" d="M121 254L165 254L165 280C165 291 155 297 143 297C131 297 121 291 121 280Z" fill="#fff"/>
-        <path class="min__foot" data-side="1" d="M187 254L231 254L231 280C231 291 221 297 209 297C197 297 187 291 187 280Z" fill="#fff"/>
-        <g class="min__limb-pivot" data-side="-1"><path d="M70 194C48 195 34 205 36 217C38 229 58 236 84 232Z" fill="#fff"/></g>
-        <g class="min__limb-pivot" data-side="1"><path d="M282 194C304 195 318 205 316 217C314 229 294 236 268 232Z" fill="#fff"/></g>
-        <path class="min__torso" d="M61.3 190.14C48.67 126.44 103.55 68 176 68C248.45 68 303.33 126.44 290.7 190.14C292 214 292 238 292 252C292 268 280 277 262 277L90 277C72 277 60 268 60 252C60 238 60 214 61.3 190.14Z" fill="#fff"/>
+        <path class="min__foot" data-side="-1" d="M63.6248 262.8C55.6248 282.8 61.6248 306.8 87.6248 313.8C117.625 321.8 151.625 306.8 163.625 282.8C169.625 268.8 167.625 260.8 157.625 256.8L63.6248 262.8Z" fill="#fff"/>
+        <path class="min__foot" data-side="1" d="M288.376 262.8C296.376 282.8 290.376 306.8 264.376 313.8C234.376 321.8 200.376 306.8 188.376 282.8C182.376 268.8 184.376 260.8 194.376 256.8L288.376 262.8Z" fill="#fff"/>
+        <g class="min__limb-pivot" data-side="-1"><path d="M70.4817 99.8C54.4817 103.8 34.4817 125.8 24.4817 155.8C17.4817 177.8 14.4817 195.8 19.4817 203.8C26.4817 210.8 41.4817 203.8 51.4817 186.8C62.4817 166.8 71.4817 133.8 70.4817 99.8Z" fill="#fff"/></g>
+        <g class="min__limb-pivot" data-side="1"><path d="M281.518 99.8C297.518 103.8 317.518 125.8 327.518 155.8C334.518 177.8 337.518 195.8 332.518 203.8C325.518 210.8 310.518 203.8 300.518 186.8C289.518 166.8 280.518 133.8 281.518 99.8Z" fill="#fff"/></g>
+        <path class="min__torso" d="M36 196.8C36 91.8 86 25.8 176 25.8C266 25.8 316 91.8 316 196.8C316 241.8 302 279.8 274 297.8C250 312.8 102 312.8 78 297.8C50 279.8 36 241.8 36 196.8Z" fill="#fff"/>
       </g>
       <!-- THE ORB. Sits OUTSIDE the translated/stroked group so it keeps its
            true circle: inside it, the 14px round stroke would swell it and the
@@ -87,12 +81,12 @@ export const minFigure = (n) => `
          CENTRE of the body is the densest, darkest part. This used to be a bright
          warm pool (#FFE7C0) - inverted optics, and the direct cause of the eyes
          vanishing: it lit the exact region the eyes have to read against. -->
-    <radialGradient id="gdens${n}" gradientUnits="userSpaceOnUse" gradientTransform="translate(166 168) scale(199 152)" cx="0" cy="0" r="1">
+    <radialGradient id="gdens${n}" gradientUnits="userSpaceOnUse" gradientTransform="translate(166 168) scale(178 152)" cx="0" cy="0" r="1">
       <stop stop-color="#6B4D2E" stop-opacity=".44"/><stop offset=".34" stop-color="#725434" stop-opacity=".37"/>
       <stop offset=".64" stop-color="#7F613D" stop-opacity=".20"/><stop offset=".85" stop-color="#8A6B4A" stop-opacity=".07"/>
       <stop offset="1" stop-color="#8A6B4A" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="gcrown${n}" gradientUnits="userSpaceOnUse" gradientTransform="translate(166 40) scale(127 66)" cx="0" cy="0" r="1">
+    <radialGradient id="gcrown${n}" gradientUnits="userSpaceOnUse" gradientTransform="translate(166 40) scale(113 66)" cx="0" cy="0" r="1">
       <stop stop-color="#fff" stop-opacity=".58"/><stop offset=".48" stop-color="#FFF9EE" stop-opacity=".16"/><stop offset="1" stop-color="#FFF9EE" stop-opacity="0"/>
     </radialGradient>
     <!-- ⚠️ THERE IS NO PER-EYE SOCKET, deliberately.
@@ -106,7 +100,7 @@ export const minFigure = (n) => `
     <radialGradient id="gbloom${n}" gradientUnits="objectBoundingBox" cx=".5" cy=".5" r=".5">
       <stop stop-color="#FFC97A" stop-opacity=".52"/><stop offset=".34" stop-color="#FFC97A" stop-opacity=".20"/><stop offset="1" stop-color="#FFC97A" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="gspec${n}" gradientUnits="userSpaceOnUse" gradientTransform="translate(130 75) scale(72 28)" cx="0" cy="0" r="1">
+    <radialGradient id="gspec${n}" gradientUnits="userSpaceOnUse" gradientTransform="translate(134 75) scale(66 28)" cx="0" cy="0" r="1">
       <stop stop-color="#fff" stop-opacity=".74"/><stop offset=".30" stop-color="#fff" stop-opacity=".40"/>
       <stop offset=".62" stop-color="#fff" stop-opacity=".14"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
     </radialGradient>
@@ -125,8 +119,8 @@ export const minFigure = (n) => `
       <stop offset=".34" stop-color="#FFF6E6" stop-opacity=".62"/>
       <stop offset="1" stop-color="#FFE9C8" stop-opacity=".9"/>
     </linearGradient>
-    <clipPath id="ceyeL${n}"><circle cx="125.8" cy="161.8" r="19.5"/></clipPath>
-    <clipPath id="ceyeR${n}"><circle cx="206.2" cy="161.8" r="19.5"/></clipPath>
+    <clipPath id="ceyeL${n}"><circle cx="111" cy="161.8" r="26.5"/></clipPath>
+    <clipPath id="ceyeR${n}"><circle cx="221" cy="161.8" r="26.5"/></clipPath>
   </defs>
 
   <g class="min__body">
@@ -146,26 +140,26 @@ export const minFigure = (n) => `
             fill="none" stroke="url(#gborder${n})" stroke-width="16"/>
     <g class="min__material" mask="url(#mshell${n})">
       <rect x="-20" y="-20" width="${VB_W + 40}" height="${VB_H + 40}" fill="url(#gmat${n})"/>
-      <ellipse cx="166" cy="168" rx="199" ry="152" fill="url(#gdens${n})"/>
-      <ellipse cx="166" cy="40" rx="127" ry="66" fill="url(#gcrown${n})"/>
+      <ellipse cx="166" cy="168" rx="178" ry="152" fill="url(#gdens${n})"/>
+      <ellipse cx="166" cy="40" rx="113" ry="66" fill="url(#gcrown${n})"/>
     </g>
 
     <!-- the specular catchlight on the crown of the dome -->
-    <ellipse class="min__spec" cx="130" cy="75" rx="72" ry="28" fill="url(#gspec${n})" transform="rotate(-10 130 75)"/>
+    <ellipse class="min__spec" cx="134" cy="75" rx="66" ry="28" fill="url(#gspec${n})" transform="rotate(-10 134 75)"/>
 
     <g class="min__face">
       <g class="min__eye" data-side="-1">
-        <circle class="min__bloom" cx="125.8" cy="161.8" r="38" fill="url(#gbloom${n})" style="mix-blend-mode:screen"/>
+        <circle class="min__bloom" cx="111" cy="161.8" r="52" fill="url(#gbloom${n})" style="mix-blend-mode:screen"/>
         <g class="min__lid-clip" clip-path="url(#ceyeL${n})">
-          <circle class="min__core" cx="125.8" cy="161.8" r="19.5" fill="url(#gcore${n})"/>
+          <circle class="min__core" cx="111" cy="161.8" r="26.5" fill="url(#gcore${n})"/>
           <rect class="min__lid min__lid--up" x="68.5" y="71.3" width="85" height="64" fill="#fbe7d2"/>
           <rect class="min__lid min__lid--low" x="68.5" y="188.3" width="85" height="64" fill="#fbe7d2"/>
         </g>
       </g>
       <g class="min__eye" data-side="1">
-        <circle class="min__bloom" cx="206.2" cy="161.8" r="38" fill="url(#gbloom${n})" style="mix-blend-mode:screen"/>
+        <circle class="min__bloom" cx="221" cy="161.8" r="52" fill="url(#gbloom${n})" style="mix-blend-mode:screen"/>
         <g class="min__lid-clip" clip-path="url(#ceyeR${n})">
-          <circle class="min__core" cx="206.2" cy="161.8" r="19.5" fill="url(#gcore${n})"/>
+          <circle class="min__core" cx="221" cy="161.8" r="26.5" fill="url(#gcore${n})"/>
           <rect class="min__lid min__lid--up" x="178.5" y="71.3" width="85" height="64" fill="#fbe7d2"/>
           <rect class="min__lid min__lid--low" x="178.5" y="188.3" width="85" height="64" fill="#fbe7d2"/>
         </g>

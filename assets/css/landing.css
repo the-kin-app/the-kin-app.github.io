@@ -1159,8 +1159,8 @@ p { margin: 0; }
   animation-fill-mode: none, both;
   animation-timing-function: linear, cubic-bezier(0.34, 1.28, 0.52, 1);
 }
-.min__limb-pivot[data-side="-1"] { transform-origin: 80px 214px;  animation-name: min-limb-l, min-sprout; animation-duration: 4s, 820ms; }
-.min__limb-pivot[data-side="1"]  { transform-origin: 272px 214px; animation-name: min-limb-r, min-sprout; animation-duration: 4s, 820ms; }
+.min__limb-pivot[data-side="-1"] { transform-origin: 60px 85px;  animation-name: min-limb-l, min-sprout; animation-duration: 4s, 820ms; }
+.min__limb-pivot[data-side="1"]  { transform-origin: 272px 85px; animation-name: min-limb-r, min-sprout; animation-duration: 4s, 820ms; }
 @keyframes min-limb-l {
   0%     { rotate: 0deg; scale: 1 1; }
   7.5%   { rotate: -1.8deg; }
@@ -2018,11 +2018,11 @@ p { margin: 0; }
 @keyframes min-sprout { from { transform: scale(0.02); } to { transform: scale(1); } }
 
 @supports (d: path("M0 0Z")) {
-  @keyframes min-morph-body    { from { d: path("M112.91 182.11C105.97 147.08 136.15 114.94 176 114.94C215.85 114.94 246.03 147.08 239.09 182.11C239.8 195.24 239.8 208.44 239.8 216.13C239.8 224.94 233.2 229.89 223.3 229.89L128.7 229.89C118.8 229.89 112.2 224.94 112.2 216.13C112.2 208.44 112.2 195.24 112.91 182.11Z"); } to { d: path("M61.3 190.14C48.67 126.44 103.55 68 176 68C248.45 68 303.33 126.44 290.7 190.14C292 214 292 238 292 252C292 268 280 277 262 277L90 277C72 277 60 268 60 252C60 238 60 214 61.3 190.14Z"); } }
+  @keyframes min-morph-body    { from { d: path("M73.59 190.14C62.31 126.44 111.31 68 176 68C240.69 68 289.69 126.44 278.41 190.14C273.92 215.47 260.21 238.24 239.91 254.04C202.33 283.32 149.67 283.32 112.09 254.04C91.79 238.24 78.08 215.47 73.59 190.14Z"); } to { d: path("M36 196.8C36 91.8 86 25.8 176 25.8C266 25.8 316 91.8 316 196.8C316 241.8 302 279.8 274 297.8C250 312.8 102 312.8 78 297.8C50 279.8 36 241.8 36 196.8Z"); } }
   @keyframes min-morph-outline { from { d: path("M73.59 190.14C62.31 126.44 111.31 68 176 68C240.69 68 289.69 126.44 278.41 190.14C273.92 215.47 260.21 238.24 239.91 254.04C202.33 283.32 149.67 283.32 112.09 254.04C91.79 238.24 78.08 215.47 73.59 190.14Z"); } to { d: path("M 159.00 0.00 C 222.05 0.00 265.46 32.39 285.81 87.88 C 295.59 97.95 304.73 112.63 310.52 130.00 C 317.52 152.00 320.52 170.00 315.52 178.00 C 311.67 181.84 305.42 181.46 298.90 177.53 C 297.93 209.12 289.83 236.82 274.61 255.93 C 273.81 270.12 265.40 283.15 247.38 288.00 C 230.53 292.49 212.41 289.73 197.65 282.19 C 173.07 283.60 144.93 283.60 120.36 282.19 C 105.59 289.73 87.48 292.49 70.63 288.00 C 52.60 283.15 44.19 270.12 43.39 255.93 C 28.17 236.82 20.07 209.12 19.10 177.53 C 12.58 181.46 6.33 181.84 2.48 178.00 C -2.52 170.00 0.48 152.00 7.48 130.00 C 13.27 112.63 22.41 97.95 32.19 87.88 C 52.54 32.39 95.96 0.00 159.00 0.00 Z"); } }
 
   .min__torso {
-    d: path("M61.3 190.14C48.67 126.44 103.55 68 176 68C248.45 68 303.33 126.44 290.7 190.14C292 214 292 238 292 252C292 268 280 277 262 277L90 277C72 277 60 268 60 252C60 238 60 214 61.3 190.14Z");
+    d: path("M73.59 190.14C62.31 126.44 111.31 68 176 68C240.69 68 289.69 126.44 278.41 190.14C273.92 215.47 260.21 238.24 239.91 254.04C202.33 283.32 149.67 283.32 112.09 254.04C91.79 238.24 78.08 215.47 73.59 190.14Z");
     animation: min-morph-body 1100ms cubic-bezier(0.33, 0, 0.15, 1)
                calc(var(--min-entry, 0ms) + 1750ms) forwards;
   }
@@ -2037,8 +2037,8 @@ p { margin: 0; }
 }
 
 /* the limbs and feet sprout, staggered — limbs lead, feet follow 140ms later */
-.min__foot[data-side="-1"] { transform-origin: 143px 262px; }
-.min__foot[data-side="1"]  { transform-origin: 209px 262px; }
+.min__foot[data-side="-1"] { transform-origin: 115px 258px; }
+.min__foot[data-side="1"]  { transform-origin: 242px 258px; }
 
 /* ═══════════════════════════════════════════════════════════════════════
    ORB AND BORDER ARE HERO-ONLY — GLOBAL DEFAULT IS HIDDEN
@@ -2217,11 +2217,22 @@ p { margin: 0; }
   100%    { opacity: 0; scale: 1.06; }
 }
 
-/* ---- 679:443 Torso · pivot — hidden inside the orb, then grows -------- */
+/* ---- 679:443 Torso · pivot — hidden inside the orb, then grows --------
+   THE TORSO MUST END ON FIGMA'S "Torso · base" (757:437 — 280 x 283.25).
+   `.min__torso` declares the MORPH'S START path as its static `d`, and the
+   hero replaces the animation shorthand with wmx-torso, which animates
+   transform only — so min-morph-body never runs here and the torso was
+   stuck on that start shape for the whole sequence: a body 205 units wide
+   wearing limbs and feet drawn for one 280 wide. That is the entire reason
+   Min read as a mushroom cap with wings. The geometry was never wrong; the
+   hero was simply never letting it finish. */
 .wordmark--hero-resin .min__torso {
   transform-box: fill-box;
   transform-origin: center;
   animation: wmx-torso var(--T) linear both;
+}
+@supports (d: path("M0 0Z")) {
+  .wordmark--hero-resin .min__torso { d: path("M36 196.8C36 91.8 86 25.8 176 25.8C266 25.8 316 91.8 316 196.8C316 241.8 302 279.8 274 297.8C250 312.8 102 312.8 78 297.8C50 279.8 36 241.8 36 196.8Z"); }
 }
 @keyframes wmx-torso {
   0%      { translate: 0 -7.2px; scale: 0.48; }
