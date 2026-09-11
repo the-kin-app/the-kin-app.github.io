@@ -1,0 +1,9 @@
+00:00.288  blend            | Read blend: "/Users/nao/Desktop/kin-site/outputs/min-character/Min_Idle.blend"
+00:08.244  render           | Saved: '/Users/nao/Desktop/kin-site/outputs/min-character/min-front.png'
+00:17.982  render           | Saved: '/Users/nao/Desktop/kin-site/outputs/min-character/min-three-quarter.png'
+00:28.466  render           | Saved: '/Users/nao/Desktop/kin-site/outputs/min-character/min-back.png'
+00:57.940  render           | Saved: '/Users/nao/Desktop/kin-site/outputs/min-character/min-idle-transparent.png'
+Blender 5.1.1 (hash b70da489d7f4 built 2026-04-14 01:46:23)
+Scene switch for render: 'MIN • Idle studio' in file: '/Users/nao/Desktop/kin-site/outputs/min-character/Min_Idle.blend'
+
+Blender quit

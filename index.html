@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Min — Where strangers become kin</title>
-<meta name="description" content="Min introduces you to the right people and moments around you, at the right moment. No swiping, no doom scrolling, no chatting — just accept the intro and say hello, in real life. Helsinki first.">
-<meta name="theme-color" content="#2A2320">
+<meta name="description" content="Talk to Min, Min finds someone worth meeting a short walk away, you go and say hello. No profile pictures, no swiping, no feed — and what Min learns about you stays on your phone. Helsinki first.">
+<meta name="theme-color" content="#2F333F">
 <link rel="canonical" href="https://hellomin.app/">
 
 <meta property="og:title" content="Min — Where strangers become kin">
@@ -40,6 +40,26 @@
       "url": "https://hellomin.app/",
       "inLanguage": "en",
       "publisher": { "@id": "https://hellomin.app/#organization" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://hellomin.app/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Is Min a dating app?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Min introduces you to people worth meeting and doesn't decide what that turns into. Some of it is a coffee, some of it is a walk with someone you'd never have spoken to, some of it is nothing." } },
+        { "@type": "Question", "name": "Do I have to make a profile?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Talking to Min is the profile. No photo, no bio, no prompts to answer." } },
+        { "@type": "Question", "name": "What does Min actually know about me?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Whatever you've told it, held on your phone. To find you someone nearby it sends the minimum that introduction needs, and you see what that is before anyone else does. Min does not sell data." } },
+        { "@type": "Question", "name": "Will it keep pinging me?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Min has a hard cap on how often it is allowed to contact you. There are no streaks to keep and nothing to come back to daily." } },
+        { "@type": "Question", "name": "Can someone look me up on it?",
+          "acceptedAnswer": { "@type": "Answer", "text": "There is no search, no profiles to browse and no followers. An introduction only becomes real when both people say yes to it." } },
+        { "@type": "Question", "name": "What will Min cost?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Pricing is not set yet. Advertising and selling data are ruled out, because both require holding your attention." } },
+        { "@type": "Question", "name": "When does Min reach my city?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Helsinki first, one neighbourhood at a time. A hyperlocal app is useless until the people near you are on it. Join the waitlist and Min goes where people are waiting." } }
+      ]
     }
   ]
 }
@@ -52,30 +72,27 @@
 <!-- ?v= is a cache bust — see the note on the same links in /waitlist/. -->
 <link rel="stylesheet" href="/assets/css/tokens.css?v=20260910b">
 <link rel="stylesheet" href="/assets/css/landing.css?v=20260910b">
-<link rel="stylesheet" href="/assets/css/pebbles.css?v=20260910b">
+<link rel="stylesheet" href="/assets/css/home-hero.css?v=20260911k">
+<link rel="stylesheet" href="/assets/css/home-sections.css?v=20260911a">
 
 <script type="importmap">
 { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js" } }
 </script>
+<!-- Warm the socket only. min-home.js decides whether to fetch three at all
+     (Data Saver, 2G and low-memory devices keep the still image), so a static
+     modulepreload here would download it behind that decision's back. -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 </head>
 <body>
 
-<!-- the environment everything floats in: light pooling at the floor,
-     slow banks of fog above it -->
-<div class="env" aria-hidden="true">
-  <span class="fog fog--1"></span>
-  <span class="fog fog--2"></span>
-  <span class="fog fog--3"></span>
-</div>
-<canvas id="scene" aria-hidden="true"></canvas>
 <div class="rail" aria-hidden="true"></div>
 
 <main>
 
   <!-- ── hero ─────────────────────────────────────────────── -->
-  <section class="hero" data-reveal>
+  <section class="hero hero--app" data-reveal>
     <div class="shell">
-      <h1 class="visually-hidden">Min — where stranger becomes kin</h1>
+      <div class="hero__copy">
 
       <!-- The Min · Resin wordmark artwork, minus the i-dot: Min sits in
            that gap. Inlined (not <img>) so the glass panels' backdrop-filter
@@ -198,26 +215,81 @@
         </div>
       </div>
 
-      <h2 class="rise" data-delay="2">Where strangers become&nbsp;kin</h2>
+      <h1 class="rise" data-delay="2">spontaneous face-to-face meetings <span class="hero__headline-soft">right around the corner</span></h1>
       <p class="lede rise" data-delay="3">
-        IRL social app that introduces you to the right people and moments around you. No swiping, no doom-scrolling, no texting — just
-        accept the intro, then say hello, in real life.
+        A little free time. Someone nearby. Min brings you together for a coffee, a walk, or a new favourite human. Accept an intro and take it into real life.
       </p>
+      <!-- The signup itself, not a link to it: /waitlist is one more tap
+           between wanting in and being in. Same <form> contract, same
+           Worker, bound by waitlist-form.js. -->
       <div class="hero__actions">
-        <a class="btn btn--primary btn--lg btn-emerge" data-delay="4" href="/waitlist/">
-          <span class="btn__fill" aria-hidden="true"></span>
-          <span class="btn__flash" aria-hidden="true"></span>
-          <span class="btn__label">Join waitlist</span>
-          <svg class="btn__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-        <a class="btn btn--quiet btn--lg btn-emerge" data-delay="5" href="#problem"><span class="btn__label">Why we're building it</span></a>
+        <div class="signup-block rise" data-delay="4">
+          <form class="signup" data-signup novalidate>
+            <div class="signup__row">
+              <input class="signup__input" type="email" name="email" required
+                     placeholder="you@example.com" autocomplete="email" inputmode="email"
+                     aria-label="Your email">
+              <button class="btn btn--primary btn--lg" type="submit">
+                <span class="btn__fill" aria-hidden="true"></span>
+                <span class="btn__flash" aria-hidden="true"></span>
+                <span class="btn__label">Join waitlist</span>
+                <svg class="btn__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            <!-- Honeypot: hidden from humans, bots tend to fill it. Leave empty. -->
+            <input class="visually-hidden" type="text" name="website"
+                   tabindex="-1" autocomplete="off" aria-hidden="true">
+            <p class="field-error" role="alert"></p>
+            <p class="status" role="status"></p>
+          </form>
+          <div class="signup__done" data-signup-done hidden>
+            <span class="signup__tick" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                   stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>
+            </span>
+            <div>
+              <strong>You're on the list</strong>
+              <span>We'll email you the moment Min opens in your neighbourhood</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <p class="fineprint rise" data-delay="5">Early beta coming to Helsinki, early 2027.</p>
+      <p class="fineprint rise" data-delay="5">Helsinki first. Early beta arriving in early 2027.</p>
+      </div>
+
+      <figure class="hero__preview rise" data-delay="3" aria-label="Illustrative Min app preview: a nearby introduction for a spontaneous coffee">
+        <div class="app-phone">
+          <div class="app-phone__status" aria-hidden="true"><span>9:41</span><span class="app-phone__island"></span><span>••• ▰</span></div>
+          <div class="app-phone__header"><img src="/assets/img/min-logo-flat-white.svg" width="48" height="30" alt="Min"><span class="app-location">↗ Helsinki</span></div>
+          <div class="app-phone__intro"><span class="app-eyebrow">A LITTLE TIME. A LITTLE POSSIBILITY.</span><h2>Your people.<br>Closer than you think.</h2><p>Let’s see who’s around.</p></div>
+          <div class="app-radar" aria-hidden="true">
+            <div class="app-radar__ring app-radar__ring--outer"></div><div class="app-radar__ring app-radar__ring--inner"></div>
+            <span class="app-person app-person--one"><span>J</span><small>Jules</small></span>
+            <span class="app-person app-person--two"><span>A</span><small>Aino</small></span>
+            <span class="app-person app-person--three"><span>E</span><small>Elias</small></span>
+            <span class="app-radar__you"><i></i>You</span>
+            <span class="app-radar__caption">Good company, a short walk away</span>
+          </div>
+          <div class="app-invite">
+            <div class="app-invite__eyebrow"><span class="app-live-dot"></span>A little nudge from Min<span>now</span></div>
+            <div class="app-invite__person"><span class="app-avatar">J</span><div><strong>Meet Jules</strong><span>5 min walk · Up for a coffee</span></div><span class="app-invite__spark" aria-hidden="true">✧</span></div>
+            <p>You both love slow mornings and finding new corners of the city. Coffee together?</p>
+            <span class="app-invite__cta">Let’s meet <span aria-hidden="true">↗</span></span>
+          </div>
+          <div class="app-phone__footer"><span class="app-live-dot"></span>Open to a little spontaneity</div>
+          <div class="app-phone__home" aria-hidden="true"></div>
+        </div>
+        <div class="min-companion" role="img" aria-label="Min glows warmly through his frosted shell, resting beside a three-dimensional phone on the sunlit floor">
+          <img class="min-companion__fallback" src="/assets/img/min-home-fallback.png" alt="" width="400" height="400" decoding="async">
+          <canvas class="min-companion__canvas" aria-hidden="true"></canvas>
+        </div>
+        <button class="min-motion" hidden type="button" aria-pressed="false">Pause Min</button>
+      </figure>
     </div>
 
-    <a class="scroll-cta" href="#problem" aria-label="Scroll to learn more">
+    <a class="scroll-cta" href="#how" aria-label="Scroll to learn more">
       <span class="scroll-cta__label">See more</span>
       <svg class="scroll-cta__chevron" width="14" height="8" viewBox="0 0 14 8" fill="none" aria-hidden="true">
         <path d="M1 1l6 6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -225,259 +297,327 @@
     </a>
   </section>
 
-  <!-- ── the problem ──────────────────────────────────────── -->
-  <section id="problem" data-reveal>
-    <div class="shell">
-      <div class="problem__grid">
-        <div>
-          <h2 class="rise">A city full of interesting people and moments, yet we're stuck staring at our screens.</h2>
-        </div>
-        <div class="stack">
-          <p class="lede rise" data-delay="2">
-            We're more connected than ever, and lonelier than ever. Loneliness
-            is now a public health concern of its own, and the apps in our
-            pocket keep making it worse — built to hold our attention, not to
-            get us to actually meet.
-          </p>
-          <p class="lede rise" data-delay="3">
-            Which is the one thing they can never give back: a real social
-            experience, with the people already within walking distance.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── the constellation ────────────────────────────────────
-       One figure, scrubbed by the scroll rather than played on a timer.
-       Eight people fade in around an empty middle, Min arrives in the hole,
-       then the links go out one at a time and the screens go dark. All of
-       the per-element values come from constellation() in landing.js;
-       without it the whole figure just sits there, assembled. -->
-  <section class="scene" id="dawn">
-    <div class="scene__stage">
-      <div class="ring" data-ring role="img"
-           aria-label="Eight people standing around each other with nothing between them, until Min arrives in the middle and connects them one by one.">
-        <svg class="ring__links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <line x1="50.73" y1="35.02" x2="51.66" y2="15.99"/>
-          <line x1="60.43" y1="39.22" x2="75.13" y2="24.03"/>
-          <line x1="65.00" y1="49.63" x2="84.00" y2="49.17"/>
-          <line x1="59.82" y1="61.34" x2="71.42" y2="74.71"/>
-          <line x1="48.23" y1="64.89" x2="45.83" y2="85.05"/>
-          <line x1="38.56" y1="59.70" x2="22.34" y2="73.47"/>
-          <line x1="35.11" y1="48.18" x2="15.95" y2="45.85"/>
-          <line x1="40.30" y1="38.56" x2="26.53" y2="22.34"/>
-        </svg>
-
-        <span class="blob" style="--x: 52%; --y: 9%"></span>
-        <span class="blob" style="--x: 80%; --y: 19%"></span>
-        <span class="blob" style="--x: 91%; --y: 49%"></span>
-        <span class="blob" style="--x: 76%; --y: 80%"></span>
-        <span class="blob" style="--x: 45%; --y: 92%"></span>
-        <span class="blob" style="--x: 17%; --y: 78%"></span>
-        <span class="blob" style="--x: 9%; --y: 45%"></span>
-        <span class="blob" style="--x: 22%; --y: 17%"></span>
-
-        <div class="min min--dawn" data-min aria-hidden="true"></div>
-      </div>
-
-      <!-- two lines in one slot: the second takes over as Min lands -->
-      <div class="scene__caption">
-        <p class="scene__line" data-line="1">
-          Interactions waiting to happen, all around them. Nobody starts one.
-        </p>
-        <p class="scene__line" data-line="2">
-          But maybe all we need is a little push from a little curious friend.
-          Meet <b class="term">Min</b>.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── Min ──────────────────────────────────────────────── -->
-  <section id="min" data-reveal>
-    <div class="shell split">
-      <div>
-        <h2 class="rise">
-          Not a feed.<br>A companion.
-        </h2>
-        <p class="lede rise" data-delay="2" style="margin-top: var(--space-6)">
-          The idea is simple. You converse with <b class="term">Min</b> naturally,
-          and it learns to understand you as a person. Then Min goes out into
-          your surroundings and connects you to the most relevant people and
-          moments.
-        </p>
-        <p class="lede rise" data-delay="3" style="margin-top: var(--space-5)">
-          There is no swiping, no profile to maintain, no chatting. The app is
-          built to do one thing: ease the awkwardness of that initial hello.
-        </p>
-      </div>
-
-      <div class="rise" data-delay="2">
-        <div class="phone" role="img" aria-label="A phone showing a short conversation with Min, who offers to introduce you to someone nearby.">
-          <div class="phone__screen">
-            <div class="phone__head">
-              <span class="phone__avatar min" data-min data-phase="3.4" aria-hidden="true"></span>
-              <span>
-                <b>Min</b>
-                <i>listening · 400 m radius</i>
-              </span>
-            </div>
-            <div class="phone__spacer"></div>
-            <!-- bubbles are inserted here, before the input bar -->
-            <div class="phone__pill">Say something to Min</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── memos ────────────────────────────────────────────── -->
   <!-- ══════════════════════════════════════════════════════════
-       THE PEBBLE CASCADE
+       THE NIGHT ROOM
 
-       Three resin lenses that rise from below the fold and park
-       overlapping, so they read as one cluster rather than three
-       cards. Each pebble's copy arrives off its OWN landing, not
-       after all three have finished.
+       Everything below the hero shares ONE environment: the dusk
+       render of the hero's own room held still behind all four sections,
+       so scrolling reads as moving through a single space rather
+       than past four backdrops. The hero keeps its own daylight —
+       the cut between the two is deliberate, not a gradient.
 
-       Stamped by pebbles.js; the lens artwork is exported from
-       Figma untouched (WEB · pebble cascade, 706:374). It renders
-       nothing without the script, which is deliberate — this is an
-       atmospheric section, not content anyone needs to read.
+       The raw render sits at L≈0.15–0.27, the exact middle where
+       neither cream nor graphite ink clears 4.5:1. The scrim in
+       .night__room::after is what buys cream its contrast; don't
+       lighten it without re-checking the text on top.
        ══════════════════════════════════════════════════════════ -->
-  <section class="pcascade-scroll" aria-label="What Min is for">
-    <div class="pcascade-stage">
-      <div data-pebbles></div>
+  <div class="night">
+    <div class="night__room" aria-hidden="true">
+      <span class="night__fog night__fog--1"></span>
+      <span class="night__fog night__fog--2"></span>
     </div>
-  </section>
 
-  <section id="memos" data-reveal>
-    <div class="shell">
-      <h2 class="rise" style="max-width: 22ch">
-        Your street,<br>ten minutes ago.
-      </h2>
-      <p class="lede section-lede rise" data-delay="2">
-        Meeting people is one part of being connected to your city. The other is
-        the hyperlocal and time-specific: a lunch deal that ends at two, a
-        gathering in the park nobody planned until an hour ago. Those are
-        <b class="term">memos</b>, and they change how you move around a city.
-      </p>
+    <!-- ── how it works ─────────────────────────────────────────
+         Three steps, told by the phone: one screen per step, held
+         in front of the reader while the steps scroll past it. Min
+         himself stays inside the screen — he is the app here, not a
+         mascot standing next to it. -->
+    <section class="steps" id="how" data-reveal>
+      <div class="shell">
+        <h2 class="rise">How it works</h2>
+        <p class="lede section-lede rise" data-delay="1">
+          You talk to Min. Min finds someone worth meeting. You go and meet them.
+          That's the whole app.
+        </p>
 
-      <div class="split split--flip">
-        <div class="rise" data-delay="2">
-          <div class="phone" role="img"
-               aria-label="A phone showing the memo map: memos left by other people pinned to the streets around you.">
-            <div class="phone__screen">
-              <div class="phone__head">
-                <svg class="phone__avatar phone__avatar--pin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M12 21.5s7-6.2 7-11.1A7 7 0 0 0 5 10.4c0 4.9 7 11.1 7 11.1Z"
-                        stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-                  <circle cx="12" cy="10" r="2.4" fill="currentColor"/>
-                </svg>
-                <span>
-                  <b>Memos</b>
-                  <i>map · 400 m around you</i>
-                </span>
+        <div class="steps__grid" data-steps>
+          <!-- ┌─ the stage ────────────────────────────────────────────┐
+               A phone showing the screen for whichever step you're on.
+
+               THE SCREENS ARE PLACEHOLDERS. Each is a self-contained
+               [data-screen] block built in CSS, and nothing outside it
+               knows what's inside: home-steps.js only toggles .is-on.
+               When the real mockups land, replace each block's contents
+               with a single <img src="…" alt=""> and delete that
+               screen's rules from home-sections.css. Nothing else moves.
+               └───────────────────────────────────────────────────────┘ -->
+          <div class="steps__stage" aria-hidden="true">
+            <div class="pmock">
+              <span class="pmock__island"></span>
+
+              <!-- 1 · talk to Min — the real screen.
+                   Exported from the design file (min-chat-day.svg, kept
+                   beside it as the source) and flattened to a JPEG: the
+                   SVG is 5.9 MB of embedded renders, this is 167 KB and
+                   pixel-identical at every size the phone is drawn. -->
+              <div class="pscreen pscreen--shot" data-screen="1">
+                <img src="/assets/img/min-chat-day.jpg" alt=""
+                     width="402" height="874" decoding="async" loading="lazy">
               </div>
 
-              <div class="mmap" aria-hidden="true">
-                <span class="mmap__radius"></span>
-                <span class="mmap__you"></span>
-                <span class="mmap__pin mmap__pin--1"><i>soup 6€ till 2</i></span>
-                <span class="mmap__pin mmap__pin--2"><i>music in the park</i></span>
-                <span class="mmap__pin mmap__pin--3"><i>queue's gone</i></span>
+              <!-- 2 · Min matches you — looking around the block -->
+              <div class="pscreen" data-screen="2">
+                <div class="pscreen__bar">
+                  <span class="pscreen__avatar pscreen__avatar--pulse"></span>
+                  <span><b>Looking nearby</b><i>within a 5 minute walk</i></span>
+                </div>
+                <div class="pradar">
+                  <span class="pradar__ring"></span>
+                  <span class="pradar__ring pradar__ring--in"></span>
+                  <span class="pradar__you"></span>
+                  <span class="pradar__dot pradar__dot--1"></span>
+                  <span class="pradar__dot pradar__dot--2"></span>
+                  <span class="pradar__dot pradar__dot--3"></span>
+                </div>
+                <div class="pscreen__note">Three people worth meeting. Checking which of them is actually free.</div>
               </div>
 
-              <div class="memo" aria-hidden="true">
-                <b>Music in the park, maybe thirty people</b>
-                <span>8 min ago · 120 m away</span>
+              <!-- 3 · go say hello — the one introduction -->
+              <div class="pscreen" data-screen="3">
+                <div class="pscreen__bar">
+                  <span class="pscreen__avatar"></span>
+                  <span><b>An introduction</b><i>now · expires in 40 min</i></span>
+                </div>
+                <div class="pinvite">
+                  <div class="pinvite__who">
+                    <span class="pinvite__face"></span>
+                    <span><b>Meet Jules</b><i>5 min walk · up for a coffee</i></span>
+                  </div>
+                  <p>You both shoot film and you're both out with nothing planned.</p>
+                  <span class="pinvite__map"></span>
+                </div>
+                <div class="pscreen__cta">Let's meet <i></i></div>
+              </div>
+
+              <span class="pmock__home"></span>
+            </div>
+          </div>
+
+          <ol class="steps__list">
+            <li class="steps__item" data-step="1">
+              <span class="steps__num" aria-hidden="true">1</span>
+              <div class="steps__copy">
+                <b>Talk to Min</b>
+                <p>
+                  Tell Min what you're into, the way you'd tell a friend — in your
+                  own words, whenever you feel like it. There's no form to fill in
+                  and no profile to keep up to date.
+                </p>
+              </div>
+            </li>
+            <li class="steps__item" data-step="2">
+              <span class="steps__num" aria-hidden="true">2</span>
+              <div class="steps__copy">
+                <b>Min matches you</b>
+                <p>
+                  Min looks at the few hundred metres you could actually walk to,
+                  and waits until there's someone genuinely worth your evening.
+                  Most of the time it says nothing.
+                </p>
+              </div>
+            </li>
+            <li class="steps__item" data-step="3">
+              <span class="steps__num" aria-hidden="true">3</span>
+              <div class="steps__copy">
+                <b>Go say hello</b>
+                <p>
+                  You get one introduction: a name, a reason, and a place five
+                  minutes away. Say yes and go. Min's job is finished — the rest
+                  happens in person.
+                </p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── what's different ───────────────────────────────────── -->
+    <section class="facts" id="different" data-reveal>
+      <div class="shell">
+        <h2 class="rise" style="max-width: 24ch">Most of what a social app does, Min doesn't</h2>
+        <p class="lede section-lede rise" data-delay="1">
+          Not to be contrary. Each of these is something we found actively gets in
+          the way of two people meeting.
+        </p>
+
+        <ul class="facts__grid">
+          <li class="fact resin rise" data-delay="1">
+            <b>No profile pictures</b>
+            <p>
+              Nobody is sorted by their face. Min introduces you with a name and a
+              reason, and you find out what someone looks like the same way you
+              always have — by turning up.
+            </p>
+          </li>
+          <li class="fact resin rise" data-delay="2">
+            <b>No swiping, no feed</b>
+            <p>
+              There is nothing to scroll. Min brings you one introduction at a
+              time, and when there isn't one, the app has nothing to show you. It
+              is meant to be boring to hold.
+            </p>
+          </li>
+          <li class="fact resin rise" data-delay="3">
+            <b>Your memory stays on your phone</b>
+            <p>
+              What Min learns about you lives on your device. When it looks for
+              someone nearby it sends only what that one introduction needs — and
+              never the conversation behind it.
+            </p>
+          </li>
+          <li class="fact resin rise" data-delay="4">
+            <b>No pressure to be friends or date</b>
+            <p>
+              An introduction is one hello, not a relationship you now owe someone.
+              There's no match to unmatch and no chat left hanging if it goes
+              nowhere.
+            </p>
+          </li>
+          <li class="fact resin rise" data-delay="5">
+            <b>Only what you can walk to</b>
+            <p>
+              Min knows a few hundred metres around you and nothing else. No
+              strangers from the other side of the planet, because you can't go
+              and meet them.
+            </p>
+          </li>
+          <li class="fact resin rise" data-delay="5">
+            <b>No streaks</b>
+            <p>
+              Min is capped on how often it can reach you. There is nothing to
+              keep alive and nothing lost by ignoring it for a week.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── questions ──────────────────────────────────────────── -->
+    <section class="faq" id="faq" data-reveal>
+      <div class="shell">
+        <div class="faq__head">
+          <div>
+            <h2 class="rise">Questions people ask</h2>
+            <p class="lede rise" data-delay="1">
+              If we've missed yours, reply to the waitlist email — a person answers it.
+            </p>
+          </div>
+        </div>
+
+        <div class="faq__list">
+          <details class="faq__item resin rise" data-delay="1">
+            <summary>Is Min a dating app?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              No. Min introduces you to people worth meeting and doesn't decide what
+              that turns into. Some of it is a coffee, some of it is a walk with
+              someone you'd never have spoken to, some of it is nothing. That's yours
+              to work out, not the app's.
+            </p></div>
+          </details>
+          <details class="faq__item resin rise" data-delay="2">
+            <summary>Do I have to make a profile?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              No. Talking to Min is the profile. No photo, no bio, no prompts to
+              answer, nothing that goes stale the moment you stop maintaining it.
+            </p></div>
+          </details>
+          <details class="faq__item resin rise" data-delay="3">
+            <summary>What does Min actually know about me?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              Whatever you've told it, held on your phone. To find you someone nearby
+              it sends the minimum that introduction needs, and you see what that is
+              before anyone else does. We don't sell data — not as a policy you have
+              to trust us on, but because nothing in the system is built to move it.
+            </p></div>
+          </details>
+          <details class="faq__item resin rise" data-delay="4">
+            <summary>Will it keep pinging me?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              Min has a hard cap on how often it's allowed to contact you. A nudge
+              when something is genuinely worth leaving the house for, and silence the
+              rest of the time. There are no streaks to keep and nothing to come back
+              to daily.
+            </p></div>
+          </details>
+          <details class="faq__item resin rise" data-delay="5">
+            <summary>Can someone look me up on it?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              There's no search, no profiles to browse and no followers. An
+              introduction only becomes real when both people say yes to it, and until
+              then neither of you is findable by the other.
+            </p></div>
+          </details>
+          <details class="faq__item resin rise" data-delay="5">
+            <summary>What will it cost?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              We haven't set pricing yet, and we'd rather say that than invent a
+              number. What we have ruled out is advertising and selling data — both
+              require holding your attention, which is the opposite of what this is
+              for.
+            </p></div>
+          </details>
+          <details class="faq__item resin rise" data-delay="5">
+            <summary>When does it reach my city?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              Helsinki first, one neighbourhood at a time. A hyperlocal app is useless
+              until the people near you are on it, so we'd rather be dense in a few
+              streets than thin across a continent. Join the waitlist and we'll go
+              where people are waiting.
+            </p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── join ───────────────────────────────────────────────── -->
+    <section class="closer" id="closer">
+      <div class="shell" data-reveal>
+        <img class="closer__min" src="/assets/img/min-night-hello.webp" alt=""
+             width="354" height="414" decoding="async" loading="lazy">
+        <h2 class="rise">Min opens in Helsinki first</h2>
+        <p class="lede rise" data-delay="2">
+          One neighbourhood at a time. Get on the list and you'll hear from us when
+          Min reaches your street — and you'll help decide what it feels like there.
+        </p>
+        <div class="hero__actions rise" data-delay="3">
+          <div class="signup-block">
+            <form class="signup" data-signup novalidate>
+              <div class="signup__row">
+                <input class="signup__input" type="email" name="email" required
+                       placeholder="you@example.com" autocomplete="email" inputmode="email"
+                       aria-label="Your email">
+                <button class="btn btn--primary btn--lg" type="submit">
+                  <span class="btn__fill" aria-hidden="true"></span>
+                  <span class="btn__flash" aria-hidden="true"></span>
+                  <span class="btn__label">Join waitlist</span>
+                  <svg class="btn__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+              <!-- Honeypot: hidden from humans, bots tend to fill it. Leave empty. -->
+              <input class="visually-hidden" type="text" name="website"
+                     tabindex="-1" autocomplete="off" aria-hidden="true">
+              <p class="field-error" role="alert"></p>
+              <p class="status" role="status"></p>
+            </form>
+            <div class="signup__done" data-signup-done hidden>
+              <span class="signup__tick" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                     stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>
+              </span>
+              <div>
+                <strong>You're on the list</strong>
+                <span>We'll email you the moment Min opens in your neighbourhood</span>
               </div>
             </div>
           </div>
         </div>
-
-        <ol class="flow">
-          <li class="flow__step resin rise" data-delay="1">
-            <b>Leave a memo</b>
-            <p>
-              When you see something a fellow neighbour would want to know,
-              leave a <b class="term">memo</b> on the spot. Anonymous by
-              default, and there are no likes to collect.
-            </p>
-          </li>
-          <li class="flow__step resin rise" data-delay="2">
-            <b>View memos</b>
-            <p>
-              The map view is where you find the memos around you, each one
-              pinned to the place it belongs to and fading as it stops being
-              true.
-            </p>
-          </li>
-          <li class="flow__step resin rise" data-delay="3">
-            <b>Ask Min</b>
-            <p>
-              Memos are also what <b class="term">Min</b> reads to answer timely
-              questions about your city.
-              <i>Are there any spots with music and people?</i>
-              <i>Any good lunch deals?</i>
-            </p>
-          </li>
-        </ol>
+        <p class="fineprint rise" data-delay="4">Early beta arriving in early 2027.</p>
       </div>
-    </div>
-  </section>
-
-  <!-- ── values ───────────────────────────────────────────── -->
-  <section id="values" data-reveal>
-    <div class="shell">
-      <h2 class="rise" style="max-width: 26ch">
-        We copied nothing from the companies that got us here.
-      </h2>
-      <div class="nots">
-        <div class="not resin rise" data-delay="1">
-          <b><span class="not__yes" data-word="Privacy">Privacy</span>, <s>not profit at all costs</s></b>
-          <p>We don't sell data — not as a policy, as an architecture. Every consumer of your persona has a declared allow-list, and zero weight means zero egress.</p>
-        </div>
-        <div class="not resin rise" data-delay="2">
-          <b><span class="not__yes" data-word="Local">Local</span>, <s>not global</s></b>
-          <p>Nothing from the other side of the planet. <b class="term">Min</b> only knows the few hundred metres around you, because that's the only place you can walk to.</p>
-        </div>
-        <div class="not resin rise" data-delay="3">
-          <b><span class="not__yes" data-word="Social">Social</span>, <s>not para-social</s></b>
-          <p>No followers, no audience, no performing. Min's only successful outcome is two people in the same room, talking.</p>
-        </div>
-        <div class="not resin rise" data-delay="4">
-          <b><span class="not__yes" data-word="Informative">Informative</span>, <s>not addictive</s></b>
-          <p>No engagement ranking, no streaks, no manufactured urgency. Proactive contact is capped by design — the app is not allowed to nag you.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── closer ───────────────────────────────────────────── -->
-  <section class="closer" id="closer">
-    <div class="shell" data-reveal>
-      <h2 class="rise">
-        The only app that wins when you put it down.
-      </h2>
-      <p class="lede rise" data-delay="2">
-        We're building it in Helsinki first, one neighbourhood at a time, because a
-        hyperlocal network only works once it's dense. Get in early and you help
-        decide what your street feels like.
-      </p>
-      <div class="hero__actions rise" data-delay="3">
-        <a class="btn btn--primary btn--lg" href="/waitlist/">
-          <span class="btn__fill" aria-hidden="true"></span>
-          <span class="btn__label">Join waitlist</span>
-          <svg class="btn__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-      </div>
-      <p class="fineprint rise" data-delay="4">Helsinki now. Then anywhere with a street.</p>
-    </div>
-  </section>
+    </section>
+  </div>
 
 </main>
 
@@ -505,8 +645,11 @@
 </a>
 <script type="module" src="/assets/js/landing.js?v=20260910b"></script>
 <script type="module">
-  import { pebbleCascade } from '/assets/js/pebbles.js?v=20260910b';
-  pebbleCascade();   // the three lenses, revealed on scroll
+  import { waitlistForms } from '/assets/js/waitlist-form.js?v=20260911a';
+  import { howItWorks } from '/assets/js/home-steps.js?v=20260911a';
+  waitlistForms();   // hero + closer, the same module /waitlist posts through
+  howItWorks();      // the three steps, and Min's pose following them
 </script>
+<script type="module" src="/assets/js/min-home.js?v=20260911i"></script>
 </body>
 </html>

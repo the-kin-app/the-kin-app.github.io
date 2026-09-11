@@ -1,0 +1,258 @@
+/* Homepage app variant; the atmosphere and resin animation stay shared. */
+.hero--app { text-align: left; padding-block: 54px 100px; }
+.hero--app .shell { grid-template-columns: 1.15fr 1fr; align-items: center; gap: clamp(32px, 5vw, 76px); }
+.hero__copy { min-width: 0; }
+.hero--app .wordmark--hero { width: 148px; margin: 0 0 20px -18px; }
+.hero--app h1 { font-size: clamp(2.6rem, 4.5vw, 4.1rem); line-height: 1.08; letter-spacing: -.045em; text-wrap: initial; margin-bottom: 26px; }
+.hero__headline-soft { color: #d5c1df; }
+.hero--app .lede { margin: 0; max-width: 40ch; font-size: 18px; }
+.hero--app .hero__actions { justify-content: flex-start; margin-top: 30px; }
+.hero--app .fineprint { font-size: 12px; }
+.hero__preview { position: relative; width: 100%; margin: 26px 0 0; padding: 0 22px; }
+.app-phone { position: relative; width: min(100%, 336px); margin: auto; padding: 18px 19px 12px; border: 1px solid #eee1d14d; border-radius: 46px; color: #faf7f2; background: radial-gradient(ellipse at 90% 38%, #8f75933d, transparent 65%), linear-gradient(155deg, #574b43eb, #302926f5 75%); box-shadow: inset 0 0 0 5px #ffffff08, inset 0 1px 2px #fff7e970, 18px 30px 65px #110c144d, 0 0 60px #e7cfe30a; transform: rotate(3deg); }
+.app-phone__status { display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding: 0 8px 20px; }
+.app-phone__island { width: 88px; height: 23px; border-radius: 20px; background: #211c1b; }
+.app-phone__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.app-location { font-size: 11px; color: #e0d4c9; padding: 7px 10px; border: 1px solid #fff3; border-radius: 20px; }
+.app-eyebrow { font-size: 8px; letter-spacing: .14em; color: #d5c1df; }
+.hero--app .app-phone h2 { font-size: 25px; line-height: 1.15; margin: 9px 0; letter-spacing: -.035em; }
+.app-phone__intro > p { font-size: 12px; color: #d0c4bd; }
+.app-radar { position: relative; height: 192px; margin: 8px -10px 0; }
+.app-radar__ring { position: absolute; left: 50%; top: 46%; translate: -50% -50%; border: 1px solid #f8e7db16; border-radius: 50%; }
+.app-radar__ring--outer { width: 258px; height: 158px; transform: rotate(-18deg); }
+.app-radar__ring--inner { width: 150px; height: 94px; transform: rotate(-18deg); background: radial-gradient(ellipse, #d1b0e412, transparent); }
+.app-person { position: absolute; text-align: center; }
+.app-person > span, .app-avatar { display: grid; place-items: center; width: 40px; height: 43px; border-radius: 45% 50% 42% 48%; background: radial-gradient(circle at 35% 10%, #eee1d6ad, transparent 60%), linear-gradient(150deg, #a58cad, #574757); box-shadow: inset 0 1px 1px #fff9, 0 5px 15px #1711184d; font-size: 14px; }
+.app-person small { display: block; margin-top: 5px; font-size: 10px; color: #e1d6d0; }
+.app-person--one { left: 18%; top: 13px; }
+.app-person--two { right: 12%; top: 48px; }
+.app-person--two > span { background-color: #a9b7a1; background-blend-mode: luminosity; }
+.app-person--three { left: 22%; bottom: 29px; }
+.app-person--three > span { width: 31px; height: 33px; background-color: #bba07c; background-blend-mode: luminosity; }
+.app-radar__you { position: absolute; left: 50%; top: 45%; translate: -50% -50%; display: grid; justify-items: center; gap: 7px; font-size: 9px; color: #dbccd9; }
+.app-radar__you i { width: 11px; height: 11px; border-radius: 50%; background: #e3c9f0; box-shadow: 0 0 0 7px #dec0f015, 0 0 24px #dfb7f080; }
+.app-radar__caption { position: absolute; bottom: 3px; width: 100%; text-align: center; font-size: 9px; color: #cabbc7; }
+.app-invite { position: relative; margin-top: 12px; padding: 15px; border: 1px solid #f4e7d733; border-radius: 23px; background: linear-gradient(145deg, #ffedda15, #d8b8eb09); box-shadow: inset 0 1px 0 #fffae91a, 0 8px 24px #120c1714; }
+.app-invite__eyebrow { display: flex; align-items: center; gap: 6px; font-size: 9px; color: #e3d3e9; }
+.app-invite__eyebrow > span:last-child { margin-left: auto; color: #bdb0b6; }
+.app-live-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #d2dfb9; box-shadow: 0 0 9px #d2dfb955; }
+.app-invite__person { display: flex; align-items: center; gap: 10px; margin: 16px 0 12px; }
+.app-invite__person strong { display: block; font-size: 16px; font-weight: 600; }
+.app-invite__person div > span { display: block; font-size: 9px; margin-top: 3px; color: #d0c4bd; }
+.app-invite__spark { margin-left: auto; font-size: 26px; color: #dac4e5; }
+.app-invite > p { font-size: 11px; line-height: 1.6; color: #e0d4cd; }
+.app-invite__cta { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; padding: 11px 16px; border-radius: 24px; background: linear-gradient(135deg, #ecdbf3, #bfa7d0); color: #392b40; box-shadow: inset 0 1px 1px #fff9, 0 3px 14px #c9a6dc1a; font-size: 12px; font-weight: 700; }
+.app-phone__footer { display: flex; align-items: center; justify-content: center; gap: 7px; margin: 17px 0; font-size: 9px; color: #d0c4bd; }
+.app-phone__home { width: 100px; height: 4px; margin: 0 auto; border-radius: 5px; background: #f9ecdf70; }
+.hero__preview-note { position: absolute; bottom: 114px; left: -30px; padding: 15px 22px; border-radius: 20px; border: 1px solid #fff3; background: #605052b8; backdrop-filter: blur(20px); box-shadow: 0 12px 35px #150e1926, inset 0 1px 0 #ffffff26; transform: rotate(-7deg); font-size: 14px; line-height: 1.45; }
+.hero__preview-note > span { float: left; font-size: 30px; margin-right: 12px; color: #dec9e9; }
+@media (max-width: 800px) {
+  .hero--app { padding-top: 28px; }
+  .hero--app .shell { grid-template-columns: 1fr; gap: 36px; }
+  .hero__copy { width: 100%; max-width: 560px; }
+  .hero--app h1 { font-size: clamp(2.65rem, 7.5vw, 4rem); }
+  .hero--app .wordmark--hero { width: 128px; margin-bottom: 16px; }
+  .hero__preview { max-width: 430px; margin-top: 0; }
+  .hero__preview-note { left: 0; }
+}
+@media (max-width: 400px) {
+  .hero--app .lede { font-size: 16px; }
+  .hero__preview { padding-inline: 8px; }
+  .app-phone { transform: rotate(1deg); }
+  .hero__preview-note { left: -4px; bottom: 110px; font-size: 12px; padding: 12px 16px; }
+}
+/* Keep the floating aside clear of the invitation and its action. */
+@media (min-width: 801px) {
+  .hero__preview-note { left: -65px; bottom: 142px; width: 180px; padding: 14px 16px; }
+}
+@media (max-width: 800px) {
+  .hero__preview-note { display: none; }
+}
+
+/* Min's sunlit home: the room belongs to the hero only. */
+.hero--app {
+  isolation: isolate;
+  color: #493d36;
+  background: #eee7de url('/assets/img/min-home.jpg') center center / cover no-repeat;
+  padding-block: 40px 100px;
+  overflow: hidden;
+  --ink: #493d36;
+  --ink-soft: #6c5c51;
+  --ink-faint: #79695e;
+}
+.hero--app::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, #f1ebe4b3, #f1ebe42b 55%, transparent); pointer-events: none; }
+.hero--app .shell { grid-template-columns: 1fr 1fr; gap: 60px; }
+.hero--app .hero__headline-soft { color: #98745e; }
+.hero--app .lede, .hero--app .fineprint { color: #6c5c51; }
+.hero--app .app-phone { width: min(100%, 310px); margin-right: 30px; transform: rotate(4deg); box-shadow: inset 0 0 0 5px #ffffff08, inset 0 1px 2px #fff7e970, 20px 35px 55px #66504138; }
+.hero__preview { padding-bottom: 28px; }
+.min-companion { position: absolute; inset: 0; width: 100%; height: 660px; pointer-events: none; }
+.min-companion__canvas { display: block; width: 100%; height: 100%; opacity: 0; }
+.min-companion__fallback { position: absolute; bottom: 0; left: 0; width: 160px; height: 180px; object-fit: contain; }
+.min-companion.is-ready .min-companion__canvas { opacity: 1; }
+.min-companion.is-ready .min-companion__fallback { display: none; }
+.hero__preview.is-3d-ready > .app-phone { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); }
+/* The caption is gone, so the figure itself reserves the canvas's height. */
+.hero__preview.is-3d-ready { height: 660px; padding: 0; }
+.min-motion { display: block; position: absolute; bottom: 0; left: 50%; translate: -50% 0; border: 0; border-bottom: 1px solid #79695e55; background: transparent; color: #79695e; font: inherit; font-size: 12px; padding: 5px 8px; cursor: pointer; }
+.min-motion:focus-visible { outline: 2px solid #98745e; outline-offset: 4px; }
+.hero--app .scroll-cta { color: #79695e; }
+
+/* ── Mobile: one screen, stacked, nothing overlapping ──────────
+   The section becomes a flex column pinned to 100svh. .hero__copy is
+   display:contents so the wordmark, headline, actions and fineprint become
+   flex items of .shell directly and can be re-ordered around the canvas:
+
+     min  ·  headline  ·  [ 3D room, takes the slack ]  ·  CTA  ·  fineprint
+
+   The lede steps aside on this screen — the room says it instead. Scoped with
+   :has() so a device without WebGL keeps the old flow layout and its static
+   phone mockup rather than squeezing it into the flex slot. */
+@media (max-width: 800px) {
+ .hero--app:has(.hero__preview.is-3d-ready) {
+   display: flex; flex-direction: column;
+   min-height: 100svh;
+   text-align: center;
+   background-position: 60% center;
+   padding: 30px 0 26px;
+ }
+ .hero--app:has(.hero__preview.is-3d-ready) .shell {
+   display: flex; flex-direction: column; align-items: center;
+   justify-content: center;
+   flex: 1; min-height: 0; gap: 0;
+ }
+ .hero--app:has(.hero__preview.is-3d-ready) .hero__copy { display: contents; }
+ .hero--app:has(.hero__preview.is-3d-ready) .wordmark--hero { order: 1; margin: 0 auto 14px; }
+ .hero--app:has(.hero__preview.is-3d-ready) h1 {
+   order: 2; margin: 0; font-size: clamp(1.95rem, 8.2vw, 2.5rem); max-width: 15ch;
+ }
+ .hero--app:has(.hero__preview.is-3d-ready) .lede { display: none; }
+ .hero--app:has(.hero__preview.is-3d-ready) .hero__actions {
+   order: 4; width: 100%; max-width: 420px; margin: 0 0 10px;
+ }
+ .hero--app:has(.hero__preview.is-3d-ready) .fineprint { order: 5; margin: 0; }
+ /* The height here is only the value before min-home.js has measured; it
+    then writes a plain pixel height inline and owns it from there. Viewport
+    units are not trustworthy for this box — mobile toolbars retracting on
+    scroll move them, which grows the room and pushes the CTA off screen. */
+ .hero--app:has(.hero__preview.is-3d-ready) .hero__preview.is-3d-ready {
+   order: 3; position: relative; inset: auto;
+   flex: 0 0 auto;
+   width: 100vw; max-width: none;
+   height: 300px;
+   margin: 6px 0 16px; padding: 0;
+   pointer-events: none;
+ }
+ .hero__preview.is-3d-ready .min-companion { position: absolute; inset: 0; width: 100%; height: 100%; }
+ .hero__preview.is-3d-ready .min-motion {
+   pointer-events: auto; left: auto; right: 16px; bottom: -2px; translate: none;
+   font-size: 11px; opacity: .75;
+ }
+ /* the column already ends on the CTA; a second nudge would only crowd it */
+ .hero--app:has(.hero__preview.is-3d-ready) .scroll-cta { display: none; }
+
+ /* 1536px of backdrop is wasted on a 390px screen — and costs 6 MB of
+    decoded bitmap. The 1024px cut is 63 KB and still oversamples. */
+ .hero--app { background-image: url('/assets/img/min-home-mobile.jpg'); background-position: 64% center; }
+
+ /* no-WebGL / Data-Saver fallback keeps the original stacked flow */
+ .hero--app .shell { grid-template-columns: 1fr; gap: 32px; }
+ .hero__preview { max-width: 540px; margin-inline: auto; padding-inline: 0; }
+ .hero--app .app-phone { margin-inline: auto; width: min(85%, 310px); }
+ .min-companion { height: 610px; }
+}
+@media (max-width: 400px) {
+ .min-companion { height: 525px; }
+}
+
+.min-motion[hidden] { display: none; }
+
+/* ── the signup, inline ────────────────────────────────────────
+   The homepage asks for the address where the wanting happens — the hero
+   and the closer — instead of linking to /waitlist and spending a tap on
+   it. Built from --ink so one set of rules serves both contexts: the
+   sunlit room (dark ink on light) and the closer (cream ink on dark).
+   The <form> contract and the fetch live in waitlist-form.js. */
+.signup-block { width: 100%; max-width: 460px; }
+.hero--app .signup-block { margin: 0; }
+.signup { display: grid; gap: 10px; }
+.signup__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: stretch;
+}
+/* 16px, not 15: under 16 iOS zooms the whole page the moment the field is
+   tapped, and there is nowhere for a full-bleed hero to zoom to. */
+.signup__input {
+  width: 100%;
+  min-width: 0;
+  padding: 17px 22px;
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  box-shadow: inset 0 2px 5px color-mix(in srgb, var(--ink) 10%, transparent);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  outline: none;
+  transition: border-color var(--duration-quick) ease, background var(--duration-quick) ease, box-shadow var(--duration-quick) ease;
+}
+.signup__input::placeholder { color: color-mix(in srgb, var(--ink) 44%, transparent); }
+.signup__input:focus {
+  border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 20%, transparent);
+}
+.signup__input[aria-invalid="true"] { border-color: color-mix(in srgb, var(--color-error) 60%, transparent); }
+/* Chrome paints autofilled fields a flat yellow, which would punch a hole
+   straight through the material. */
+.signup__input:-webkit-autofill {
+  -webkit-text-fill-color: var(--ink);
+  -webkit-box-shadow: inset 0 0 0 100px color-mix(in srgb, var(--ink) 7%, var(--bg));
+  caret-color: var(--ink);
+}
+/* The room is bright enough that a tinted field disappears into it. */
+.hero--app .signup__input {
+  border-color: #493d3626;
+  background: #fffdf9a6;
+  box-shadow: inset 0 2px 5px #493d3614, inset 0 -1px 0 #ffffffb3;
+}
+.signup .btn { white-space: nowrap; }
+.signup .field-error,
+.signup .status {
+  margin: 0;
+  padding-inline: 6px;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.4;
+}
+.signup .field-error { color: var(--color-error); }
+.signup .status.error { color: var(--color-error); }
+/* Neither message takes any room until it has something to say. */
+.signup .field-error:empty,
+.signup .status:empty { display: none; }
+
+.signup__done { display: flex; align-items: center; gap: 12px; text-align: left; }
+/* A class rule beats the UA's [hidden] { display: none }, so say it here. */
+.signup__done[hidden] { display: none; }
+.signup__done strong { display: block; font-size: var(--text-md); font-weight: 600; }
+.signup__done div > span { font-size: var(--text-sm); color: color-mix(in srgb, var(--ink) 68%, transparent); }
+.signup__tick {
+  flex: 0 0 auto;
+  display: grid; place-items: center;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  color: var(--ink);
+}
+.signup__tick svg { width: 16px; height: 16px; display: block; }
+
+/* One column below the width where the field and the button stop both
+   being comfortable — the button keeps its full tap target. */
+@media (max-width: 560px) {
+  .signup-block { max-width: 420px; }
+  .signup__row { grid-template-columns: 1fr; }
+  .signup .btn { justify-content: center; }
+  .signup__done { justify-content: center; text-align: center; }
+}

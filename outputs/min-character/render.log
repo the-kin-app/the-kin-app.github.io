@@ -1,0 +1,57 @@
+00:00.282  blend            | Read blend: "/Users/nao/Desktop/kin-site/outputs/min-character/Min_Idle.blend"
+00:00.295  render           | Rendering single frame
+00:00.296  render           | Rendering frame 1
+00:00.296  render           | Start rendering: MIN • Idle studio, ViewLayer
+00:00.296  render           | Engine: Cycles
+00:00.841  render           | Fra: 1 | Mem: 0M | Synchronizing object | Min | continuous soft body
+Blender 5.1.1 (hash b70da489d7f4 built 2026-04-14 01:46:23)
+Scene switch for render: 'MIN • Idle studio' in file: '/Users/nao/Desktop/kin-site/outputs/min-character/Min_Idle.blend'
+00:00.841  render           | Fra: 1 | Mem: 0M | Synchronizing object | Studio | crown
+00:00.849  render           | Fra: 1 | Mem: 0M | Initializing
+00:00.853  render           | Fra: 1 | Mem: 0M | Waiting for render to start
+00:00.853  render           | Fra: 1 | Mem: 0M | Updating Scene
+00:00.853  render           | Fra: 1 | Mem: 0M | Updating Shaders
+00:00.853  render           | Fra: 1 | Mem: 0M | Loading render kernels (may take a few minutes the first time)
+00:00.853  render           | Fra: 1 | Mem: 1M | Updating Procedurals
+00:00.853  render           | Fra: 1 | Mem: 1M | Updating Background
+00:00.853  render           | Fra: 1 | Mem: 1M | Updating Camera
+00:00.853  render           | Fra: 1 | Mem: 1M | Updating Meshes Flags
+00:00.853  render           | Fra: 1 | Mem: 1M | Updating Objects
+00:00.853  render           | Fra: 1 | Mem: 1M | Updating Objects | Copying Transformations to device
+00:00.853  render           | Fra: 1 | Mem: 1M | Updating Particle Systems
+00:00.853  render           | Fra: 1 | Mem: 1M | Updating Particle Systems | Copying Particles to device
+00:00.853  render           | Fra: 1 | Mem: 1M | Updating Meshes
+00:00.853  render           | Fra: 1 | Mem: 1M | Updating Objects | Applying Static Transformations
+00:00.853  render           | Fra: 1 | Mem: 1M | Updating Mesh | Computing attributes
+00:00.854  render           | Fra: 1 | Mem: 1M | Updating Mesh | Copying Attributes to device
+00:00.854  render           | Fra: 1 | Mem: 10M | Updating Geometry BVH Mesh 2/1 | Building BVH
+00:00.855  render           | Fra: 1 | Mem: 26M | Updating Geometry BVH Mesh 2/1 | Building BVH 0%
+00:00.873  render           | Fra: 1 | Mem: 43M | Updating Scene BVH | Building
+00:00.873  render           | Fra: 1 | Mem: 43M | Updating Scene BVH | Building BVH
+00:00.875  render           | Fra: 1 | Mem: 44M | Updating Scene BVH | Copying BVH to device
+00:00.875  render           | Fra: 1 | Mem: 44M | Updating Mesh | Computing normals
+00:00.876  render           | Fra: 1 | Mem: 44M | Updating Mesh | Copying Mesh to device
+00:00.876  render           | Fra: 1 | Mem: 55M | Updating Objects Flags
+00:00.876  render           | Fra: 1 | Mem: 55M | Updating Primitive Offsets
+00:00.876  render           | Fra: 1 | Mem: 55M | Updating Images
+00:00.876  render           | Fra: 1 | Mem: 55M | Updating Volume
+00:00.876  render           | Fra: 1 | Mem: 55M | Updating Camera Volume
+00:00.876  render           | Fra: 1 | Mem: 55M | Updating Lookup Tables
+00:00.876  render           | Fra: 1 | Mem: 55M | Updating Lights
+00:00.876  render           | Fra: 1 | Mem: 55M | Updating Lights | Computing tree
+00:01.221  render           | Fra: 1 | Mem: 153M | Updating Integrator
+00:01.221  render           | Fra: 1 | Mem: 153M | Updating Film
+00:01.221  render           | Fra: 1 | Mem: 153M | Updating Lookup Tables
+00:01.221  render           | Fra: 1 | Mem: 153M | Updating Baking
+00:01.221  render           | Fra: 1 | Mem: 153M | Updating Device | Writing constant memory
+00:01.221  render           | Fra: 1 | Mem: 153M | Loading denoising kernels (may take a few minutes the first time)
+00:01.221  render           | Fra: 1 | Mem: 153M | Sample 0/64
+00:01.804  render           | Fra: 1 | Remaining: 00:36.76 | Mem: 225M | Sample 1/64
+00:42.552  render           | Fra: 1 | Mem: 225M | Sample 64/64
+00:42.552  render           | Fra: 1 | Mem: 225M | Finished
+00:42.552  render           | Executing compositor
+00:42.552  render           | Fra: 1 | Compositing
+00:42.776  render           | Saved: '/Users/nao/Desktop/kin-site/outputs/min-character/min-idle0001.png'
+00:42.776  render           | Time: 00:42.48 (Saving: 00:00.08)
+
+Blender quit

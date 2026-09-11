@@ -6,7 +6,7 @@
      1. the banner — three slides that advance on their own, and
         can be swiped or tapped through
      2. the form   — one address, posted to the same Worker
-        endpoint as every other signup
+        endpoint as every other signup (waitlist-form.js)
 
    Both are progressive: the markup renders a finished first slide
    and a working <form> with no script at all. This file only adds
@@ -186,133 +186,7 @@
     setTimeout(play, INTRO_HOLD + 900);
   }
 
-  /* ==========================================================
-     2. the form
-     ========================================================== */
-
-  const form = document.getElementById('waitlist-form');
-  if (!form) return;
-
-  const emailInput = document.getElementById('email');
-  const websiteInput = document.getElementById('website');
-  const errorEl = document.getElementById('email-error');
-  const statusEl = document.getElementById('form-status');
-  const button = form.querySelector('button[type="submit"]');
-  const label = button.querySelector('.btn__label') || button;
-
-  // Cloudflare Worker endpoint. Override at deploy time by setting
-  // window.KIN_API_BASE before this script runs.
-  const API_BASE = (window.KIN_API_BASE || 'https://api.hellomin.app').replace(/\/$/, '');
-  const SUBMIT_URL = API_BASE + '/waitlist';
-
-  /* Poster attribution — the same contract as waitlist.js, because this
-     page is where every printed QR actually lands. Codes on posters
-     already hanging point at api.kinapp.social/<location>/<poster> —
-     the OLD host, kept alive permanently because printed paper can't
-     be reissued. New posters use api.hellomin.app. Either host counts
-     the scan and redirects here with ?l=<location>&p=<poster>.
-
-     Read once into memory and held for this page view only — no cookie,
-     no localStorage, nothing on the device, so it needs no consent
-     banner. The trade-off: navigate away and back without the query
-     string and the signup lands unattributed. Every poster loses the
-     same share of those, so the comparison still holds. Which is also
-     why ?l= and ?p= stay in the address bar: with nothing persisted,
-     the URL *is* the attribution.
-
-     Only the shape is checked here. min-waitlist-worker src/index.js holds the
-     authoritative allowlists and stores anything it doesn't recognise
-     as NULL, so the vocabulary lives in one place rather than two. */
-  const SLUG_RE = /^[a-z0-9-]{1,32}$/;
-  const params = new URLSearchParams(window.location.search);
-
-  function readSlug(key) {
-    const value = params.get(key);
-    return value && SLUG_RE.test(value) ? value : null;
-  }
-
-  const poster = readSlug('p');
-  const posterLocation = readSlug('l');
-
-  const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-
-  /* The Worker requires a name and the signups table stores it NOT
-     NULL, but this page deliberately asks for one thing only — a
-     second field is the difference between joining and not, at a QR
-     code in a bar. So the name is read off the address: the local
-     part, minus any +tag, with separators opened out into spaces.
-     `sam.okonkwo+kin@…` becomes "Sam Okonkwo". The address remains
-     the identity; this is only what a greeting would use. */
-  function nameFromEmail(email) {
-    const local = email.split('@')[0].split('+')[0];
-    const words = local.replace(/[._\-]+/g, ' ').replace(/\d+/g, ' ').trim();
-    if (!words) return 'Friend';
-    return words
-      .split(/\s+/)
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(' ')
-      .slice(0, 100);
-  }
-
-  function fail(message) {
-    errorEl.textContent = message;
-    emailInput.setAttribute('aria-invalid', 'true');
-  }
-
-  function clear() {
-    errorEl.textContent = '';
-    emailInput.removeAttribute('aria-invalid');
-    statusEl.textContent = '';
-    statusEl.className = 'status';
-  }
-
-  emailInput.addEventListener('input', () => { if (errorEl.textContent) clear(); });
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    clear();
-
-    const email = emailInput.value.trim();
-    if (!email) { fail('Please enter your email.'); return; }
-    if (!isValidEmail(email)) { fail('That address doesn’t look right.'); return; }
-
-    const payload = {
-      name: nameFromEmail(email),
-      contact_method: 'email',
-      email: email,
-      phone: null,
-      website: websiteInput ? websiteInput.value : '', // honeypot — always empty for real users
-      poster: poster,
-      poster_location: posterLocation
-    };
-
-    const original = label.textContent;
-    button.disabled = true;
-    label.textContent = 'Joining…';
-
-    try {
-      const res = await fetch(SUBMIT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (!res.ok) {
-        let message = 'Something went wrong. Please try again.';
-        try {
-          const data = await res.json();
-          if (data && data.error) message = data.error;
-        } catch (_) { /* non-JSON error response */ }
-        throw new Error(message);
-      }
-
-      form.style.display = 'none';
-      document.getElementById('done-view').style.display = 'block';
-    } catch (err) {
-      button.disabled = false;
-      label.textContent = original;
-      statusEl.textContent = err.message || 'Network error. Please try again.';
-      statusEl.className = 'status error';
-    }
-  });
+  /* The form lives in waitlist-form.js — /waitlist and the homepage both
+     post through it, so the Worker contract has exactly one implementation.
+     It is wired up from the module block at the foot of the page. */
 })();

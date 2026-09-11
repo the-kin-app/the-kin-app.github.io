@@ -1,0 +1,15 @@
+00:00.431  blend            | Read blend: "/Users/nao/Desktop/kin-site/outputs/min-character/geometry-v3/Min_Idle_Geometry_v3.blend"
+00:03.251  render           | Saved: '/Users/nao/Desktop/kin-site/outputs/min-character/geometry-v3/min-v3-clay-front.png'
+00:07.203  render           | Saved: '/Users/nao/Desktop/kin-site/outputs/min-character/geometry-v3/min-v3-clay-three-quarter.png'
+00:09.604  render           | Saved: '/Users/nao/Desktop/kin-site/outputs/min-character/geometry-v3/min-v3-clay-right.png'
+00:12.328  render           | Saved: '/Users/nao/Desktop/kin-site/outputs/min-character/geometry-v3/min-v3-clay-back.png'
+00:16.568  render           | Saved: '/Users/nao/Desktop/kin-site/outputs/min-character/geometry-v3/min-v3-satin-three-quarter.png'
+BlenderMCP: cannot start server in background mode (blender -b) - commands would never execute
+BlenderMCP: run Blender with a GUI, or use a virtual display: xvfb-run -a blender
+BlenderMCP addon registered
+BlenderMCP server stopped
+BlenderMCP addon unregistered
+Blender 5.1.1 (hash b70da489d7f4 built 2026-04-14 01:46:23)
+Scene switch for render: 'MIN • Idle geometry v3' in file: '/Users/nao/Desktop/kin-site/outputs/min-character/geometry-v3/Min_Idle_Geometry_v3.blend'
+
+Blender quit
