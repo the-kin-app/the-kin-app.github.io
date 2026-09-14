@@ -41,6 +41,7 @@
   // it is. The label is only for this page — the slug is what gets printed.
   const POSTERS = [
     { slug: 'unclesam', label: 'Uncle Sam' },
+    { slug: 'unclesam-footer', label: 'Uncle Sam footer' },
     { slug: 'happy', label: 'Happy' },
   ];
 
