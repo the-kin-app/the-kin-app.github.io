@@ -175,22 +175,59 @@
    frame, the crossfade and the sticky behaviour are not placeholders.
    ══════════════════════════════════════════════════════════════ */
 
+/* The grid is the SCROLL TRACK, not just a layout. Both columns are pinned
+   inside it — the phone and the pebble cluster hold one eyeline together and
+   neither moves — so the track needs a height of its own to travel through.
+   This is the scroll budget the three steps are divided across. */
+/* Heading and lede centred over the two columns — the section announces
+   itself down the middle, then the work happens left and right.
+
+   .steps__head sits INSIDE .steps__pin, so on desktop the heading is
+   parked with the phone and the pebbles instead of scrolling away from
+   them. A heading that drifts while the block under it is nailed down
+   reads as parallax, and nothing in this section is supposed to move. */
+.steps__head { text-align: center; }
+.steps h2,
+.steps .section-lede {
+  text-align: center;
+  margin-inline: auto;
+}
+.steps .section-lede { margin-top: var(--space-4); }
+
+/* The track. It holds no layout of its own — its only job is to be tall
+   enough to scroll through while .steps__pin stays parked in it. */
 .steps__grid {
+  margin-top: clamp(32px, 4.5vh, 56px);
+  min-height: 260svh;
+}
+
+/* Everything visible, in ONE sticky box. Both columns park and release on
+   the same frame because they are the same element. */
+.steps__pin {
+  position: sticky;
+  top: max(24px, calc(50svh - var(--steps-band, 590px) / 2));
+  height: var(--steps-band, 590px);
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
   gap: clamp(28px, 5vw, 68px);
   align-items: start;
-  margin-top: clamp(40px, 6vh, 72px);
 }
+/* The pin's own vertical rhythm: heading, then the two columns. Its
+   height is a token so the sticky offset above can centre it without
+   measuring anything. */
+/* The band is a box on mobile and nothing at all on desktop: `display:
+   contents` hands its two children straight to the pin's grid, so the
+   named areas below still work. */
+.steps__band { display: contents; }
+.steps__head { grid-area: head; }
+.steps__stage { grid-area: stage; }
+.steps__list { grid-area: list; }
 
 .steps__stage {
-  position: sticky;
-  /* the phone centred on the viewport, so it holds the reader's eyeline
-     while the three steps move past it */
-  top: calc(50vh - 310px);
+  /* Not sticky any more — .steps__pin is. */
   display: grid;
   place-items: end center;
-  height: 590px;
+  height: var(--steps-band, 590px);
 }
 
 /* ---- the phone ---------------------------------------------
@@ -453,94 +490,127 @@
   rotate: 45deg;
 }
 
-/* The gap is doing structural work, not just breathing: a sticky grid item
-   can only travel inside its own grid area, so the phone pins for exactly
-   as long as this column is taller than the stage. At a 54px gap the list
-   and the 590px stage came out nearly the same height, the phone had ~100px
-   of runway, and it drifted upward through step 3 instead of holding. Wide
-   gaps give each step its own screenful and the phone a real hold. */
+/* ---- the three steps ---------------------------------------------------
+   One cluster, parked beside the phone and STILL. Two separate things have
+   to hold for that: the list is sticky, so it doesn't ride up the screen as
+   you scroll; and every row is the same fixed height, so the cluster doesn't
+   re-flow when the open step changes. Scrolling changes what's inside the
+   pebbles. It never changes where they are. */
 .steps__list {
   list-style: none;
   margin: 0;
-  /* Top padding buys the FIRST hold: step 1 has to survive the whole
-     time the section is still arriving, so step 2's text starts a
-     screenful below the fold rather than just under step 1. */
-  /* The bottom padding is runway for the phone's hold, but it used to be
-     44vh of it — step 3 only arrived as the phone released, so it needed
-     a long empty tail to be read at all. Now that a step claims the phone
-     as its heading appears, step 3 gets its whole dwell from the gap
-     above it. What's left is the runway the phone needs to still be
-     PARKED when step 3 comes to rest at the centre — cut past that and
-     the phone was already riding up out of frame while you read it. */
-  padding: clamp(48px, 12vh, 140px) 0 clamp(120px, 26vh, 300px);
+  padding: 0;
   display: grid;
-  /* And the gap buys the other two. At 11vh the three switch points
-     were packed into ~440px of scroll — tight enough that steps 2 and 3
-     fired in the few hundred pixels AFTER the section had begun leaving
-     the top of the screen. A step needs to be worth roughly a third of
-     the phone's hold, which is what this is. */
-  gap: clamp(72px, 26vh, 300px);
+  gap: var(--steps-gap, 14px);
+  /* Centred against the phone inside the shared sticky box. Nothing here is
+     positioned or transformed: the pin above owns all of that. */
+  align-content: center;
+  height: 100%;
 }
 
-/* Each step is a place the scroll SETTLES, the way a product page moves
-   one claim at a time rather than sliding through all of them. `proximity`
-   on the root, not `mandatory`: proximity only pulls when a scroll comes
-   to rest near a step and leaves a deliberate flick alone, so the rest of
-   the page — which has no snap targets at all — scrolls exactly as before
-   and nobody is ever trapped between two steps.
-
-   Aligned to the same low line the phone is driven off (see home-steps.js),
-   so the step the scroll settles on is the step the screen is showing. */
-/* The scroll container is the document, so the snap type has to go on the
-   root — the targets below are the only ones on the page, which scopes it
-   to this section in practice. */
-html { scroll-snap-type: y proximity; }
+/* A pebble per step. `.resin` in the markup supplies the material — the same
+   optical resin as the cards in "what's different" — and these rules only
+   set the geometry and the open/closed states on top of it. */
 .steps__item {
-  scroll-snap-align: center;
-  scroll-snap-stop: normal;
+  border-radius: var(--radius-2xl);
+  padding: var(--space-5) var(--space-6);
+  /* The closed size. Both heights are FIXED values rather than content-driven
+     ones, and that is what keeps the group anchored: exactly one step is ever
+     open, so the cluster's total is always open + 2x closed + 2 gaps — a
+     constant. The pebbles resize against each other inside a box whose outer
+     edges never move. */
+  height: var(--steps-closed, 88px);
+  /* Inset while closed, so shrinking reads in both directions, not just
+     vertically. */
+  margin-inline: 16px;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: var(--space-5);
-  align-items: start;
-  /* the inactive steps are still fully readable — dimmed, never hidden,
-     so the section works identically with JS off or on a screen reader */
-  opacity: 0.46;
-  transition: opacity var(--duration-standard) var(--ease-emergence);
+  gap: var(--space-4);
+  /* Centred inside the fixed box. Top-aligned left every closed pebble with
+     its heading stuck to the ceiling and a hand's width of dead air beneath
+     it; centred, a closed pebble reads as a complete small object. The
+     pebbles themselves never move either way — only what's inside one does,
+     and only the one you're on. */
+  align-items: center;
+  /* Everything that separates a closed pebble from the open one moves on the
+     same curve and the same clock, so the cluster reads as ONE object
+     re-settling rather than three boxes animating independently. */
+  transition:
+    height var(--duration-standard) var(--ease-emergence),
+    margin var(--duration-standard) var(--ease-emergence),
+    opacity var(--duration-standard) var(--ease-emergence),
+    box-shadow var(--duration-standard) var(--ease-emergence);
 }
-.steps__item.is-on { opacity: 1; }
+/* Higher specificity than the bare `.steps__item` opacity resets further
+   down the file, which exist for the old spread-out layout.
+
+   Opacity only — no scale. A closed pebble used to sit at scale(0.975),
+   which is 3px of size change on a 126px row: small, but it meant the
+   pebbles' edges shifted every time the open step changed, and this cluster
+   is supposed to be nailed down. Dimming says "not this one" without
+   moving anything. */
+.steps__grid .steps__item { opacity: 0.62; }
+/* The open step: taller, full width, full strength. */
+.steps__grid .steps__item.is-on {
+  height: var(--steps-open, 168px);
+  margin-inline: 0;
+  opacity: 1;
+}
+
+/* The body copy: closed is a zero-height row, open is its natural height.
+   `0fr → 1fr` on a grid row is the one way to transition to an unknown
+   height without measuring it in JS. The padding lives INSIDE the clipped
+   child so it collapses with the text instead of leaving a gap. */
+.steps__reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--duration-standard) var(--ease-emergence),
+    opacity 260ms var(--ease-emergence);
+}
+.steps__reveal > p { overflow: hidden; min-height: 0; }
+.steps__item.is-on .steps__reveal { grid-template-rows: 1fr; opacity: 1; }
+/* Without JS nothing is ever marked current, so every step stays open —
+   the section still reads as three complete steps. home-steps.js adds
+   .is-live once it has taken over. */
+.steps__grid:not(.is-live) .steps__reveal { grid-template-rows: 1fr; opacity: 1; }
 
 .steps__num {
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  border: 1px solid rgba(250, 247, 242, 0.22);
-  background: rgba(28, 31, 41, 0.34);
+  border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  background: color-mix(in srgb, var(--ink) 5%, transparent);
   font-size: var(--text-base);
   font-weight: var(--font-weight-bold);
   font-variant-numeric: tabular-nums;
-  color: color-mix(in srgb, var(--ink) 82%, transparent);
+  color: var(--ink-soft, #6D6861);
   transition:
     border-color var(--duration-standard) var(--ease-emergence),
     background var(--duration-standard) var(--ease-emergence),
     box-shadow var(--duration-standard) var(--ease-emergence),
     color var(--duration-standard) var(--ease-emergence);
 }
-/* The active step takes the room's one warm light — the same amber as
+/* The current step takes the room's one warm light — the same amber as
    Min's lamp, so the number and the character are lit by one source. */
+.steps__item.is-on .steps__copy > b { font-size: clamp(1.16rem, 1.9vw, 1.44rem); }
+
 .steps__item.is-on .steps__num {
   border-color: rgba(251, 205, 159, 0.55);
-  background: linear-gradient(180deg, rgba(251, 205, 159, 0.26), rgba(251, 189, 130, 0.10));
+  background: linear-gradient(180deg, rgba(251, 205, 159, 0.28), rgba(251, 189, 130, 0.11));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    0 0 20px rgba(251, 205, 159, 0.22);
+    0 0 20px rgba(251, 205, 159, 0.24);
   color: #FFF3E0;
 }
 
 .steps__copy > b {
   display: block;
-  font-size: clamp(1.28rem, 2.3vw, 1.66rem);
+  font-size: clamp(1.02rem, 1.5vw, 1.18rem);
+  transition: font-size var(--duration-standard) var(--ease-emergence);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--tracking-tight);
   line-height: 1.15;
@@ -549,46 +619,101 @@ html { scroll-snap-type: y proximity; }
 .steps__copy > p {
   margin: 0;
   max-width: 44ch;
+  padding-top: var(--space-3);
   font-size: var(--text-md);
   line-height: var(--leading-normal);
   color: color-mix(in srgb, var(--ink) 84%, transparent);
 }
 
+
+
 /* ══════════════════════════════════════════════════════════════
    2 · WHAT'S DIFFERENT
    ══════════════════════════════════════════════════════════════ */
+
+/* The scare quotes are the argument: the word "social" is the thing being
+   doubted, so it is set apart rather than just quoted. */
+.facts__scare {
+  color: var(--night-amber);
+  font-style: italic;
+  opacity: 0.92;
+  /* The italic's right side bearing swallows the following space, so the
+     closing quote sits flush against the next word without this. */
+  padding-right: 0.09em;
+}
 
 .facts__grid {
   list-style: none;
   margin: clamp(40px, 6vh, 68px) 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(272px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(288px, 1fr));
   gap: var(--space-5);
+  align-items: stretch;
 }
 
 .fact {
-  padding: var(--space-7) var(--space-6) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5) var(--space-6) var(--space-6);
   border-radius: var(--radius-2xl);
 }
+/* The heading is the negative claim, so it carries the card, and the
+   visual above it shows what that negative buys you. */
 .fact > b {
   display: block;
   font-size: var(--text-lg);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--tracking-tight);
   line-height: 1.2;
-  margin-bottom: var(--space-3);
+  margin: var(--space-5) 0 var(--space-3);
 }
 .fact > p {
   margin: 0;
   font-size: var(--text-base);
   line-height: var(--leading-normal);
   color: color-mix(in srgb, var(--ink) 84%, transparent);
+  text-wrap: pretty;
 }
 
-/* The last tile is Min rather than another claim — the grid has said
-   enough by then, and he closes it the way a signature does. No resin
-   panel: he stands in the room, not in a card. */
+/* ── the visual ────────────────────────────────────────────────
+   One image per card, above its claim. The artwork isn't in yet, so
+   the slot renders as an empty plate: it holds its ratio and its
+   place so the grid doesn't reflow when the real files land. Drop an
+   <img> inside .fact__media and it fills the slot — the placeholder
+   <span> is the only thing to delete.
+
+   What used to live here was a CSS diagram of struck-out chores over
+   an "Instead" line. It's gone, and so are the two rules that drew
+   long horizontal rules across every card (the strike on each chore
+   and the divider above "Instead"). */
+.fact__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(ellipse at 50% 108%, rgba(251, 205, 159, 0.16), transparent 68%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(8, 9, 14, 0.18));
+  border: 1px solid rgba(250, 247, 242, 0.08);
+}
+.fact__media > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Only ever seen while the slot is empty. */
+.fact__media-hint {
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 30%, transparent);
+}
+.fact__media:has(img) .fact__media-hint { display: none; }
+
 /* ══════════════════════════════════════════════════════════════
    3 · QUESTIONS
    <details> does the disclosure: no JS, keyboard and screen-reader
@@ -698,8 +823,9 @@ html { scroll-snap-type: y proximity; }
   filter: drop-shadow(0 18px 34px rgba(8, 9, 14, 0.55));
 }
 
-/* The dock CTA sits over the foot of the page. */
-.night .closer { padding-bottom: calc(clamp(84px, 10vh, 132px) + var(--dock-clear)); }
+/* The dock has already stepped aside by the time the closer is on screen,
+   so neither it nor the footer reserves room underneath one any more. */
+.night .closer { padding-bottom: clamp(72px, 8vh, 108px); }
 
 /* ---- footer, in the room ------------------------------------
    The room stops at the end of the last section, and the footer below it
@@ -717,6 +843,12 @@ html { scroll-snap-type: y proximity; }
 }
 
 .footer { position: relative; z-index: 1; }
+/* landing.css reserves --dock-clear (~105px) under every footer, because on
+   the pages that share it a docked pill still sits at the bottom of the
+   document. Here the dock has already stepped aside by the time the closer
+   is on screen, so that reservation was just an empty chin. Opt-in by class
+   so the eight other pages on landing.css keep theirs untouched. */
+.footer--tight { padding-block: var(--space-6) var(--space-7); }
 
 /* ══════════════════════════════════════════════════════════════
    Responsive
@@ -724,18 +856,16 @@ html { scroll-snap-type: y proximity; }
 
 @media (max-width: 900px) {
   .steps { overflow-x: clip; }
-  .steps__grid { grid-template-columns: 1fr; gap: var(--space-6); }
-  /* Stage above the steps and still sticky, so the phone stays on screen
-     while the three steps pass under it — watching the screen change IS
-     the section. A phone is tall, so this band takes real height; the
-     alternative (a phone per step, inline) triples the markup and loses
-     the change entirely, which is the one thing worth showing. */
+  .steps__pin { grid-template-columns: 1fr; gap: var(--space-6); }
+  /* Stage above the steps. NOT sticky — .steps__pin is, and it carries the
+     phone and the cluster together. When the stage kept its own sticky here
+     it re-pinned itself inside the released pin, so on the way out the phone
+     hung at the top of the screen while the pebbles slid away beneath it. */
   .steps__stage {
-    position: sticky;
-    top: 0;
     /* Tall enough that the fade at the foot of the band starts BELOW the
        phone, with room to spare — see the note on Min's alignment. */
     height: clamp(348px, 50vh, 436px);
+    position: relative;
     padding-top: var(--space-3);
     place-items: start center;
     z-index: 2;
@@ -795,14 +925,13 @@ html { scroll-snap-type: y proximity; }
   .pradar__ring { width: 132px; height: 132px; }
   .pradar__ring--in { width: 78px; height: 78px; }
   .pradar__you::after { width: 124px; height: 124px; }
-  .steps__item { opacity: 1; }   /* nothing is off-screen to dim for */
-  .steps__num { width: 36px; height: 36px; font-size: var(--text-sm); }
+  .steps__num { width: 34px; height: 34px; font-size: var(--text-sm); }
 }
 
 @media (max-width: 620px) {
   .faq__item summary { padding: var(--space-4) var(--space-5); font-size: var(--text-base); }
   .faq__answer { padding: var(--space-4) var(--space-5) var(--space-5); }
-  .fact { padding: var(--space-6) var(--space-5) var(--space-5); }
+  .fact { padding: var(--space-5) var(--space-5) var(--space-6); }
   .facts__grid { grid-template-columns: 1fr; }
 }
 
@@ -832,11 +961,168 @@ html { scroll-snap-type: y proximity; }
   /* And no pulling the scroll somewhere the reader didn't put it. */
   html { scroll-snap-type: none; }
   .steps__item,
+  .steps__reveal,
   .steps__num { transition: none; }
+  /* No scroll-driven opening: all three read as one static list, with no
+     runway held open for a scroll story that never plays. */
+  .steps__reveal { grid-template-rows: 1fr; opacity: 1; }
+  .steps__grid .steps__item { opacity: 1; transform: none; height: auto; }
+  .steps__pin { position: static; height: auto; min-height: 0; }
+  .steps__band { position: static; }
+  .steps__list { height: auto; padding-block: 0; }
+  .steps__grid { min-height: 0; }
   .pscreen { transition: none; }
   .pscreen[data-screen="1"] { opacity: 1; visibility: visible; }
   .pradar__dot { animation: none; opacity: 1; transform: none; }
   .pscreen__avatar--pulse { animation: none; }
   .pradar__you::after { animation: none; opacity: 0.3; transform: scale(1); }
   .steps__item { opacity: 1; }
+}
+
+/* Coordinated reading positions, with no negative sticky offset. */
+.pscreen { transition: opacity 280ms ease, visibility 280ms; }
+.faq__item summary { min-height: 64px; }
+@media(max-width:900px) {
+ /* Phone band + cluster have to fit ONE screen here, because the cluster is
+    parked under the band rather than beside it. 52svh of phone left the
+    third pebble hanging off the bottom edge. */
+ .steps__stage { height: min(44svh, 348px); }
+ .steps__stage .pmock { width: min(38vw, 174px, 22svh); height: min(78vw, 358px, 45svh); }
+ /* One column: the phone is pinned as a band across the TOP and the steps
+    sit under it, so a scrolling cluster would slide straight behind the
+    phone — the open step would be the one you can't see. Here the cluster
+    parks just below the band and the grid's own height carries the scroll.
+    (The desktop column is beside the phone, not under it, so it scrolls
+    normally and needs none of this.) */
+ /* Stacked under the phone's band rather than beside it, so it takes its
+    own height and sits where the flow puts it. */
+ .steps__list { height: auto; padding-block: 0; margin-top: var(--space-4); }
+ .steps__grid { --steps-open: 178px; --steps-closed: 82px; --steps-gap: 12px; }
+ .steps__item { margin-inline: 10px; }
+ .steps__item { padding: var(--space-4); gap: var(--space-3); }
+ .steps__copy > p { font-size: 15px; line-height: 1.5; }
+ /* The scroll runway moves onto the PIN here. A sticky element can only
+    travel inside its own containing block, and below 901px the thing that
+    sticks is .steps__band — a child of the pin. Left on .steps__grid the
+    runway was outside the band's reach and nothing stuck at all. */
+ .steps__grid { margin-top: 32px; min-height: 0; }
+ .steps__pin { min-height: 250svh; }
+ /* Here the HEADING scrolls and the band parks. Parking the heading too
+    would cost the band ~130px it doesn't have: phone + three pebbles
+    already fill a phone screen. So the pin goes static and .steps__band —
+    the phone and the cluster, still one box — does the sticking. */
+ .steps__pin { position: static; height: auto; top: auto; }
+ .steps__band { position: sticky; top: 8px; display: block; }
+ .steps__head { margin-bottom: var(--space-5); text-align: center; }
+ .steps__head h2 { font-size: clamp(1.7rem, 6.4vw, 2.1rem); }
+ .steps .section-lede { margin-top: var(--space-2); font-size: var(--text-md); }
+ .facts .section-lede { margin-bottom: 0; }
+}
+/* Between 600 and 700px tall the band still parks, but phone + three
+   pebbles ran 16px past the fold. Everything in it gives a little. */
+@media (max-width: 900px) and (max-height: 700px) {
+ .steps__stage { height: min(38svh, 278px); }
+ .steps__grid { --steps-open: 164px; --steps-closed: 74px; --steps-gap: 10px; }
+}
+@media(max-height:600px) and (max-width:900px) {
+ .steps__stage { height: 310px; }
+ .steps__stage .pmock { width: 140px; height: 288px; }
+ .steps__stage::before { display: none; }
+ /* Nothing is pinned at this height, so nothing is scroll-driven either —
+    the three pebbles just stack and stay open, each as tall as its own copy
+    needs rather than all reserving room for the longest. */
+ .steps__pin { position: static; height: auto; min-height: 0; }
+ .steps__band { position: static; }
+ .steps__list { height: auto; padding-block: 0; }
+ .steps__item { height: auto; }
+ .steps__grid { min-height: 0; }
+ .steps__grid .steps__item { opacity: 1; transform: none; }
+ .steps__reveal { grid-template-rows: 1fr; opacity: 1; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .pscreen[data-screen="1"]:not(.is-on) { opacity: 0; visibility: hidden; }
+}
+@media(max-width:900px) { .steps__pin { display: block; } }
+@media(max-width:620px) {
+ .night .closer { padding-top: 56px; }
+ .closer .signup__input { min-height: 48px; font-size: 16px; }
+ .faq__item summary:focus-visible { outline: 2px solid #fbcd9f; outline-offset: 3px; }
+}
+
+/* The dock steps aside only where a second CTA would be redundant: over
+   the closer, which carries the same form. It used to hide over #how and
+   #different too, which is most of the page — the one persistent way to
+   sign up was missing for almost the whole scroll. */
+body.is-near-closer .dock-cta { opacity: 0 !important; visibility: hidden; pointer-events: none; }
+@media(max-width:900px) {
+ .steps__stage .pmock { width: 268px; height: 552px; padding: 11px; border-radius: 42px; scale: .58; transform-origin: top center; }
+ .steps__stage .pscreen { inset: 11px; border-radius: 32px; padding: 46px 14px 30px; }
+ .steps__stage .pscreen--shot { padding: 0; }
+ .steps__stage .pmock__island { top: 20px; width: 78px; height: 20px; }
+ .steps__stage .pmock__home { bottom: 18px; width: 96px; }
+ .steps__stage .pradar__ring { width: 180px; height: 180px; }
+ .steps__stage .pradar__ring--in { width: 110px; height: 110px; }
+}
+@media(max-height:740px) and (max-width:900px) { .steps__stage .pmock { scale: .54; } }
+@media(max-height:600px) and (max-width:900px) { .steps__stage .pmock { scale: .5; } }
+@media(max-width:900px) {
+ .steps__stage::before { background: #252833; mask-image: linear-gradient(#000 0%, #000 85%, transparent); -webkit-mask-image: linear-gradient(#000 0%, #000 85%, transparent); }
+}
+
+/* ---- the two columns as one band (desktop) ------------------------------
+   The phone stands in the room with no frame around it — same as it always
+   did. What the band still buys is that the pebble cluster is the same
+   height as the phone's stage and centred on the same line, so the section
+   reads as two things of equal weight rather than a tall object beside a
+   short one. */
+@media (min-width: 901px) {
+  .steps__pin {
+    grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "head  head"
+      "stage list";
+    column-gap: clamp(20px, 2.6vw, 40px);
+    row-gap: clamp(16px, 3.2vh, 38px);
+    /* Auto, not a fixed band: the heading row is as tall as the words in
+       it, and a box that sizes to its content can never clip them. The
+       offset below only has to CENTRE it, so an estimate of the heading's
+       height is good enough there — being a few px off moves the whole
+       block, it doesn't cut anything. */
+    height: auto;
+    top: max(20px, calc((100svh - var(--steps-band, 590px) - var(--steps-head-h, 190px)) / 2));
+  }
+  /* Both columns are the band's height, so the pebble cluster centres on
+     the phone's line rather than on its own content. */
+  .steps__list { height: var(--steps-band, 590px); }
+  .steps__grid {
+    --steps-band: 590px;
+    /* One row height and one gap, so the cluster's total height is a fixed
+       number and it can be centred on the phone's line without ever
+       re-measuring itself. 3 rows + 2 gaps = 490px against a 590px phone. */
+    --steps-open: 168px;
+    --steps-closed: 88px;
+    --steps-gap: 32px;
+  }
+
+}
+
+/* A narrower desktop column wraps the longest copy onto a third line, so
+   the fixed row has to be taller there or that line would be clipped. */
+@media (min-width: 901px) and (max-width: 1180px) {
+  .steps__grid { --steps-open: 188px; --steps-closed: 84px; --steps-gap: 26px; }
+}
+@media (min-width: 901px) and (max-height: 860px) {
+  /* The heading now shares the viewport with the band, so the band has to
+     give some of it back. The phone scales as one object — `scale` is its
+     own property, so it composes with .pmock's resting rotate. */
+  .steps__grid { --steps-band: 512px; --steps-head-h: 176px; }
+  .steps__pin .pmock { scale: 0.92; transform-origin: bottom center; }
+}
+@media (min-width: 901px) and (max-height: 760px) {
+  .steps__grid {
+    --steps-band: 452px; --steps-head-h: 164px;
+    --steps-gap: 20px; --steps-closed: 78px; --steps-open: 156px;
+  }
+  .steps__pin .pmock { scale: 0.8; transform-origin: bottom center; }
 }

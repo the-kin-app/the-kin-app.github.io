@@ -653,6 +653,16 @@ p { margin: 0; }
   .dock-armed.is-docked .dock-cta .btn__flash {
     animation: none;
   }
+  /* The emerge animation is also what put the CTA at its resting values
+     (it runs `both`, so its last frame is what held opacity and position).
+     Turning the animation off without restating them left the docked CTA
+     at the hidden values above — invisible and translated off screen — so
+     under reduced motion there was no floating CTA at all. */
+  .dock-armed.is-docked .dock-cta {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
   .dock-armed.is-docked .dock-cta > :not(.btn__fill):not(.btn__flash):not(.btn__ripple) {
     opacity: 1;
   }

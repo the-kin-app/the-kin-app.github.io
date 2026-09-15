@@ -21,6 +21,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://hellomin.app/partners/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://hellomin.app/privacy-policy/</loc>
     <lastmod>2026-08-27</lastmod>
     <priority>0.2</priority>

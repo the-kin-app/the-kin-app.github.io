@@ -22,6 +22,11 @@
    the palette stays at cave throughout, so there is no daybreak
    ramp and nothing here fights the form for attention. */
 
+/* landing.css opens --bg at cave for its sunrise. This page has no
+   sunrise (see "daylight" in business.js), so it starts lit — set here
+   too, not only in JS, so the first paint is never a dark flash. */
+.biz { --bg: #F0EBE2; --ink: #23211E; }
+
 .biz main { position: relative; z-index: 1; }
 
 /* The dock is always up on this page (no hero-gated surfacing), so
@@ -71,34 +76,21 @@ html:not(.js-ready) .concept {
 .wordmark--hero .wordmark__dot { display: none; }
 html:not(.js-ready) .wordmark--hero .wordmark__dot { display: block; }
 
-/* ---- hero --------------------------------------------------
-   Shorter than the landing hero — this page's job is the form
-   below it, so the hero introduces and gets out of the way. */
-
-/* A full screen of its own, so the questionnaire starts strictly below
-   the fold: you land on the pitch, and the first question only arrives
-   once you've decided to scroll. The section padding on
-   .biz-form-section keeps card one clear of the seam.
-
-   svh, not vh or dvh: sized to the viewport with the mobile toolbar
-   *shown*, which is what you get on load. Once the toolbar retracts on
-   the first scroll the card comes up into view — which is the moment we
-   want it to. */
-.biz-hero {
-  min-height: 100svh;
+/* ---- masthead ----------------------------------------------
+   There is no hero. This page is the questionnaire, so the brand
+   gets one quiet band at the top and the first card follows
+   immediately — no full screen to scroll past before question one. */
+.biz-masthead {
   display: grid;
-  align-content: center;
-  padding-top: 88px;
-  /* Unlike the landing page, the dock is up from the start here, so the
-     hero centres its content in the space above it rather than behind it. */
-  padding-bottom: calc(var(--dock-clear) + var(--space-4));
+  justify-items: center;
+  padding-top: clamp(40px, 7vh, 72px);
+  padding-bottom: clamp(var(--space-6), 3.4vh, var(--space-8));
   text-align: center;
 }
-.biz-hero .shell { display: grid; justify-items: center; }
 
-.biz-hero .wordmark--hero {
-  width: min(212px, 40vw);
-  margin-bottom: var(--space-7);
+.biz-masthead .wordmark--hero {
+  width: min(148px, 34vw);
+  margin-bottom: var(--space-5);
 }
 
 /* The one line that says whose page this is. Small, spaced, quiet —
@@ -109,24 +101,7 @@ html:not(.js-ready) .wordmark--hero .wordmark__dot { display: block; }
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-faint);
-  margin-bottom: var(--space-5);
 }
-
-/* The <h1> is the visually-hidden page name ("Min for Business"), so the
-   display line here is the <h2> — the wordmark above it is doing the
-   work a visible h1 usually would. */
-.biz-hero h2 {
-  font-size: clamp(2.1rem, 5.4vw, 3.9rem);
-  max-width: 16ch;
-  margin-inline: auto;
-}
-
-.biz-hero .lede {
-  margin: var(--space-7) auto 0;
-  text-align: center;
-}
-
-.biz-hero .fineprint { margin-top: var(--space-7); }
 
 /* ---- the form ---------------------------------------------- */
 
@@ -306,6 +281,82 @@ html:not(.js-ready) .wordmark--hero .wordmark__dot { display: block; }
   font-size: var(--text-sm);
   color: var(--color-error);
 }
+
+/* ---- ranking list --------------------------------------------
+   Click-to-rank rather than drag-to-reorder: dragging is a poor fit
+   for a phone held one-handed outside a bar, and a numbered tap order
+   says the same thing. Tap order is the answer, so the badge carries
+   the number and the list itself never reflows — items staying put is
+   what makes a second and third tap cheap. */
+
+.rank-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.rank-option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 13px 16px;
+  font: inherit;
+  text-align: left;
+  color: var(--ink);
+  border: 1px solid rgba(35, 33, 30, 0.07);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition:
+    background var(--duration-quick) ease,
+    border-color var(--duration-quick) ease;
+}
+
+.rank-option:hover { background: rgba(255, 255, 255, 0.46); }
+
+.rank-option[aria-pressed="true"] {
+  background: rgba(255, 255, 255, 0.62);
+  border-color: rgba(35, 33, 30, 0.14);
+}
+
+.rank-option:focus-visible {
+  outline: 2px solid var(--violet-ink);
+  outline-offset: 2px;
+}
+
+/* The badge holds the rank. Empty and hollow until picked, so an
+   unranked row reads as an empty slot waiting for a number rather
+   than as an unchecked box. */
+.rank-option__num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(35, 33, 30, 0.16);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  color: transparent;
+  transition:
+    background var(--duration-quick) ease,
+    color var(--duration-quick) ease,
+    border-color var(--duration-quick) ease;
+}
+
+.rank-option[aria-pressed="true"] .rank-option__num {
+  background: var(--violet-ink);
+  border-color: var(--violet-ink);
+  color: #fff;
+}
+
+.rank-option__label { flex: 1; }
+
+.rank-none { margin-top: var(--space-3); }
 
 /* ---- options ------------------------------------------------
    Checkboxes and radios as their own small wells, so a questionnaire
@@ -553,8 +604,7 @@ html:not(.js-ready) .wordmark--hero .wordmark__dot { display: block; }
 /* ---- small screens ----------------------------------------- */
 
 @media (max-width: 760px) {
-  .biz-hero { padding-top: 72px; }
-  .biz-hero .wordmark--hero { width: min(212px, 52vw); }
+  .biz-masthead .wordmark--hero { width: min(132px, 40vw); }
   .biz-card { border-radius: var(--radius-2xl); }
   .biz-success { border-radius: var(--radius-2xl); }
 }

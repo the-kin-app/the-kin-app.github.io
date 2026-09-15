@@ -1,129 +1,99 @@
-/* ============================================================
-   Homepage · how it works
-   ------------------------------------------------------------
-   Three steps, one phone. Whichever step is nearest the reader's
-   eyeline is the active one, and the phone shows that step's screen.
-
-   The screens are placeholders for the real UI mockups, and this
-   module is deliberately ignorant of what is inside them: it only
-   toggles .is-on on the nth [data-screen]. Swapping a placeholder
-   for a real mockup needs no change here.
-
-   Driven off scroll position rather than an IntersectionObserver
-   band. An observer gets ambiguous the moment two short steps are
-   in the band at once, and the steps' heights change with the
-   viewport and the font — measuring the distance to a target line
-   gives exactly one winner at every scroll position, always.
-
-   The section is fully readable before this runs and if it never
-   runs: CSS dims the inactive steps but hides nothing, and the
-   first screen is the one CSS shows on its own.
-   ============================================================ */
-
+/* The steps sit together as one cluster beside the phone; neither moves.
+   What scroll changes is only WHICH step is open, so selection comes from
+   how far the sticky pair has travelled through its track — not from where
+   each step happens to be on screen. No snap rules, no wheel interception. */
 export function howItWorks() {
-  const grid = document.querySelector('[data-steps]');
-  if (!grid) return;
+  const grid=document.querySelector('[data-steps]');
+  if(!grid)return;
+  const items=[...grid.querySelectorAll('.steps__item')];
+  const stage=grid.querySelector('.steps__stage');
+  const screens=[...grid.querySelectorAll('[data-screen]')];
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  let queued=false,current=-1;
+  grid.classList.add('is-live');   // JS owns the open/closed state from here
+  const pin=grid.querySelector('.steps__pin');
+  const band=grid.querySelector('.steps__band');
+  /* The track: the stretch of scroll where BOTH the phone and the cluster
+     are parked. Taking it from the phone alone was wrong on mobile, where
+     the cluster starts lower in the grid and is shorter, so it releases and
+     slides away while step 3 is still arriving. Each sticky element has its
+     own pinned range; the track is where those ranges overlap.
 
-  const items = [...grid.querySelectorAll('.steps__item')];
-  const stage = grid.querySelector('.steps__stage');
-  // The screens the active step drives, matched to the steps by position,
-  // so a step with no screen simply doesn't get one rather than throwing
-  // or knocking the others out of sync.
-  const screens = [...grid.querySelectorAll('[data-screen]')];
-  if (!items.length) return;
-
-  // Reduced motion gets step 1 and no swapping; the CSS says the same thing,
-  // and agreeing with it here keeps a mid-session preference change honest.
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-
-  let current = -1;
-
-  const show = (index) => {
-    if (index === current) return;
-    current = index;
-    items.forEach((el, i) => el.classList.toggle('is-on', i === index));
-    screens.forEach((el, i) => el.classList.toggle('is-on', i === index));
-  };
-
-  /* The eyeline — where on the viewport we ask "which step is here?".
-     The phone answers whichever step's TEXT has most recently come into
-     view — the line sits low, near the foot of the viewport, and a step
-     claims the phone the moment its heading crosses it from below. That
-     is the change the reader is actually waiting for: new words arrive,
-     the screen beside them is already the right one, and it then holds
-     for the whole time those words are on screen.
-
-     Measuring against the middle instead made the screens flick past
-     mid-scroll: each step won the phone only as it reached the centre,
-     so a screen swapped while the reader was still on the step before
-     it. One low line works on both layouts — the narrow stage covers
-     the TOP of the viewport, and nothing about "has the next heading
-     appeared yet" depends on where the phone is sitting.
-
-     0.72 rather than lower down: the steps snap to centre, so at rest a
-     step's heading sits near 0.43vh and the NEXT one near 0.83vh. The
-     line has to clear both by a margin, or a step could come to rest
-     centred while the phone had already moved on to the one below it. */
-  const eyeline = () => innerHeight * 0.72;
-
-  /* Nothing swaps until the phone has PARKED. The stage is sticky, so
-     while it is still riding up into place the whole section is still
-     arriving — swapping screens then spends the change off to the side
-     of the reader's attention, and by the time they're actually looking
-     at the phone it has already moved on. Once the stage's top has
-     reached its own sticky offset, the section is settled in view and
-     the eyeline takes over.
-
-     Read off the computed `top` rather than hard-coded, so the desktop
-     (50vh - 310px) and mobile (0) offsets both come out right, and it
-     stays true if the CSS changes. Past the section the stage unsticks
-     upward, which keeps the test true — the last step stays chosen. */
-
-  const parked = () => {
-    if (!stage) return true;
-    const offset = parseFloat(getComputedStyle(stage).top) || 0;
-    return stage.getBoundingClientRect().top <= offset + 1;
-  };
-
-  const pick = () => {
-    // The narrow-screen backdrop rides on the same answer: it only has
-    // something to hide once the phone is holding still in front of it.
-    const isParked = parked();
-    if (stage) stage.classList.toggle('is-parked', isParked);
-    if (!isParked) return show(0);
-
-    // The LAST step to have crossed the line, so scrolling back up hands
-    // the phone back in the same order it took it.
-    const line = eyeline();
-    let best = 0;
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].getBoundingClientRect().top < line) best = i;
-    }
-    show(best);
-  };
-
-  let queued = false;
-  const onScroll = () => {
-    if (queued) return;
-    queued = true;
-    requestAnimationFrame(() => {
-      queued = false;
-      pick();
-    });
-  };
-
-  const start = () => {
-    if (reduced.matches) {
-      removeEventListener('scroll', onScroll);
-      removeEventListener('resize', onScroll);
-      show(0);
-      return;
-    }
-    addEventListener('scroll', onScroll, { passive: true });
-    addEventListener('resize', onScroll, { passive: true });
-    pick();
-  };
-
-  reduced.addEventListener('change', start);
-  start();
+     Which box sticks depends on the breakpoint: on desktop it is
+     .steps__pin (heading, phone and pebbles parked as one block), below
+     901px it is .steps__band (phone and pebbles only — the heading is let
+     go, because all three don't fit a phone screen). Both are listed here
+     and range() skips whichever is not `sticky`, so nothing in this file
+     has to know the breakpoint. Whatever sticks, the track is the stretch
+     where all of it is parked. */
+  const pinned=[pin,band].filter(Boolean);
+  let within=pinned.map(()=>0);
+  /* Where each one sits in the grid before anything sticks. This CANNOT be
+     read while an element is stuck: `offsetTop` on a stuck sticky element
+     reports the position it has been pushed to, not its position in the
+     layout, so reading it mid-scroll made `start` follow scrollY and the
+     progress below was permanently 0. Dropping to `static` for the read is
+     the only way to get the honest number back. Cached — this forces a
+     reflow, so it runs on resize, never per scroll frame. */
+  function measure(){
+    const kept=pinned.map(el=>el.style.position);
+    pinned.forEach(el=>{el.style.position='static';});
+    within=pinned.map(el=>el.offsetTop-grid.offsetTop);
+    pinned.forEach((el,i)=>{el.style.position=kept[i];});
+  }
+  function range(el,i){
+    const cs=getComputedStyle(el);
+    if(cs.position!=='sticky')return null;                    // nothing pins here
+    const offset=parseFloat(cs.top)||0;
+    const top=scrollY+grid.getBoundingClientRect().top;       // the grid, in the document
+    return {
+      start: top+within[i]-offset,                            // it reaches its parked line
+      end:   top+grid.offsetHeight-el.offsetHeight-offset,    // its foot reaches the grid's
+    };
+  }
+  function track(){
+    const parts=pinned.map(range).filter(Boolean);
+    if(!parts.length)return {start:scrollY,span:0};
+    const start=Math.max(...parts.map(p=>p.start));
+    return {start,span:Math.min(...parts.map(p=>p.end))-start};
+  }
+  function update(){
+    queued=false;
+    /* The dock hides ONLY over the closer, which carries the same form.
+       Everywhere else it is the one persistent way to sign up, so it stays
+       up. The threshold is the closer's top reaching the lower third of
+       the screen — late enough that the two CTAs are never both in frame. */
+    const cl=document.querySelector('#closer');
+    document.body.classList.toggle('is-near-closer',
+      !!cl && cl.getBoundingClientRect().top < innerHeight*0.72);
+    const t=track();
+    // A track with no runway (short phones, reduced motion) leaves step 1 open.
+    const progress=t.span>40?Math.max(0,Math.min(1,(scrollY-t.start)/t.span)):0;
+    const nearest=Math.min(items.length-1,Math.floor(progress*items.length));
+    if(current!==nearest){
+      current=nearest;
+      items.forEach((el,i)=>el.classList.toggle('is-on',i===nearest));
+      screens.forEach((el,i)=>el.classList.toggle('is-on',i===nearest));    }
+    // The mobile band's scrim only has a job once the box is actually
+    // parked. That state belongs to whichever box is sticky at this width,
+    // not to the stage — the stage no longer sticks to anything of its own.
+    const stuck=pinned.find(el=>getComputedStyle(el).position==='sticky');
+    stage.classList.toggle('is-parked', !!stuck &&
+      stuck.getBoundingClientRect().top<=(parseFloat(getComputedStyle(stuck).top)||0)+1);
+    // The phone does NOT move. It used to take a scroll-driven float and a
+    // tilt that swept -1.5deg to +1.5deg across the section, which read as
+    // parallax against a cluster that is nailed down. Its resting tilt is
+    // CSS (.pmock) and nothing overrides it.
+  }
+  /* Read the scroll, never write it. There used to be a `settle()` here
+     that smooth-scrolled the page to the middle of a step's band 240ms
+     after you stopped — so the page carried on moving ~100px on its own
+     after you let go. That is the section moving itself, which is exactly
+     what it must not do. */
+  function onScroll(){if(!queued){queued=true;requestAnimationFrame(update);}}
+  addEventListener('scroll',onScroll,{passive:true});
+  addEventListener('resize',()=>{measure();update();},{passive:true});
+  reduced.addEventListener('change',update);
+  new ResizeObserver(()=>{measure();update();}).observe(grid);
+  measure();update();
 }

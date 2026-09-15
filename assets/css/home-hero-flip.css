@@ -1,0 +1,141 @@
+/* ============================================================
+   Min — hero variant B: the flipping word
+   ------------------------------------------------------------
+   Loaded only by /b/. Layers on top of home-hero.css; it adds one
+   line to the hero and re-balances the two lines above it, and
+   changes nothing the control variant uses.
+
+   The line replaces the lede, so the hero still has exactly three
+   beats: headline, hook, signup. Adding a fourth would push the
+   form under the fold on a 720px window, which is the whole reason
+   home-hero.css budgets the phone against 100svh.
+   ============================================================ */
+
+.hero__flipline {
+  margin: 0;
+  font-size: clamp(1.4rem, 2.7vw, 2.15rem);
+  line-height: 1.25;
+  letter-spacing: -0.035em;
+  font-weight: var(--font-weight-semibold);
+  color: #6c5c51;
+  /* The word can overflow to the right for the ~240ms the container's
+     width is still travelling. Nothing follows it on the line, so the
+     overflow is invisible — but the line must not be a clipping box or
+     the blur on the outgoing word gets a hard edge. */
+  overflow: visible;
+}
+
+/* The changing word. An inline-block whose width is set in px by
+   hero-flip.js and transitions on the page's own emergence curve, so
+   the sentence widens and narrows rather than jumping. */
+.flipwords {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  vertical-align: bottom;
+  transition: width var(--duration-emergence) var(--ease-emergence);
+}
+
+.flipwords__word {
+  display: inline-block;
+  white-space: nowrap;
+  font-weight: var(--font-weight-bold);
+  /* Same warm-to-violet wash as .hero__line--lit: the flipping word is
+     now the loudest thing in the hero, so it gets the one place in the
+     page where the room's light and the brand accent meet. The solid
+     `color` underneath is what a browser without background-clip shows. */
+  color: #6E4632;
+  background-image: linear-gradient(96deg, #6E4632 0%, #9A5A38 46%, #6E5490 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-right: 0.06em;
+  transition:
+    opacity var(--duration-emergence) ease,
+    transform var(--duration-emergence) var(--ease-emergence),
+    filter var(--duration-emergence) ease;
+}
+
+/* Leaving: lifts and dissolves, faster than it arrived. 240ms — the
+   number hero-flip.js waits before swapping the text. */
+.flipwords__word.is-out {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.985);
+  filter: blur(4px);
+  transition-duration: 240ms;
+}
+
+/* Arriving: the `.rise` recipe — magnified, blurred, below the line,
+   clarifying as it settles. Held for one frame by JS, then released. */
+.flipwords__word.is-in {
+  opacity: 0;
+  transform: translateY(10px) scale(1.05);
+  filter: blur(6px);
+  transition-duration: 0ms;
+}
+
+/* The measuring stick: the word's exact type, laid out but never painted
+   and never affecting layout. Read once per layout, not per flip. */
+.flipwords__ruler {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  visibility: hidden;
+  pointer-events: none;
+  font-weight: var(--font-weight-bold);
+  padding-right: 0.06em;
+}
+
+/* The fixed half of the sentence. Deliberately quieter than the word it
+   introduces: it is the constant the reader's eye anchors to while the
+   right-hand side keeps changing. */
+.hero__flipline-lead {
+  font-weight: var(--font-weight-semibold);
+  color: #7a675a;
+}
+
+.hero--app .hero__flipline { margin-top: 4px; }
+
+/* Variant B's headline is the setup and the flip line is the payoff, so
+   the headline gives a little size back — otherwise two loud things sit
+   on top of each other and neither wins. */
+.hero--app.hero--flip h1 {
+  font-size: clamp(2.15rem, 3.6vw, 3.2rem);
+  margin-bottom: 18px;
+}
+
+/* ── Mobile ────────────────────────────────────────────────────
+   home-hero.css makes .hero__copy `display: contents` here, so every
+   piece of the hero is a flex item of .shell with its own explicit
+   `order`. Anything without one lands at 0 — which is how this line
+   ended up above the wordmark the first time. It takes the lede's slot
+   (3) because it takes the lede's place. */
+@media (max-width: 800px) {
+  .hero--app.hero--flip h1 { font-size: clamp(1.5rem, 7.4vw, 2.9rem); }
+  .hero--app .hero__flipline {
+    order: 3;
+    /* Sized so the longest ending — "a friend of a friend" — still fits
+       on one line inside the shell at 360px. It has to: the word is
+       nowrap, so a wrap moves the whole hook to two lines and the line
+       count would then change from word to word. */
+    font-size: clamp(1.05rem, 4.6vw, 1.9rem);
+    margin: 10px auto 0;
+  }
+}
+
+/* Short screens: home-hero.css drops the lede here to buy the phone its
+   room. This line stays — it is the variant, and it is one line where
+   the lede was three. It only gives up its air. */
+@media (max-width: 800px) and (max-height: 700px) {
+  .hero--app .hero__flipline { margin-top: 8px; }
+}
+
+/* No blur, no travel, no width animation — the word simply changes, and
+   hero-flip.js slows the beat right down so it reads as a sentence
+   rewording itself rather than something moving in the corner of the eye. */
+@media (prefers-reduced-motion: reduce) {
+  .flipwords { transition: none; width: auto !important; }
+  .flipwords__word.is-out,
+  .flipwords__word.is-in { opacity: 1; transform: none; filter: none; }
+}

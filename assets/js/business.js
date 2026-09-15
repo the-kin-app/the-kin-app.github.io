@@ -12,8 +12,8 @@
    4. atmosphere() — the people-in-fog field, gathering as you scroll.
    5. form()       — validation + submit to the Worker.
 
-   Only business_name and location are required; everything else is
-   optional signal for the hyperlocal-ads research. Endpoint is
+   Only business_name is required; everything else is optional
+   signal for the merchant research. Endpoint is
    configurable via window.KIN_API_BASE (set before this module runs).
    ============================================================ */
 
@@ -52,13 +52,17 @@ function reveals() {
   document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
 }
 
-/* ---------- 4. daybreak + the atmosphere --------------------
-   The landing page's sunrise, compressed to this page's shape: the
-   hero opens at cave, and the light comes up as you reach the first
-   question. That arc isn't decoration here — .resin is a pale, very
-   translucent material, so a card only reads as a lit object once
-   there is light behind it. Held at cave, the whole questionnaire
-   silts up into low-contrast murk.
+/* ---------- 4. daylight + the atmosphere --------------------
+   No sunrise here. The landing page opens at cave and lifts as you
+   scroll, but that arc needs a hero to happen across — and this page
+   has none, so the same ramp would fire inside the first few pixels
+   of scroll and read as a lurch rather than a dawn.
+
+   So the page simply opens at daylight and stays there. .resin is a
+   pale, very translucent material and only reads as a lit object with
+   light behind it, which is exactly what a questionnaire needs from
+   the first question onward. What still moves with scroll is the
+   atmosphere: people gathering in the field behind the cards.
 
    The helpers below mirror landing.js. They're small, and copying
    them keeps this page from having to import the landing page's
@@ -112,31 +116,22 @@ const inkFor = (bg) => {
   return contrast(l, L_CREAM) >= contrast(l, L_GRAPHITE) ? CREAM : GRAPHITE;
 };
 
-/* Keyframed off the form's real offset, not a guessed fraction, so
-   editing copy can't drift the sunrise into the middle of a card. */
 function buildRamps() {
-  const max = Math.max(1, document.body.scrollHeight - innerHeight);
-  const pp = (px) => clamp(px / max, 0, 0.995);
-  const formTop = document.querySelector('.biz-form-section')?.offsetTop ?? innerHeight;
-
-  const breaks = pp(formTop - innerHeight * 0.75);  // light starts arriving
-  const risen = pp(formTop - innerHeight * 0.15);   // full daylight, card one
-
   return {
+    /* Daylight from the first paint. The two stops are near-identical
+       on purpose — just enough warm drift down the page to keep the
+       ground from looking like flat paint, far too little to register
+       as a colour change. */
     bg: [
-      [0, [42, 35, 32]],            // #2A2320 — cave, under the hero
-      [breaks, [70, 58, 49]],        // #463A31 — the cave floor lifting
-      [lerp(breaks, risen, 0.55), [214, 197, 172]],  // first light
-      [risen, [240, 235, 226]],      // #F0EBE2 — daylight
-      [Math.min(0.995, risen + 0.18), [246, 238, 230]],
-      [1, [244, 235, 228]],          // settled daylight for the rest of the form
+      [0, [240, 235, 226]],   // #F0EBE2
+      [1, [244, 235, 228]],   // #F4EBE4
     ],
-    /* the field diffuses away as the light comes up — at full strength
-       over daylight it would just muddy the page behind the cards */
-    alpha: [[0, 1], [breaks, 0.92], [risen, 0.14], [1, 0.1]],
+    /* The field stays diffuse throughout: over daylight, any more than
+       this muddies the page behind the cards. */
+    alpha: [[0, 0.14], [1, 0.1]],
     /* people drawing together as you work down the questionnaire */
-    gather: [[0, 0.18], [risen, 0.5], [1, 0.85]],
-    warmth: [[0, 0.02], [breaks, 0.12], [risen, 0.85], [1, 1]],
+    gather: [[0, 0.35], [1, 0.85]],
+    warmth: [[0, 0.85], [1, 1]],
   };
 }
 
@@ -201,14 +196,11 @@ function form() {
   const emailInput = document.getElementById('email');
   const phoneInput = document.getElementById('phone');
   const businessNameInput = document.getElementById('business_name');
-  const locationInput = document.getElementById('location');
-  const businessTypeSelect = document.getElementById('business_type');
-  const businessTypeOtherField = document.getElementById('business_type_other-field');
-  const businessTypeOtherInput = document.getElementById('business_type_other');
-  const contactNameInput = document.getElementById('contact_name');
+  const dealNotesField = document.getElementById('per_customer_deal_notes-field');
+  const dealNotesInput = document.getElementById('per_customer_deal_notes');
   const slowTimesInput = document.getElementById('slow_times');
+  const contactNameInput = document.getElementById('contact_name');
   const walkinValueInput = document.getElementById('walkin_value');
-  const trustNotesInput = document.getElementById('trust_notes');
   const websiteInput = document.getElementById('website');
   const formStatus = document.getElementById('form-status');
   const submitButton = form.querySelector('button.submit');
@@ -232,7 +224,7 @@ function form() {
   }
 
   function clearErrors() {
-    for (const id of ['business_name-error', 'location-error', 'email-error', 'phone-error']) {
+    for (const id of ['business_name-error', 'email-error', 'phone-error']) {
       document.getElementById(id).textContent = '';
     }
     formStatus.textContent = '';
@@ -242,26 +234,65 @@ function form() {
   const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
   const isValidPhone = (v) => v.replace(/[^\d]/g, '').length >= 7;
 
-  businessTypeSelect.addEventListener('change', () => {
-    businessTypeSelect.classList.toggle('is-placeholder', !businessTypeSelect.value);
+  /* The ranking list. Tap order is the answer, so state lives in one
+     array and the badges are redrawn from it; tapping a ranked item
+     removes it and everything below closes up. The hidden input carries
+     the order on submit, which keeps the whole thing working as a plain
+     form field rather than something the submit handler has to know
+     about. */
+  const rankButtons = [...form.querySelectorAll('.rank-option')];
+  const rankInput = document.getElementById('marketing_rank');
+  const rankOrder = [];
 
-    // The write-in belongs to "Something else" only. Clearing it on the way
-    // out means picking "other", typing, then changing your mind can't leave
-    // a stale answer attached to a category it doesn't describe.
-    const isOther = businessTypeSelect.value === 'other';
-    businessTypeOtherField.style.display = isOther ? '' : 'none';
-    if (isOther) {
-      businessTypeOtherInput.focus();
-    } else {
-      businessTypeOtherInput.value = '';
+  function paintRank() {
+    for (const btn of rankButtons) {
+      const i = rankOrder.indexOf(btn.dataset.value);
+      const picked = i !== -1;
+      btn.setAttribute('aria-pressed', String(picked));
+      btn.querySelector('.rank-option__num').textContent = picked ? String(i + 1) : '';
+      // The number is decoration; the label has to say the rank out loud
+      // for anyone who can't see the badge.
+      const label = btn.querySelector('.rank-option__label').textContent;
+      btn.setAttribute('aria-label', picked ? `${label} — ranked ${i + 1}` : label);
     }
-  });
+    rankInput.value = rankOrder.join(',');
+  }
+
+  for (const btn of rankButtons) {
+    btn.setAttribute('aria-pressed', 'false');
+    btn.addEventListener('click', () => {
+      const v = btn.dataset.value;
+      const i = rankOrder.indexOf(v);
+      if (i === -1) rankOrder.push(v);
+      else rankOrder.splice(i, 1);
+      paintRank();
+    });
+  }
+  paintRank();
+
+  // Selects start showing their disabled "Choose one" option, which is
+  // greyed by .is-placeholder until a real choice replaces it.
+  for (const select of form.querySelectorAll('select.select')) {
+    select.addEventListener('change', () => {
+      select.classList.toggle('is-placeholder', !select.value);
+    });
+  }
+
+  // The write-in belongs to the two "yes" answers only. Clearing it on the
+  // way out means answering yes, typing, then switching to "never" can't
+  // leave a stale story attached to a deal that didn't happen.
+  for (const radio of form.querySelectorAll('input[name="per_customer_deal"]')) {
+    radio.addEventListener('change', () => {
+      const isYes = radio.value.startsWith('yes');
+      dealNotesField.style.display = isYes ? '' : 'none';
+      if (isYes) dealNotesInput.focus();
+      else dealNotesInput.value = '';
+    });
+  }
 
   tabEmail.addEventListener('click', () => setMode('email'));
   tabPhone.addEventListener('click', () => setMode('phone'));
 
-  const checkedValues = (name) =>
-    [...form.querySelectorAll(`input[name="${name}"]:checked`)].map((el) => el.value);
   const radioValue = (name) =>
     form.querySelector(`input[name="${name}"]:checked`)?.value ?? null;
 
@@ -275,12 +306,6 @@ function form() {
     if (!businessNameInput.value.trim()) {
       document.getElementById('business_name-error').textContent = 'We need a name to go on.';
       firstBad = firstBad || businessNameInput;
-      valid = false;
-    }
-
-    if (!locationInput.value.trim()) {
-      document.getElementById('location-error').textContent = 'Whereabouts is it?';
-      firstBad = firstBad || locationInput;
       valid = false;
     }
 
@@ -302,7 +327,7 @@ function form() {
     if (!valid) {
       formStatus.textContent = 'Almost — a couple of things need fixing above.';
       formStatus.className = 'status error';
-      // The required fields are four cards up by the time you reach submit,
+      // The name field is four cards up by the time you reach submit,
       // so an error there is off screen unless we go back to it.
       firstBad?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
       firstBad?.focus({ preventScroll: true });
@@ -311,21 +336,24 @@ function form() {
 
     const payload = {
       business_name: businessNameInput.value.trim(),
-      location: locationInput.value.trim(),
-      business_type: businessTypeSelect.value || null,
-      business_type_other:
-        businessTypeSelect.value === 'other' ? (businessTypeOtherInput.value.trim() || null) : null,
       contact_name: contactNameInput.value.trim() || null,
       contact_method: activeContactValue ? contactMode : null,
       email: activeContactValue && contactMode === 'email' ? activeContactValue : null,
       phone: activeContactValue && contactMode === 'phone' ? activeContactValue : null,
-      current_marketing: checkedValues('current_marketing'),
-      slow_times: slowTimesInput.value.trim() || null,
+      // Ranked best-first, so [0] is what works and [last] is what they
+      // value least — the three old questions, in one answer.
+      marketing_rank: [...rankOrder],
+      marketing_none: document.getElementById('marketing_none').checked,
+      cost_per_customer: radioValue('cost_per_customer'),
+      per_customer_deal: radioValue('per_customer_deal'),
+      per_customer_deal_notes: dealNotesInput.value.trim() || null,
+      ads_satisfaction: radioValue('ads_satisfaction'),
+      ai_concern: radioValue('ai_concern'),
       concept_interest: radioValue('concept_interest'),
       walkin_value: walkinValueInput.value.trim() || null,
       pricing_pref: radioValue('pricing_pref'),
-      pilot_interest: radioValue('pilot_interest'),
-      trust_notes: trustNotesInput.value.trim() || null,
+      followup_interest: radioValue('followup_interest'),
+      slow_times: slowTimesInput.value.trim() || null,
       website: websiteInput ? websiteInput.value : '' // honeypot — always empty for real users
     };
 

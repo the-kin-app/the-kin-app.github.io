@@ -1,0 +1,350 @@
+/* ============================================================
+   Min for venues  (/partners/)
+   ------------------------------------------------------------
+   The pitch we hand to a café or a bar, in the landing page's
+   world: cave light under the hero, daybreak as you reach the
+   argument, and every claim carried on a slab of optical resin.
+
+   This file loads *after* landing.css and re-invents nothing.
+   The environment, the wordmark, Min, .btn, .resin, .shell and
+   the .rise emergence recipe all come from there. What's added
+   here is only this page's layout.
+
+   Because .resin flips --ink to graphite, anything inside a card
+   reads from --ink / --ink-soft / --ink-faint and lands the right
+   way round without a second palette.
+
+   Depends on tokens.css + landing.css.
+   ============================================================ */
+
+.pt main { position: relative; z-index: 1; }
+
+/* The dock is up from the first pixel on this page (no hero-gated
+   surfacing), so the foot of the document keeps a lane clear for it. */
+.pt .footer { padding-bottom: calc(var(--space-10) + var(--dock-clear)); }
+
+/* ---- reveal fail-safe --------------------------------------
+   landing.css hides .rise until an observer adds .in. This page is
+   nothing but argument — a module that fails to load would leave a
+   venue owner staring at a blank screen — so the hidden state is
+   opt-in: it applies only once the inline <head> script has armed
+   it, which it does before first paint. No script, no hiding. */
+
+.pt .rise { opacity: 1; transform: none; filter: none; }
+
+html.reveal-armed .pt .rise {
+  opacity: 0;
+  transform: translateY(8px) scale(1.06);
+  filter: blur(5px);
+}
+html.reveal-armed .pt .in .rise,
+html.reveal-armed .pt .rise.in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* ---- no-module fallbacks -----------------------------------
+   partners.js stamps .js-ready on <html>. Without it the daybreak
+   never runs and the page is stuck at cave — and .resin over cave is
+   a pale wash on a dark floor, which is murk, not a lit object. So
+   the cards carry their own opaque material until there is light
+   behind them to make them read. Same for the i-dot: Min is drawn by
+   the module, so the flat dot stands in when he can't be. */
+
+html:not(.js-ready) .pt .resin {
+  background: linear-gradient(168deg, rgba(252, 250, 246, 0.96), rgba(244, 240, 233, 0.93));
+  backdrop-filter: blur(10px) saturate(120%);
+}
+
+.pt .wordmark--hero .wordmark__dot { display: none; }
+html:not(.js-ready) .pt .wordmark--hero .wordmark__dot { display: block; }
+
+/* ---- hero --------------------------------------------------
+   One screen, because the reader is standing behind a counter with a
+   phone in one hand. Headline, the sentence under it, the button —
+   the argument starts strictly below the fold.
+
+   svh, not vh or dvh: sized to the viewport with the mobile toolbar
+   *shown*, which is what you get on load. */
+.pt-hero {
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  padding-top: 88px;
+  padding-bottom: calc(var(--dock-clear) + var(--space-4));
+  text-align: center;
+}
+.pt-hero .shell { display: grid; justify-items: center; }
+
+.pt-hero .wordmark--hero {
+  width: min(212px, 40vw);
+  margin-bottom: var(--space-7);
+}
+
+/* The one line that says whose page this is. Small and spaced — the
+   wordmark above it is already the brand. */
+.pt-eyebrow {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: var(--space-5);
+}
+
+/* The <h1> is the visually-hidden page name, so the display line is
+   the <h2> — the wordmark above it does the work a visible h1 would. */
+.pt-hero h2 {
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  max-width: 17ch;
+  margin-inline: auto;
+}
+
+.pt-hero .lede { margin: var(--space-7) auto 0; text-align: center; }
+.pt-hero__cta { margin-top: var(--space-8); }
+.pt-hero .fineprint { margin-top: var(--space-7); }
+
+/* ---- the argument ------------------------------------------ */
+
+.pt-section { padding-block: clamp(var(--space-10), 9vh, 104px); }
+
+.pt-kicker {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: var(--space-4);
+}
+
+.pt-h2 {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  max-width: 20ch;
+  margin-bottom: var(--space-8);
+}
+
+/* ---- the three steps ---------------------------------------
+   Numbered, because this is a sequence and the third item is the
+   one the whole page is about. Equal columns on a desk, a single
+   stack on a phone — never a squeezed three-across. */
+
+.pt-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(var(--space-5), 2vw, var(--space-7));
+  grid-template-columns: repeat(auto-fit, minmax(258px, 1fr));
+  counter-reset: none;
+}
+
+.pt-step, .pt-card {
+  padding: clamp(var(--space-6), 2.6vw, var(--space-9));
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+}
+
+/* The number is a brighter pebble sunk into the card's own resin —
+   a well in the material, not another object stacked on top. */
+.pt-step__n {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--violet-ink);
+  background: color-mix(in srgb, var(--violet-light) 40%, var(--resin-base));
+  box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, 0.9),
+              inset 0 -2px 6px rgba(15, 13, 20, 0.08);
+}
+
+.pt-step h3, .pt-card h3 {
+  font-size: clamp(1.125rem, 2.1vw, 1.375rem);
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.pt-step p, .pt-card p {
+  font-size: var(--text-md);
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* ---- the four reasons --------------------------------------
+   Two-up, so a pair of claims reads as a pair rather than a list of
+   four things to get through. */
+
+.pt-grid {
+  display: grid;
+  gap: clamp(var(--space-5), 2vw, var(--space-7));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* ---- the honesty block --------------------------------------
+   Deliberately one wide slab and no columns: the one place on the
+   page where we are saying something uncomfortable, so it gets the
+   shape of a paragraph in a letter rather than of a feature grid. */
+
+.pt-plain {
+  padding: clamp(var(--space-7), 3.4vw, var(--space-10));
+  max-width: 62ch;
+}
+.pt-plain .pt-h2 { max-width: none; margin-bottom: var(--space-6); }
+.pt-plain p {
+  font-size: var(--text-md);
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.pt-plain p + p { margin-top: var(--space-4); }
+
+/* ---- the two-sided deal -------------------------------------
+   Two cards of equal weight, because the page is claiming the ask is
+   as small as the offer. Unequal columns would give that away. */
+
+.pt-deal {
+  display: grid;
+  gap: clamp(var(--space-5), 2vw, var(--space-7));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  align-items: start;
+}
+.pt-card--tall { gap: var(--space-5); }
+
+.pt-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-4);
+}
+.pt-list li {
+  font-size: var(--text-md);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  padding-left: var(--space-5);
+  position: relative;
+}
+/* A dot, not a bullet glyph — the same pebble the rest of the system
+   is made of, sized down until it is punctuation. */
+.pt-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--violet-deep);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.pt-list strong { color: var(--ink); font-weight: var(--font-weight-semibold); }
+
+/* The list of things we are NOT asking for is the most persuasive
+   line in the section, so it sits apart from the list above it. */
+.pt-not {
+  margin-top: var(--space-2);
+  padding-top: var(--space-5);
+  border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  font-size: var(--text-base);
+  line-height: 1.55;
+  color: var(--ink-faint);
+}
+.pt-not strong { color: var(--ink-soft); font-weight: var(--font-weight-semibold); }
+
+/* ---- FAQ ----------------------------------------------------
+   Native <details>. Six answers in six open panels is a wall; six
+   questions is a page you can skim behind a counter. */
+
+.pt-faq { display: grid; gap: var(--space-4); }
+
+.pt-q { padding: 0; }
+.pt-q summary {
+  cursor: pointer;
+  list-style: none;
+  padding: clamp(var(--space-5), 2.2vw, var(--space-6)) clamp(var(--space-6), 2.6vw, var(--space-8));
+  font-size: clamp(1rem, 1.9vw, 1.125rem);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+}
+.pt-q summary::-webkit-details-marker { display: none; }
+
+/* The affordance is one hairline cross that loses a stroke when the
+   panel opens — no chevron, nothing borrowed from a toolbar. */
+.pt-q summary::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 13px;
+  height: 13px;
+  background:
+    linear-gradient(currentColor, currentColor) center/13px 1.5px no-repeat,
+    linear-gradient(currentColor, currentColor) center/1.5px 13px no-repeat;
+  color: var(--ink-faint);
+  transition: transform var(--duration-standard, 240ms) var(--ease-emergence, ease),
+              opacity var(--duration-standard, 240ms) ease;
+}
+.pt-q[open] summary::after {
+  background: linear-gradient(currentColor, currentColor) center/13px 1.5px no-repeat;
+  transform: rotate(180deg);
+}
+.pt-q summary:hover::after { color: var(--ink); }
+
+.pt-q > p {
+  margin: 0;
+  padding: 0 clamp(var(--space-6), 2.6vw, var(--space-8)) clamp(var(--space-6), 2.6vw, var(--space-8));
+  font-size: var(--text-md);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 62ch;
+}
+
+/* ---- the closer ---------------------------------------------
+   No card. The landing page ends the same way: the closing line
+   stands in the open air and the button is the only object, so the
+   ending doesn't flatten into another panel. */
+
+.pt-closer {
+  padding-block: clamp(var(--space-10), 11vh, 128px) clamp(76px, 9vh, 112px);
+  text-align: center;
+}
+.pt-closer .shell { display: grid; justify-items: center; }
+.pt-closer .pt-h2 { max-width: 18ch; margin-bottom: var(--space-5); }
+.pt-closer .lede { margin: 0 auto; text-align: center; }
+.pt-closer .fineprint { margin-top: var(--space-7); }
+.pt-closer .fineprint a { color: var(--ink-soft); text-decoration: underline; }
+
+.pt-closer__min {
+  width: 74px;
+  height: 74px;
+  margin-bottom: var(--space-6);
+}
+
+/* ---- phone --------------------------------------------------
+   Nothing collapses below this — the grids are already auto-fit —
+   so the only job here is to stop the display type from eating the
+   screen and to give the cards back their side gutters. */
+
+@media (max-width: 620px) {
+  .pt-hero h2 { max-width: 14ch; }
+  .pt-h2 { max-width: 22ch; }
+  .pt-section { padding-block: clamp(var(--space-9), 7vh, 72px); }
+  .pt-q summary { gap: var(--space-4); }
+}
+
+/* Somebody who asked for less motion still gets the whole argument —
+   only the emergence cascade goes. */
+@media (prefers-reduced-motion: reduce) {
+  html.reveal-armed .pt .rise { opacity: 1; transform: none; filter: none; }
+}

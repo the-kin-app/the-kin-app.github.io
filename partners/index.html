@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Min for venues — two people who've never met, at your table</title>
+<meta name="description" content="Min introduces one person to one person, within a five-minute walk of both. They still need somewhere to sit down. We're choosing the Helsinki places Min suggests first.">
+<meta name="theme-color" content="#2A2320">
+<link rel="canonical" href="https://hellomin.app/partners/">
+
+<meta property="og:title" content="Min for venues">
+<meta property="og:description" content="Min introduces one person to one person, within a five-minute walk of both. They still need somewhere to sit down.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hellomin.app/partners/">
+<meta property="og:site_name" content="Min">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://hellomin.app/assets/img/og-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Min: a softly glowing pebble with two lit eyes, floating in dusk light.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hellomin.app/assets/img/og-cover.jpg">
+
+<link rel="icon" href="/assets/favicon.svg?v=3" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/landing.css">
+<link rel="stylesheet" href="/assets/css/partners.css?v=20260912a">
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js" } }
+</script>
+
+<!-- Arms the scroll-reveal before first paint. If this never runs the page
+     renders visible instead of waiting for an observer that isn't coming
+     (see "reveal fail-safe" in partners.css). -->
+<script>document.documentElement.classList.add('reveal-armed');</script>
+</head>
+<body class="pt">
+
+<!-- the environment everything floats in: light pooling at the floor,
+     slow banks of fog above it -->
+<div class="env" aria-hidden="true">
+  <span class="fog fog--1"></span>
+  <span class="fog fog--2"></span>
+  <span class="fog fog--3"></span>
+</div>
+<canvas id="scene" aria-hidden="true"></canvas>
+
+<main>
+
+  <!-- ── hero ─────────────────────────────────────────────────
+       The whole pitch in one sentence, because a venue owner reading
+       this on a phone behind the counter gets exactly one screen. -->
+  <section class="pt-hero" data-reveal>
+    <div class="shell">
+      <h1 class="visually-hidden">Min for venues</h1>
+
+      <!-- Cast-glass letterforms with Min sitting in the i-dot's place -->
+      <div class="wordmark--hero" role="img" aria-label="min">
+        <span class="wordmark__bloom" aria-hidden="true"></span>
+        <span class="wordmark__glass wordmark__glass--shadow" aria-hidden="true"></span>
+        <span class="wordmark__glass" aria-hidden="true"></span>
+        <!-- the flat i-dot, shown only if the module never runs to draw Min -->
+        <span class="wordmark__dot" aria-hidden="true"></span>
+        <div class="wordmark__min" aria-hidden="true">
+          <div class="min min--hero" data-min data-phase="1.9"></div>
+        </div>
+      </div>
+
+      <div class="pt-eyebrow rise" data-delay="1">For venues</div>
+
+      <h2 class="rise" data-delay="2">We send two people who&rsquo;ve never met. You&rsquo;re where they meet.</h2>
+
+      <p class="lede rise" data-delay="3">
+        Min introduces one person to one person, within a five-minute walk of
+        both. It doesn&rsquo;t give them anywhere to sit down &mdash; you do.
+        Before Min opens in Helsinki, we&rsquo;re choosing the places it
+        suggests first.
+      </p>
+
+      <div class="pt-hero__cta rise" data-delay="4">
+        <a class="btn btn--primary btn--lg" href="#talk">
+          <span class="btn__fill" aria-hidden="true"></span>
+          <span class="btn__label">Be one of the first places</span>
+        </a>
+      </div>
+
+      <p class="fineprint rise" data-delay="5">
+        Helsinki. Early beta in early 2027. No fee, no exclusivity, nothing to install.
+      </p>
+    </div>
+  </section>
+
+  <!-- Everything below the hero sits in the daylight the ramp brings up. -->
+  <div class="pt-body">
+
+    <!-- ── what Min is, told from the doorway ────────────────── -->
+    <section class="pt-section" id="what" data-reveal>
+      <div class="shell">
+        <p class="pt-kicker rise">What we actually do</p>
+        <h2 class="pt-h2 rise" data-delay="1">One introduction, and then a door to walk through.</h2>
+
+        <ol class="pt-steps">
+          <li class="resin pt-step rise" data-delay="2">
+            <span class="pt-step__n" aria-hidden="true">1</span>
+            <h3>Someone has a free hour</h3>
+            <p>No plans, in your neighbourhood, open to company. Min is quiet
+              until that&rsquo;s true &mdash; there&rsquo;s no feed to scroll and
+              nothing to keep up with.</p>
+          </li>
+          <li class="resin pt-step rise" data-delay="3">
+            <span class="pt-step__n" aria-hidden="true">2</span>
+            <h3>Min makes one introduction</h3>
+            <p>One person, one honest reason the two of them would get on, and a
+              place nearby. Not a swipe, not a group of six &mdash; one name.</p>
+          </li>
+          <li class="resin pt-step rise" data-delay="4">
+            <span class="pt-step__n" aria-hidden="true">3</span>
+            <h3>They need somewhere to go</h3>
+            <p>A first meeting between two strangers needs a room with a door on
+              it. That is the part of this we cannot build, and the reason
+              this page exists.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ── why a Min table is worth having ──────────────────── -->
+    <section class="pt-section" id="why" data-reveal>
+      <div class="shell">
+        <p class="pt-kicker rise">Why your corner</p>
+        <h2 class="pt-h2 rise" data-delay="1">A table of two strangers is a good table.</h2>
+
+        <div class="pt-grid">
+          <div class="resin pt-card rise" data-delay="2">
+            <h3>Two covers, in the quiet hours</h3>
+            <p>Min&rsquo;s introductions happen in the gaps in a day &mdash;
+              weekday afternoons, the flat hour before the evening. The hours
+              you already wish were busier.</p>
+          </div>
+          <div class="resin pt-card rise" data-delay="3">
+            <h3>They stay a while</h3>
+            <p>It&rsquo;s a first conversation with somebody new. Nobody orders
+              one coffee and leaves in eight minutes. It runs long, and long is
+              a second round.</p>
+          </div>
+          <div class="resin pt-card rise" data-delay="4">
+            <h3>No discount required</h3>
+            <p>We&rsquo;re not sending someone hunting for a deal. We&rsquo;re
+              sending someone who has already decided to leave the house. The
+              offer is the company, not the price.</p>
+          </div>
+          <div class="resin pt-card rise" data-delay="5">
+            <h3>Walking distance, by design</h3>
+            <p>Min only introduces people who are already within about five
+              minutes of each other. The people it matches near you are, by
+              definition, your neighbours.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── the honesty block ─────────────────────────────────
+         This is where 222's page puts "100,000 members, $5M revenue".
+         We have neither, and a number we don't have is the fastest way
+         to lose a room. The honesty is the pitch. -->
+    <section class="pt-section" id="where" data-reveal>
+      <div class="shell">
+        <div class="resin pt-plain rise">
+          <p class="pt-kicker">Where we are, honestly</p>
+          <h2 class="pt-h2">We haven&rsquo;t launched. There is no footfall to promise you.</h2>
+          <p>Most partnership pages open with a number. Ours can&rsquo;t, so it
+            won&rsquo;t. Min is pre-launch: a waitlist in the Helsinki area, an
+            app that opens to early beta in early 2027, and a small team who
+            have to decide which places Min suggests on the first day it
+            works.</p>
+          <p>We&rsquo;d rather make that decision with you in the room than
+            find out afterwards that we sent two strangers somewhere with
+            nowhere to sit. That is genuinely the whole ask: be early, and
+            tell us what you see.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── the deal, both directions ─────────────────────────── -->
+    <section class="pt-section" id="deal" data-reveal>
+      <div class="shell">
+        <p class="pt-kicker rise">The arrangement</p>
+        <h2 class="pt-h2 rise" data-delay="1">Small, and pointed both ways.</h2>
+
+        <div class="pt-deal">
+          <div class="resin pt-card pt-card--tall rise" data-delay="2">
+            <h3>What you get</h3>
+            <ul class="pt-list">
+              <li><strong>To be suggested.</strong> One of the places Min offers
+                as a spot to meet, from the first week it&rsquo;s on.</li>
+              <li><strong>No fee, the whole beta.</strong> We don&rsquo;t have a
+                price because we don&rsquo;t yet have proof.</li>
+              <li><strong>What actually happened.</strong> How many
+                introductions landed at your place, and how they went. Numbers
+                and themes, never a named person.</li>
+              <li><strong>A poster and your own code</strong>, so your regulars
+                can join the waitlist from the counter.</li>
+              <li><strong>A say.</strong> You&rsquo;re in the room while we
+                decide what this becomes.</li>
+            </ul>
+          </div>
+
+          <div class="resin pt-card pt-card--tall rise" data-delay="3">
+            <h3>What we&rsquo;d ask</h3>
+            <ul class="pt-list">
+              <li><strong>Permission to name you</strong> inside the app as a
+                place to meet.</li>
+              <li><strong>A table that works for two strangers</strong> &mdash;
+                quiet enough to hear each other, easy to find, no booking
+                needed.</li>
+              <li><strong>Your slow hours</strong>, so Min can point people at
+                them rather than at your Friday night.</li>
+              <li><strong>Twenty minutes, now and again</strong>, to tell us
+                what you saw from behind the counter.</li>
+            </ul>
+            <p class="pt-not"><strong>Not asked:</strong> a fee, exclusivity, a
+              discount, a booking system, a POS integration, or any change at
+              all to how you run the place.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── questions a venue owner actually asks ─────────────── -->
+    <section class="pt-section" id="faq" data-reveal>
+      <div class="shell">
+        <p class="pt-kicker rise">Straight answers</p>
+        <h2 class="pt-h2 rise" data-delay="1">Questions we get asked first.</h2>
+
+        <div class="pt-faq">
+          <details class="resin pt-q rise" data-delay="2">
+            <summary>What does it cost?</summary>
+            <p>Nothing, for the whole early beta. If Min works and we ever start
+              charging, it will be for something measurable &mdash; people who
+              actually walked in &mdash; and you&rsquo;ll hear the number before
+              anyone else does.</p>
+          </details>
+          <details class="resin pt-q rise" data-delay="3">
+            <summary>What do I have to change?</summary>
+            <p>Nothing. No app on your till, no menu, no staff training, no
+              reserved table. Two people walk in and order like anybody else.
+              The only difference is that they met four minutes ago.</p>
+          </details>
+          <details class="resin pt-q rise" data-delay="4">
+            <summary>How is this different from a promoter, or a deal app?</summary>
+            <p>A deal app sells your margin to somebody who was going out
+              anyway. A promoter fills a room once. Min is trying to make one
+              person meet one other person, repeatedly, in the neighbourhood
+              they already live in &mdash; which means the same two people come
+              back on their own, without us.</p>
+          </details>
+          <details class="resin pt-q rise" data-delay="5">
+            <summary>When does this actually start?</summary>
+            <p>Early beta opens in early 2027, Helsinki area first. Between now
+              and then we&rsquo;re visiting places, walking the neighbourhoods,
+              and working out what a good first meeting spot really looks like.
+              That&rsquo;s the part we&rsquo;d like your help with.</p>
+          </details>
+          <details class="resin pt-q rise" data-delay="6">
+            <summary>What if nobody comes?</summary>
+            <p>Then you&rsquo;ve lost nothing but a conversation with us, and
+              we&rsquo;ve learned something we badly needed to know. We&rsquo;d
+              rather tell you that now than dress up a pilot as a guarantee.</p>
+          </details>
+          <details class="resin pt-q rise" data-delay="7">
+            <summary>Do you hand over my customers&rsquo; data, or take theirs?</summary>
+            <p>No, in both directions. What someone tells Min stays on their
+              phone; only what a single introduction needs is ever shared. You
+              get counts and themes about meetings at your place, never a name.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── the ask ──────────────────────────────────────────── -->
+    <section class="pt-closer" id="talk" data-reveal>
+      <div class="shell">
+        <div class="min pt-closer__min" data-min data-phase="0.6" aria-hidden="true"></div>
+        <h2 class="pt-h2 rise" data-delay="1">Want to be one of the first rooms?</h2>
+        <p class="lede rise" data-delay="2">
+          Tell us where you are and roughly when you&rsquo;re quiet. If
+          you&rsquo;re in the Helsinki area we&rsquo;ll come by, buy something,
+          and talk it through in person &mdash; which is, after all, the entire
+          point of the app.
+        </p>
+        <div class="pt-hero__cta rise" data-delay="3">
+          <a class="btn btn--primary btn--lg"
+             href="mailto:hello@hellomin.app?subject=Min%20for%20venues&body=Our%20place%3A%0AWhere%20we%20are%3A%0AWhen%20we%27re%20quiet%3A%0A">
+            <span class="btn__fill" aria-hidden="true"></span>
+            <span class="btn__label">hello@hellomin.app</span>
+          </a>
+        </div>
+        <p class="fineprint rise" data-delay="4">
+          Or answer <a href="/business/">a few questions about your place</a>
+          &mdash; two minutes, and it feeds straight into what we build.
+        </p>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer__row">
+    <span>© 2026 Min</span>
+    <span>
+      <a href="/privacy-policy/">Privacy Policy</a> ·
+      <a href="/">About Min</a>
+    </span>
+  </div>
+</footer>
+
+<!-- Docked to the bottom of the viewport (see .nav), and last in the source
+     so the page's content comes before it for keyboard and screen readers. -->
+<header class="nav">
+  <a class="nav__brand" href="/" aria-label="Min">
+    <span class="wordmark--nav" aria-hidden="true">
+      <span class="wordmark__bloom"></span>
+      <span class="wordmark__glass wordmark__glass--shadow"></span>
+      <span class="wordmark__glass"></span>
+      <span class="wordmark__min">
+        <span class="min min--nav" data-min data-phase="3.4"></span>
+      </span>
+    </span>
+  </a>
+  <nav class="nav__right">
+    <a class="nav__link" href="/">About Min</a>
+    <a class="btn" href="#talk"><span class="btn__fill" aria-hidden="true"></span><span class="btn__label">Talk to us</span></a>
+  </nav>
+</header>
+
+<script type="module" src="/assets/js/partners.js?v=20260912a"></script>
+</body>
+</html>

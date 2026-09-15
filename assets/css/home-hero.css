@@ -10,6 +10,14 @@
 .hero--app .fineprint { font-size: 12px; }
 .hero__preview { position: relative; width: 100%; margin: 26px 0 0; padding: 0 22px; }
 .app-phone { position: relative; width: min(100%, 336px); margin: auto; padding: 18px 19px 12px; border: 1px solid #eee1d14d; border-radius: 46px; color: #faf7f2; background: radial-gradient(ellipse at 90% 38%, #8f75933d, transparent 65%), linear-gradient(155deg, #574b43eb, #302926f5 75%); box-shadow: inset 0 0 0 5px #ffffff08, inset 0 1px 2px #fff7e970, 18px 30px 65px #110c144d, 0 0 60px #e7cfe30a; transform: rotate(3deg); }
+.app-phone--photo { padding: 10px 10px 22px; overflow: hidden; }
+/* height:auto is load-bearing: the <img> carries height="1748", a
+   presentational hint that `width: 100%` overrides but the height does
+   not — so the shot rendered 290px wide by its full 1748px tall, the hero
+   grew to 1976px and the headline went below the fold. With height auto
+   the aspect-ratio takes over, which is what it is there for. */
+.app-phone__shot { display: block; width: 100%; height: auto; aspect-ratio: 804 / 1748; object-fit: cover; border-radius: 34px; }
+.app-phone--photo .app-phone__home { position: absolute; left: 50%; bottom: 9px; transform: translateX(-50%); }
 .app-phone__status { display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding: 0 8px 20px; }
 .app-phone__island { width: 88px; height: 23px; border-radius: 20px; background: #211c1b; }
 .app-phone__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
@@ -81,91 +89,212 @@
   --ink-faint: #79695e;
 }
 .hero--app::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, #f1ebe4b3, #f1ebe42b 55%, transparent); pointer-events: none; }
-.hero--app .shell { grid-template-columns: 1fr 1fr; gap: 60px; }
+/* The copy column takes the larger share: the headline's three lines are
+   authored breaks, and the longest of them has to fit on one line at every
+   desktop width or the break stops being a decision. Measured: the widest
+   line runs 9.97em, so the size below leaves ~10% of headroom at the
+   tightest width this layout is used at (801px). */
+.hero--app .shell { grid-template-columns: 1.18fr 0.82fr; gap: 60px; }
 .hero--app .hero__headline-soft { color: #98745e; }
 .hero--app .lede, .hero--app .fineprint { color: #6c5c51; }
 .hero--app .app-phone { width: min(100%, 310px); margin-right: 30px; transform: rotate(4deg); box-shadow: inset 0 0 0 5px #ffffff08, inset 0 1px 2px #fff7e970, 20px 35px 55px #66504138; }
 .hero__preview { padding-bottom: 28px; }
-.min-companion { position: absolute; inset: 0; width: 100%; height: 660px; pointer-events: none; }
-.min-companion__canvas { display: block; width: 100%; height: 100%; opacity: 0; }
-.min-companion__fallback { position: absolute; bottom: 0; left: 0; width: 160px; height: 180px; object-fit: contain; }
-.min-companion.is-ready .min-companion__canvas { opacity: 1; }
-.min-companion.is-ready .min-companion__fallback { display: none; }
-.hero__preview.is-3d-ready > .app-phone { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); }
-/* The caption is gone, so the figure itself reserves the canvas's height. */
-.hero__preview.is-3d-ready { height: 660px; padding: 0; }
-.min-motion { display: block; position: absolute; bottom: 0; left: 50%; translate: -50% 0; border: 0; border-bottom: 1px solid #79695e55; background: transparent; color: #79695e; font: inherit; font-size: 12px; padding: 5px 8px; cursor: pointer; }
-.min-motion:focus-visible { outline: 2px solid #98745e; outline-offset: 4px; }
 .hero--app .scroll-cta { color: #79695e; }
 
-/* ── Mobile: one screen, stacked, nothing overlapping ──────────
-   The section becomes a flex column pinned to 100svh. .hero__copy is
-   display:contents so the wordmark, headline, actions and fineprint become
-   flex items of .shell directly and can be re-ordered around the canvas:
+/* ── Desktop: the phone is capped by the viewport, not by the art ──
+   .hero already carries min-height: 100svh (landing.css); what pushed it
+   PAST one screen was the phone, which at 355px wide is 680px tall and
+   ignores how much room the window actually has. On a 720px-tall window
+   that plus the section's own padding came to 854px — a hero you had to
+   scroll to finish.
 
-     min  ·  headline  ·  [ 3D room, takes the slack ]  ·  CTA  ·  fineprint
+   So its height is the budget and its width follows: `width: auto` hands
+   the sizing to the shot's aspect-ratio, exactly as on mobile. 160px is
+   the section's own padding (40 + 100) plus 20px of air; the preview's
+   margin and padding are zeroed here because both were reserving room for
+   things this layout no longer has (the caption, and the Pause Min
+   button), and 26px of stale margin is what kept it 18px over. */
+@media (min-width: 801px) {
+  .hero__preview {
+    display: flex; justify-content: center; align-items: center;
+    min-height: 0;
+    margin: 0;
+    padding-bottom: 0;
+  }
+  .hero--app .app-phone {
+    width: auto;
+    height: min(680px, calc(100svh - 160px));
+    max-width: 100%;
+    margin-right: 30px;
+  }
+  .app-phone--photo .app-phone__shot { height: 100%; width: auto; max-width: 100%; }
+}
 
-   The lede steps aside on this screen — the room says it instead. Scoped with
-   :has() so a device without WebGL keeps the old flow layout and its static
-   phone mockup rather than squeezing it into the flex slot. */
+/* ── the hero's words ──────────────────────────────────────────
+   The headline is three authored lines, each its own block, so the
+   break is a design decision and not a consequence of the viewport.
+   The emphasis runs one way down the block: the middle line is the
+   loudest (it is the promise), the first sets it up, the third is
+   the aside that softens it. */
+.hero--app h1 {
+  font-size: clamp(2.4rem, 4.1vw, 3.7rem);
+  line-height: 1.02;
+  letter-spacing: -0.048em;
+  margin-bottom: 24px;
+}
+.hero__line { display: block; }
+.hero__line:first-child {
+  font-weight: var(--font-weight-semibold);
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+/* The lit line. A warm-to-violet wash: it starts in the room's own
+   light and lands on the brand accent, so the loudest words in the
+   hero are also the only place the two palettes meet. Every stop is
+   dark enough to clear 4.5:1 on the sunlit backdrop, and the solid
+   `color` above it is what a browser without background-clip gets. */
+.hero__line--lit {
+  color: #6E4632;
+  background: linear-gradient(96deg, #6E4632 0%, #9A5A38 46%, #6E5490 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: var(--font-weight-bold);
+  /* background-clip crops to the glyph box, which clips the descender
+     and the italic-ish overhang of a tight tracking. */
+  padding-right: 0.06em;
+}
+.hero--app .hero__headline-soft {
+  color: #8A6551;
+  font-weight: var(--font-weight-semibold);
+}
+
+/* The lede carries one emphasised clause — the thing Min actually
+   gives you. Not an italic: a weight and a colour step, plus a low
+   warm underline that reads as highlighter rather than a link. */
+.hero--app .lede {
+  max-width: 42ch;
+  font-size: 19px;
+  line-height: 1.55;
+}
+.hero--app .lede em {
+  font-style: normal;
+  font-weight: var(--font-weight-bold);
+  color: #4A3C33;
+  background: linear-gradient(transparent 62%, rgba(201, 168, 224, 0.42) 62%);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* The launch note: plain text. The only emphasis is on the two facts in
+   it — who it opens for, and when. */
+.hero--app .fineprint {
+  margin-top: 18px;
+  font-size: 13px;
+  color: #5E4E43;
+}
+.hero--app .fineprint b { font-weight: var(--font-weight-bold); color: #43372F; }
+
 @media (max-width: 800px) {
- .hero--app:has(.hero__preview.is-3d-ready) {
-   display: flex; flex-direction: column;
-   min-height: 100svh;
-   text-align: center;
-   background-position: 60% center;
-   padding: 30px 0 26px;
- }
- .hero--app:has(.hero__preview.is-3d-ready) .shell {
-   display: flex; flex-direction: column; align-items: center;
-   justify-content: center;
-   flex: 1; min-height: 0; gap: 0;
- }
- .hero--app:has(.hero__preview.is-3d-ready) .hero__copy { display: contents; }
- .hero--app:has(.hero__preview.is-3d-ready) .wordmark--hero { order: 1; margin: 0 auto 14px; }
- .hero--app:has(.hero__preview.is-3d-ready) h1 {
-   order: 2; margin: 0; font-size: clamp(1.95rem, 8.2vw, 2.5rem); max-width: 15ch;
- }
- .hero--app:has(.hero__preview.is-3d-ready) .lede { display: none; }
- .hero--app:has(.hero__preview.is-3d-ready) .hero__actions {
-   order: 4; width: 100%; max-width: 420px; margin: 0 0 10px;
- }
- .hero--app:has(.hero__preview.is-3d-ready) .fineprint { order: 5; margin: 0; }
- /* The height here is only the value before min-home.js has measured; it
-    then writes a plain pixel height inline and owns it from there. Viewport
-    units are not trustworthy for this box — mobile toolbars retracting on
-    scroll move them, which grows the room and pushes the CTA off screen. */
- .hero--app:has(.hero__preview.is-3d-ready) .hero__preview.is-3d-ready {
-   order: 3; position: relative; inset: auto;
-   flex: 0 0 auto;
-   width: 100vw; max-width: none;
-   height: 300px;
-   margin: 6px 0 16px; padding: 0;
-   pointer-events: none;
- }
- .hero__preview.is-3d-ready .min-companion { position: absolute; inset: 0; width: 100%; height: 100%; }
- .hero__preview.is-3d-ready .min-motion {
-   pointer-events: auto; left: auto; right: 16px; bottom: -2px; translate: none;
-   font-size: 11px; opacity: .75;
- }
- /* the column already ends on the CTA; a second nudge would only crowd it */
- .hero--app:has(.hero__preview.is-3d-ready) .scroll-cta { display: none; }
+  .hero--app h1 { font-size: clamp(1.6rem, 8.4vw, 3.2rem); }
+  .hero--app .lede { font-size: 17px; }
+}
+@media (max-width: 400px) {
+  .hero--app .fineprint { font-size: 12px; }
+}
 
+/* ── Mobile: one screen, nothing below the fold ───────────────
+   The section is a flex column pinned to the viewport, and .hero__copy is
+   `display: contents` so the wordmark, headline, lede, form and fineprint
+   become flex items of .shell directly — which is what lets the phone be
+   ordered BETWEEN the lede and the form rather than after everything:
+
+     min · headline · lede · [ phone, takes the slack ] · form · fineprint
+
+   The phone is the only thing here sized by height rather than width: it
+   gets whatever the words and the form leave over and scales to it, so the
+   column ends on the fineprint at every screen size instead of running a
+   third of a page past the fold. */
+@media (max-width: 800px) {
  /* 1536px of backdrop is wasted on a 390px screen — and costs 6 MB of
     decoded bitmap. The 1024px cut is 63 KB and still oversamples. */
  .hero--app { background-image: url('/assets/img/min-home-mobile.jpg'); background-position: 64% center; }
 
- /* no-WebGL / Data-Saver fallback keeps the original stacked flow */
- .hero--app .shell { grid-template-columns: 1fr; gap: 32px; }
- .hero__preview { max-width: 540px; margin-inline: auto; padding-inline: 0; }
- .hero--app .app-phone { margin-inline: auto; width: min(85%, 310px); }
- .min-companion { height: 610px; }
-}
-@media (max-width: 400px) {
- .min-companion { height: 525px; }
+ .hero--app {
+   display: flex;
+   flex-direction: column;
+   min-height: 100svh;
+   text-align: center;
+   padding-block: 26px 22px;
+ }
+ .hero--app .shell {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   flex: 1;
+   min-height: 0;
+   gap: 0;
+ }
+ .hero__copy { display: contents; }
+
+ .hero--app .wordmark--hero { order: 1; width: 112px; margin: 0 auto 10px; }
+ .hero--app h1 { order: 2; margin: 0; }
+ .hero--app .lede { order: 3; margin: 14px auto 0; max-width: 34ch; font-size: 16px; }
+ .hero--app .hero__actions { order: 5; width: 100%; max-width: 420px; margin: 0; justify-content: center; }
+ .hero--app .fineprint { order: 6; margin-top: 12px; }
+
+ /* flex: 1 takes the slack and nothing more — an auto min-height would let
+    the phone's intrinsic 674px push the column past the fold, which is what
+    it used to do. But a floor is needed at the other end too: on a short
+    screen the slack goes to nothing and the phone was collapsing to 17px
+    wide. Below the floor the section is simply allowed to be taller than
+    one screen, which is the honest answer on a 568px-tall phone. */
+ .hero__preview {
+   order: 4;
+   flex: 1 1 0;
+   min-height: min(34svh, 280px);
+   display: flex;
+   justify-content: center;
+   width: 100%;
+   max-width: none;
+   margin: 16px 0 18px;
+   padding: 0;
+ }
+ /* Height-driven: `width: auto` hands the sizing to the shot's own
+    aspect-ratio, so the frame is always the right shape for whatever
+    height it was given. */
+ .hero--app .app-phone {
+   width: auto;
+   height: 100%;
+   max-width: 100%;
+   margin: 0;
+   padding: 7px 7px 15px;
+   border-radius: 34px;
+   transform: rotate(2deg);
+ }
+ .app-phone--photo .app-phone__shot {
+   height: 100%;
+   width: auto;
+   max-width: 100%;
+   border-radius: 27px;
+ }
+ .app-phone--photo .app-phone__home { bottom: 6px; width: 74px; }
+
+ /* The column already ends on the fineprint; a scroll nudge under it would
+    only push the fold it is promising there isn't one past. */
+ .hero--app .scroll-cta { display: none; }
 }
 
-.min-motion[hidden] { display: none; }
+/* Short screens — small phones, and any phone in landscape. Everything
+   that isn't the headline, the phone or the form gives up its room, and
+   the lede steps aside entirely: the screenshot is saying the same thing
+   and there is only one screen to say it on. */
+@media (max-width: 800px) and (max-height: 700px) {
+ .hero--app { padding-block: 16px 14px; }
+ .hero--app .wordmark--hero { width: 92px; margin-bottom: 6px; }
+ .hero--app .lede { display: none; }
+ .hero__preview { margin: 12px 0 14px; }
+ .hero--app .fineprint { margin-top: 10px; }
+}
 
 /* ── the signup, inline ────────────────────────────────────────
    The homepage asks for the address where the wanting happens — the hero
@@ -255,4 +384,51 @@
   .signup__row { grid-template-columns: 1fr; }
   .signup .btn { justify-content: center; }
   .signup__done { justify-content: center; text-align: center; }
+}
+
+
+/* ── "here it is" ──────────────────────────────────────────────
+   Added by dock() when the floating CTA jumps you back up here. A field
+   that has just been focused from the other end of the page needs to say
+   so — two rings breathing out of its border, then gone. Only the ring
+   changes: the field keeps its own inset shading throughout (restated in
+   every frame, or the pulse would flatten it) and its geometry never
+   moves, so nothing under it reflows.
+
+   --violet-ink, not the plain accent: the hero's ground is a bright cream
+   room, and --violet at 55% on it is invisible. This is the same hue at
+   the darkness the token set already reserves for marks that have to read
+   on light.
+
+   Last in the file on purpose — it has to outrank `.hero--app
+   .signup__input`, which is the same specificity and sets its own
+   box-shadow. */
+@keyframes signup-called {
+  0% {
+    box-shadow: var(--signup-bed), 0 0 0 0 color-mix(in srgb, var(--violet-ink) 85%, transparent);
+  }
+  55% {
+    box-shadow: var(--signup-bed), 0 0 0 11px color-mix(in srgb, var(--violet-ink) 0%, transparent);
+  }
+  56% {
+    box-shadow: var(--signup-bed), 0 0 0 0 color-mix(in srgb, var(--violet-ink) 60%, transparent);
+  }
+  100% {
+    box-shadow: var(--signup-bed), 0 0 0 11px color-mix(in srgb, var(--violet-ink) 0%, transparent);
+  }
+}
+.signup__input.is-called {
+  --signup-bed: inset 0 2px 5px #493d3614, inset 0 -1px 0 #ffffffb3;
+  animation: signup-called 1200ms var(--ease-emergence) both;
+  border-color: var(--violet-ink);
+  background: #fffdf9;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* No pulse, but the field still has to be identifiable — it holds one
+     ring for the same beat instead of breathing it out. dock() takes the
+     class off on a timer, since there is no animationend to wait for. */
+  .signup__input.is-called {
+    animation: none;
+    box-shadow: var(--signup-bed), 0 0 0 4px color-mix(in srgb, var(--violet-ink) 45%, transparent);
+  }
 }

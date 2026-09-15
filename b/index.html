@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Min — Where strangers become kin</title>
-<meta name="description" content="Talk to Min, Min finds someone worth meeting a short walk away, you go and say hello. No profile pictures, no swiping, no feed — and what Min learns about you stays on your phone. Helsinki first.">
+<title>Min — Say hello to your neighbour</title>
+<meta name="description" content="Spontaneous IRL meetings right around the corner. Say hello to your neighbour, a campus crush, that familiar face. No profile pictures, no swiping, no feed. Helsinki first.">
 <meta name="theme-color" content="#2F333F">
+<meta name="robots" content="noindex,follow">
 <link rel="canonical" href="https://hellomin.app/">
 
-<meta property="og:title" content="Min — Where strangers become kin">
+<meta property="og:title" content="Min — Say hello to your neighbour">
 <meta property="og:description" content="The app that introduces you to the right people and moments around you, at the right moment.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hellomin.app/">
@@ -59,40 +60,23 @@
 }
 </script>
 
-<!-- ── A/B split: the hero's headline ──────────────────────────────
-     Two homepages, same everything below the fold:
-       /    control — "spontaneous IRL meetings right around the corner"
-       /b/  variant — the same headline, finished by a word that keeps
-            changing ("say hello to your neighbour / a campus crush / …")
-
-     Runs first thing in <head>, synchronously, before a stylesheet or a
-     font has been asked for — so a visitor sent to /b/ never sees a frame
-     of the control. Sticky per browser, so someone who comes back twice is
-     counted once and never sees the page change under them.
-
-     ?v=a and ?v=b force a side and re-stick it, which is how you link a
-     campaign at one arm and how you check your own work.
-
-     To end the test: delete this block. Everyone lands on the control.
-     To ship the variant instead: move /b/index.html over this file.
-     ────────────────────────────────────────────────────────────────── -->
+<!-- A/B split, the /b/ half. See the twin in / for the whole contract.
+     This page does NOT bounce unassigned visitors: it is also a real
+     landing page, linkable directly from a campaign. It only sends you
+     back when ?v=a explicitly asks for the control. -->
 <script>
 (function () {
   try {
-    var KEY = 'min-ab-hero';
     var q = new URLSearchParams(location.search);
-    var forced = q.get('v');
-    var v = (forced === 'a' || forced === 'b') ? forced : localStorage.getItem(KEY);
-    if (v !== 'a' && v !== 'b') v = Math.random() < 0.5 ? 'a' : 'b';
-    localStorage.setItem(KEY, v);
-    if (v === 'b') {
-      // The variant keeps ?v=b in the address bar for the same reason the
-      // poster codes keep ?l= and ?p= (see waitlist-form.js): nothing about
-      // the visit is persisted server-side, so the URL is the record.
-      q.set('v', 'b');
-      location.replace('/b/?' + q.toString() + location.hash);
+    if (q.get('v') === 'a') {
+      localStorage.setItem('min-ab-hero', 'a');
+      q.delete('v');
+      var s = q.toString();
+      location.replace('/' + (s ? '?' + s : '') + location.hash);
+      return;
     }
-  } catch (e) { /* private mode / storage blocked: serve the control */ }
+    localStorage.setItem('min-ab-hero', 'b');
+  } catch (e) { /* private mode: the visitor just isn't sticky */ }
 })();
 </script>
 
@@ -105,6 +89,7 @@
 <link rel="stylesheet" href="/assets/css/landing.css?v=20260915a">
 <link rel="stylesheet" href="/assets/css/home-hero.css?v=20260915e">
 <link rel="stylesheet" href="/assets/css/home-sections.css?v=20260915b">
+<link rel="stylesheet" href="/assets/css/home-hero-flip.css?v=20260915a">
 
 </head>
 <body>
@@ -114,7 +99,7 @@
 <main>
 
   <!-- ── hero ─────────────────────────────────────────────── -->
-  <section class="hero hero--app" id="top" data-reveal>
+  <section class="hero hero--app hero--flip" id="top" data-reveal>
     <div class="shell">
       <div class="hero__copy">
 
@@ -246,10 +231,23 @@
         <span class="hero__line hero__line--lit">IRL meetings</span>
         <span class="hero__line hero__headline-soft">right around the corner</span>
       </h1>
-      <p class="lede rise" data-delay="3">
-        A new type of social app that makes saying hello easy. Neighbors, that familiar face,
-        or your campus crush: <em>min gives you an excuse to say hello</em> — the rest
-        is up to you.
+      <!-- The variant's whole idea: the sentence finishes differently every
+           couple of seconds, so the reader gets to find themselves in one of
+           the endings instead of being told what the app is for.
+
+           The animated word is aria-hidden and the full list follows it in a
+           .visually-hidden span — a screen reader hears the sentence once,
+           with every ending, rather than a live region rewriting itself.
+           The word starts rendered so the line reads correctly with JS off. -->
+      <p class="hero__flipline rise" data-delay="3">
+        <span class="hero__flipline-lead">say hello to</span>
+        <span class="flipwords" data-flipwords aria-hidden="true">
+          <span class="flipwords__word">your neighbour</span>
+          <span class="flipwords__ruler"></span>
+        </span>
+        <span class="visually-hidden">say hello to your neighbour, a campus crush,
+          that familiar face, your barista, a future flatmate, a running partner,
+          or a friend of a friend.</span>
       </p>
       <!-- The signup itself, not a link to it: /waitlist is one more tap
            between wanting in and being in. Same <form> contract, same
@@ -348,8 +346,8 @@
                pebbles held still, which reads as parallax against a block
                that is deliberately nailed down. -->
           <div class="steps__head">
-            <h2 class="rise">How it works</h2>
-            <p class="lede section-lede rise" data-delay="1">Simple but novel UX.</p>
+            <h2 class="rise">how it works</h2>
+            <p class="lede section-lede rise" data-delay="1">So simple yet it feels so different</p>
           </div>
 
           <!-- The phone and the pebbles, as one box. On desktop this is
@@ -676,8 +674,10 @@
 <script type="module">
   import { waitlistForms } from '/assets/js/waitlist-form.js?v=20260911a';
   import { howItWorks } from '/assets/js/home-steps.js?v=20260915b';
+  import { heroFlip } from '/assets/js/hero-flip.js?v=20260915a';
   waitlistForms();   // hero + closer, the same module /waitlist posts through
   howItWorks();      // the three steps, and Min's pose following them
+  heroFlip();        // variant B only: the hero's changing last word
 </script>
 </body>
 </html>

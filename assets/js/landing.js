@@ -83,6 +83,47 @@ function dock() {
   addEventListener('load', remeasure);
   addEventListener('scroll', sync, { passive: true });
   sync();   // reloading mid-page should not require a scroll to get the CTA back
+
+  /* Tapping it goes back UP to the hero's own field rather than off to
+     /waitlist. The href is a real fragment, so with JS off the browser
+     does the jump on its own; this only adds the smooth travel and the
+     "here it is" beat once you arrive — landing on a page at a form with
+     no indication of which box to type in is the thing being avoided.
+
+     The focus is deliberately late: focusing a field mid-scroll makes the
+     browser jump to it instantly and the smooth scroll is thrown away. */
+  const field = document.querySelector('#hero-email');
+  if (!field) return;
+  let ring;
+  cta.addEventListener('click', (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;  // let a new tab be a new tab
+    e.preventDefault();
+    const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
+    const land = () => {
+      // preventScroll: the page is already where it should be, and Safari
+      // would otherwise re-scroll to its own idea of the field's position.
+      field.focus({ preventScroll: true });
+      clearTimeout(ring);
+      field.classList.remove('is-called');
+      void field.offsetWidth;          // restart the highlight on a repeat tap
+      field.classList.add('is-called');
+      // Under reduced motion the highlight is a held ring with no animation,
+      // so `animationend` never comes to clear it. This is what does.
+      ring = setTimeout(() => field.classList.remove('is-called'), 1400);
+    };
+    if (!smooth) return land();
+    // No scrollend in every engine yet, so: whichever comes first.
+    let done = false;
+    const once = () => { if (done) return; done = true; clearTimeout(t); land(); };
+    const t = setTimeout(once, 700);
+    addEventListener('scrollend', once, { once: true });
+  });
+  const clearRing = () => { clearTimeout(ring); field.classList.remove('is-called'); };
+  field.addEventListener('animationend', clearRing);
+  // Typing or clicking away is the cue landing; it has nothing left to say.
+  field.addEventListener('input', clearRing);
+  field.addEventListener('blur', clearRing);
 }
 
 /* ---------- 6. the dwell scroll cue -------------------------
