@@ -13,8 +13,10 @@
    5. form()       — validation + submit to the Worker.
 
    Only business_name is required; everything else is optional
-   signal for the merchant research. Endpoint is
-   configurable via window.KIN_API_BASE (set before this module runs).
+   signal for the merchant research. No contact fields live on this
+   page — the follow-up conversation is arranged elsewhere. Endpoint
+   is configurable via window.KIN_API_BASE (set before this module
+   runs).
    ============================================================ */
 
 import { buttons } from '/assets/js/press.js';
@@ -187,52 +189,24 @@ function form() {
   const form = document.getElementById('business-form');
   if (!form) return;
 
-  const tabEmail = document.getElementById('tab-email');
-  const tabPhone = document.getElementById('tab-phone');
-  const segmented = tabEmail.closest('.segmented');
-  const segmentedPill = segmented.querySelector('.segmented__pill');
-  const emailField = document.getElementById('email-field');
-  const phoneField = document.getElementById('phone-field');
-  const emailInput = document.getElementById('email');
-  const phoneInput = document.getElementById('phone');
   const businessNameInput = document.getElementById('business_name');
   const dealNotesField = document.getElementById('per_customer_deal_notes-field');
   const dealNotesInput = document.getElementById('per_customer_deal_notes');
-  const slowTimesInput = document.getElementById('slow_times');
-  const contactNameInput = document.getElementById('contact_name');
+  const deadHoursInput = document.getElementById('dead_hours');
   const walkinValueInput = document.getElementById('walkin_value');
+  const commentsInput = document.getElementById('comments');
   const websiteInput = document.getElementById('website');
   const formStatus = document.getElementById('form-status');
   const submitButton = form.querySelector('button.submit');
   const submitLabel = submitButton.querySelector('.btn__label') || submitButton;
 
-  let contactMode = 'email';
-
-  function setMode(mode) {
-    if (mode === contactMode) return;
-    contactMode = mode;
-    const isEmail = mode === 'email';
-    tabEmail.classList.toggle('active', isEmail);
-    tabPhone.classList.toggle('active', !isEmail);
-    segmented.classList.toggle('is-phone', !isEmail);
-    segmentedPill.classList.remove('is-launching');
-    void segmentedPill.offsetWidth; // restart the launch keyframes on repeat clicks
-    segmentedPill.classList.add('is-launching');
-    emailField.style.display = isEmail ? '' : 'none';
-    phoneField.style.display = isEmail ? 'none' : '';
-    clearErrors();
-  }
-
+  // The name is the only field that can fail, so there is exactly one
+  // error slot to clear.
   function clearErrors() {
-    for (const id of ['business_name-error', 'email-error', 'phone-error']) {
-      document.getElementById(id).textContent = '';
-    }
+    document.getElementById('business_name-error').textContent = '';
     formStatus.textContent = '';
     formStatus.className = 'status';
   }
-
-  const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-  const isValidPhone = (v) => v.replace(/[^\d]/g, '').length >= 7;
 
   /* The ranking list. Tap order is the answer, so state lives in one
      array and the badges are redrawn from it; tapping a ranked item
@@ -290,9 +264,6 @@ function form() {
     });
   }
 
-  tabEmail.addEventListener('click', () => setMode('email'));
-  tabPhone.addEventListener('click', () => setMode('phone'));
-
   const radioValue = (name) =>
     form.querySelector(`input[name="${name}"]:checked`)?.value ?? null;
 
@@ -309,25 +280,10 @@ function form() {
       valid = false;
     }
 
-    // Contact is optional here — only validate the visible field's format
-    // if the person actually typed something into it.
-    const activeContactValue = (contactMode === 'email' ? emailInput.value : phoneInput.value).trim();
-    if (activeContactValue) {
-      if (contactMode === 'email' && !isValidEmail(activeContactValue)) {
-        document.getElementById('email-error').textContent = 'That email doesn’t look right.';
-        firstBad = firstBad || emailInput;
-        valid = false;
-      } else if (contactMode === 'phone' && !isValidPhone(activeContactValue)) {
-        document.getElementById('phone-error').textContent = 'That number doesn’t look right.';
-        firstBad = firstBad || phoneInput;
-        valid = false;
-      }
-    }
-
     if (!valid) {
-      formStatus.textContent = 'Almost — a couple of things need fixing above.';
+      formStatus.textContent = 'Almost — one thing needs fixing above.';
       formStatus.className = 'status error';
-      // The name field is four cards up by the time you reach submit,
+      // The name field is three cards up by the time you reach submit,
       // so an error there is off screen unless we go back to it.
       firstBad?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
       firstBad?.focus({ preventScroll: true });
@@ -336,24 +292,22 @@ function form() {
 
     const payload = {
       business_name: businessNameInput.value.trim(),
-      contact_name: contactNameInput.value.trim() || null,
-      contact_method: activeContactValue ? contactMode : null,
-      email: activeContactValue && contactMode === 'email' ? activeContactValue : null,
-      phone: activeContactValue && contactMode === 'phone' ? activeContactValue : null,
       // Ranked best-first, so [0] is what works and [last] is what they
       // value least — the three old questions, in one answer.
       marketing_rank: [...rankOrder],
       marketing_none: document.getElementById('marketing_none').checked,
-      cost_per_customer: radioValue('cost_per_customer'),
+      monthly_marketing_spend: radioValue('monthly_marketing_spend'),
       per_customer_deal: radioValue('per_customer_deal'),
       per_customer_deal_notes: dealNotesInput.value.trim() || null,
       ads_satisfaction: radioValue('ads_satisfaction'),
       ai_concern: radioValue('ai_concern'),
       concept_interest: radioValue('concept_interest'),
+      group_events: radioValue('group_events'),
+      dead_hours: deadHoursInput.value.trim() || null,
       walkin_value: walkinValueInput.value.trim() || null,
       pricing_pref: radioValue('pricing_pref'),
       followup_interest: radioValue('followup_interest'),
-      slow_times: slowTimesInput.value.trim() || null,
+      comments: commentsInput.value.trim() || null,
       website: websiteInput ? websiteInput.value : '' // honeypot — always empty for real users
     };
 

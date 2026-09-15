@@ -4,20 +4,34 @@
 .hero__copy { min-width: 0; }
 .hero--app .wordmark--hero { width: 148px; margin: 0 0 20px -18px; }
 .hero--app h1 { font-size: clamp(2.6rem, 4.5vw, 4.1rem); line-height: 1.08; letter-spacing: -.045em; text-wrap: initial; margin-bottom: 26px; }
-.hero__headline-soft { color: #d5c1df; }
 .hero--app .lede { margin: 0; max-width: 40ch; font-size: 18px; }
 .hero--app .hero__actions { justify-content: flex-start; margin-top: 30px; }
 .hero--app .fineprint { font-size: 12px; }
 .hero__preview { position: relative; width: 100%; margin: 26px 0 0; padding: 0 22px; }
-.app-phone { position: relative; width: min(100%, 336px); margin: auto; padding: 18px 19px 12px; border: 1px solid #eee1d14d; border-radius: 46px; color: #faf7f2; background: radial-gradient(ellipse at 90% 38%, #8f75933d, transparent 65%), linear-gradient(155deg, #574b43eb, #302926f5 75%); box-shadow: inset 0 0 0 5px #ffffff08, inset 0 1px 2px #fff7e970, 18px 30px 65px #110c144d, 0 0 60px #e7cfe30a; transform: rotate(3deg); }
-.app-phone--photo { padding: 10px 10px 22px; overflow: hidden; }
+/* ── the device ────────────────────────────────────────────────
+   The frame is a photograph of the real hardware (iPhone 16 Pro),
+   not a box drawn in CSS: the titanium rim, the button cuts and the
+   Dynamic Island are all in the PNG, and its interior is transparent.
+   The screenshot sits UNDER it, inset to the exact interior the rim
+   leaves — measured off the asset's own alpha channel:
+
+       canvas   1350 x 2760
+       interior 1206 x 2622  at (72, 69)   ->  5.333% / 2.5%
+       corner radius 222px                 ->  18.41% of interior width
+
+   1206/2622 is the iPhone 16 Pro's real display, and min-chat-day.jpg
+   is 804/1748 — the same 0.46, so the shot fills the hole exactly with
+   nothing cropped. The frame keeps that ratio; everything else follows
+   from its height. A box-shadow would trace the element's square box,
+   so the drop is a filter, which follows the rim's actual silhouette. */
+.app-phone { position: relative; aspect-ratio: 1350 / 2760; width: auto; margin: auto; transform: rotate(3deg); filter: drop-shadow(16px 26px 40px #110c1440); }
 /* height:auto is load-bearing: the <img> carries height="1748", a
    presentational hint that `width: 100%` overrides but the height does
    not — so the shot rendered 290px wide by its full 1748px tall, the hero
    grew to 1976px and the headline went below the fold. With height auto
    the aspect-ratio takes over, which is what it is there for. */
-.app-phone__shot { display: block; width: 100%; height: auto; aspect-ratio: 804 / 1748; object-fit: cover; border-radius: 34px; }
-.app-phone--photo .app-phone__home { position: absolute; left: 50%; bottom: 9px; transform: translateX(-50%); }
+.app-phone__shot { position: absolute; left: 5.333%; top: 2.5%; width: 89.333%; height: 95%; display: block; object-fit: cover; border-radius: 18.41% / 8.47%; }
+.app-phone__rim { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
 .app-phone__status { display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding: 0 8px 20px; }
 .app-phone__island { width: 88px; height: 23px; border-radius: 20px; background: #211c1b; }
 .app-phone__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
@@ -80,13 +94,16 @@
 /* Min's sunlit home: the room belongs to the hero only. */
 .hero--app {
   isolation: isolate;
-  color: #493d36;
+  color: #3A3733;
   background: #eee7de url('/assets/img/min-home.jpg') center center / cover no-repeat;
   padding-block: 40px 100px;
   overflow: hidden;
-  --ink: #493d36;
-  --ink-soft: #6c5c51;
-  --ink-faint: #79695e;
+  /* One neutral ink family for the whole hero — no hue, only value.
+     The room behind is a warm near-white, so a warm ink read as brown
+     the moment it was put on type this large. */
+  --ink: #3A3733;
+  --ink-soft: #565250;
+  --ink-faint: #6B6764;
 }
 .hero--app::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, #f1ebe4b3, #f1ebe42b 55%, transparent); pointer-events: none; }
 /* The copy column takes the larger share: the headline's three lines are
@@ -95,11 +112,10 @@
    line runs 9.97em, so the size below leaves ~10% of headroom at the
    tightest width this layout is used at (801px). */
 .hero--app .shell { grid-template-columns: 1.18fr 0.82fr; gap: 60px; }
-.hero--app .hero__headline-soft { color: #98745e; }
-.hero--app .lede, .hero--app .fineprint { color: #6c5c51; }
-.hero--app .app-phone { width: min(100%, 310px); margin-right: 30px; transform: rotate(4deg); box-shadow: inset 0 0 0 5px #ffffff08, inset 0 1px 2px #fff7e970, 20px 35px 55px #66504138; }
+.hero--app .lede, .hero--app .fineprint { color: var(--ink-soft); }
+.hero--app .app-phone { margin-right: 30px; transform: rotate(4deg); filter: drop-shadow(18px 30px 44px #66504147); }
 .hero__preview { padding-bottom: 28px; }
-.hero--app .scroll-cta { color: #79695e; }
+.hero--app .scroll-cta { color: var(--ink-faint); }
 
 /* ── Desktop: the phone is capped by the viewport, not by the art ──
    .hero already carries min-height: 100svh (landing.css); what pushed it
@@ -123,11 +139,10 @@
   }
   .hero--app .app-phone {
     width: auto;
-    height: min(680px, calc(100svh - 160px));
+    height: min(680px, calc(var(--vh-fixed, 100svh) - 160px));
     max-width: 100%;
     margin-right: 30px;
   }
-  .app-phone--photo .app-phone__shot { height: 100%; width: auto; max-width: 100%; }
 }
 
 /* ── the hero's words ──────────────────────────────────────────
@@ -143,34 +158,25 @@
   margin-bottom: 24px;
 }
 .hero__line { display: block; }
+/* All three lines share ONE ink. The emphasis is carried by weight
+   alone — the gradient that used to run brown-to-violet across the
+   middle line is gone, and with it the only place two palettes met. */
 .hero__line:first-child {
   font-weight: var(--font-weight-semibold);
-  color: color-mix(in srgb, var(--ink) 82%, transparent);
 }
-/* The lit line. A warm-to-violet wash: it starts in the room's own
-   light and lands on the brand accent, so the loudest words in the
-   hero are also the only place the two palettes meet. Every stop is
-   dark enough to clear 4.5:1 on the sunlit backdrop, and the solid
-   `color` above it is what a browser without background-clip gets. */
+/* The loudest line — the promise. Bold, same ink as its neighbours. */
 .hero__line--lit {
-  color: #6E4632;
-  background: linear-gradient(96deg, #6E4632 0%, #9A5A38 46%, #6E5490 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
   font-weight: var(--font-weight-bold);
-  /* background-clip crops to the glyph box, which clips the descender
-     and the italic-ish overhang of a tight tracking. */
+  /* tight tracking overhangs the glyph box on the last letter */
   padding-right: 0.06em;
 }
 .hero--app .hero__headline-soft {
-  color: #8A6551;
   font-weight: var(--font-weight-semibold);
 }
 
 /* The lede carries one emphasised clause — the thing Min actually
-   gives you. Not an italic: a weight and a colour step, plus a low
-   warm underline that reads as highlighter rather than a link. */
+   gives you. Not an italic, and no highlighter: a weight step and the
+   full-strength ink against the softer ink around it. */
 .hero--app .lede {
   max-width: 42ch;
   font-size: 19px;
@@ -179,10 +185,7 @@
 .hero--app .lede em {
   font-style: normal;
   font-weight: var(--font-weight-bold);
-  color: #4A3C33;
-  background: linear-gradient(transparent 62%, rgba(201, 168, 224, 0.42) 62%);
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
+  color: var(--ink);
 }
 
 /* The launch note: plain text. The only emphasis is on the two facts in
@@ -190,9 +193,9 @@
 .hero--app .fineprint {
   margin-top: 18px;
   font-size: 13px;
-  color: #5E4E43;
+  color: var(--ink-soft);
 }
-.hero--app .fineprint b { font-weight: var(--font-weight-bold); color: #43372F; }
+.hero--app .fineprint b { font-weight: var(--font-weight-bold); color: var(--ink); }
 
 @media (max-width: 800px) {
   .hero--app h1 { font-size: clamp(1.6rem, 8.4vw, 3.2rem); }
@@ -215,14 +218,99 @@
    column ends on the fineprint at every screen size instead of running a
    third of a page past the fold. */
 @media (max-width: 800px) {
- /* 1536px of backdrop is wasted on a 390px screen — and costs 6 MB of
-    decoded bitmap. The 1024px cut is 63 KB and still oversamples. */
- .hero--app { background-image: url('/assets/img/min-home-mobile.jpg'); background-position: 64% center; }
+ /* A PORTRAIT cut of the room, not a crop of the landscape master. `cover`
+    on a 390x844 hero scales to the taller side, so a 1.50-wide source had to
+    grow to 1267px to fill 844px of height: the phone saw 31% of the scene,
+    upscaled. This cut is 860x1560 — the room sits along the bottom at full
+    width and the light above it is the scene's own top band carried upward,
+    so the same 390x844 box now shows 84% of it, downscaled. Anchored to the
+    bottom so a phone held sideways keeps the room rather than the empty air. */
+ .hero--app { background-image: url('/assets/img/min-home-tall.jpg'); background-position: center bottom; }
 
+ /* ── the shade under the mark ─────────────────────────────────
+    The portrait cut is a near-white wall from the top of the frame down
+    to the room, and the wordmark is cream resin — on mobile the mark was
+    sitting on its own colour. So the top of the section gets a shade that
+    feathers down from the top of the screen: full strength behind the
+    mark, carrying it, and nothing left by the headline.
+
+    The PLATEAU is the whole trick, and the first version got it wrong by
+    putting the peak at 0% and letting it fall immediately. Measured, the
+    letterforms do not sit at the top of this box — there is padding and
+    the artwork's own margin above them:
+
+        390x844   shade 206px   glyphs at  69- 96px  =  33-47%
+        590x760   shade 183px   glyphs at  47- 68px  =  26-37%
+        780x900   shade 221px   glyphs at  69- 96px  =  31-43%
+
+    So the shade holds near peak to ~40% and only then feathers: the band
+    the mark actually occupies gets 0.335-0.27 instead of the 0.215-0.135
+    it was getting when the ramp started falling from 0%. Stops are
+    hand-eased rather than a two-stop ramp, which bands visibly across
+    200px of near-white.
+
+    It is a pseudo-element on the section, not a box around the wordmark:
+    a box would move with the flex column on every screen height, and the
+    shade belongs to the room's light, not to the logo's layout.
+
+    Painted at FULL strength in frame one — it is the ground the resin
+    emerges against, not part of the emergence, so it is already there
+    before the mark has drawn a single edge. Fading it IN would mean the
+    logo forms over the bright wall (the exact problem this solves) and
+    only gets its contrast once the animation is over.
+
+    Then it relaxes. The emergence needs ~13% more shade than the parked
+    mark does — an empty wall behind a half-drawn outline is the worst
+    moment for contrast, and the formed mark carries its own weight. So
+    the stops below are the LOUD value and the element eases back to
+    0.885 of them (= the resting shade) once the resin has finished
+    forming. 2.2s of a 13% opacity step is below the threshold where it
+    reads as motion; it reads as the room settling. */
+ .hero--app::after {
+   content: '';
+   position: absolute;
+   inset: 0 0 auto;
+   z-index: -1;
+   height: clamp(180px, 27vh, 268px);
+   background: linear-gradient(to bottom,
+     rgba(70, 66, 62, 0.340) 0%,
+     rgba(70, 66, 62, 0.335) 24%,
+     rgba(70, 66, 62, 0.300) 40%,
+     rgba(70, 66, 62, 0.225) 54%,
+     rgba(70, 66, 62, 0.145) 68%,
+     rgba(70, 66, 62, 0.075) 82%,
+     rgba(70, 66, 62, 0.025) 92%,
+     rgba(70, 66, 62, 0) 100%);
+   pointer-events: none;
+   /* 4600ms is --T, the length of the whole emerge track (landing.css,
+      the wmx-* keyframes: outline 850–1750, fill 1650–2450, glow lands at
+      68% = 3128, and Min is still morphing limbs and feet past that to the
+      end). Nothing under the mark gives anything back until the last of it
+      has landed. `both` is what holds frame one at the loud value through
+      the delay — without it the element would paint at its own opacity of
+      1 anyway, but the intent should be in the declaration. */
+   animation: hero-shade-relax 2200ms cubic-bezier(0.4, 0, 0.6, 1) 4600ms both;
+ }
+ /* Symmetric ease, not an ease-out: an ease-out front-loads the change,
+    which is the one thing that would make 13% visible. */
+ @keyframes hero-shade-relax {
+   from { opacity: 1; }
+   to   { opacity: 0.885; }
+ }
+ /* No settle — the resting shade, from the first frame. */
+ @media (prefers-reduced-motion: reduce) {
+   .hero--app::after { animation: none; opacity: 0.885; }
+ }
+
+ /* --vh-fixed is one screen, in pixels, written once (see the inline
+    script in the page head). The browser's toolbars retract as you scroll
+    and svh moves with them — which grew the phone and pushed the form down
+    the screen mid-scroll. A number that is measured once cannot do that;
+    svh stays as the no-JS fallback. */
  .hero--app {
    display: flex;
    flex-direction: column;
-   min-height: 100svh;
+   min-height: var(--vh-fixed, 100svh);
    text-align: center;
    padding-block: 26px 22px;
  }
@@ -251,33 +339,38 @@
  .hero__preview {
    order: 4;
    flex: 1 1 0;
-   min-height: min(34svh, 280px);
+   min-height: min(calc(var(--vh-fixed, 100svh) * 0.38), 320px);
    display: flex;
    justify-content: center;
+   align-items: center;
    width: 100%;
    max-width: none;
-   margin: 16px 0 18px;
+   margin: 12px 0 14px;
    padding: 0;
  }
  /* Height-driven: `width: auto` hands the sizing to the shot's own
     aspect-ratio, so the frame is always the right shape for whatever
-    height it was given. */
+    height it was given.
+
+    That height is stated in svh rather than taken as `height: 100%` of the
+    preview, and the difference is the whole bug this once had on real
+    phones. A percentage height only resolves against an ancestor whose own
+    height is DEFINITE, and nothing above here is: .hero--app carries
+    min-height, not height, so the preview's height is an outcome of flex
+    layout. Blink resolves it anyway — which is why device emulation in
+    desktop devtools looked correct — but WebKit, and so every browser on
+    iOS, drops the percentage to `auto`. The shot then fell back to its own
+    aspect-ratio at full width and the frame rendered ~840px tall, running
+    off the fold. An svh length is definite in both engines, so the frame is
+    the same size everywhere and the shot's `height: 100%` below now has a
+    definite box to resolve against. */
  .hero--app .app-phone {
    width: auto;
-   height: 100%;
+   height: min(calc(var(--vh-fixed, 100svh) * 0.44), 420px);
    max-width: 100%;
    margin: 0;
-   padding: 7px 7px 15px;
-   border-radius: 34px;
    transform: rotate(2deg);
  }
- .app-phone--photo .app-phone__shot {
-   height: 100%;
-   width: auto;
-   max-width: 100%;
-   border-radius: 27px;
- }
- .app-phone--photo .app-phone__home { bottom: 6px; width: 74px; }
 
  /* The column already ends on the fineprint; a scroll nudge under it would
     only push the fold it is promising there isn't one past. */
@@ -288,12 +381,31 @@
    that isn't the headline, the phone or the form gives up its room, and
    the lede steps aside entirely: the screenshot is saying the same thing
    and there is only one screen to say it on. */
-@media (max-width: 800px) and (max-height: 700px) {
- .hero--app { padding-block: 16px 14px; }
- .hero--app .wordmark--hero { width: 92px; margin-bottom: 6px; }
- .hero--app .lede { display: none; }
- .hero__preview { margin: 12px 0 14px; }
- .hero--app .fineprint { margin-top: 10px; }
+/* Gated on a CLASS, not on (max-height: 700px). A live height query flips
+   the moment the browser's toolbar retracts past the breakpoint, and the
+   lede would pop back in mid-scroll — the same shift --vh-fixed exists to
+   stop. The class is set from the height measured once, so what the page
+   decided on arrival is what it keeps. */
+@media (max-width: 800px) {
+ :root.is-short .hero--app { padding-block: 16px 14px; }
+ :root.is-short .hero--app .wordmark--hero { width: 92px; margin-bottom: 6px; }
+ /* The lede STAYS on a short screen — it is the only line that says what
+    the app actually is, and dropping it left the headline unexplained.
+    It pays for itself out of the phone: condensed type here, and the frame
+    below gives up the difference. The column is ordered so that if anything
+    does fall past the fold it is the fineprint, never the form. */
+ :root.is-short .hero--app .lede {
+   font-size: 14.5px;
+   line-height: 1.42;
+   max-width: 34ch;
+   margin-top: 8px;
+ }
+ :root.is-short .hero--app h1 { font-size: clamp(1.62rem, 7.3vw, 1.95rem); }
+ :root.is-short .hero--app .wordmark--hero { width: 84px; }
+ :root.is-short .hero__preview { margin: 8px 0 10px; min-height: 0; }
+ :root.is-short .hero--app .app-phone { height: min(calc(var(--vh-fixed, 100svh) * 0.35), 340px); }
+ :root.is-short .hero__preview { margin: 10px 0 12px; }
+ :root.is-short .hero--app .fineprint { margin-top: 10px; }
 }
 
 /* ── the signup, inline ────────────────────────────────────────

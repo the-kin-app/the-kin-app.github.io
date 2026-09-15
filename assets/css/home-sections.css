@@ -198,14 +198,14 @@
    enough to scroll through while .steps__pin stays parked in it. */
 .steps__grid {
   margin-top: clamp(32px, 4.5vh, 56px);
-  min-height: 260svh;
+  min-height: calc(var(--vh-fixed, 100svh) * 2.6);
 }
 
 /* Everything visible, in ONE sticky box. Both columns park and release on
    the same frame because they are the same element. */
 .steps__pin {
   position: sticky;
-  top: max(24px, calc(50svh - var(--steps-band, 590px) / 2));
+  top: max(24px, calc(var(--vh-fixed, 100svh) * 0.5 - var(--steps-band, 590px) / 2));
   height: var(--steps-band, 590px);
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
@@ -239,48 +239,47 @@
   grid-area: 1 / 1;
   align-self: start;
   position: relative;
-  width: 268px;
+  /* The same photographed iPhone the hero uses, inset to the same interior
+     measured off the asset's alpha: 1206x2622 at (72,69) in a 1350x2760
+     canvas. Height-driven with width:auto, so the hardware can never be
+     stretched to a ratio it doesn't have. The drop is a filter, not a
+     box-shadow, so it traces the rim rather than the element's square box. */
   height: 552px;
-  padding: 11px;
-  border-radius: 42px;
-  background:
-    linear-gradient(150deg, #9b9184 0%, #5e5650 44%, #837a6f 100%);
-  box-shadow:
-    inset 0 0 0 1.5px rgba(255, 250, 240, 0.28),
-    inset 0 2px 3px rgba(255, 247, 233, 0.35),
-    0 40px 70px -28px rgba(6, 7, 12, 0.85),
-    0 0 90px rgba(251, 205, 159, 0.07);
+  width: auto;
+  max-width: 100%;
+  aspect-ratio: 1350 / 2760;
   transform: rotate(-2.4deg);
+  filter: drop-shadow(0 34px 52px rgba(6, 7, 12, 0.7));
 }
-.pmock__island {
+.pmock__rim {
   position: absolute;
-  top: 20px; left: 50%;
-  translate: -50% 0;
-  width: 78px; height: 20px;
-  border-radius: 20px;
-  background: #17151a;
-  z-index: 3;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 4;
+  pointer-events: none;
 }
 .pmock__home {
   position: absolute;
-  bottom: 18px; left: 50%;
+  bottom: 3.2%; left: 50%;
   translate: -50% 0;
-  width: 92px; height: 4px;
+  width: 34%; height: 3px;
   border-radius: 4px;
   background: rgba(250, 243, 232, 0.5);
-  z-index: 3;
+  z-index: 5;
 }
 
 /* ---- the screens ------------------------------------------- */
 
 .pscreen {
   position: absolute;
-  inset: 11px;
+  left: 5.333%; top: 2.5%; width: 89.333%; height: 95%;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  padding: 46px 14px 30px;
-  border-radius: 32px;
+  padding: 14% 6% 9%;
+  border-radius: 18.41% / 8.47%;
   overflow: hidden;
   background:
     radial-gradient(120% 70% at 50% -8%, rgba(201, 168, 224, 0.16), transparent 62%),
@@ -327,12 +326,6 @@
     radial-gradient(circle at 38% 26%, #fff6e4 0%, #e8c9a4 46%, #b58f6d 100%);
   box-shadow: 0 0 12px rgba(251, 205, 159, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.7);
 }
-.pscreen__avatar--pulse { animation: pmock-pulse 2.6s ease-in-out infinite; }
-@keyframes pmock-pulse {
-  0%, 100% { box-shadow: 0 0 10px rgba(251, 205, 159, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.7); }
-  50%      { box-shadow: 0 0 22px rgba(251, 205, 159, 0.75), inset 0 1px 1px rgba(255, 255, 255, 0.7); }
-}
-
 /* 1 · the conversation — a real exported screen, so the block is just
    the image. Full-bleed: the export already includes its own background,
    and .pscreen clips it to the screen's radius. */
@@ -352,80 +345,6 @@
    it disappears. Darken it for as long as that screen is the one up. */
 .pmock:has(.pscreen--shot.is-on) .pmock__home {
   background: rgba(40, 34, 30, 0.42);
-}
-
-/* 2 · looking nearby */
-.pradar {
-  position: relative;
-  flex: 1;
-  margin: var(--space-2) -4px;
-}
-.pradar__ring {
-  position: absolute;
-  left: 50%; top: 50%;
-  translate: -50% -50%;
-  width: 180px; height: 180px;
-  border: 1px solid rgba(250, 247, 242, 0.12);
-  border-radius: 50%;
-}
-.pradar__ring--in {
-  width: 104px; height: 104px;
-  background: radial-gradient(circle, rgba(201, 168, 224, 0.14), transparent 70%);
-}
-.pradar__you {
-  position: absolute;
-  left: 50%; top: 50%;
-  translate: -50% -50%;
-  display: grid;            /* a positioning context for the ping */
-  place-items: center;
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: #e6ccf3;
-  box-shadow: 0 0 0 6px rgba(222, 192, 240, 0.12), 0 0 18px rgba(223, 183, 240, 0.6);
-}
-.pradar__dot {
-  position: absolute;
-  width: 20px; height: 21px;
-  border-radius: 46% 50% 43% 48%;
-  background: radial-gradient(circle at 36% 22%, rgba(238, 225, 214, 0.85), transparent 62%),
-              linear-gradient(150deg, #a58cad, #5a4a5a);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.55), 0 4px 10px rgba(15, 13, 20, 0.4);
-  /* Each arrives on its own beat and STAYS. Cycling them back out left the
-     screen half-empty at any given instant and read as people leaving, not
-     as Min finding them; the ping below is what says "still looking". */
-  opacity: 0;
-  animation: pmock-found 700ms var(--ease-emergence) forwards;
-}
-.pradar__dot--1 { left: 22%; top: 20%; animation-delay: 250ms; }
-.pradar__dot--2 { right: 16%; top: 36%; animation-delay: 650ms; }
-.pradar__dot--3 { left: 30%; bottom: 20%; animation-delay: 1050ms; }
-@keyframes pmock-found {
-  from { opacity: 0; transform: scale(0.55); }
-  to   { opacity: 1; transform: none; }
-}
-
-/* The sweep: one ring expanding out of "you" on a slow loop. This is the
-   part that says the screen is still working. */
-.pradar__you::after {
-  content: '';
-  grid-area: 1 / 1;
-  width: 168px; height: 168px;
-  border: 1px solid rgba(230, 204, 243, 0.5);
-  border-radius: 50%;
-  animation: pmock-ping 3.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-}
-@keyframes pmock-ping {
-  0%        { transform: scale(0.06); opacity: 0; }
-  12%       { opacity: 0.75; }
-  70%, 100% { transform: scale(1); opacity: 0; }
-}
-.pscreen__note {
-  padding: 10px 12px;
-  border-radius: 14px;
-  background: rgba(250, 247, 242, 0.07);
-  box-shadow: inset 0 0 0 1px rgba(250, 247, 242, 0.09);
-  color: rgba(250, 247, 242, 0.76);
-  font-size: 10px;
 }
 
 /* 3 · the introduction */
@@ -699,6 +618,9 @@
     linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(8, 9, 14, 0.18));
   border: 1px solid rgba(250, 247, 242, 0.08);
 }
+/* No artwork yet — hide the empty plate rather than show a placeholder.
+   Drop an <img> in and this rule stops matching, so the slot reappears. */
+.fact__media:not(:has(img)) { display: none; }
 .fact__media > img {
   width: 100%;
   height: 100%;
@@ -914,17 +836,10 @@
   /* The phone scales as one object — width, height, radius and padding all
      off the same ratio — so the screens inside need no second breakpoint. */
   .pmock {
-    width: clamp(142px, 38vw, 186px);
     height: clamp(292px, 76vw, 382px);
-    padding: 8px;
-    border-radius: 32px;
+    width: auto;
   }
-  .pscreen { inset: 8px; border-radius: 25px; padding: 34px 10px 22px; }
-  .pmock__island { top: 14px; width: 58px; height: 15px; }
-  .pmock__home { bottom: 12px; width: 68px; height: 3px; }
-  .pradar__ring { width: 132px; height: 132px; }
-  .pradar__ring--in { width: 78px; height: 78px; }
-  .pradar__you::after { width: 124px; height: 124px; }
+  .pscreen { padding: 14% 6% 9%; }
   .steps__num { width: 34px; height: 34px; font-size: var(--text-sm); }
 }
 
@@ -973,9 +888,6 @@
   .steps__grid { min-height: 0; }
   .pscreen { transition: none; }
   .pscreen[data-screen="1"] { opacity: 1; visibility: visible; }
-  .pradar__dot { animation: none; opacity: 1; transform: none; }
-  .pscreen__avatar--pulse { animation: none; }
-  .pradar__you::after { animation: none; opacity: 0.3; transform: scale(1); }
   .steps__item { opacity: 1; }
 }
 
@@ -986,8 +898,11 @@
  /* Phone band + cluster have to fit ONE screen here, because the cluster is
     parked under the band rather than beside it. 52svh of phone left the
     third pebble hanging off the bottom edge. */
- .steps__stage { height: min(44svh, 348px); }
- .steps__stage .pmock { width: min(38vw, 174px, 22svh); height: min(78vw, 358px, 45svh); }
+ /* Sized from --vh-fixed (one screen, measured once in the page head) rather
+    than svh. svh moves as the browser's toolbars retract, which re-sized the
+    phone mid-scroll and dropped it onto step one — most visibly when you
+    scrolled past the section and came back up. */
+ .steps__stage { height: 320px; }
  /* One column: the phone is pinned as a band across the TOP and the steps
     sit under it, so a scrolling cluster would slide straight behind the
     phone — the open step would be the one you can't see. Here the cluster
@@ -996,7 +911,10 @@
     normally and needs none of this.) */
  /* Stacked under the phone's band rather than beside it, so it takes its
     own height and sits where the flow puts it. */
- .steps__list { height: auto; padding-block: 0; margin-top: var(--space-4); }
+ /* An explicit gap under the phone. The frame is rotated, so its bounding
+    box clears the first pebble by a hair while the visible hardware clears
+    by more — too fine a margin to trust across engines. */
+ .steps__list { height: auto; padding-block: 0; margin-top: var(--space-5); }
  .steps__grid { --steps-open: 178px; --steps-closed: 82px; --steps-gap: 12px; }
  .steps__item { margin-inline: 10px; }
  .steps__item { padding: var(--space-4); gap: var(--space-3); }
@@ -1006,7 +924,7 @@
     sticks is .steps__band — a child of the pin. Left on .steps__grid the
     runway was outside the band's reach and nothing stuck at all. */
  .steps__grid { margin-top: 32px; min-height: 0; }
- .steps__pin { min-height: 250svh; }
+ .steps__pin { min-height: calc(var(--vh-fixed, 100svh) * 2.5); }
  /* Here the HEADING scrolls and the band parks. Parking the heading too
     would cost the band ~130px it doesn't have: phone + three pebbles
     already fill a phone screen. So the pin goes static and .steps__band —
@@ -1020,24 +938,23 @@
 }
 /* Between 600 and 700px tall the band still parks, but phone + three
    pebbles ran 16px past the fold. Everything in it gives a little. */
-@media (max-width: 900px) and (max-height: 700px) {
- .steps__stage { height: min(38svh, 278px); }
- .steps__grid { --steps-open: 164px; --steps-closed: 74px; --steps-gap: 10px; }
+@media (max-width: 900px) {
+ :root.is-short .steps__stage { height: 276px; }
+ :root.is-short .steps__grid { --steps-open: 164px; --steps-closed: 74px; --steps-gap: 10px; }
 }
-@media(max-height:600px) and (max-width:900px) {
- .steps__stage { height: 310px; }
- .steps__stage .pmock { width: 140px; height: 288px; }
- .steps__stage::before { display: none; }
+@media(max-width:900px) {
+ :root.is-tiny .steps__stage { height: 248px; }
+ :root.is-tiny .steps__stage::before { display: none; }
  /* Nothing is pinned at this height, so nothing is scroll-driven either —
     the three pebbles just stack and stay open, each as tall as its own copy
     needs rather than all reserving room for the longest. */
- .steps__pin { position: static; height: auto; min-height: 0; }
- .steps__band { position: static; }
- .steps__list { height: auto; padding-block: 0; }
- .steps__item { height: auto; }
- .steps__grid { min-height: 0; }
- .steps__grid .steps__item { opacity: 1; transform: none; }
- .steps__reveal { grid-template-rows: 1fr; opacity: 1; }
+ :root.is-tiny .steps__pin { position: static; height: auto; min-height: 0; }
+ :root.is-tiny .steps__band { position: static; }
+ :root.is-tiny .steps__list { height: auto; padding-block: 0; }
+ :root.is-tiny .steps__item { height: auto; }
+ :root.is-tiny .steps__grid { min-height: 0; }
+ :root.is-tiny .steps__grid .steps__item { opacity: 1; transform: none; }
+ :root.is-tiny .steps__reveal { grid-template-rows: 1fr; opacity: 1; }
 }
 @media(prefers-reduced-motion:reduce) {
  .pscreen[data-screen="1"]:not(.is-on) { opacity: 0; visibility: hidden; }
@@ -1055,16 +972,27 @@
    sign up was missing for almost the whole scroll. */
 body.is-near-closer .dock-cta { opacity: 0 !important; visibility: hidden; pointer-events: none; }
 @media(max-width:900px) {
- .steps__stage .pmock { width: 268px; height: 552px; padding: 11px; border-radius: 42px; scale: .58; transform-origin: top center; }
- .steps__stage .pscreen { inset: 11px; border-radius: 32px; padding: 46px 14px 30px; }
+ /* The phone simply IS the stage: full height, width from the hardware's
+    own ratio. It used to be a 552px box shrunk by `scale`, which left a
+    552px hole in the layout while painting ~320px of phone — the gap is
+    what dropped onto step one. Worse, the scale was chosen by
+    (max-height: 740px) and the stage height by (max-height: 700px), both
+    live: retracting the toolbar past either line resized the phone
+    mid-scroll, which is the jump you see coming back up the section.
+    Filling the stage removes the hole and both breakpoints at once. */
+ /* Drawn at its DESIGN size and scaled down as one piece. Screens 2 and 3
+    are real markup — radar rings, bars, notes — laid out in px against a
+    268px phone; sizing the box down instead of scaling it left those
+    internals at their full size and they overflowed a 121px screen.
+    `scale` doesn't shrink the layout box, so the leftover 552px box is the
+    hole that used to drop onto step one — the negative margin below is
+    exactly that hole, 552 * (1 - scale), handed back. Scale is chosen by
+    the pinned classes, never by a live height query. */
+ .steps__stage .pmock { width: 268px; height: 552px; scale: .58; transform-origin: top center; margin-bottom: -222px; margin-inline: auto; }
+ :root.is-short .steps__stage .pmock { scale: .50; margin-bottom: -266px; }
+ :root.is-tiny  .steps__stage .pmock { scale: .45; margin-bottom: -294px; }
  .steps__stage .pscreen--shot { padding: 0; }
- .steps__stage .pmock__island { top: 20px; width: 78px; height: 20px; }
- .steps__stage .pmock__home { bottom: 18px; width: 96px; }
- .steps__stage .pradar__ring { width: 180px; height: 180px; }
- .steps__stage .pradar__ring--in { width: 110px; height: 110px; }
 }
-@media(max-height:740px) and (max-width:900px) { .steps__stage .pmock { scale: .54; } }
-@media(max-height:600px) and (max-width:900px) { .steps__stage .pmock { scale: .5; } }
 @media(max-width:900px) {
  .steps__stage::before { background: #252833; mask-image: linear-gradient(#000 0%, #000 85%, transparent); -webkit-mask-image: linear-gradient(#000 0%, #000 85%, transparent); }
 }
@@ -1090,7 +1018,7 @@ body.is-near-closer .dock-cta { opacity: 0 !important; visibility: hidden; point
        height is good enough there — being a few px off moves the whole
        block, it doesn't cut anything. */
     height: auto;
-    top: max(20px, calc((100svh - var(--steps-band, 590px) - var(--steps-head-h, 190px)) / 2));
+    top: max(20px, calc((var(--vh-fixed, 100svh) - var(--steps-band, 590px) - var(--steps-head-h, 190px)) / 2));
   }
   /* Both columns are the band's height, so the pebble cluster centres on
      the phone's line rather than on its own content. */

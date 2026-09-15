@@ -20,12 +20,12 @@
 <meta property="og:url" content="https://hellomin.app/">
 <meta property="og:site_name" content="Min">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://hellomin.app/assets/img/og-cover.jpg">
+<meta property="og:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Min: a softly glowing pebble with two lit eyes, floating in dusk light.">
+<meta property="og:image:alt" content="Min: a softly glowing pebble with two lit eyes, waving hello in dusk light.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://hellomin.app/assets/img/og-cover.jpg">
+<meta name="twitter:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
 
 <script type="application/ld+json">
 {
@@ -102,9 +102,22 @@
 <!-- ?v= is a cache bust — see the note on the same links in /waitlist/. -->
 <link rel="stylesheet" href="/assets/css/tokens.css?v=20260910b">
 <link rel="stylesheet" href="/assets/css/landing.css?v=20260915a">
-<link rel="stylesheet" href="/assets/css/home-hero.css?v=20260915e">
-<link rel="stylesheet" href="/assets/css/home-sections.css?v=20260915b">
+<link rel="stylesheet" href="/assets/css/home-hero.css?v=20260916i">
+<link rel="stylesheet" href="/assets/css/home-sections.css?v=20260916a">
 
+<script>
+/* One screen, in pixels, written once. The browser's toolbars retract as you
+   scroll and svh moves with them, which grew the hero and shoved the signup
+   down the page mid-scroll. Re-measured only when the WIDTH changes — i.e.
+   on rotation — so a height-only resize (the toolbar) can never reflow the
+   page. Inline and synchronous so the first paint already has the value. */
+(function(){var d=document.documentElement,w=-1;function pin(){if(innerWidth===w)return;
+w=innerWidth;d.style.setProperty('--vh-fixed',innerHeight+'px');
+d.classList.toggle('is-short',innerHeight<=700);
+d.classList.toggle('is-tiny',innerHeight<=600);}
+pin();addEventListener('resize',pin,{passive:true});
+addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})();
+</script>
 </head>
 <body>
 
@@ -291,9 +304,9 @@
       </div>
 
       <figure class="hero__preview rise" data-delay="3" aria-label="Min's chat interface, where you tell Min about yourself">
-        <div class="app-phone app-phone--photo">
+        <div class="app-phone">
           <img class="app-phone__shot" src="/assets/img/min-chat-day.jpg" alt="Min chat screen: Min asks about your week while you type a reply" width="804" height="1748">
-          <div class="app-phone__home" aria-hidden="true"></div>
+          <img class="app-phone__rim" src="/assets/img/iphone-frame.png" alt="" aria-hidden="true" width="900" height="1840" decoding="async">
         </div>
       </figure>
     </div>
@@ -371,50 +384,25 @@
                └───────────────────────────────────────────────────────┘ -->
           <div class="steps__stage" aria-hidden="true">
             <div class="pmock">
-              <span class="pmock__island"></span>
+              <img class="pmock__rim" src="/assets/img/iphone-frame.png" alt="" aria-hidden="true"
+                   width="900" height="1840" decoding="async" loading="lazy">
 
-              <!-- 1 · talk to Min — the real screen.
-                   Exported from the design file (min-chat-day.svg, kept
-                   beside it as the source) and flattened to a JPEG: the
-                   SVG is 5.9 MB of embedded renders, this is 167 KB and
-                   pixel-identical at every size the phone is drawn. -->
+              <!-- 1 · talk to Min — the real screen. -->
               <div class="pscreen pscreen--shot" data-screen="1">
-                <img src="/assets/img/min-chat-day.jpg" alt=""
+                <img src="/assets/img/min-ui/chat.png" alt=""
                      width="402" height="874" decoding="async" loading="lazy">
               </div>
 
-              <!-- 2 · Min matches you — looking around the block -->
-              <div class="pscreen" data-screen="2">
-                <div class="pscreen__bar">
-                  <span class="pscreen__avatar pscreen__avatar--pulse"></span>
-                  <span><b>Looking nearby</b><i>within a 5 minute walk</i></span>
-                </div>
-                <div class="pradar">
-                  <span class="pradar__ring"></span>
-                  <span class="pradar__ring pradar__ring--in"></span>
-                  <span class="pradar__you"></span>
-                  <span class="pradar__dot pradar__dot--1"></span>
-                  <span class="pradar__dot pradar__dot--2"></span>
-                  <span class="pradar__dot pradar__dot--3"></span>
-                </div>
-                <div class="pscreen__note">Three people worth meeting. Checking which of them is actually free.</div>
+              <!-- 2 · Min finds your people — the real screen. -->
+              <div class="pscreen pscreen--shot" data-screen="2">
+                <img src="/assets/img/min-ui/match.png" alt=""
+                     width="402" height="874" decoding="async" loading="lazy">
               </div>
 
-              <!-- 3 · go say hello — the one introduction -->
-              <div class="pscreen" data-screen="3">
-                <div class="pscreen__bar">
-                  <span class="pscreen__avatar"></span>
-                  <span><b>An introduction</b><i>now · expires in 40 min</i></span>
-                </div>
-                <div class="pinvite">
-                  <div class="pinvite__who">
-                    <span class="pinvite__face"></span>
-                    <span><b>Meet Jules</b><i>5 min walk · up for a coffee</i></span>
-                  </div>
-                  <p>You both shoot film and you're both out with nothing planned.</p>
-                  <span class="pinvite__map"></span>
-                </div>
-                <div class="pscreen__cta">Let's meet <i></i></div>
+              <!-- 3 · go say hello — the real screen. -->
+              <div class="pscreen pscreen--shot" data-screen="3">
+                <img src="/assets/img/min-ui/find.png" alt=""
+                     width="402" height="874" decoding="async" loading="lazy">
               </div>
 
               <span class="pmock__home"></span>

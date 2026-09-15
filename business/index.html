@@ -18,12 +18,12 @@
 <meta property="og:url" content="https://hellomin.app/business/">
 <meta property="og:site_name" content="Min">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://hellomin.app/assets/img/og-cover.jpg">
+<meta property="og:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Min: a softly glowing pebble with two lit eyes, floating in dusk light.">
+<meta property="og:image:alt" content="Min: a softly glowing pebble with two lit eyes, waving hello in dusk light.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://hellomin.app/assets/img/og-cover.jpg">
+<meta name="twitter:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
 
 <link rel="icon" href="/assets/favicon.svg?v=3" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,8 +56,9 @@
 <main>
 
   <!-- ── masthead ───────────────────────────── -->
-  <!-- No hero. The form is the page, so the brand gets one quiet line at
-       the top and the first question starts immediately below it. -->
+  <!-- No hero, and barely a mark: the form is the page, so the brand
+       takes the smallest band it can and the first question starts
+       immediately below it. -->
   <section class="biz-masthead" data-reveal>
     <h1 class="visually-hidden">Min for Business</h1>
 
@@ -77,21 +78,14 @@
   </section>
 
   <!-- ── the questionnaire ────────────────────────────────── -->
+  <!-- No card titles and no step counter. Every question says what it
+       is on its own line, and a heading above it only delays it. -->
   <section class="biz-form-section">
     <form id="business-form" class="biz-form" novalidate>
 
-      <!-- 1 ─ who you are -->
+      <!-- 1 ─ who you are : the only required answer on the page -->
       <div class="resin biz-card" data-reveal>
-        <div class="biz-card__head">
-          <span class="biz-card__step rise">Step 1 of 4</span>
-          <h2 class="rise" data-delay="1">Your business</h2>
-          <p class="biz-card__note rise" data-delay="2">
-            The only thing we actually need. Everything after this is
-            optional — answer what's useful, skip what isn't.
-          </p>
-        </div>
-
-        <div class="field rise" data-delay="3">
+        <div class="field rise">
           <label for="business_name">What's your business called?</label>
           <input class="input" type="text" id="business_name" name="business_name"
                  placeholder="e.g. Café Aurinko" required autocomplete="organization">
@@ -104,20 +98,12 @@
            numbers rather than the future in opinions, which is the only
            kind of answer that calibrates the rate card. -->
       <div class="resin biz-card" data-reveal>
-        <div class="biz-card__head">
-          <span class="biz-card__step rise">Step 2 of 4</span>
-          <h2 class="rise" data-delay="1">How people find you today</h2>
-          <p class="biz-card__note rise" data-delay="2">
-            What you already do matters more to us than what you think of our
-            idea — so we're asking this first.
-          </p>
-        </div>
 
         <!-- One interaction, three answers. Tapping in order gives us the
              set they actually use, the one that works (first), and the one
              they value least (last) — which used to be three separate
              questions and three separate chances to give up. -->
-        <fieldset class="fieldset rise" data-delay="3">
+        <fieldset class="fieldset rise">
           <legend>How do new customers actually find you?</legend>
           <p class="q-note">
             Tap them in order, the one that works best first. Leave out
@@ -142,26 +128,27 @@
           <input type="hidden" id="marketing_rank" name="marketing_rank" value="">
         </fieldset>
 
-        <!-- Per head, not per month: this is the number that sits directly
-             next to a per-pair price. "Never worked it out" is a real answer
-             and a finding in itself — a venue that has never measured a
-             promotion cannot be sold on attribution. -->
-        <fieldset class="fieldset rise" data-delay="5">
-          <legend>Roughly what does it cost you to get one new customer through the door? <span class="opt">(optional)</span></legend>
-          <p class="q-note">A rough feel is fine. Total spend divided by new faces, near enough.</p>
+        <!-- The budget, as an owner actually holds it: a monthly number,
+             not a per-head cost nobody has worked out. Read against the
+             walk-in price in step 3 — the two together say how many
+             walk-ins a month our side of the deal has to be worth. -->
+        <fieldset class="fieldset rise" data-delay="2">
+          <legend>In a typical month, roughly how much do you spend attracting customers? <span class="opt">(optional)</span></legend>
+          <p class="q-note">Everything that goes into getting people in — ads, print, offers, discounts, the hours someone spends posting.</p>
           <div class="option-group">
-            <label class="option"><input type="radio" name="cost_per_customer" value="under_1"><span>Under €1</span></label>
-            <label class="option"><input type="radio" name="cost_per_customer" value="1_3"><span>€1 to €3</span></label>
-            <label class="option"><input type="radio" name="cost_per_customer" value="3_8"><span>€3 to €8</span></label>
-            <label class="option"><input type="radio" name="cost_per_customer" value="8_20"><span>€8 to €20</span></label>
-            <label class="option"><input type="radio" name="cost_per_customer" value="over_20"><span>Over €20</span></label>
-            <label class="option"><input type="radio" name="cost_per_customer" value="never_worked_out"><span>We've never worked it out</span></label>
+            <label class="option"><input type="radio" name="monthly_marketing_spend" value="nothing"><span>Nothing at all</span></label>
+            <label class="option"><input type="radio" name="monthly_marketing_spend" value="under_100"><span>Under €100</span></label>
+            <label class="option"><input type="radio" name="monthly_marketing_spend" value="100_500"><span>€100 to €500</span></label>
+            <label class="option"><input type="radio" name="monthly_marketing_spend" value="500_1500"><span>€500 to €1,500</span></label>
+            <label class="option"><input type="radio" name="monthly_marketing_spend" value="1500_5000"><span>€1,500 to €5,000</span></label>
+            <label class="option"><input type="radio" name="monthly_marketing_spend" value="over_5000"><span>Over €5,000</span></label>
+            <label class="option"><input type="radio" name="monthly_marketing_spend" value="never_worked_out"><span>We've never worked it out</span></label>
           </div>
         </fieldset>
 
         <!-- Finds the owners already primed for per-outcome pricing, and the
              ones burned by it. Both are worth knowing before §G names a rate. -->
-        <fieldset class="fieldset rise" data-delay="5">
+        <fieldset class="fieldset rise" data-delay="3">
           <legend>Has anyone ever sold you customers rather than advertising? <span class="opt">(optional)</span></legend>
           <p class="q-note">Paying for people who turned up, not for the reach.</p>
           <div class="option-group">
@@ -181,7 +168,7 @@
              the part that calibrates. These two are here because a venue
              that is quietly unhappy with its ad spend is a different buyer
              from one that is content with it. -->
-        <fieldset class="fieldset rise" data-delay="6">
+        <fieldset class="fieldset rise" data-delay="4">
           <legend>Honestly, how do you feel about what you spend on digital ads? <span class="opt">(optional)</span></legend>
           <div class="option-group">
             <label class="option"><input type="radio" name="ads_satisfaction" value="happy"><span>Happy — it earns its keep</span></label>
@@ -192,7 +179,7 @@
           </div>
         </fieldset>
 
-        <fieldset class="fieldset rise" data-delay="6">
+        <fieldset class="fieldset rise" data-delay="4">
           <legend>Does the way AI is changing search and social worry you? <span class="opt">(optional)</span></legend>
           <p class="q-note">
             People asking a chatbot instead of searching, feeds filling up with
@@ -208,28 +195,25 @@
       </div>
 
       <!-- 3 ─ the concept -->
-      <!-- Describing, not offering — note the conditional in the blurb.
-           Kept general on purpose: the mechanic is matching people and
-           getting them outside together, whether that is two people or a
-           few. What it is not, in any size, is advertising — there is no
-           placement to buy and nothing for a venue to post. -->
+      <!-- Describing, not offering. The blurb leads with the experience
+           itself — people matched and sent outside to be together in one
+           place — because that mechanic is the whole product. Everything
+           a venue gets comes out of it as a side effect. It is not
+           advertising in any size: no placement to buy, nothing to post. -->
       <div class="resin biz-card" data-reveal>
-        <div class="biz-card__head">
-          <span class="biz-card__step rise">Step 3 of 4</span>
-          <h2 class="rise" data-delay="1">The thing we're considering</h2>
-        </div>
 
-        <p class="concept rise" data-delay="2">
-          We're building an app that gets people out of the house to meet
-          face to face. It matches people who are nearby and up for company
-          right now, and points them at a spot on the street just outside a
-          venue — sometimes two of them, sometimes a few. Ten minutes into
-          standing around talking, <b>going inside is the natural next
-          move</b>, and a venue would pay only when they actually do. No
-          advertising, nothing to post, nothing for your staff to do.
+        <p class="concept rise">
+          Min gets people out of the house to spend time together somewhere
+          real. It matches people who are nearby and up for company, then
+          sends them to <b>one specific venue</b> to actually be there —
+          two people meeting, or a whole group. Sometimes decided ten
+          minutes beforehand, sometimes planned days ahead. Either way
+          people arrive at a place with a reason to be in it, and that
+          venue would pay only when they turn up. No advertising,
+          nothing to post, nothing for your staff to do.
         </p>
 
-        <fieldset class="fieldset rise" data-delay="3">
+        <fieldset class="fieldset rise" data-delay="2">
           <legend>Honest first reaction? <span class="opt">(optional)</span></legend>
           <div class="option-group">
             <label class="option"><input type="radio" name="concept_interest" value="definitely"><span>I'd use that</span></label>
@@ -238,19 +222,45 @@
           </div>
         </fieldset>
 
-        <!-- §C's best question: willingness to pay in their own unit, no
-             margin literacy needed. Read against the cost-per-customer band
-             in step 2 — the gap between the two is the pricing headroom. -->
+        <!-- The same matching, pointed at a quiet slot instead of a pair.
+             A venue that names its dead hours here is telling us which
+             §8.2 tier it would actually buy, and gauging appetite for the
+             hosted-group version before we build any of it. -->
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend>Are there dead hours you'd fill with a custom event we host? <span class="opt">(optional)</span></legend>
+          <p class="q-note">
+            The same matching that puts two people together can build a whole
+            activity group — a run club finishing at your door, a language
+            night, a board-games table — and we'd aim it at your quiet slot.
+            We'd organise and host it; you'd just be the place it happens.
+          </p>
+          <div class="option-group">
+            <label class="option"><input type="radio" name="group_events" value="yes"><span>Yes — we've got hours I'd love to fill</span></label>
+            <label class="option"><input type="radio" name="group_events" value="maybe"><span>Maybe, depending on the event</span></label>
+            <label class="option"><input type="radio" name="group_events" value="no"><span>No — we're busy enough</span></label>
+          </div>
+          <div class="field--conditional">
+            <label class="visually-hidden" for="dead_hours">Which hours are quiet?</label>
+            <input class="input" type="text" id="dead_hours" name="dead_hours"
+                   placeholder="Which hours? e.g. weekday afternoons, Tuesday evenings" maxlength="200">
+          </div>
+        </fieldset>
+
+        <!-- Willingness to pay in their own unit, no margin literacy
+             needed — and priced against a walk-in we can prove, which is
+             the whole difference between this and an ad buy. Read against
+             the monthly budget in step 2. -->
         <div class="field rise" data-delay="4">
-          <label for="walkin_value">Roughly what is one new walk-in worth to you? <span class="opt">(optional, €)</span></label>
+          <label for="walkin_value">How much would you pay for one new walk-in, sent and verified by us? <span class="opt">(optional, €)</span></label>
+          <p class="q-note">Someone who wasn't coming otherwise, and we can show you they walked in.</p>
           <input class="input" type="text" id="walkin_value" name="walkin_value"
-                 placeholder="e.g. 15" inputmode="decimal">
+                 placeholder="e.g. 5" inputmode="decimal">
         </div>
 
         <!-- A genuine fork, not a formality: the plan sells a monthly budget
              cap rather than a meter, specifically to avoid per-cover
              resentment. Owners picking pay-per-walk-in would contradict it. -->
-        <fieldset class="fieldset rise" data-delay="4">
+        <fieldset class="fieldset rise" data-delay="5">
           <legend>Which way of paying would suit you? <span class="opt">(optional)</span></legend>
           <p class="q-note">
             We haven't set prices — they'd depend on your size and what a
@@ -265,65 +275,32 @@
         </fieldset>
       </div>
 
-      <!-- 4 ─ keeping in touch -->
-      <!-- Deliberately not a pilot ask. There is nothing to pilot until the
-           closed beta has run, and offering one would promise venue matches
-           we cannot yet produce in their neighbourhood. Permission to come
-           back is the honest close, and it is what sets up the second call. -->
+      <!-- 4 ─ the verdict -->
+      <!-- One question and an open box. The top option is the only real
+           ask on the page: a letter of interest costs an owner nothing
+           and is the strongest signal this form can collect. -->
       <div class="resin biz-card" data-reveal>
-        <div class="biz-card__head">
-          <span class="biz-card__step rise">Step 4 of 4</span>
-          <h2 class="rise" data-delay="1">Can we come back to you?</h2>
-          <p class="biz-card__note rise" data-delay="2">
+
+        <fieldset class="fieldset rise">
+          <legend>How does all this sound? <span class="opt">(optional)</span></legend>
+          <p class="q-note">
             We're not selling anything today. We're running this in one
             Helsinki neighbourhood first, and in a few months we'll have real
             numbers instead of an idea — who met where, and who went in.
           </p>
-        </div>
-
-        <fieldset class="fieldset rise" data-delay="3">
-          <legend>Would you want to hear from us then? <span class="opt">(optional)</span></legend>
           <div class="option-group">
+            <label class="option"><input type="radio" name="followup_interest" value="letter_of_interest"><span>Super interested — I'd sign a letter of interest to be one of your launching partners</span></label>
             <label class="option"><input type="radio" name="followup_interest" value="yes"><span>Yes — come back with the numbers</span></label>
             <label class="option"><input type="radio" name="followup_interest" value="maybe"><span>Maybe — tell me more first</span></label>
             <label class="option"><input type="radio" name="followup_interest" value="no"><span>Not right now</span></label>
           </div>
         </fieldset>
 
-        <!-- Which §8.2 tier they would actually want traffic in, in their
-             own words — a bar naming Tuesday evenings is a different buyer
-             from a café naming weekday afternoons. -->
-        <div class="field rise" data-delay="4">
-          <label for="slow_times">Any slow hours you wish you could fill? <span class="opt">(optional)</span></label>
-          <input class="input" type="text" id="slow_times" name="slow_times"
-                 placeholder="e.g. weekday afternoons, Tuesday evenings">
-        </div>
-
-        <div class="field rise" data-delay="4">
-          <label for="contact_name">Your name <span class="opt">(optional)</span></label>
-          <input class="input" type="text" id="contact_name" name="contact_name"
-                 placeholder="First name" autocomplete="name">
-        </div>
-
-        <div class="field rise" data-delay="5">
-          <label>How should we reach you? <span class="opt">(optional)</span></label>
-          <div class="segmented" role="tablist">
-            <span class="segmented__pill" aria-hidden="true"></span>
-            <button type="button" id="tab-email" class="active">Email</button>
-            <button type="button" id="tab-phone">Phone</button>
-          </div>
-
-          <div class="field--contact" id="email-field">
-            <input class="input" type="email" id="email" name="email"
-                   placeholder="you@yourbusiness.com" autocomplete="email" aria-label="Email">
-            <div class="field-error" id="email-error"></div>
-          </div>
-
-          <div class="field--contact" id="phone-field" style="display:none;">
-            <input class="input" type="tel" id="phone" name="phone"
-                   placeholder="+358 40 123 4567" autocomplete="tel" aria-label="Phone number">
-            <div class="field-error" id="phone-error"></div>
-          </div>
+        <div class="field rise" data-delay="2">
+          <label for="comments">Anything else? <span class="opt">(optional)</span></label>
+          <p class="q-note">Comments, suggestions, questions — whatever the boxes above didn't cover.</p>
+          <textarea class="textarea" id="comments" name="comments" rows="4"
+                    placeholder="Tell us what you think, or ask us anything." maxlength="2000"></textarea>
         </div>
       </div>
 
@@ -351,9 +328,9 @@
       <div class="min" data-min data-phase="0.6" aria-hidden="true"></div>
       <h2>Thanks — that's genuinely useful</h2>
       <p>
-        When we have real numbers from the first neighbourhood, we'll be in
-        touch. If you left no contact details, your answers still count —
-        they're what tells us whether this is worth building at all.
+        Your answers are what tell us whether this is worth building at all.
+        When we have real numbers from the first neighbourhood, we'll come
+        back to you with them.
       </p>
     </div>
   </section>
@@ -369,25 +346,6 @@
     </span>
   </div>
 </footer>
-
-<!-- Docked to the bottom of the viewport (see .nav), and last in the source
-     so the page's content comes before it for keyboard and screen readers. -->
-<header class="nav">
-  <a class="nav__brand" href="/" aria-label="Min">
-    <span class="wordmark--nav" aria-hidden="true">
-      <span class="wordmark__bloom"></span>
-      <span class="wordmark__glass wordmark__glass--shadow"></span>
-      <span class="wordmark__glass"></span>
-      <span class="wordmark__min">
-        <span class="min min--nav" data-min data-phase="3.4"></span>
-      </span>
-    </span>
-  </a>
-  <nav class="nav__right">
-    <a class="nav__link" href="/">About Min</a>
-    <a class="btn" href="/waitlist/"><span class="btn__fill" aria-hidden="true"></span><span class="btn__label">I'm not a business</span></a>
-  </nav>
-</header>
 
 <script type="module" src="/assets/js/business.js"></script>
 </body>

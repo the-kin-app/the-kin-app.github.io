@@ -17,7 +17,7 @@
   line-height: 1.25;
   letter-spacing: -0.035em;
   font-weight: var(--font-weight-semibold);
-  color: #6c5c51;
+  color: var(--ink-soft);
   /* The word can overflow to the right for the ~240ms the container's
      width is still travelling. Nothing follows it on the line, so the
      overflow is invisible — but the line must not be a clipping box or
@@ -40,15 +40,10 @@
   display: inline-block;
   white-space: nowrap;
   font-weight: var(--font-weight-bold);
-  /* Same warm-to-violet wash as .hero__line--lit: the flipping word is
-     now the loudest thing in the hero, so it gets the one place in the
-     page where the room's light and the brand accent meet. The solid
-     `color` underneath is what a browser without background-clip shows. */
-  color: #6E4632;
-  background-image: linear-gradient(96deg, #6E4632 0%, #9A5A38 46%, #6E5490 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  /* Monochrome, like .hero__line--lit. The flipping word is the loudest
+     thing in the hero and it earns that with weight and with the fact
+     that it MOVES — it does not need a hue of its own on top. */
+  color: var(--ink);
   padding-right: 0.06em;
   transition:
     opacity var(--duration-emergence) ease,
@@ -92,7 +87,7 @@
    right-hand side keeps changing. */
 .hero__flipline-lead {
   font-weight: var(--font-weight-semibold);
-  color: #7a675a;
+  color: var(--ink-faint);
 }
 
 .hero--app .hero__flipline { margin-top: 4px; }
