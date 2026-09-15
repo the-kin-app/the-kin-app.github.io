@@ -8,7 +8,8 @@ waitlist submissions.
 
 ```
 /
-├── index.html              Homepage — the long-form landing page (see below)
+├── index.html              Homepage — the long-form landing page (see below). Variant A of the landing A/B
+├── b/index.html            Variant B — the same page, hero headline finishing on a changing word
 ├── pitchdeck/index.html    The public pitch deck — swipeable slides (see below)
 ├── waitlist/index.html     The scan page — a three-slide banner + one-field signup, all above the fold
 ├── privacy-policy/index.html
@@ -26,6 +27,7 @@ waitlist submissions.
 │   │   └── waitlist-hero.css  The waitlist's three-slide banner + its no-scroll layout
 │   ├── js/
 │   │   ├── waitlist-hero.js The waitlist banner (auto-advance, swipe, dots) + its one-field form
+│   │   ├── scan-attribution.js  Reads ?l/?p/?v/?s off a scan, reports the arrival, feeds the form
 │   │   ├── qr-encode.js     QR encoder — byte mode, versions 1–10, no dependencies
 │   │   ├── qr-style.js      Draws an encoded grid as a Min-styled SVG
 │   │   ├── qrgenerator.js   The workbench page: controls, print sheet, SVG/PNG/ZIP export
@@ -300,9 +302,10 @@ worth re-checking at 390×844 if you add copy to a slide.
 
 Makes the codes that go on the printed posters. Every poster carries a QR
 pointing at `api.hellomin.app/<location>/<poster>` — the **Worker's** host,
-not the site's. The Worker counts that scan and forwards to
-`hellomin.app/waitlist/?l=&p=`, which is how `/admin/posters` knows which
-artwork worked and where. A code aimed at `hellomin.app/<location>/<poster>`
+not the site's. The Worker counts that scan, draws a side of the landing A/B and forwards to
+`hellomin.app/?l=&p=&v=a&s=` or `hellomin.app/b/?l=&p=&v=b&s=`, which is how
+`/admin/posters` knows which artwork worked, where, and which of the two
+homepages it was read on. A code aimed at `hellomin.app/<location>/<poster>`
 instead just 404s on Pages and counts nothing, so the page flags that shape
 as an error rather than a warning. **The codes are measurement instruments** — the
 location and poster lists in `assets/js/qrgenerator.js` must match
@@ -369,6 +372,51 @@ python3 -m http.server 8000      # from the repo root
 For the waitlist form to submit locally, run the Worker and point the form at
 it (see the `min-waitlist-worker` repo): set `window.KIN_API_BASE` before
 `waitlist-hero.js` loads.
+
+## The landing A/B (`/` and `/b/`)
+
+Two homepages, identical below the fold. `/` is the control; `/b/` finishes the
+hero headline on a word that keeps changing. Which one a visitor sees is
+decided **per QR scan, in the Worker**, and written on the row that counts the
+scan — see `handleScan` in `min-waitlist-worker src/index.js`.
+
+Neither page splits anything itself. There used to be a script in each `<head>`
+drawing a side with `Math.random()` and stamping it into `localStorage`; both
+are gone, and the comments where they stood say why. In short: the assignment
+lived on the device where no query could see it, the stamp was permanent so one
+phone was pinned to one side forever, and it split *all* traffic including
+people who typed the address in.
+
+So today:
+
+| How you arrive | What you get |
+| --- | --- |
+| Scanning a poster | `/` or `/b/`, 50/50, drawn and recorded by the Worker |
+| Typing `hellomin.app` | `/` — the control, every time |
+| Following a link to `/b/` | `/b/` — no bounce, no stamp |
+
+Each page declares its own side as `<html data-variant="a">`, which
+`assets/js/scan-attribution.js` reads and sends with every signup off that
+page, scanned or not. The attribute rather than the path: the path differs
+between the live site, a local file server and a copy opened from disk, and a
+variant that is wrong in one of those is wrong silently.
+
+`scan-attribution.js` also reports the **arrival** — it posts the scan's token
+to `POST /scan/land` so the Worker can stamp that the page actually rendered.
+A scan is a camera pointed at paper and an arrival is a page that drew; the gap
+between them is scans that never made it, and without it every conversion rate
+is measured against the larger number. It fires on import rather than from a
+call in each page, so a page cannot forget it and read as somewhere nobody
+reaches.
+
+**Nothing is written to the device.** No cookie, no `localStorage`, no
+`sessionStorage`, so there is still no consent banner. The reload guard the
+arrival ping would normally want lives in the Worker instead, as
+`WHERE landed_at IS NULL`.
+
+**Ending the test:** delete `b/`, and drop `VARIANT_PATHS` in the Worker so
+every scan goes to `/`. **Shipping the variant:** move `b/index.html` over
+`index.html`.
 
 ## Backend
 

@@ -1,5 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- data-variant: which side of the landing A/B this page IS — the variant.
+     Read by assets/js/scan-attribution.js and sent with every signup
+     from this page, scanned or not. On the <html> element rather than
+     inferred from the path, because the path differs between the live
+     site, a local file server and a copy opened from disk, and a
+     variant that is wrong in one of those is wrong silently. -->
+<html lang="en" data-variant="b">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,25 +66,15 @@
 }
 </script>
 
-<!-- A/B split, the /b/ half. See the twin in / for the whole contract.
-     This page does NOT bounce unassigned visitors: it is also a real
-     landing page, linkable directly from a campaign. It only sends you
-     back when ?v=a explicitly asks for the control. -->
-<script>
-(function () {
-  try {
-    var q = new URLSearchParams(location.search);
-    if (q.get('v') === 'a') {
-      localStorage.setItem('min-ab-hero', 'a');
-      q.delete('v');
-      var s = q.toString();
-      location.replace('/' + (s ? '?' + s : '') + location.hash);
-      return;
-    }
-    localStorage.setItem('min-ab-hero', 'b');
-  } catch (e) { /* private mode: the visitor just isn't sticky */ }
-})();
-</script>
+<!-- A/B split, the /b/ half. See the twin comment in / for the whole
+     contract. The script that used to sit here — the localStorage stamp, and
+     the bounce back to / on ?v=a — is gone with its twin: the side is drawn
+     once per QR scan in the Worker, not on the device, and this URL now
+     simply serves the variant to whoever asks for it.
+
+     Still noindex + canonical to /, which is unchanged and still right: two
+     addresses serving near-identical copy is a duplicate-content problem
+     whatever decides who sees which. -->
 
 <link rel="icon" href="/assets/favicon.svg?v=3" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -672,9 +668,15 @@
 </a>
 <script type="module" src="/assets/js/landing.js?v=20260915a"></script>
 <script type="module">
-  import { waitlistForms } from '/assets/js/waitlist-form.js?v=20260911a';
+  import { waitlistForms } from '/assets/js/waitlist-form.js?v=20260916a';
   import { howItWorks } from '/assets/js/home-steps.js?v=20260915b';
   import { heroFlip } from '/assets/js/hero-flip.js?v=20260915a';
+  // The scan -> arrival ping rides in on that first import: waitlist-form.js
+  // pulls in scan-attribution.js, which reports back to the Worker that this
+  // page actually rendered, if and only if a QR scan sent us here with a ?s=
+  // token. Nothing to call — a page that had to remember the call would
+  // report zero arrivals when someone forgot, which reads as a page nobody
+  // reaches rather than as a missing line.
   waitlistForms();   // hero + closer, the same module /waitlist posts through
   howItWorks();      // the three steps, and Min's pose following them
   heroFlip();        // variant B only: the hero's changing last word

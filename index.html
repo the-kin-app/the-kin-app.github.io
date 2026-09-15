@@ -1,5 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- data-variant: which side of the landing A/B this page IS — the control.
+     Read by assets/js/scan-attribution.js and sent with every signup
+     from this page, scanned or not. On the <html> element rather than
+     inferred from the path, because the path differs between the live
+     site, a local file server and a copy opened from disk, and a
+     variant that is wrong in one of those is wrong silently. -->
+<html lang="en" data-variant="a">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,36 +71,29 @@
        /b/  variant — the same headline, finished by a word that keeps
             changing ("say hello to your neighbour / a campus crush / …")
 
-     Runs first thing in <head>, synchronously, before a stylesheet or a
-     font has been asked for — so a visitor sent to /b/ never sees a frame
-     of the control. Sticky per browser, so someone who comes back twice is
-     counted once and never sees the page change under them.
+     THIS PAGE NO LONGER SPLITS ANYTHING. There used to be a script here that
+     drew a side with Math.random() and stamped it into localStorage. It is
+     gone, and deliberately:
 
-     ?v=a and ?v=b force a side and re-stick it, which is how you link a
-     campaign at one arm and how you check your own work.
+       - the draw lived on the visitor's device, so no query could ever say
+         how many people saw which page;
+       - the stamp was permanent, so a phone that drew /b/ once went to /b/
+         forever — which reads exactly like a broken 50/50 when you test it
+         on your own phone;
+       - and it split ALL traffic, including people who typed the address,
+         who are not the audience the test is about.
 
-     To end the test: delete this block. Everyone lands on the control.
+     The split now happens once per QR scan, in the Worker, on the row that
+     counts the scan: min-waitlist-worker src/index.js handleScan. A scan is
+     redirected to / or /b/ with ?v= naming the side and ?s= naming the scan,
+     and the page reports back that it arrived (assets/js/scan-attribution.js).
+
+     So: this URL always serves the control, /b/ always serves the variant,
+     and anyone who is not holding a poster sees whichever one they asked for.
+
+     To end the test: delete /b/, and drop VARIANT_PATHS in the Worker.
      To ship the variant instead: move /b/index.html over this file.
      ────────────────────────────────────────────────────────────────── -->
-<script>
-(function () {
-  try {
-    var KEY = 'min-ab-hero';
-    var q = new URLSearchParams(location.search);
-    var forced = q.get('v');
-    var v = (forced === 'a' || forced === 'b') ? forced : localStorage.getItem(KEY);
-    if (v !== 'a' && v !== 'b') v = Math.random() < 0.5 ? 'a' : 'b';
-    localStorage.setItem(KEY, v);
-    if (v === 'b') {
-      // The variant keeps ?v=b in the address bar for the same reason the
-      // poster codes keep ?l= and ?p= (see waitlist-form.js): nothing about
-      // the visit is persisted server-side, so the URL is the record.
-      q.set('v', 'b');
-      location.replace('/b/?' + q.toString() + location.hash);
-    }
-  } catch (e) { /* private mode / storage blocked: serve the control */ }
-})();
-</script>
 
 <link rel="icon" href="/assets/favicon.svg?v=3" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -674,8 +673,14 @@
 </a>
 <script type="module" src="/assets/js/landing.js?v=20260915a"></script>
 <script type="module">
-  import { waitlistForms } from '/assets/js/waitlist-form.js?v=20260911a';
+  import { waitlistForms } from '/assets/js/waitlist-form.js?v=20260916a';
   import { howItWorks } from '/assets/js/home-steps.js?v=20260915b';
+  // The scan -> arrival ping rides in on that first import: waitlist-form.js
+  // pulls in scan-attribution.js, which reports back to the Worker that this
+  // page actually rendered, if and only if a QR scan sent us here with a ?s=
+  // token. Nothing to call — a page that had to remember the call would
+  // report zero arrivals when someone forgot, which reads as a page nobody
+  // reaches rather than as a missing line.
   waitlistForms();   // hero + closer, the same module /waitlist posts through
   howItWorks();      // the three steps, and Min's pose following them
 </script>

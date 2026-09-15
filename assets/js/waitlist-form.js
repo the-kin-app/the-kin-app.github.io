@@ -15,35 +15,23 @@
    own. This file only adds validation and the fetch.
    ============================================================ */
 
-// Cloudflare Worker endpoint. Override at deploy time by setting
-// window.KIN_API_BASE before this module runs.
-const API_BASE = (window.KIN_API_BASE || 'https://api.hellomin.app').replace(/\/$/, '');
+/* Where the visit came from — which poster, where it hangs, which of the two
+   homepages they were shown, and which scan brought them. Read once per page
+   view by one module, which also reports the arrival back to the Worker; see
+   scan-attribution.js for the whole query-string contract and why none of it
+   is persisted about the person.
+
+   The Worker's origin comes from there too, so the site has exactly one
+   definition of where the API lives.
+
+   The trade-off, unchanged: navigate away and back without the query string
+   and the signup lands unattributed. Every poster and both variants lose the
+   same share of those, so the comparison still holds. Which is why ?l=, ?p=,
+   ?v= and ?s= stay in the address bar — with nothing persisted, the URL *is*
+   the attribution. */
+import { API_BASE, attribution } from '/assets/js/scan-attribution.js?v=20260916a';
+
 const SUBMIT_URL = API_BASE + '/waitlist';
-
-/* Poster attribution — the same contract as waitlist.js. Codes on posters
-   already hanging point at api.kinapp.social/<location>/<poster> — the OLD
-   host, kept alive permanently because printed paper can't be reissued. New
-   posters use api.hellomin.app. Either host counts the scan and redirects
-   here with ?l=<location>&p=<poster>.
-
-   Read once into memory and held for this page view only — no cookie, no
-   localStorage, nothing on the device, so it needs no consent banner. The
-   trade-off: navigate away and back without the query string and the signup
-   lands unattributed. Every poster loses the same share of those, so the
-   comparison still holds. Which is also why ?l= and ?p= stay in the address
-   bar: with nothing persisted, the URL *is* the attribution.
-
-   Only the shape is checked here. min-waitlist-worker src/index.js holds the
-   authoritative allowlists and stores anything it doesn't recognise as NULL,
-   so the vocabulary lives in one place rather than two. */
-const SLUG_RE = /^[a-z0-9-]{1,32}$/;
-const params = new URLSearchParams(window.location.search);
-const readSlug = (key) => {
-  const value = params.get(key);
-  return value && SLUG_RE.test(value) ? value : null;
-};
-const poster = readSlug('p');
-const posterLocation = readSlug('l');
 
 const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
@@ -105,8 +93,16 @@ export function waitlistForm(form) {
       email: email,
       phone: null,
       website: websiteInput ? websiteInput.value : '', // honeypot — always empty for real users
-      poster: poster,
-      poster_location: posterLocation
+      poster: attribution.poster,
+      poster_location: attribution.location,
+      // Which homepage they signed up from, and which scan brought them.
+      // The variant is sent by every signup on either homepage, scanned or
+      // not, so a visitor who reached /b/ from a link still counts on the b
+      // side. The token is only there when a poster brought them; it is what
+      // lets scan -> arrival -> signup be read as one funnel instead of three
+      // counts that have to be lined up by eye.
+      variant: attribution.variant,
+      scan_token: attribution.scanToken
     };
 
     const original = label.textContent;
