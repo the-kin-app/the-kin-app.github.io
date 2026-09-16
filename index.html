@@ -1,20 +1,26 @@
 <!DOCTYPE html>
-<!-- data-variant: which side of the landing A/B this page IS — the control.
+<!-- data-variant: which side of the landing A/B this page IS — side A.
      Read by assets/js/scan-attribution.js and sent with every signup
      from this page, scanned or not. On the <html> element rather than
      inferred from the path, because the path differs between the live
      site, a local file server and a copy opened from disk, and a
-     variant that is wrong in one of those is wrong silently. -->
+     variant that is wrong in one of those is wrong silently.
+
+     This page was /b/ until 2026-09-16, when it became the homepage and
+     the test changed shape: it is no longer homepage-against-homepage
+     but homepage-against-/waitlist/. It is side A now. The letters mean
+     different pages than they did before that date — see the note in
+     min-waitlist-worker migrations/0008. -->
 <html lang="en" data-variant="a">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Min — Where strangers become kin</title>
-<meta name="description" content="Talk to Min, Min finds someone worth meeting a short walk away, you go and say hello. No profile pictures, no swiping, no feed — and what Min learns about you stays on your phone. Helsinki first.">
+<title>Min — Say hello to your neighbour</title>
+<meta name="description" content="Spontaneous IRL meetings right around the corner. Say hello to your neighbour, a campus crush, that familiar face. No profile pictures, no swiping, no feed. Helsinki first.">
 <meta name="theme-color" content="#2F333F">
 <link rel="canonical" href="https://hellomin.app/">
 
-<meta property="og:title" content="Min — Where strangers become kin">
+<meta property="og:title" content="Min — Say hello to your neighbour">
 <meta property="og:description" content="The app that introduces you to the right people and moments around you, at the right moment.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hellomin.app/">
@@ -65,34 +71,29 @@
 }
 </script>
 
-<!-- ── A/B split: the hero's headline ──────────────────────────────
-     Two homepages, same everything below the fold:
-       /    control — "spontaneous IRL meetings right around the corner"
-       /b/  variant — the same headline, finished by a word that keeps
-            changing ("say hello to your neighbour / a campus crush / …")
+<!-- ── The landing A/B ──────────────────────────────────────────────
+     Two pages, and they are no longer two homepages:
 
-     THIS PAGE NO LONGER SPLITS ANYTHING. There used to be a script here that
-     drew a side with Math.random() and stamped it into localStorage. It is
-     gone, and deliberately:
+       /           side A — this page. Hero headline finishing on a word
+                   that keeps changing ("say hello to your neighbour / a
+                   campus crush / …")
+       /waitlist/  side B — the waitlist page: three-slide banner, one
+                   field, everything above the fold
 
-       - the draw lived on the visitor's device, so no query could ever say
-         how many people saw which page;
-       - the stamp was permanent, so a phone that drew /b/ once went to /b/
-         forever — which reads exactly like a broken 50/50 when you test it
-         on your own phone;
-       - and it split ALL traffic, including people who typed the address,
-         who are not the audience the test is about.
+     This page does not split anything and never did. The side is drawn
+     per QR scan in the Worker, on the row that counts the scan — see
+     handleScan in min-waitlist-worker src/index.js. Type the address in
+     and you get this page; follow a link to /waitlist/ and you get that
+     one. Only a poster scan is split.
 
-     The split now happens once per QR scan, in the Worker, on the row that
-     counts the scan: min-waitlist-worker src/index.js handleScan. A scan is
-     redirected to / or /b/ with ?v= naming the side and ?s= naming the scan,
-     and the page reports back that it arrived (assets/js/scan-attribution.js).
+     HISTORY, because the letters moved: until 2026-09-16 this file was
+     /b/ and the test was this page against a static-headline homepage.
+     That homepage is gone, this one took its place, and /waitlist/
+     became the other side. Variant data written before that date labels
+     different pages and is cleared rather than carried over.
 
-     So: this URL always serves the control, /b/ always serves the variant,
-     and anyone who is not holding a poster sees whichever one they asked for.
-
-     To end the test: delete /b/, and drop VARIANT_PATHS in the Worker.
-     To ship the variant instead: move /b/index.html over this file.
+     To end the test: point both sides of VARIANT_PATHS in the Worker at
+     '/' and every scan lands here.
      ────────────────────────────────────────────────────────────────── -->
 
 <link rel="icon" href="/assets/favicon.svg?v=3" type="image/svg+xml">
@@ -104,6 +105,7 @@
 <link rel="stylesheet" href="/assets/css/landing.css?v=20260915a">
 <link rel="stylesheet" href="/assets/css/home-hero.css?v=20260916i">
 <link rel="stylesheet" href="/assets/css/home-sections.css?v=20260916a">
+<link rel="stylesheet" href="/assets/css/home-hero-flip.css?v=20260916a">
 
 <script>
 /* One screen, in pixels, written once. The browser's toolbars retract as you
@@ -126,7 +128,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 <main>
 
   <!-- ── hero ─────────────────────────────────────────────── -->
-  <section class="hero hero--app" id="top" data-reveal>
+  <section class="hero hero--app hero--flip" id="top" data-reveal>
     <div class="shell">
       <div class="hero__copy">
 
@@ -258,10 +260,23 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
         <span class="hero__line hero__line--lit">IRL meetings</span>
         <span class="hero__line hero__headline-soft">right around the corner</span>
       </h1>
-      <p class="lede rise" data-delay="3">
-        A new type of social app that makes saying hello easy. Neighbors, that familiar face,
-        or your campus crush: <em>min gives you an excuse to say hello</em> — the rest
-        is up to you.
+      <!-- The variant's whole idea: the sentence finishes differently every
+           couple of seconds, so the reader gets to find themselves in one of
+           the endings instead of being told what the app is for.
+
+           The animated word is aria-hidden and the full list follows it in a
+           .visually-hidden span — a screen reader hears the sentence once,
+           with every ending, rather than a live region rewriting itself.
+           The word starts rendered so the line reads correctly with JS off. -->
+      <p class="hero__flipline rise" data-delay="3">
+        <span class="hero__flipline-lead">say hello to</span>
+        <span class="flipwords" data-flipwords aria-hidden="true">
+          <span class="flipwords__word">your neighbour</span>
+          <span class="flipwords__ruler"></span>
+        </span>
+        <span class="visually-hidden">say hello to your neighbour, a campus crush,
+          that familiar face, your barista, a future flatmate, a running partner,
+          or a friend of a friend.</span>
       </p>
       <!-- The signup itself, not a link to it: /waitlist is one more tap
            between wanting in and being in. Same <form> contract, same
@@ -360,8 +375,8 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
                pebbles held still, which reads as parallax against a block
                that is deliberately nailed down. -->
           <div class="steps__head">
-            <h2 class="rise">How it works</h2>
-            <p class="lede section-lede rise" data-delay="1">Simple but novel UX.</p>
+            <h2 class="rise">how it works</h2>
+            <p class="lede section-lede rise" data-delay="1">So simple yet it feels so different</p>
           </div>
 
           <!-- The phone and the pebbles, as one box. On desktop this is
@@ -663,6 +678,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 <script type="module">
   import { waitlistForms } from '/assets/js/waitlist-form.js?v=20260916a';
   import { howItWorks } from '/assets/js/home-steps.js?v=20260915b';
+  import { heroFlip } from '/assets/js/hero-flip.js?v=20260915a';
   // The scan -> arrival ping rides in on that first import: waitlist-form.js
   // pulls in scan-attribution.js, which reports back to the Worker that this
   // page actually rendered, if and only if a QR scan sent us here with a ?s=
@@ -671,6 +687,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
   // reaches rather than as a missing line.
   waitlistForms();   // hero + closer, the same module /waitlist posts through
   howItWorks();      // the three steps, and Min's pose following them
+  heroFlip();        // the hero's changing last word — the thing being tested
 </script>
 </body>
 </html>

@@ -1,5 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- data-variant: which side of the landing A/B this page IS — side B.
+     Read by assets/js/scan-attribution.js and sent with every signup from
+     this page, scanned or not. On the <html> element rather than inferred
+     from the path, because the path differs between the live site, a local
+     file server and a copy opened from disk, and a variant that is wrong in
+     one of those is wrong silently.
+
+     This page has always been where poster scans landed. As of 2026-09-16 it
+     is one side of the test rather than the only destination: half of every
+     scan comes here and half goes to the homepage. Nothing about the page
+     itself changed — it already carried ?l= and ?p= through to the signup,
+     and the arrival ping rides in on waitlist-form.js like everywhere else. -->
+<html lang="en" data-variant="b">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">

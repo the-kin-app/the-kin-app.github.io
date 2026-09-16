@@ -8,8 +8,8 @@ waitlist submissions.
 
 ```
 /
-├── index.html              Homepage — the long-form landing page (see below). Variant A of the landing A/B
-├── b/index.html            Variant B — the same page, hero headline finishing on a changing word
+├── index.html              Homepage — the long-form landing page, hero headline finishing on a changing word. Side A of the landing A/B
+├── b/index.html            A redirect stub to /. Was the variant homepage until 2026-09-16; kept only for URLs already in the wild
 ├── pitchdeck/index.html    The public pitch deck — swipeable slides (see below)
 ├── waitlist/index.html     The scan page — a three-slide banner + one-field signup, all above the fold
 ├── privacy-policy/index.html
@@ -303,9 +303,9 @@ worth re-checking at 390×844 if you add copy to a slide.
 Makes the codes that go on the printed posters. Every poster carries a QR
 pointing at `api.hellomin.app/<location>/<poster>` — the **Worker's** host,
 not the site's. The Worker counts that scan, draws a side of the landing A/B and forwards to
-`hellomin.app/?l=&p=&v=a&s=` or `hellomin.app/b/?l=&p=&v=b&s=`, which is how
-`/admin/posters` knows which artwork worked, where, and which of the two
-homepages it was read on. A code aimed at `hellomin.app/<location>/<poster>`
+`hellomin.app/?l=&p=&v=a&s=` or `hellomin.app/waitlist/?l=&p=&v=b&s=`, which is
+how `/admin/posters` knows which artwork worked, where, and which of the two
+landing pages it was read on. A code aimed at `hellomin.app/<location>/<poster>`
 instead just 404s on Pages and counts nothing, so the page flags that shape
 as an error rather than a warning. **The codes are measurement instruments** — the
 location and poster lists in `assets/js/qrgenerator.js` must match
@@ -373,27 +373,22 @@ For the waitlist form to submit locally, run the Worker and point the form at
 it (see the `min-waitlist-worker` repo): set `window.KIN_API_BASE` before
 `waitlist-hero.js` loads.
 
-## The landing A/B (`/` and `/b/`)
+## The landing A/B (`/` and `/waitlist/`)
 
-Two homepages, identical below the fold. `/` is the control; `/b/` finishes the
-hero headline on a word that keeps changing. Which one a visitor sees is
-decided **per QR scan, in the Worker**, and written on the row that counts the
-scan — see `handleScan` in `min-waitlist-worker src/index.js`.
+Two pages, and deliberately not two versions of one page:
 
-Neither page splits anything itself. There used to be a script in each `<head>`
-drawing a side with `Math.random()` and stamping it into `localStorage`; both
-are gone, and the comments where they stood say why. In short: the assignment
-lived on the device where no query could see it, the stamp was permanent so one
-phone was pinned to one side forever, and it split *all* traffic including
-people who typed the address in.
-
-So today:
-
-| How you arrive | What you get |
+| | |
 | --- | --- |
-| Scanning a poster | `/` or `/b/`, 50/50, drawn and recorded by the Worker |
-| Typing `hellomin.app` | `/` — the control, every time |
-| Following a link to `/b/` | `/b/` — no bounce, no stamp |
+| `/` — **side A** | The homepage. Long-form landing, hero headline finishing on a word that keeps changing ("say hello to your neighbour / a campus crush / …"), everything below the fold |
+| `/waitlist/` — **side B** | The waitlist page. Three-slide banner, one field, the whole thing above the fold |
+
+Which one a visitor sees is decided **per QR scan, in the Worker**, and written
+on the row that counts the scan — see `handleScan` and `VARIANT_PATHS` in
+`min-waitlist-worker src/index.js`.
+
+Neither page splits anything itself, and neither ever bounces. Type the address
+in and you get the homepage; follow a link to `/waitlist/` and you get that.
+Only a poster scan is split.
 
 Each page declares its own side as `<html data-variant="a">`, which
 `assets/js/scan-attribution.js` reads and sends with every signup off that
@@ -414,9 +409,24 @@ reaches.
 arrival ping would normally want lives in the Worker instead, as
 `WHERE landed_at IS NULL`.
 
-**Ending the test:** delete `b/`, and drop `VARIANT_PATHS` in the Worker so
-every scan goes to `/`. **Shipping the variant:** move `b/index.html` over
-`index.html`.
+### The letters moved on 2026-09-16
+
+This test used to be two homepages: a static-headline control at `/`, and the
+changing-headline page at `/b/`. The control is deleted, the changing-headline
+page took its place as `/`, and `/waitlist/` became the other side.
+
+So `a` and `b` name different pages either side of that date. The old variant
+data was cleared rather than summed with the new — see
+`min-waitlist-worker migrations/0008_variant_letters_moved.sql`. The poster
+A/B kept every row of its history; only the page label was cleared.
+
+`b/index.html` is now a redirect stub to `/`, carrying the query string
+through so a straggler with an old `/b/?l=…&p=…` URL in their history still
+signs up attributed. Delete it once those have aged out — nothing generates
+them any more.
+
+**Ending the test:** point both sides of `VARIANT_PATHS` at `/` and every scan
+lands on the homepage.
 
 ## Backend
 

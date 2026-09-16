@@ -25,9 +25,9 @@
      api.hellomin.app/<location>/<poster> — the WORKER's host, not
      the site's. The Worker counts that scan, draws a side of the
      landing A/B and forwards to hellomin.app/?l=&p=&v=a&s= or
-     hellomin.app/b/?l=&p=&v=b&s=, which is how the poster
+     hellomin.app/waitlist/?l=&p=&v=b&s=, which is how the poster
      scoreboard at /admin/posters knows which artwork worked,
-     where, and which of the two homepages it was read on. A code aimed at hellomin.app/<location>/<poster>
+     where, and which of the two landing pages it was read on. A code aimed at hellomin.app/<location>/<poster>
      instead just 404s on Pages and counts nothing. So these codes are measurement instruments — the
      vocabulary below has to match min-waitlist-worker src/index.js exactly, or a
      scan lands on the fallback and the row it should have filled

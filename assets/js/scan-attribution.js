@@ -12,12 +12,14 @@
         │  mints a token for this one scan
         ▼
      hellomin.app/?l=kumpula&p=unclesam&v=a&s=<token>
-     hellomin.app/b/?l=kumpula&p=unclesam&v=b&s=<token>
+     hellomin.app/waitlist/?l=kumpula&p=unclesam&v=b&s=<token>
 
    Four values arrive:
      l  where the poster hangs
      p  which poster design
-     v  which of the two homepages the Worker sent this scan to
+     v  which of the two landing pages the Worker sent this scan to —
+        a is the homepage, b is /waitlist/ (changed 2026-09-16; the
+        letters named two homepages before that)
      s  this scan's token — the handle that ties scan, arrival
         and signup into one funnel
 
@@ -63,9 +65,10 @@ const readMatch = (key, re) => {
    opened from disk — all three of which give a different location.pathname.
 
    Falls back to ?v= when a page carries no attribute, and to null when
-   neither is there. null is correct for /waitlist/ and /partners/: they are
-   not in the test, and forcing them into a side would put signups on a page
-   nobody was shown. */
+   neither is there. null is correct for a page outside the test —
+   /partners/, /business/ — where forcing a side would file signups under a
+   page nobody was shown. /waitlist/ IS in the test now and declares b for
+   itself. */
 const pageVariant = document.documentElement.dataset.variant || null;
 const declared = pageVariant === 'a' || pageVariant === 'b' ? pageVariant : null;
 const fromQuery = params.get('v');
