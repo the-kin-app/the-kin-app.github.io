@@ -1,0 +1,84 @@
+/* ============================================================
+   Min — the ad landing page (/ads)
+   ------------------------------------------------------------
+   Loads on top of waitlist-hero.css and changes exactly one
+   thing: the form asks a second question.
+
+   /waitlist/ is one field on purpose — it is read off a poster by
+   somebody standing in a bar, and every extra box there is
+   somebody deciding not to bother. This page is read off a paid
+   ad by somebody sitting down with a thumb already moving, and
+   the whole reason we bought the impression is to find out
+   whether they are a Helsinki student. So the second field is the
+   point of the page rather than a tax on it.
+
+   The rest — the world, the banner, the material, the intro — is
+   inherited untouched, so a change to the scan page lands here
+   too and the two cannot drift apart visually.
+   ============================================================ */
+
+/* ---- the two rows ------------------------------------------
+   /waitlist/ is [ address | Join ] on one line. Here the address
+   takes its own line and the school shares the second with the
+   button, so the form grows by one line rather than two and the
+   page still fits 100svh on a phone. */
+
+.ads-form__row--email  { grid-template-columns: minmax(0, 1fr); }
+.ads-form__row--school { grid-template-columns: minmax(0, 1fr) auto; }
+
+/* ---- the select --------------------------------------------
+   The same inset well as .input — a hollow sunk into the resin,
+   not a pebble stacked on it — with the platform's own arrow
+   removed and ours drawn in its place. The native control's
+   chevron is painted in the OS's colour and would be the one
+   cold blue thing on a warm page. */
+
+.ads-school {
+  appearance: none;
+  -webkit-appearance: none;
+  /* room on the right for the chevron, so a long school name never
+     runs underneath it */
+  padding-right: 42px;
+  /* the chevron: ink at the same weight as typed text, drawn rather
+     than a glyph so it lines up the same in every browser */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'%3E%3Cpath d='M1.5 1.5L7 7l5.5-5.5' stroke='%2323211E' stroke-opacity='0.55' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  /* .input sets a flat translucent white; keep it and let the arrow
+     ride on top — two backgrounds, one declaration each. */
+  background-color: rgba(255, 255, 255, 0.42);
+  cursor: pointer;
+  /* iOS centres select text vertically on its own metrics and lands a
+     pixel high against the email field beside it */
+  line-height: 1.2;
+  text-overflow: ellipsis;
+}
+.ads-school:focus { background-color: rgba(255, 255, 255, 0.6); }
+
+/* Until a school is chosen the control is showing a prompt, not an
+   answer, so it reads at placeholder weight — the same distinction
+   the email field makes. `required` + an empty first option is what
+   makes :invalid true here, so nothing has to toggle a class. */
+.ads-school:invalid {
+  color: color-mix(in srgb, var(--ink) 46%, transparent);
+}
+
+/* The dropdown itself is drawn by the OS and ignores almost
+   everything. These two land on Windows and Android, where an
+   unstyled list would otherwise inherit the page's ink on the
+   page's dark ground and come out unreadable. */
+.ads-school option {
+  color: #23211E;
+  background: #FFF;
+}
+.ads-school option[value=""] { color: #77726B; }
+
+/* ---- the phone ---------------------------------------------
+   Under 520px tall the scan page already drops the figure to keep
+   its form on screen; this form is one line taller, so it needs the
+   same room a step earlier. Nothing else moves — the banner still
+   explains Min, it just does it in words for the shortest screens. */
+
+@media (max-height: 600px) {
+  .wlq .hslide__fig { display: none; }
+}

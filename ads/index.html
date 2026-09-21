@@ -1,29 +1,64 @@
 <!DOCTYPE html>
-<!-- data-variant: which side of the landing A/B this page IS — side B.
-     Read by assets/js/scan-attribution.js and sent with every signup from
-     this page, scanned or not. On the <html> element rather than inferred
-     from the path, because the path differs between the live site, a local
-     file server and a copy opened from disk, and a variant that is wrong in
-     one of those is wrong silently.
+<!-- ══════════════════════════════════════════════════════════
+     THE AD LANDING PAGE (/ads)
+     ──────────────────────────────────────────────────────────
+     A copy of /waitlist/ with one extra field, and the only page
+     paid social is ever pointed at.
 
-     This page has always been where poster scans landed. As of 2026-09-16 it
-     is one side of the test rather than the only destination: half of every
-     scan comes here and half goes to the homepage. Nothing about the page
-     itself changed — it already carried ?l= and ?p= through to the signup,
-     and the arrival ping rides in on waitlist-form.js like everywhere else. -->
-<html lang="en" data-variant="b">
+     WHY IT IS A SEPARATE PAGE, not a change to /waitlist/:
+
+       · `Business/Market/social ads strategy` §7 freezes the
+         waitlist page for the duration of Round 1 — "one
+         variable". Editing /waitlist/ to serve the ads would
+         change the landing page underneath the running poster
+         A/B and make both reads worthless.
+       · /waitlist/ is side B of that A/B and declares
+         data-variant="b". THIS PAGE DECLARES NO VARIANT AT ALL.
+         A page outside the test files signups with variant NULL,
+         which is correct: nobody drew a side for them. See
+         scan-attribution.js — the ?v= fallback only fires when a
+         page carries no attribute AND the URL says a side, and no
+         ad URL carries ?v=.
+       · Ad traffic arrives with a keyboard and a thumb already
+         moving. Poster traffic arrives standing up in a bar. One
+         page cannot be built for both, and the extra field below
+         is exactly the difference.
+
+     THE EXTRA FIELD: a required school dropdown. The paid-social
+     budget buys a Helsinki student or it buys nothing, and an
+     email address alone cannot tell the two apart — students sign
+     up from gmail, not from aalto.fi. Read `school` on the signup
+     row to filter. It is a filter, NOT a gate: "Other" and "Not a
+     student" are both real options and both join. Blocking them
+     would cost the one honest number this page can produce, which
+     is what share of paid traffic is off-target.
+
+     The layout, the world, the banner and the material are all
+     inherited from waitlist-hero.css untouched, so an edit to the
+     scan page lands here too.
+
+     noindex: same copy as /waitlist/ on a second URL. Nothing to
+     gain in search and a duplicate to lose. Deliberately absent
+     from sitemap.xml for the same reason as /survey/pro/.
+     ══════════════════════════════════════════════════════════ -->
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Min — Join the waitlist</title>
 <meta name="description" content="Min introduces you to the people, groups and moments already around you. Launching for Helsinki area students in early 2027 — leave an email and be first in.">
 <meta name="theme-color" content="#2A2320">
-<link rel="canonical" href="https://hellomin.app/waitlist/">
+<link rel="canonical" href="https://hellomin.app/ads/">
+<!-- The same words as /waitlist/ on a second URL. noindex on the page
+     rather than Disallow in robots.txt — a disallowed page is never
+     fetched, so the crawler never reads the noindex. Same reasoning as
+     /business/ and /survey/pro/; see robots.txt. -->
+<meta name="robots" content="noindex, follow">
 
 <meta property="og:title" content="Join the Min waitlist">
 <meta property="og:description" content="An introduction, not a feed. Be first in when Min launches in Helsinki. No spam, ever.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://hellomin.app/waitlist/">
+<meta property="og:url" content="https://hellomin.app/ads/">
 <meta property="og:site_name" content="Min">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
@@ -43,25 +78,30 @@
      markup — which renders as a subtly broken page rather than an obviously
      broken one. Bump the date on any release that touches these files. -->
 <link rel="stylesheet" href="/assets/css/tokens.css?v=20260910b">
-<link rel="stylesheet" href="/assets/css/landing.css?v=20260917b">
+<link rel="stylesheet" href="/assets/css/landing.css?v=20260916m">
 <link rel="stylesheet" href="/assets/css/waitlist.css?v=20260910b">
 <link rel="stylesheet" href="/assets/css/waitlist-hero.css?v=20260916m">
+<!-- /ads only: the second field and the two-row form. Loads last so it
+     overrides waitlist-hero.css and nothing else. -->
+<link rel="stylesheet" href="/assets/css/ads.css?v=20260917a">
 </head>
 
 <!-- ══════════════════════════════════════════════════════════
-     THE SCAN PAGE
+     THE AD PAGE
      ──────────────────────────────────────────────────────────
-     This page is reached almost entirely by pointing a phone at a
-     QR code — off a poster, off the last slide of the deck, off a
-     coaster in a bar. So it is built for one glance:
+     Reached by tapping an ad, not by pointing a phone at paper.
+     Everything below is the scan page's, unchanged, because the
+     three slides are the fastest honest explanation of Min we
+     have and a paid visitor deserves the same one:
 
        · everything fits in 100svh. Nothing to scroll to, because
          nobody standing in a bar is going to scroll.
        · the banner explains Min while they read, on its own, in
          three slides: the near-miss, what it is, how it works.
          Those are pages 2, 4 and 5 of /pitchdeck/short.
-       · the form asks for one thing. The name the waitlist stores
-         is read off the address — see waitlist-hero.js.
+       · the form asks for two: the address, and which school.
+         The name the waitlist stores is still read off the
+         address — see waitlist-form.js.
 
      Materials, figures and Min all come from landing.css, so this
      is the same world as the landing page, not a lookalike.
@@ -407,18 +447,65 @@
 </div>
 
 <!-- ── the ask ─────────────────────────────────────────────
-     One field. Every extra box here is somebody deciding not to
-     bother, and the address is the only thing we actually need to
-     tell them Min is open. -->
+     Two fields, and the second one is why this page exists.
+
+     On /waitlist/ the address is the only thing we need, and a
+     second box there is somebody deciding not to bother. Here we
+     are paying per click for an audience we cannot see, and
+     "which school" is the only question that tells us whether the
+     euro bought a Helsinki student. It is worth the drop-off, and
+     the drop-off itself is a number worth having.
+
+     The school is REQUIRED but never disqualifying. "Another
+     school" and "Not a student" both submit and both join the
+     list — a page that turned them away would lose the measure of
+     how far off-target the targeting ran, which is the finding
+     the spend is actually for. -->
 <div class="wlq-row">
   <div class="wl-card wlq-card resin">
 
     <form id="waitlist-form" class="wlq-form" data-signup data-done="#done-view" novalidate>
-      <div class="wlq-form__row">
+      <div class="wlq-form__row ads-form__row--email">
         <input class="input" type="email" id="email" name="email"
                placeholder="you@example.com" autocomplete="email"
                inputmode="email" required aria-label="Your email"
                aria-describedby="email-error">
+      </div>
+
+      <!-- The list is ALPHABETICAL, and that is a measurement decision
+           rather than a tidiness one. Ordering it by campus size would put
+           Aalto under the thumb of everybody who could not be bothered to
+           read, and this field's entire job is to be read.
+
+           The slugs — not the labels — are what the Worker stores, and its
+           SCHOOL_KEYS allowlist has to carry every one of them or the
+           answer lands as NULL and the row cannot be filtered. Same rule as
+           the poster lists: adding a school is an edit in two files. See
+           outputs/school-field-spec-2026-09-17.md.
+
+           `required` plus an empty first option is also what makes
+           .ads-school:invalid true, which is how the prompt reads at
+           placeholder weight until somebody answers. Remove the empty
+           value and the styling goes with it. -->
+      <div class="wlq-form__row ads-form__row--school">
+        <select class="input ads-school" id="school" name="school" required
+                aria-label="Which school do you go to?"
+                aria-describedby="school-error">
+          <option value="" disabled selected>Which school?</option>
+          <option value="aalto">Aalto University</option>
+          <option value="arcada">Arcada</option>
+          <option value="diak">Diak</option>
+          <option value="haaga-helia">Haaga-Helia</option>
+          <option value="hanken">Hanken</option>
+          <option value="humak">Humak</option>
+          <option value="laurea">Laurea</option>
+          <option value="metropolia">Metropolia</option>
+          <option value="uniarts">Uniarts</option>
+          <option value="helsinki">University of Helsinki</option>
+          <!-- Both of these join. See the note above the form. -->
+          <option value="other">Another school</option>
+          <option value="none">Not a student</option>
+        </select>
         <button type="submit" class="btn btn--primary">
           <span class="btn__fill" aria-hidden="true"></span>
           <span class="btn__label">Join waitlist</span>
@@ -430,6 +517,7 @@
              tabindex="-1" autocomplete="off" aria-hidden="true">
 
       <div class="field-error" id="email-error" role="alert"></div>
+      <div class="field-error" id="school-error" role="alert"></div>
       <div class="status" id="form-status" role="status"></div>
 
       <p class="consent">
@@ -466,7 +554,8 @@
   import { waitlistForms } from '/assets/js/waitlist-form.js?v=20260917a';
   minBodies();     // Min in the i-dot, and Min in the middle of the ring
   buttons();       // Join submerges and ripples like every other Min button
-  waitlistForms(); // the one signup implementation, shared with the homepage
+  waitlistForms(); // the one signup implementation — it picks the school
+                   // field up from the markup, so /waitlist/ is untouched
 </script>
 
 </body>

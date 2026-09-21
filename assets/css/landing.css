@@ -256,14 +256,27 @@ p { margin: 0; }
 .in [data-delay="4"] { transition-delay: calc(4 * var(--stagger-cascade) + var(--rise-hold, 0ms)); }
 .in [data-delay="5"] { transition-delay: calc(5 * var(--stagger-cascade) + var(--rise-hold, 0ms)); }
 
-/* The hero waits for the mark. The logo parks at 2900ms and its material is
-   revealing from ~2320ms; holding the cascade to 2250ms means the headline
-   arrives INTO that reveal rather than a second and a half before it.
-   Everything below it follows on the existing 180ms cascade. */
-/* Waits for the WORDMARK (formed at ~3050ms), not for Min. Min deliberately
-   runs on past this, finishing at ~4850ms, so the copy is not held for six
-   seconds waiting on a 35px character. */
-.hero { --rise-hold: 2200ms; }
+/* The mark goes first, and finishes first.
+
+   The mark's own track (above) now runs 80–780ms: outline, flash, fill,
+   glow, all of it done before this hold expires. 480ms of hold puts the
+   headline (slot 2) at 840ms — the mark has landed, THEN the copy comes
+   up under it. Nothing is on screen at the same time as the forming.
+
+   Two clocks are involved and they are not the same one, which is worth
+   knowing before tuning this number. The mark's animations run off the
+   CSS clock, from first paint. The copy is a transition gated on `.in`,
+   which landing.js adds from an IntersectionObserver — so its delay is
+   measured from whenever the module has loaded and the observer has
+   fired, always at or after first paint. The gap can only ever be wider
+   than the number here, never narrower, so the mark's lead is safe.
+
+   This was 2200ms before 2026-09-16 — the mark's full forming track, so
+   the page sat empty for over two seconds. Holding for the mark to finish
+   is right; holding for it and then some is what made it feel dead.
+
+   The cascade itself is the house 180ms — the hero is not special here. */
+.hero { --rise-hold: 480ms; }
 
 /* ---- button emerge -------------------------------------------
    Ported from KinButton.swift's playEmerge(): a control floats up and
@@ -729,14 +742,14 @@ p { margin: 0; }
      landed, matching the app splash's own logo-forming beat (shade/ground
      first, mark arrives and settles, THEN forms) rather than forming
      while still travelling. */
-  animation: wm-park 2100ms cubic-bezier(0.16, 0.82, 0.22, 1) forwards;
+  animation: wm-park 700ms cubic-bezier(0.16, 0.82, 0.22, 1) forwards;
 }
 /* ONE authored curve, not hand-picked stops. cubic-bezier(0.45,0,0.15,1)
    is deliberately gentler out of the gate than the standard arrival ease:
    an expo-out finishes its visible travel in the first third, which left
    the mark already parked before the border showed up. This keeps real,
    perceptible displacement running underneath the whole forming sequence
-   and lands at 2900ms — as the flash clears and the material reveals. */
+   and lands at 700ms — as the flash clears and the material reveals. */
 @keyframes wm-park {
   from { translate: 0 220px; }
   to   { translate: 0 0; }
@@ -757,11 +770,11 @@ p { margin: 0; }
 
 .wordmark-letter > path {
   opacity: 0;
-  animation: wm-fade-in 900ms cubic-bezier(0.33, 0, 0.25, 1) 850ms forwards;
+  animation: wm-fade-in 380ms cubic-bezier(0.33, 0, 0.25, 1) 80ms forwards;
 }
 .wordmark-letter > g {
   opacity: 0;
-  animation: wm-fade-in 800ms cubic-bezier(0.33, 0, 0.25, 1) 1650ms forwards;
+  animation: wm-fade-in 360ms cubic-bezier(0.33, 0, 0.25, 1) 340ms forwards;
 }
 
 /* the glow: a blurred duplicate of the letterforms (see the SVG markup),
@@ -769,15 +782,22 @@ p { margin: 0; }
    well short of "a colour of its own"). Follows the fill in. */
 .wordmark-glow-group {
   opacity: 0;
-  animation: wm-glow-in 700ms cubic-bezier(0.42, 0, 0.30, 1) 2450ms forwards;
+  animation: wm-glow-in 420ms cubic-bezier(0.42, 0, 0.30, 1) 620ms forwards;
 }
 /* the flash: the outline appears ALONE first and holds ~380ms with nothing
    else on screen, THEN this white pass washes over and fades, revealing the
    material fill underneath. Painted last (on top).
-   Timeline: park 0–2200 · border in 1400–1820 · border holds alone to 2200
-   · flash 2200–2720 (Min flashes on the same frame) · fill 2320–3020
-   · glow 2700–3400. Previously the flash fired at 750ms — 50ms after the
-   border STARTED fading in — so it read as the flash coming first. */
+   Timeline: park 0–700 · border in 80–460 · border holds alone to 300
+   · flash 300–780 (Min flashes on the same frame) · fill 340–700
+   · glow 620–1040. Previously the flash fired at 750ms — 50ms after the
+   border STARTED fading in — so it read as the flash coming first.
+
+   Cut from the original 3.4s beat sheet on 2026-09-16, and the front of it
+   pulled in again on 2026-09-17. The outline now appears at 80ms rather
+   than 240: a mark that shows NOTHING for its first quarter-second has not
+   started as far as the reader is concerned, and the copy underneath was
+   catching up with it. The whole mark is formed by ~780ms, before the
+   first line of copy moves. The choreography is unchanged throughout. */
 /* A gradient BAND travelling across the letterforms, not an opacity pulse on
    the whole mark. The pulse read as a broken halogen lamp because every letter
    lit and died at the same instant; a sweep has a direction and a soft edge,
@@ -799,7 +819,7 @@ p { margin: 0; }
           mask-size: 260% 100%;
   -webkit-mask-repeat: no-repeat;
           mask-repeat: no-repeat;
-  animation: wm-sweep 800ms cubic-bezier(0.42, 0, 0.58, 1) 1450ms both;
+  animation: wm-sweep 480ms cubic-bezier(0.42, 0, 0.58, 1) 300ms both;
 }
 @keyframes wm-fade-in { to { opacity: 1; } }
 @keyframes wm-glow-in { to { opacity: 0.38; } }
@@ -843,20 +863,20 @@ p { margin: 0; }
    Source of truth: Figma "WEB · logo emerge" (QR landing page, 679:404),
    4.60s. Full beat sheet in claude/min-logo-emerge-spec.md.
 
-     0.70  Min starts descending          2.30  flash rolls up
-     0.85  BOTH outlines begin            2.40  morph starts (100ms behind)
-     1.10  eyes open                      2.65  limbs · 2.80 feet
-     1.75  BOTH are empty shells          3.00  flash full
-     2.10  wordmark parks                 3.35  morph complete
-     2.20  Min parks                      4.40  flash rolled off
+     0.10  Min starts descending          0.62  flash rolls up
+     0.08  BOTH outlines begin            0.70  morph starts (100ms behind)
+     0.27  eyes open                      0.80  limbs · 0.90 feet
+     0.46  BOTH are empty shells          0.95  flash full
+     0.70  wordmark parks                 1.10  morph complete
+     0.80  Min parks                      1.50  flash rolled off
 
    The descent runs on `transform` and the idle float on `translate` — two
    independent CSS properties, so the one-shot arrival and the forever-float
    compose instead of overwriting each other. */
 .wordmark__min--resin .min--hero {
-  animation: min-descend 1500ms cubic-bezier(0.16, 0.82, 0.22, 1) 700ms both,
-             float-min 9s ease-in-out infinite 2400ms;
-  --min-entry: 1100ms;
+  animation: min-descend 700ms cubic-bezier(0.16, 0.82, 0.22, 1) 100ms both,
+             float-min 9s ease-in-out infinite 800ms;
+  --min-entry: 180ms;
 }
 /* ~0.9x his own height, the same proportion as Figma's 150px against a 167px
    Min. Expressed in em so it tracks the mark at every size it is used at. */
@@ -898,7 +918,7 @@ p { margin: 0; }
   backdrop-filter: blur(14px) saturate(150%) brightness(1.3);
   opacity: 0;
   filter: blur(18px);
-  animation: surface 750ms var(--ease-emergence) 400ms forwards;
+  animation: surface 550ms var(--ease-emergence) 120ms forwards;
 }
 /* the cast edge: lifts the letterforms off the fog behind them */
 .wordmark__glass--shadow {
@@ -916,7 +936,7 @@ p { margin: 0; }
   background: radial-gradient(50% 50% at 50% 55%, rgba(255, 242, 212, 0.22), transparent 68%);
   filter: blur(22px);
   opacity: 0;
-  animation: surface 900ms var(--ease-emergence) 500ms forwards;
+  animation: surface 620ms var(--ease-emergence) 180ms forwards;
 }
 @keyframes surface {
   to { opacity: 1; filter: blur(0); }

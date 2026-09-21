@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Min — What would you pay for?</title>
+<meta name="description" content="Six questions about paying to meet people, and what a paid Min would have to be. Two minutes.">
+<meta name="theme-color" content="#2A2320">
+<!-- Sent to a recruited cohort, never found in search. noindex keeps it out
+     of the index but keeps the preview when someone forwards the link.
+     Deliberately absent from sitemap.xml for the same reason as /business/. -->
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://hellomin.app/survey/pro/">
+
+<meta property="og:title" content="What would you pay for?">
+<meta property="og:description" content="Six questions about paying to meet people, and what a paid Min would have to be. Two minutes.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hellomin.app/survey/pro/">
+<meta property="og:site_name" content="Min">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Min: a softly glowing pebble with two lit eyes, waving hello in dusk light.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
+
+<link rel="icon" href="/assets/favicon.svg?v=3" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/landing.css">
+<link rel="stylesheet" href="/assets/css/business.css">
+<link rel="stylesheet" href="/assets/css/survey.css">
+<link rel="stylesheet" href="/assets/css/pro-survey.css">
+
+<script>document.documentElement.classList.add('reveal-armed');</script>
+</head>
+
+<!-- ══════════════════════════════════════════════════════════
+     THE PRO SURVEY  (what to gate, and at what price)
+     ──────────────────────────────────────────────────────────
+     Sibling to /survey/, not a replacement. /survey/ asks where
+     your hours go. This one asks one thing: which features are
+     worth gating, and what people would pay for the ones they
+     picked.
+
+     Source instrument:
+       min-brain/Ideas/Inbox/2026-09-17 user willingness-to-pay survey.md
+     Model it feeds:
+       min-brain/Business/Money/business model/consumer-subscription analysis.md
+
+     Two halves, in this order and not the other:
+
+       1  what they have ALREADY paid for to have a social life.
+          Establishes that paying for this kind of thing is a
+          thing they do, before anything is pitched.
+       2  the app, then the extras, then their price.
+
+     The order inside half two is the whole design:
+
+       core loop  →  reaction  →  intent  →  extras  →  price
+
+     Explain the free product first and get the reaction to THAT.
+     Only then ask which extras they want, and only then ask what
+     the extras are worth. Asking for a price before they know
+     what the free version does prices a blank.
+
+     Question 5 names their own ticks back to them, so every
+     person prices the bundle they actually chose. That means two
+     answers are not directly comparable, and the analysis is a
+     cross-tab (which extras × what price) rather than an average.
+     That is the deliberate trade: relevance over comparability.
+
+     ⚠️ No question on this page mentions AI, and none should.
+     A version of question 1 that asked about ChatGPT limits was
+     removed on 2026-09-18 for that reason.
+
+     Stays at cave throughout, so it never stamps .js-ready. Same
+     reason as /survey/: the cards keep their own opaque material.
+     ══════════════════════════════════════════════════════════ -->
+
+<body class="biz survey pro-survey">
+
+<!-- the world: light pooling to the floor, slow banks of fog above it -->
+<div class="env" aria-hidden="true">
+  <span class="fog fog--1"></span>
+  <span class="fog fog--2"></span>
+  <span class="fog fog--3"></span>
+</div>
+
+<main>
+
+  <!-- ── masthead ─────────────────────────────────────────
+       The wordmark and nothing else. This page is a form, not a
+       pitch: whoever is here was sent here and already knows what
+       it is, so a hero would only delay question 1. Same band as
+       /business/, which starts asking immediately for the same
+       reason.
+
+       No .wordmark__dot fallback here. The page never stamps
+       .js-ready, so the flat dot would show permanently on top of
+       the Min that min.js draws. Matches /survey/. -->
+  <section class="biz-masthead" data-reveal>
+    <h1 class="visually-hidden">What would you pay for?</h1>
+
+    <!-- Cast-glass letterforms with Min sitting in the i-dot's place -->
+    <div class="wordmark--hero rise" role="img" aria-label="min">
+      <span class="wordmark__bloom" aria-hidden="true"></span>
+      <span class="wordmark__glass wordmark__glass--shadow" aria-hidden="true"></span>
+      <span class="wordmark__glass" aria-hidden="true"></span>
+      <div class="wordmark__min" aria-hidden="true">
+        <div class="min min--hero" data-min data-phase="1.9"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── the questions ────────────────────────────────────── -->
+  <section class="biz-form-section">
+    <form id="pro-form" class="biz-form" novalidate>
+
+      <!-- 1 ─ what they've already paid for ────────────────
+           Deliberately narrow. Not "what do you subscribe to",
+           which measures a wallet, but "what have you paid to
+           have a social life", which measures whether this cohort
+           treats meeting people as something you can buy at all.
+           If almost nobody ticks anything, the tier has a much
+           bigger problem than its price.
+
+           Ticks only, no amounts. Amounts would double the length
+           of the page for a number people invent anyway.
+
+           Rows come from pro-survey.js (SERVICES) so the list
+           stays in one place and in step with the Worker. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 1 of 6</span>
+          <h2 class="rise" data-delay="1">Have you ever paid for any of these?</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            Things people pay for to have a social life. Ever counts, it doesn't
+            have to be now, and it counts whether or not it worked.
+          </p>
+        </div>
+
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend class="visually-hidden">Social life services you have paid for</legend>
+          <div class="option-group option-group--grid" data-checks="services"></div>
+        </fieldset>
+
+        <div class="field rise" data-delay="4">
+          <label for="services_other">Anything else? <span class="opt">(optional)</span></label>
+          <input class="input" type="text" id="services_other" name="services_other"
+                 placeholder="Something else you've paid for to meet people" maxlength="150">
+        </div>
+      </div>
+
+      <!-- 2 ─ the core loop, then the reaction ─────────────
+           The free product, described once, and nothing else. No
+           price, no tier, no extras, and the word "dating" does
+           not appear. Whether it gets HEARD as dating anyway is
+           one of the findings, which is why the write-in sits
+           directly under the reaction rather than at the end. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 2 of 6</span>
+          <h2 class="rise" data-delay="1">Here's what Min does.</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            This part is the free version, and it stays free.
+          </p>
+        </div>
+
+        <p class="concept rise" data-delay="2">
+          <b>You talk to Min for a few minutes.</b> From that conversation it
+          works out what you're like and what you're up for, and it never asks
+          you to fill in a profile. Then, when someone nearby is a good fit and
+          you're both up for it, Min introduces the two of you and suggests a
+          public spot to meet, right then. No browsing, no profiles, no
+          followers.
+          <br><br>
+          <b>And anyone can put up something to do later the same day</b> —
+          a coffee, a run, a board game — for other people nearby to join.
+        </p>
+
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend>Honest first reaction?</legend>
+          <div class="option-group">
+            <label class="option"><input type="radio" name="reaction" value="would_use"><span>I'd use that</span></label>
+            <label class="option"><input type="radio" name="reaction" value="maybe"><span>Maybe, depends on the details</span></label>
+            <label class="option"><input type="radio" name="reaction" value="not_for_me"><span>Not for me</span></label>
+          </div>
+
+          <div class="field why-field">
+            <label for="reaction_why">What's the part you don't believe? <span class="opt">(optional)</span></label>
+            <textarea class="textarea" id="reaction_why" name="reaction_why" rows="3"
+                      maxlength="1000"
+                      placeholder="Whatever came to mind when you picked"></textarea>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 3 ─ intent ───────────────────────────────────────
+           Multi-select, because the product's own model carries
+           several intents at once rather than one label (see
+           min-brain Product/Features/Min.md). The rows here are
+           the user-facing wording of those intents.
+
+           "Something that might turn into dating" is on the list
+           on purpose. The FAQ says Min is not a dating app and
+           that what a meeting becomes is up to the two people, so
+           the honest thing is to let people say it and then find
+           out how many did. Leaving it off would not change the
+           answer, only our ability to see it. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 3 of 6</span>
+          <h2 class="rise" data-delay="1">What would you actually use it for?</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            Tick everything that's true. Most people want more than one thing.
+          </p>
+        </div>
+
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend class="visually-hidden">What you would use Min for</legend>
+          <div class="option-group option-group--grid" data-checks="intents"></div>
+        </fieldset>
+      </div>
+
+      <!-- 4 ─ the extras ───────────────────────────────────
+           Click all you want, not a ranking and not a rating. The
+           gating question is "who wants this", and a tick answers
+           it; a five-point scale does not, because everything
+           comes back four out of five.
+
+           These are read back by name in question 5, so each row
+           has to read as a thing somebody could want on its own.
+
+           The first three rows are the three variables an
+           encounter has: who, when and where. They sit together
+           and first because the open question in min-brain's
+           "chance vs control as the pro line" note is whether the
+           paid tier sells control over those variables or sells
+           planning as one thing. Separate rows are what makes
+           that readable: ticked only together, the tier is
+           planning; ticked apart, it is control, and they can be
+           gated apart.
+
+           ⭐ "Choose who you meet" is scored split by gender. It
+           is a safety feature to one half of the cohort and a
+           filtering feature to the other, and that split is the
+           single biggest risk in the subscription model. It is
+           the only reason question 6 asks gender at all.
+
+           ⚠️ "Works in other cities" is a control. Nobody who has
+           not used the app can know whether another city is worth
+           anything, so ticks here measure the appeal of the
+           sentence rather than of the feature.
+
+           Rows come from pro-survey.js (EXTRAS). -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 4 of 6</span>
+          <h2 class="rise" data-delay="1">Which of these would you want?</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            Things that could sit on top of the free version. Tick everything
+            you'd genuinely use, and leave the rest. Ticking none is a real
+            answer.
+          </p>
+        </div>
+
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend class="visually-hidden">Extras you would want</legend>
+          <div class="option-group" data-checks="extras"></div>
+        </fieldset>
+      </div>
+
+      <!-- 5 ─ their price, for their picks ─────────────────
+           We name no figure. The card names THEIR ticks back to
+           them and asks what that is worth, so the thing being
+           priced is the thing they just said they wanted.
+
+           Consequence for the analysis, worth knowing before
+           reading the results: everybody prices a different
+           bundle, so there is no single average to quote. The
+           output is a cross-tab of which extras against what
+           price, which is what tells you where to draw the gate.
+
+           "I wouldn't pay for any of this" is a first-class
+           answer and not a blank field. A blank is a person who
+           skipped; the checkbox is a person who decided. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 5 of 6</span>
+          <h2 class="rise" data-delay="1">What would that be worth to you?</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            A monthly subscription with the things you just ticked in it, on top
+            of the free Min. Your number, we haven't set one.
+          </p>
+        </div>
+
+        <!-- filled by pro-survey.js from question 4 -->
+        <div class="picks rise" data-delay="3" data-picks hidden>
+          <span class="picks__label">You'd be paying for</span>
+          <ul class="picks__list" data-picks-list></ul>
+        </div>
+
+        <div class="field rise" data-delay="3">
+          <label for="price">What you'd pay a month <span class="opt">(€)</span></label>
+          <input class="input" type="text" id="price" name="price"
+                 inputmode="decimal" placeholder="e.g. 5" maxlength="10">
+          <div class="field-error" id="price-error"></div>
+        </div>
+
+        <label class="option option--standalone rise" data-delay="4">
+          <input type="checkbox" id="would_not_pay" name="would_not_pay">
+          <span>I wouldn't pay for any of this</span>
+        </label>
+
+        <fieldset class="fieldset rise" data-delay="4">
+          <legend>And how would you rather pay it? <span class="opt">(optional)</span></legend>
+          <div class="option-group">
+            <label class="option"><input type="radio" name="billing_pref" value="monthly"><span>Monthly, cancel whenever</span></label>
+            <label class="option"><input type="radio" name="billing_pref" value="annual"><span>A cheaper yearly price, paid once</span></label>
+            <label class="option"><input type="radio" name="billing_pref" value="episodic"><span>Only in the weeks I'm actually using it</span></label>
+            <label class="option"><input type="radio" name="billing_pref" value="one_off"><span>One payment, no subscription at all</span></label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 6 ─ who answered ─────────────────────────────────
+           Last, and every field optional. Gender is here for one
+           reason and it is not demographics: question 4's first
+           row means opposite things depending on it, and a sample
+           we cannot split is worth a fraction of one we can.
+           Saying that out loud is the only honest way to ask. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 6 of 6</span>
+          <h2 class="rise" data-delay="1">Who are we listening to?</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            All optional, all skippable, and your answers count either way.
+          </p>
+        </div>
+
+        <div class="field rise" data-delay="3">
+          <label for="email">Email <span class="opt">(optional)</span></label>
+          <p class="q-note">
+            Only used to tell you when and where on campus to pick up the patch.
+          </p>
+          <input class="input" type="email" id="email" name="email"
+                 placeholder="you@example.com" autocomplete="email"
+                 inputmode="email" maxlength="254">
+          <div class="field-error" id="email-error"></div>
+        </div>
+
+        <div class="field rise" data-delay="3">
+          <label for="campus">Which campus? <span class="opt">(optional)</span></label>
+          <input class="input" type="text" id="campus" name="campus"
+                 placeholder="e.g. Otaniemi, Viikki, Hanken" maxlength="100">
+        </div>
+
+        <fieldset class="fieldset rise" data-delay="4">
+          <legend>Gender <span class="opt">(optional)</span></legend>
+          <p class="q-note">
+            We ask because one of the things above, being able to choose who you
+            meet, means something quite different depending on who you are, and
+            we'd rather find that out now than after we've built it.
+          </p>
+          <div class="option-group">
+            <label class="option"><input type="radio" name="gender" value="woman"><span>Woman</span></label>
+            <label class="option"><input type="radio" name="gender" value="man"><span>Man</span></label>
+            <label class="option"><input type="radio" name="gender" value="non_binary"><span>Non-binary</span></label>
+            <label class="option"><input type="radio" name="gender" value="self_describe"><span>Prefer to self-describe</span></label>
+            <label class="option"><input type="radio" name="gender" value="prefer_not"><span>Prefer not to say</span></label>
+          </div>
+          <div class="field--conditional" id="gender_self_describe-field" style="display:none;">
+            <label class="visually-hidden" for="gender_self_describe">How would you describe it?</label>
+            <input class="input" type="text" id="gender_self_describe" name="gender_self_describe"
+                   placeholder="In your own words" maxlength="60">
+          </div>
+        </fieldset>
+
+        <div class="field rise" data-delay="4">
+          <label for="comments">Anything else? <span class="opt">(optional)</span></label>
+          <p class="q-note">Especially anything that would put you off entirely.</p>
+          <textarea class="textarea" id="comments" name="comments" rows="3"
+                    maxlength="1000"
+                    placeholder="Whatever the boxes above didn't cover"></textarea>
+        </div>
+      </div>
+
+      <!-- Honeypot: hidden from humans, bots tend to fill it. Leave empty. -->
+      <input class="visually-hidden" type="text" id="website" name="website"
+             tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <!-- The patch was in the hero. It belongs here instead: it is a
+           reason to FINISH, so it sits where finishing happens. -->
+      <div class="biz-submit" data-reveal>
+        <p class="survey-patch rise">
+          <b>A Min patch for finishing</b>, pick it up on your campus
+        </p>
+
+        <button type="submit" class="btn btn--primary btn--lg submit rise" data-delay="1">
+          <span class="btn__fill" aria-hidden="true"></span>
+          <span class="btn__label">Send my answers</span>
+          <svg class="btn__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <p class="consent rise" data-delay="2">
+          By sending this you agree to our <a href="/privacy-policy/">Privacy Policy</a>.
+          Your answers are only used to decide what Min becomes, and what it costs.
+        </p>
+        <div class="status" id="form-status" role="status"></div>
+      </div>
+    </form>
+
+    <div id="success-view" class="resin biz-success">
+      <div class="min" data-min data-phase="0.6" aria-hidden="true"></div>
+      <h2>That's the useful kind of answer, thank you</h2>
+      <p>
+        If you left your email, we'll write when the patches are on your campus.
+        Either way, the free Min stays free, and what a paid one turns into is
+        now partly yours.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer__row">
+    <span>© 2026 Min</span>
+    <span>
+      <a href="/privacy-policy/">Privacy Policy</a> ·
+      <a href="/">About Min</a>
+    </span>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/pro-survey.js"></script>
+
+</body>
+</html>

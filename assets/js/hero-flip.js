@@ -40,12 +40,12 @@ const OUT = 240;
 const IN = 550;
 const HOLD = 1900;
 
-/* The hero holds its whole cascade until the wordmark has formed
-   (--rise-hold: 2200ms in landing.css) and this line is slot 3, so it
-   finishes arriving around 3.3s. Flipping before that would animate a word
+/* The hero holds its copy until the mark has formed (--rise-hold: 480ms
+   in landing.css) and this line is slot 3 of a 180ms cascade, so it
+   finishes arriving around 1.6s. Flipping before that would animate a word
    nobody can see yet — and the first thing the reader ever sees would be
-   the second word, not the first. */
-const FIRST = 3300 + 1500;
+   the second word, not the first. Then a beat to actually read it. */
+const FIRST = 1570 + 1400;
 
 export function heroFlip(root = document) {
   const el = root.querySelector('[data-flipwords]');

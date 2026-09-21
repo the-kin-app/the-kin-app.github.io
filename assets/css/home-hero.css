@@ -282,14 +282,14 @@
      rgba(70, 66, 62, 0.025) 92%,
      rgba(70, 66, 62, 0) 100%);
    pointer-events: none;
-   /* 4600ms is --T, the length of the whole emerge track (landing.css,
-      the wmx-* keyframes: outline 850–1750, fill 1650–2450, glow lands at
-      68% = 3128, and Min is still morphing limbs and feet past that to the
-      end). Nothing under the mark gives anything back until the last of it
-      has landed. `both` is what holds frame one at the loud value through
+   /* 1250ms is --T, the length of the whole emerge track (landing.css,
+      the wmx-* keyframes: outline 80–460, fill 340–700, glow lands at
+      1040, and Min is still morphing limbs and feet past that to the end).
+      Nothing under the mark gives anything back until the last of it has
+      landed. `both` is what holds frame one at the loud value through
       the delay — without it the element would paint at its own opacity of
       1 anyway, but the intent should be in the declaration. */
-   animation: hero-shade-relax 2200ms cubic-bezier(0.4, 0, 0.6, 1) 4600ms both;
+   animation: hero-shade-relax 1200ms cubic-bezier(0.4, 0, 0.6, 1) 1250ms both;
  }
  /* Symmetric ease, not an ease-out: an ease-out front-loads the change,
     which is the one thing that would make 13% visible. */

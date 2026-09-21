@@ -12,8 +12,10 @@ waitlist submissions.
 ├── b/index.html            A redirect stub to /. Was the variant homepage until 2026-09-16; kept only for URLs already in the wild
 ├── pitchdeck/index.html    The public pitch deck — swipeable slides (see below)
 ├── waitlist/index.html     The scan page — a three-slide banner + one-field signup, all above the fold
+├── ads/index.html          The ad landing page — /waitlist/ plus a required school dropdown, and the only page paid social points at (see below)
 ├── privacy-policy/index.html
 ├── qr/index.html           QR code that links to the waitlist
+├── survey/pro/index.html   The Pro survey — six questions on what to gate and at what price (see below)
 ├── qrgenerator/index.html  QR workbench — makes the poster tracking codes (see below)
 ├── assets/
 │   ├── css/
@@ -23,14 +25,18 @@ waitlist submissions.
 │   │   ├── landing.css      Homepage only (does not load base/components)
 │   │   ├── pitchdeck.css    Deck paging + per-slide figures; loads on top of landing.css
 │   │   ├── qrgenerator.css  The QR workbench + its print sheet
+│   │   ├── pro-survey.css   The Pro survey's tick grids + the question 5 read-back; loads on top of business.css and survey.css
 │   │   ├── waitlist.css     The waitlist card, form and inputs; loads on top of landing.css
+│   │   ├── ads.css          /ads only: the school select and its two-row form; loads on top of waitlist-hero.css
 │   │   └── waitlist-hero.css  The waitlist's three-slide banner + its no-scroll layout
 │   ├── js/
-│   │   ├── waitlist-hero.js The waitlist banner (auto-advance, swipe, dots) + its one-field form
+│   │   ├── waitlist-hero.js The waitlist banner (auto-advance, swipe, dots)
+│   │   ├── waitlist-form.js The one signup implementation — /, /waitlist/ and /ads/ all post through it
 │   │   ├── scan-attribution.js  Reads ?l/?p/?v/?s off a scan, reports the arrival, feeds the form
 │   │   ├── qr-encode.js     QR encoder — byte mode, versions 1–10, no dependencies
 │   │   ├── qr-style.js      Draws an encoded grid as a Min-styled SVG
 │   │   ├── qrgenerator.js   The workbench page: controls, print sheet, SVG/PNG/ZIP export
+│   │   ├── pro-survey.js    The Pro survey: the three tick grids, the question 5 read-back, submit
 │   │   ├── press.js         The submerge button press (shared by every page)
 │   │   ├── min.js           Min himself: anatomy, the 5s morph loop, the gaze (shared)
 │   │   ├── landing.js       Homepage: colour ramp, reveals, typewriter, constellation
@@ -362,6 +368,80 @@ that is exactly what the poster template reserves (`.poster__slot--qr` in
 not a margin to trim. Warm ink on the resin ground is the print default; the
 cave palette is inverted and belongs on screens.
 
+## The Pro survey (`/survey/pro/`)
+
+A feature-gating instrument, not a landing page. It answers one question:
+**which extras are worth gating, and at what price.** `/survey/` asks where your
+hours go; this one asks what you have paid to have a social life, and what a
+paid Min would have to be. Sent to a recruited campus cohort, `noindex`, and
+deliberately absent from `sitemap.xml` for the same reason as `/business/`.
+
+Source instrument: `min-brain/Ideas/Inbox/2026-09-17 user willingness-to-pay
+survey.md`. The model it feeds: `min-brain/Business/Money/business
+model/consumer-subscription analysis.md`.
+
+**The order is the design.** Six questions in two halves:
+
+```
+  1  what you have ALREADY paid for to have a social life
+        ticks only, no amounts
+
+  ── then, and only then ──
+
+  2  the free product, described once   →  honest reaction
+  3  what you'd use it for              →  intent
+  4  which extras you'd want            →  tick all
+  5  what YOUR ticks are worth          →  your number
+  6  who answered
+```
+
+Three rules are enforced in code, not in copy. A change to the page that breaks
+one of them costs more than it looks:
+
+- **Explain the free product first, price last.** Nothing is priced until the
+  person has read what the free version does and said what they would use it
+  for. Move question 5 up and it prices a blank.
+- **Every extra is a tick, never a rating.** The gating question is "who wants
+  this", and a tick answers it. A five-point scale comes back four out of five
+  for everything and ranks nothing.
+- **We name no figure.** Question 5 lists that person's own question 4 ticks
+  back to them and asks what *that* is worth. There is no euro amount anywhere
+  in the markup, and that is on purpose.
+
+**⚠️ Nothing on this page mentions AI, and nothing should.** An earlier draft
+asked what people did when they hit a free AI usage limit; it was cut on
+2026-09-18 because the association is not one Min wants. Min is a character, not
+a chatbot, and the copy has to keep reading that way.
+
+**Consequence for the analysis, worth knowing before anyone reads results:**
+every respondent prices a different bundle, so there is no single average to
+quote. The output is a cross-tab of extras against price. Someone who ticked
+four extras and said €6 contributes €6 to all four. See the admin section of the
+spec below, which spells out how that can be misread.
+
+Two rows in question 4 are not what they appear to be, and both are noted in the
+markup so they survive an edit:
+
+| Row | What it really is |
+| --- | --- |
+| **Choose who you meet** | Read **split by gender**. It is a safety feature to one half of the cohort and a filtering feature to the other, and that split is the largest single risk in the subscription model. It is the only reason question 6 asks gender, and the page says so where it asks. |
+| **Pick when / Pick where** | The other two variables an encounter has, beside "who". They are separate rows so the open question in min-brain's *chance vs control as the pro line* note is readable: ticked only together the tier is planning, ticked apart it is control and they can be gated apart. |
+| **Works in other cities** | A **control**. Nobody who has not used the app can know whether another city is worth anything, so ticks measure the appeal of the sentence, not of the feature. A high count is not a reason to build it sooner. |
+
+**The lists live in two files.** `SERVICES`, `INTENTS` and `EXTRAS` in
+`assets/js/pro-survey.js` must stay in step with `SERVICE_KEYS`, `INTENT_KEYS`
+and `EXTRA_KEYS` in the Worker, the same rule the poster lists already follow.
+Anything the Worker does not recognise is dropped on the way in, so a row added
+on one side only is a box people can tick that records nothing. Note that
+`language` and `dating` appear in two different lists meaning different things,
+so each array validates against its own allowlist.
+
+**Backend:** `POST api.hellomin.app/pricing`, which does not exist yet. The full
+handover spec — payload, allowlists, validation, D1 schema, the three admin
+queries, and the two things the endpoint must never do — is
+`outputs/pricing-endpoint-spec-2026-09-17.md`. Until it lands the page submits
+and shows an error.
+
 ## Local preview
 
 ```bash
@@ -389,6 +469,11 @@ on the row that counts the scan — see `handleScan` and `VARIANT_PATHS` in
 Neither page splits anything itself, and neither ever bounces. Type the address
 in and you get the homepage; follow a link to `/waitlist/` and you get that.
 Only a poster scan is split.
+
+`/ads/` is **outside this test** — it declares no `data-variant` and its
+signups carry `variant = NULL`. Adding a third landing page to a two-sided
+test would not make it a three-sided test; it would make the two sides
+incomparable, because only one of them would be carrying paid traffic.
 
 Each page declares its own side as `<html data-variant="a">`, which
 `assets/js/scan-attribution.js` reads and sends with every signup off that

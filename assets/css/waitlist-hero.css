@@ -108,18 +108,18 @@ body.wlq {
   height: 100%;
   display: block;
 }
-/* Min lands just behind the mark, which surfaces at 120ms here (see the
-   reveal block at the foot of this file). The homepage's 1850ms is timed to
-   its slow letter-by-letter forming beat, and this page has four seconds of
-   attention in total — he'd arrive after the reader had already moved on.
+/* Min lands just behind the mark, which surfaces on the first frame here
+   (see the reveal block at the foot of this file). The homepage's drop is
+   timed to its letter-by-letter forming beat, and this page has four seconds
+   of attention in total — he'd arrive after the reader had already moved on.
 
    wm-min-drop animates `translate` and the float animates `transform`, which
    is what lets the two run as one comma-list without overwriting each other
    (see the note on this pair in landing.css). */
 .wlq .wordmark__min--resin .min--hero {
   animation:
-    wm-min-drop 700ms cubic-bezier(0.32, 0.62, 0.3, 1) 420ms forwards,
-    float-min-mark 9s ease-in-out infinite 1120ms;
+    wm-min-drop 520ms cubic-bezier(0.32, 0.62, 0.3, 1) 180ms forwards,
+    float-min-mark 9s ease-in-out infinite 820ms;
 }
 @keyframes float-min-mark {
   0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -748,16 +748,16 @@ body.wlq[data-scene="shore"] .hdots-pill {
 
 /* ---- reveal ------------------------------------------------- */
 
-.wlq .wordmark--hero { animation: wl-surface var(--duration-standard) var(--ease-emergence) 120ms both; }
+.wlq .wordmark--hero { animation: wl-surface var(--duration-standard) var(--ease-emergence) 0ms both; }
 /* the resin wordmark owns its own rise-and-form beat (landing.css) — this
    wins over the line above on source order (same specificity), so the
    old plain fade doesn't fight the new park+letter-form animation. */
-.wlq .wordmark--hero-resin { animation: wm-park 2900ms cubic-bezier(0.45, 0, 0.15, 1) forwards; }
-.wlq-when            { animation: wl-rise var(--duration-emergence) ease 2450ms both; }
-.wlq-banner          { animation: wl-rise var(--duration-emergence) ease 2570ms both; }
-/* Held until the mark has formed (park lands 2900ms) — the card used to
-   arrive at 480ms, long before the logo it sits under had finished. */
-.wlq-card            { animation: wl-surface var(--duration-hero) var(--ease-emergence) 2700ms both; }
+.wlq .wordmark--hero-resin { animation: wm-park 1000ms cubic-bezier(0.45, 0, 0.15, 1) forwards; }
+.wlq-when            { animation: wl-rise var(--duration-emergence) ease 980ms both; }
+.wlq-banner          { animation: wl-rise var(--duration-emergence) ease 1050ms both; }
+/* Held until the mark has formed (park lands 1000ms) — the card must not
+   arrive before the logo it sits under has finished. */
+.wlq-card            { animation: wl-surface var(--duration-hero) var(--ease-emergence) 1150ms both; }
 
 /* ---- short screens ------------------------------------------
    Under about 640px tall the supporting line is the first thing
@@ -1012,7 +1012,11 @@ body.wlq .hslide__say em {
    element is held at the `from` state through the delay, then arrives.
    If everything else on the page fails to load, this still completes.
    ═══════════════════════════════════════════════════════════════════ */
-body.wlq { --intro-hold: 3200ms; }
+/* The one number that paces this page's opening: how long the mark gets
+   the screen to itself before the world and the content come up under it.
+   Was 3200ms — over three seconds of a held, empty page before anything a
+   reader came for appeared. 1050ms lands it just as the mark parks. */
+body.wlq { --intro-hold: 1050ms; }
 
 /* the world comes up first.
    ⚠️ animation-iteration-count is NOT optional here. `.fog` declares its

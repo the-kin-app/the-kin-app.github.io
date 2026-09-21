@@ -1,0 +1,148 @@
+/* ============================================================
+   Min — the Pro survey (/survey/pro/)
+   ------------------------------------------------------------
+   Loads on top of landing.css, business.css and survey.css. Those
+   three already own the world, the cards and every control, so
+   this file holds only what this page invents:
+
+     1. a two-column tick grid, because eleven stacked rows is a
+        scroll before the survey has started;
+     2. a tick row that carries a line of explanation under its
+        label, for the extras in question 4;
+     3. the read-back in question 5 — the extras somebody just
+        ticked, listed as the thing they are about to price.
+
+   Nothing here introduces a colour. Every value is a token, so a
+   re-theme from Figma reaches this page like any other.
+   ============================================================ */
+
+/* ---- the masthead ------------------------------------------
+   The wordmark and nothing else. Whoever is on this page was sent
+   here and already knows what it is, so anything above question 1
+   is delay. Same band as /business/, with a little more air above
+   it because there is no nav to sit under. */
+
+.pro-survey .biz-masthead { padding-top: clamp(28px, 6vh, 56px); }
+
+/* ---- the patch, at the end ---------------------------------
+   It is a reason to FINISH, so it lives above the submit button
+   rather than in a hero. .biz-submit is a centred grid with its
+   own gap, so the badge drops the margin it carries on /survey/. */
+
+.biz-submit .survey-patch { margin-top: 0; }
+
+/* ---- the tick grids ----------------------------------------
+   Two columns on anything wider than a phone. The rows are short
+   noun phrases, so they pair without wrapping into each other,
+   and eleven of them in one column would push question 2 off the
+   first screen entirely.
+
+   Question 4 does NOT use this: its rows carry a gloss line and
+   are the question people should read slowly. */
+
+.option-group--grid { grid-template-columns: 1fr; }
+
+@media (min-width: 620px) {
+  .option-group--grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2) var(--space-3);
+  }
+}
+
+/* ---- a tick row with a gloss -------------------------------
+   One line saying what the extra actually is. Without it people
+   read seven short labels differently from one another, and ticks
+   that mean different things cannot be counted together.
+
+   The box moves to the top of the row rather than the middle,
+   since a control centred against two lines of text reads as
+   floating between them. */
+
+.option--noted { align-items: flex-start; }
+.option--noted input { margin-top: 2px; }
+
+.option__note {
+  display: block;
+  margin-top: 3px;
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  color: var(--ink-secondary);
+}
+
+/* A tick that stands on its own outside a group, like "I wouldn't
+   pay for any of this". It needs the gap a .option-group would
+   have given it. */
+.option--standalone { margin-top: var(--space-3); }
+
+/* ---- question 5: what you're pricing -----------------------
+   The extras from question 4, listed back. It is the subject of
+   the question rather than decoration, so it sits above the field
+   at label weight and rebuilds on every tick.
+
+   Hidden outright when nothing is ticked: somebody who wants none
+   of the extras answers this card with the checkbox, and a
+   heading saying "you'd be paying for" above an empty list reads
+   as a bug. */
+
+.picks {
+  margin-bottom: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.34);
+  box-shadow: inset 0 1px 2px rgba(15, 13, 20, 0.06);
+}
+
+.picks[hidden] { display: none; }
+
+.picks__label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+}
+
+.picks__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-1);
+}
+
+/* A soft bullet rather than a disc: the list is a sentence broken
+   into parts, not an inventory. */
+.picks__item {
+  position: relative;
+  padding-left: var(--space-4);
+  font-size: var(--text-md);
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.picks__item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--violet-ink);
+}
+
+/* ---- the amount, switched off ------------------------------
+   "I wouldn't pay for any of this" empties and disables the
+   field, because a row carrying both €5 and that tick is a row
+   nobody can read. Dimming the label as well as the input is what
+   makes the cause obvious without a line of copy explaining it. */
+
+.field.is-disabled > label,
+.field.is-disabled .opt { color: var(--ink-tertiary); }
+
+.field.is-disabled .input {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
