@@ -20,7 +20,8 @@
   'use strict';
 
   // The scan URL is on the WORKER's host, not the site's. hellomin.app is
-  // GitHub Pages and knows nothing about /<location>/<asset>/<design> — a code
+  // GitHub Pages and knows nothing about /<location>/<asset>/<design> or the
+  // locationless /<asset>/<design> a card carries — a code
   // pointing there 404s without the scan ever being counted. The Worker
   // lives at api.hellomin.app (min-waitlist-worker wrangler.toml `routes`), counts the
   // hit, and 302s to hellomin.app/?l=&a=&p=&v=&s= itself.
@@ -50,11 +51,18 @@
   // downstream, because the PAIR is the key and not the design. Designs are
   // named after their tagline, so a filename says which artwork it is. Labels
   // are only for this page — the slugs are what gets printed.
+  //
+  // `located` says whether the artwork is somewhere. A poster hangs on a wall
+  // and WHICH wall is half of what it measures. A card is handed over: it has
+  // no wall, it travels in a pocket, and the place it changed hands says
+  // nothing anyone could act on. So a located asset is one code per location
+  // per design, and an unlocated one is a single code per design.
   const ASSETS = [
     {
       slug: 'poster',
       label: 'Poster',
       note: 'on a wall',
+      located: true,
       designs: [
         { slug: 'unclesam', label: 'Uncle Sam' },
         { slug: 'unclesam-footer', label: 'Uncle Sam footer' },
@@ -65,6 +73,7 @@
       slug: 'card',
       label: 'Card',
       note: 'handed over',
+      located: false,
       designs: [
         { slug: 'unclemin', label: 'Uncle Min' },
         { slug: 'help', label: 'Help' },
@@ -142,6 +151,7 @@
     // has to exist in does not exist until the asset is set.
     set(els.asset, s.asset);
     fillDesigns();
+    syncLocationField();
     set(els.poster, s.poster);
     set(els.customUrl, s.custom);
     if (typeof s.logo === 'boolean') els.logo.checked = s.logo;
@@ -149,21 +159,35 @@
   }
 
   // ---- Targets ------------------------------------------------------
-  // Three segments, asset in the middle. The two-segment form the Worker still
-  // resolves to a poster is deliberately not generated here — see LEGACY_ASSET.
-  const posterUrl = (location, asset, design) => `${API}/${location}/${asset}/${design}`;
+  // The LOCATION IS AN OPTIONAL LEADING SEGMENT:
+  //   /<location>/<asset>/<design>  a located asset — a poster
+  //   /<asset>/<design>             an unlocated one — a card
+  //
+  // The old two-segment /<location>/<design>, which the Worker still resolves
+  // to a poster, is deliberately never generated here — see LEGACY_ASSET.
+  const targetUrl = (location, asset, design) => (location
+    ? `${API}/${location}/${asset}/${design}`
+    : `${API}/${asset}/${design}`);
+
+  // Same rule for the filename, so a file's name is readable back into the URL
+  // it encodes. The asset is always in it: without it, the card and the poster
+  // of one design would overwrite each other in a download folder, a mix-up
+  // nobody can see once the file is at the print shop.
+  const targetName = (location, asset, design) => (location
+    ? `kin-qr-${location}-${asset}-${design}`
+    : `kin-qr-${asset}-${design}`);
 
   function currentTarget() {
     if (mode === 'custom') {
       return { url: els.customUrl.value.trim(), name: 'kin-qr-custom' };
     }
-    const l = els.location.value;
     const a = els.asset.value;
     const p = els.poster.value;
-    // The asset is in the filename too. Without it, the card and the poster of
-    // one design overwrite each other in a download folder, which is a mix-up
-    // nobody can see once the file is at the print shop.
-    return { url: posterUrl(l, a, p), name: `kin-qr-${l}-${a}-${p}` };
+    // The select keeps its value while the field is hidden, so read the asset
+    // rather than the select: an unlocated asset takes no location even though
+    // there is still one sitting in the control.
+    const l = assetBySlug(a).located ? els.location.value : null;
+    return { url: targetUrl(l, a, p), name: targetName(l, a, p) };
   }
 
   function setMode(next, quiet) {
@@ -182,6 +206,15 @@
   // switching poster/card to compare the same artwork is the common move, and
   // silently resetting to the first design would mint a code for artwork
   // nobody chose.
+  // The Location control is hidden for an asset that has none. Hidden rather
+  // than disabled: a greyed-out control says "you could set this", and for a
+  // card there is nothing to set — the location is not part of what a card
+  // measures.
+  function syncLocationField() {
+    const wrap = els.location.closest('.ctl');
+    if (wrap) wrap.style.display = assetBySlug(els.asset.value).located ? '' : 'none';
+  }
+
   function fillDesigns() {
     const wanted = els.poster.value;
     const designs = assetBySlug(els.asset.value).designs;
@@ -196,6 +229,7 @@
     els.asset.innerHTML = ASSETS
       .map((a) => `<option value="${a.slug}">${a.label} — ${a.note}</option>`).join('');
     fillDesigns();
+    syncLocationField();
     els.palette.innerHTML = Object.entries(KinQRStyle.PALETTES)
       .map(([key, p]) => `<option value="${key}">${p.label}</option>`).join('');
   }
@@ -238,20 +272,33 @@
     const m = TRACKED_RE.exec(url);
     if (m) {
       const legacyHost = url.startsWith(LEGACY_API);
-      // Two segments means no asset in the URL, which the Worker reads as a
-      // poster — the permanent meaning of every code printed before the asset
-      // layer existed.
-      const shortForm = !m[3];
-      const location = m[1];
-      const asset = shortForm ? LEGACY_ASSET : m[2];
-      const design = shortForm ? m[2] : m[3];
+
+      // The location is an optional leading segment, so two segments is one of
+      // two different things and the FIRST ONE tells them apart:
+      //   /<asset>/<design>     an asset with no location — a card
+      //   /<location>/<design>  pre-2026-09-22, means a poster
+      // No slug is both a location and an asset type (the Worker throws at
+      // startup if that ever changes), so there is nothing to guess.
+      const threeSeg = !!m[3];
+      const firstIsAsset = !threeSeg && ASSETS.some((a) => a.slug === m[1]);
+      const legacyShort = !threeSeg && !firstIsAsset;
+
+      const location = (threeSeg || legacyShort) ? m[1] : null;
+      const asset = threeSeg ? m[2] : (firstIsAsset ? m[1] : LEGACY_ASSET);
+      const design = threeSeg ? m[3] : m[2];
 
       const entry = ASSETS.find((a) => a.slug === asset);
-      const known = LOCATIONS.includes(location) &&
-        !!entry && entry.designs.some((d) => d.slug === design);
+      const designOk = !!entry && entry.designs.some((d) => d.slug === design);
+      // A located asset needs a real location. An unlocated one may carry one
+      // — cards printed before they stopped having a location do — and the
+      // Worker drops it rather than refusing the scan.
+      const locationOk = entry && entry.located
+        ? LOCATIONS.includes(location)
+        : (location === null || LOCATIONS.includes(location));
 
-      if (!known) {
-        return [{ kind: 'warn', text: `The Worker does not know "${location}/${asset}/${design}". A scan will ` +
+      if (!designOk || !locationOk) {
+        const shown = [location, asset, design].filter(Boolean).join('/');
+        return [{ kind: 'warn', text: `The Worker does not know "${shown}". A scan will ` +
           'still reach the homepage, but it will not be counted — add the slug to min-waitlist-worker ' +
           'src/index.js and to the lists at the top of this file first.' }];
       }
@@ -260,10 +307,15 @@
         out.push({ kind: 'warn', text: 'On the old api.kinapp.social host. That route stays live for artwork ' +
           'already printed — anything new should point at api.hellomin.app.' });
       }
-      if (shortForm) {
+      if (legacyShort) {
         out.push({ kind: 'warn', text: 'No asset type in the path, so the Worker will count it as a poster. ' +
           'That is correct for codes printed before 2026-09-22 and wrong for anything new — print the ' +
           'three-segment form instead.' });
+      }
+      if (location && entry && !entry.located) {
+        out.push({ kind: 'warn', text: `A ${asset} has no location, so the Worker will count this scan and ` +
+          `drop the "${location}". That is correct for ${asset}s printed before 2026-09-22 and wrong for ` +
+          `anything new — print ${API.replace('https://', '')}/${asset}/${design} instead.` });
       }
       return out;
     }
@@ -336,12 +388,22 @@
   // Rendered at a small preview width; the downloads re-render at the
   // export size, because a 24-code grid at 1024 px each is a lot of DOM
   // for something nobody looks at closely.
+  // Asset-major, so a print run for cards is a contiguous block on the sheet
+  // rather than two rows scattered through twelve locations.
+  //
+  // A located asset is one code per location per design. An unlocated one is a
+  // single code per design — twelve identical card codes would be twelve ways
+  // to print the same thing and one more chance to grab the wrong file.
   function allTargets() {
     const out = [];
-    for (const l of LOCATIONS) {
-      for (const a of ASSETS) {
-        for (const p of a.designs) {
-          out.push({ location: l, asset: a, poster: p, url: posterUrl(l, a.slug, p.slug) });
+    for (const a of ASSETS) {
+      for (const p of a.designs) {
+        if (a.located) {
+          for (const l of LOCATIONS) {
+            out.push({ location: l, asset: a, poster: p, url: targetUrl(l, a.slug, p.slug) });
+          }
+        } else {
+          out.push({ location: null, asset: a, poster: p, url: targetUrl(null, a.slug, p.slug) });
         }
       }
     }
@@ -350,15 +412,19 @@
 
   function renderSheet(options) {
     const targets = allTargets();
-    els.sheetNote.textContent = `${targets.length} codes — every location crossed with every asset type ` +
-      'and its designs, in the style set above. Labels sit beside each code, never inside it.';
+    els.sheetNote.textContent = `${targets.length} codes — every located asset crossed with every ` +
+      'location, and one code for each design that has none. In the style set above; labels sit ' +
+      'beside each code, never inside it.';
     els.sheet.innerHTML = targets.map((t) => {
       const { svg } = build(t.url, { ...options, pixels: 300, idScope: 'sheet' });
+      // An unlocated code says so in place of a location, rather than leaving a
+      // blank line where every other cell has a word. A gap reads as a bug.
+      const where = t.location || 'anywhere';
       return `<figure class="sheet-cell">${svg}` +
-        `<figcaption><p class="sheet-cell__label">${t.location}` +
+        `<figcaption><p class="sheet-cell__label">${escapeHtml(where)}` +
         `<b>${escapeHtml(`${t.asset.label} · ${t.poster.label}`)}</b></p>` +
         `<p class="sheet-cell__sub">${t.url.replace(API, '')}</p></figcaption>` +
-        `<button type="button" class="sheet-cell__dl" data-l="${t.location}" ` +
+        `<button type="button" class="sheet-cell__dl" data-l="${t.location || ''}" ` +
         `data-a="${t.asset.slug}" data-p="${t.poster.slug}">SVG</button>` +
         `</figure>`;
     }).join('');
@@ -483,17 +549,25 @@
           `${options.frame} ground · badge ${options.logo ? 'on' : 'off'} · quiet zone ${options.quiet}`,
         '',
         'Each file is named for the URL it encodes:',
-        'kin-qr-<location>-<asset>-<design>.',
+        'kin-qr-<location>-<asset>-<design>, or kin-qr-<asset>-<design> for',
+        'artwork that has no location.',
         `That URL is ${API}/<location>/<asset>/<design> — the Worker's host,`,
         'not the site\'s. The Worker counts the scan, then forwards to',
         `${SITE}/?l=&a=&p=&v=&s=. Print the file whose name matches the artwork,`,
         'what it is being printed on, and where it is going — a mismatch is not',
         'visible on the artwork and quietly ruins the numbers.',
         '',
-        'The asset type is the middle segment: poster or card. It is a dimension',
-        'of the measurement, not a label. A poster is walked past by hundreds and',
-        'a card is handed to one person, so the same design converts at rates that',
-        'cannot be pooled — which is why the two are never the same file.',
+        'The asset type is a dimension of the measurement, not a label. A poster',
+        'is walked past by hundreds and a card is handed to one person, so the',
+        'same design converts at rates that cannot be pooled — which is why the',
+        'two are never the same file.',
+        '',
+        'THE LOCATION IS AN OPTIONAL LEADING SEGMENT. A poster hangs on a wall and',
+        'which wall is half of what it measures, so there is one poster code per',
+        'location. A card is handed over: it has no wall, it travels in a pocket,',
+        'and the place it changed hands says nothing anyone could act on. So there',
+        'is ONE card code per design, it carries no location, and the same file is',
+        'the one to print wherever the cards are going.',
         '',
         'The SVGs are vector and self-contained: no linked images, no webfonts.',
         `The PNGs are ${options.pixels} px wide.`,
@@ -513,7 +587,7 @@
       // one folder to hand over rather than a filename prefix to filter on.
       for (const t of allTargets()) {
         const { svg } = build(t.url, options);
-        const base = `kin-qr-${t.location}-${t.asset.slug}-${t.poster.slug}`;
+        const base = targetName(t.location, t.asset.slug, t.poster.slug);
         files.push({ name: `${t.asset.slug}/svg/${base}.svg`, bytes: enc.encode(svg) });
         const png = await toPng(svg, options.pixels);
         files.push({ name: `${t.asset.slug}/png/${base}.png`, bytes: new Uint8Array(await png.arrayBuffer()) });
@@ -537,7 +611,7 @@
   });
 
   // The asset owns the design list, so it rebuilds that list before the redraw.
-  els.asset.addEventListener('change', () => { fillDesigns(); update(); });
+  els.asset.addEventListener('change', () => { fillDesigns(); syncLocationField(); update(); });
 
   for (const el of [els.location, els.poster, els.palette, els.shape, els.eye, els.frame,
                     els.level, els.quiet, els.pixels, els.logo]) {
@@ -574,8 +648,10 @@
     const btn = e.target.closest('.sheet-cell__dl');
     if (!btn) return;
     const { l, a, p } = btn.dataset;
-    const { svg } = build(posterUrl(l, a, p), readOptions());
-    download(svgBlob(svg), `kin-qr-${l}-${a}-${p}.svg`);
+    // data-l is empty for an unlocated code, which reads back as null here.
+    const loc = l || null;
+    const { svg } = build(targetUrl(loc, a, p), readOptions());
+    download(svgBlob(svg), `${targetName(loc, a, p)}.svg`);
   });
 
   els.dlZip.addEventListener('click', downloadAll);
