@@ -7,10 +7,13 @@
    else can change.
 
    Versions stop at 10 on purpose. The longest thing this site ever
-   encodes is a poster URL — `api.hellomin.app/myllypuro/unclesam`,
-   forty-four characters — and version 10 at the highest error
-   correction still holds 122 bytes. Everything past that is table nobody would read
-   and nobody could check.
+   encodes is a tracking URL — since 2026-09-22 that is
+   `api.hellomin.app/myllypuro/poster/unclesam-footer`, fifty-seven
+   characters, which needs version 6 at the highest error correction.
+   Version 10 there still holds 122 bytes, so there is room for a
+   longer location or design slug without touching this file.
+   Everything past that is table nobody would read and nobody could
+   check.
 
    Output is `{ size, modules }` where `modules` is a size×size array
    of booleans, dark = true. Drawing it is somebody else's job (see

@@ -38,7 +38,7 @@
    same share of those, so the comparison still holds. Which is why ?l=, ?p=,
    ?v= and ?s= stay in the address bar — with nothing persisted, the URL *is*
    the attribution. */
-import { API_BASE, attribution } from '/assets/js/scan-attribution.js?v=20260916a';
+import { API_BASE, attribution } from '/assets/js/scan-attribution.js?v=20260922a';
 
 const SUBMIT_URL = API_BASE + '/waitlist';
 
@@ -136,6 +136,11 @@ export function waitlistForm(form) {
       phone: null,
       website: websiteInput ? websiteInput.value : '', // honeypot — always empty for real users
       poster: attribution.poster,
+      /* What the design was printed on — poster or card. Sent as null when the
+         query string didn't carry it; the Worker fills in 'poster' for a
+         design that arrives without one, which is what every code printed
+         before 2026-09-22 encodes. */
+      poster_asset: attribution.asset,
       poster_location: attribution.location,
       // Which homepage they signed up from, and which scan brought them.
       // The variant is sent by every signup on either homepage, scanned or

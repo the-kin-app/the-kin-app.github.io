@@ -32,7 +32,7 @@ waitlist submissions.
 │   ├── js/
 │   │   ├── waitlist-hero.js The waitlist banner (auto-advance, swipe, dots)
 │   │   ├── waitlist-form.js The one signup implementation — /, /waitlist/ and /ads/ all post through it
-│   │   ├── scan-attribution.js  Reads ?l/?p/?v/?s off a scan, reports the arrival, feeds the form
+│   │   ├── scan-attribution.js  Reads ?l/?a/?p/?v/?s off a scan, reports the arrival, feeds the form
 │   │   ├── qr-encode.js     QR encoder — byte mode, versions 1–10, no dependencies
 │   │   ├── qr-style.js      Draws an encoded grid as a Min-styled SVG
 │   │   ├── qrgenerator.js   The workbench page: controls, print sheet, SVG/PNG/ZIP export
@@ -306,24 +306,46 @@ worth re-checking at 390×844 if you add copy to a slide.
 
 ## The QR generator (`/qrgenerator`)
 
-Makes the codes that go on the printed posters. Every poster carries a QR
-pointing at `api.hellomin.app/<location>/<poster>` — the **Worker's** host,
-not the site's. The Worker counts that scan, draws a side of the landing A/B and forwards to
-`hellomin.app/?l=&p=&v=a&s=` or `hellomin.app/waitlist/?l=&p=&v=b&s=`, which is
-how `/admin/posters` knows which artwork worked, where, and which of the two
-landing pages it was read on. A code aimed at `hellomin.app/<location>/<poster>`
+Makes the codes that go on the printed posters and cards. Every one carries a
+QR pointing at `api.hellomin.app/<location>/<asset>/<design>` — the **Worker's**
+host, not the site's. The Worker counts that scan, draws a side of the landing
+A/B and forwards to `hellomin.app/?l=&a=&p=&v=a&s=` or
+`hellomin.app/waitlist/?l=&a=&p=&v=b&s=`, which is how `/admin/posters` knows
+which artwork worked, on what it was printed, where, and which of the two
+landing pages it was read on. A code aimed at `hellomin.app/<location>/…`
 instead just 404s on Pages and counts nothing, so the page flags that shape
 as an error rather than a warning. **The codes are measurement instruments** — the
-location and poster lists in `assets/js/qrgenerator.js` must match
+location, asset and design lists in `assets/js/qrgenerator.js` must match
 `min-waitlist-worker src/index.js`, or a scan lands on the fallback redirect and the
-scoreboard row it should have filled stays empty. Adding a poster is an edit
-in both files.
+scoreboard row it should have filled stays empty. Adding a design or an asset
+type is an edit in both files.
 
-Posters printed before the move to `hellomin.app` encode
-`api.kinapp.social/<location>/<poster>`. That Worker route is kept alive
-permanently — paper on a wall cannot be reissued — so those codes still count
-scans, and the generator marks them legacy rather than broken. New codes must
-never be minted on the old host.
+### The asset type
+
+`<asset>` is the middle segment — `poster` or `card` — and it is a **dimension
+of the measurement, not a label**. A poster is walked past by hundreds; a card
+is handed to one person. The same design converts at rates that have no
+meaningful average, so the Worker keys every count on the (asset, design) pair
+and the two are never pooled.
+
+Each asset type owns its own design list: posters are `unclesam`,
+`unclesam-footer` and `happy`; cards are `unclemin` and `help`. The lists are
+disjoint today, but nothing depends on that — two asset types may share a
+design slug, and if they ever do they stay separate cells everywhere
+downstream, including in the filenames the generator exports, so a card and a
+poster of one design cannot overwrite each other in a download folder. The pair
+is the key, never the design on its own.
+
+**Codes printed before 2026-09-22 have no asset segment**, and
+`api.hellomin.app/<location>/<design>` resolves to a poster permanently. Paper
+on a wall cannot be reissued. The generator recognises the short form, warns
+that it is only correct for already-printed artwork, and never mints another.
+
+The same reasoning covers the host: posters printed before the move to
+`hellomin.app` encode `api.kinapp.social/<location>/<design>`. That Worker
+route is kept alive permanently, so those codes still count scans, and the
+generator marks them legacy rather than broken. New codes must never be minted
+on the old host.
 
 Three files, each doing one thing:
 

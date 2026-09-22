@@ -5,24 +5,25 @@
    getting the artwork out: one SVG, one PNG, or the whole print run
    as a ZIP.
 
-   The location and poster lists are the same vocabulary the Worker
-   accepts (min-waitlist-worker src/index.js). They are duplicated here rather
-   than fetched because this page has to work with no network, and a
-   fetch that quietly fails would generate codes pointing at URLs
-   the Worker rejects — the scan would still land on /waitlist/, so
-   nothing would look broken while every row in the scoreboard
-   stayed empty. A list that goes stale is visible; a silent
-   mismatch is not. Adding a poster is an edit in both files.
+   The location, asset and design lists are the same vocabulary the
+   Worker accepts (min-waitlist-worker src/index.js). They are duplicated
+   here rather than fetched because this page has to work with no
+   network, and a fetch that quietly fails would generate codes
+   pointing at URLs the Worker rejects — the scan would still land on
+   the homepage, so nothing would look broken while every row in the
+   scoreboard stayed empty. A list that goes stale is visible; a silent
+   mismatch is not. Adding a design or an asset type is an edit in both
+   files.
    ============================================================ */
 
 (function () {
   'use strict';
 
   // The scan URL is on the WORKER's host, not the site's. hellomin.app is
-  // GitHub Pages and knows nothing about /<location>/<poster> — a code
+  // GitHub Pages and knows nothing about /<location>/<asset>/<design> — a code
   // pointing there 404s without the scan ever being counted. The Worker
   // lives at api.hellomin.app (min-waitlist-worker wrangler.toml `routes`), counts the
-  // hit, and 302s to hellomin.app/waitlist/?l=&p= itself.
+  // hit, and 302s to hellomin.app/?l=&a=&p=&v=&s= itself.
   const API = 'https://api.hellomin.app';
   const SITE = 'https://hellomin.app';
 
@@ -37,18 +38,53 @@
     'viikki', 'otaniemi', 'hanken', 'uniarts', 'diak', 'myyrmaki',
   ];
 
-  // Posters are named after their tagline, so a filename says which artwork
-  // it is. The label is only for this page — the slug is what gets printed.
-  const POSTERS = [
-    { slug: 'unclesam', label: 'Uncle Sam' },
-    { slug: 'unclesam-footer', label: 'Uncle Sam footer' },
-    { slug: 'happy', label: 'Happy' },
+  // What the artwork is printed on. A poster goes on a wall and is scanned by
+  // whoever walks past; a card is handed to one person. They pull utterly
+  // different numbers off the same design, which is why the Worker keys every
+  // count on the pair — so the code has to carry both.
+  //
+  // Each asset type owns its own design list, because a design that reads at
+  // three metres is not the design that reads in a hand. The lists are
+  // disjoint today, but nothing here assumes that: two asset types may share a
+  // design slug, and if they ever do they stay two separate cells everywhere
+  // downstream, because the PAIR is the key and not the design. Designs are
+  // named after their tagline, so a filename says which artwork it is. Labels
+  // are only for this page — the slugs are what gets printed.
+  const ASSETS = [
+    {
+      slug: 'poster',
+      label: 'Poster',
+      note: 'on a wall',
+      designs: [
+        { slug: 'unclesam', label: 'Uncle Sam' },
+        { slug: 'unclesam-footer', label: 'Uncle Sam footer' },
+        { slug: 'happy', label: 'Happy' },
+      ],
+    },
+    {
+      slug: 'card',
+      label: 'Card',
+      note: 'handed over',
+      designs: [
+        { slug: 'unclemin', label: 'Uncle Min' },
+        { slug: 'help', label: 'Help' },
+      ],
+    },
   ];
+
+  const assetBySlug = (slug) => ASSETS.find((a) => a.slug === slug) || ASSETS[0];
+
+  // What a two-segment URL means. Every code printed before 2026-09-22 has
+  // that shape, it is on walls, and paper cannot be reissued — so the Worker
+  // resolves it to 'poster' permanently. This page recognises the short form
+  // and never mints another one.
+  const LEGACY_ASSET = 'poster';
 
   const $ = (id) => document.getElementById(id);
   const els = {
     modes: $('mode-toggles'), posterFields: $('poster-fields'), customFields: $('custom-fields'),
-    location: $('location'), poster: $('poster'), customUrl: $('custom-url'), targetNote: $('target-note'),
+    location: $('location'), asset: $('asset'), poster: $('poster'),
+    customUrl: $('custom-url'), targetNote: $('target-note'),
     palette: $('palette'), shape: $('shape'), eye: $('eye'), frame: $('frame'),
     level: $('level'), quiet: $('quiet'), pixels: $('pixels'), logo: $('logo'),
     stage: $('stage'), meta: $('meta'), urlOut: $('url-out'), notes: $('notes'),
@@ -56,12 +92,19 @@
     sheet: $('sheet'), sheetNote: $('sheet-note'), dlZip: $('dl-zip'), printSheet: $('print-sheet'),
   };
 
-  let mode = 'poster';
+  // 'tracked' — a code the Worker counts — or 'custom', a URL typed in. Not
+  // named 'poster' any more: that word now means one asset type, and a mode
+  // sharing its name with a value inside the mode is how a rename goes wrong.
+  let mode = 'tracked';
 
   // ---- Options, remembered ------------------------------------------
   // The style is a print decision: whoever laid out the last poster batch
   // should find the same settings tomorrow, not the defaults.
-  const STORE = 'kin-qrgen-v1';
+  // v2: the stored shape gained an asset, and the mode was renamed. A v1 blob
+  // would restore a mode that no longer exists and a design list belonging to
+  // no asset type, so the key is bumped rather than migrated — the cost is one
+  // person re-picking their palette once.
+  const STORE = 'kin-qrgen-v2';
 
   function readOptions() {
     return {
@@ -81,7 +124,8 @@
     try {
       localStorage.setItem(STORE, JSON.stringify({
         ...readOptions(), level: els.level.value, mode,
-        location: els.location.value, poster: els.poster.value, custom: els.customUrl.value,
+        location: els.location.value, asset: els.asset.value, poster: els.poster.value,
+        custom: els.customUrl.value,
       }));
     } catch (e) { /* private browsing, or storage full — the tool still works */ }
   }
@@ -93,27 +137,38 @@
     const set = (el, v) => { if (v !== undefined && v !== null && el) el.value = v; };
     set(els.palette, s.palette); set(els.shape, s.moduleShape); set(els.eye, s.eyeStyle);
     set(els.frame, s.frame); set(els.level, s.level); set(els.quiet, s.quiet);
-    set(els.pixels, s.pixels); set(els.location, s.location); set(els.poster, s.poster);
+    set(els.pixels, s.pixels); set(els.location, s.location);
+    // The asset first, then its designs, then the design — the list the design
+    // has to exist in does not exist until the asset is set.
+    set(els.asset, s.asset);
+    fillDesigns();
+    set(els.poster, s.poster);
     set(els.customUrl, s.custom);
     if (typeof s.logo === 'boolean') els.logo.checked = s.logo;
-    if (s.mode === 'custom' || s.mode === 'poster') setMode(s.mode, true);
+    if (s.mode === 'custom' || s.mode === 'tracked') setMode(s.mode, true);
   }
 
   // ---- Targets ------------------------------------------------------
-  const posterUrl = (location, poster) => `${API}/${location}/${poster}`;
+  // Three segments, asset in the middle. The two-segment form the Worker still
+  // resolves to a poster is deliberately not generated here — see LEGACY_ASSET.
+  const posterUrl = (location, asset, design) => `${API}/${location}/${asset}/${design}`;
 
   function currentTarget() {
     if (mode === 'custom') {
       return { url: els.customUrl.value.trim(), name: 'kin-qr-custom' };
     }
     const l = els.location.value;
+    const a = els.asset.value;
     const p = els.poster.value;
-    return { url: posterUrl(l, p), name: `kin-qr-${l}-${p}` };
+    // The asset is in the filename too. Without it, the card and the poster of
+    // one design overwrite each other in a download folder, which is a mix-up
+    // nobody can see once the file is at the print shop.
+    return { url: posterUrl(l, a, p), name: `kin-qr-${l}-${a}-${p}` };
   }
 
   function setMode(next, quiet) {
     mode = next;
-    els.posterFields.style.display = next === 'poster' ? '' : 'none';
+    els.posterFields.style.display = next === 'tracked' ? '' : 'none';
     els.customFields.style.display = next === 'custom' ? '' : 'none';
     for (const b of els.modes.querySelectorAll('.toggle')) {
       b.setAttribute('aria-pressed', String(b.dataset.mode === next));
@@ -122,11 +177,25 @@
   }
 
   // ---- Populate the selects ----------------------------------------
+  // The design list belongs to the asset type, so it is rebuilt every time the
+  // asset changes. The current design is kept if the new asset also has it —
+  // switching poster/card to compare the same artwork is the common move, and
+  // silently resetting to the first design would mint a code for artwork
+  // nobody chose.
+  function fillDesigns() {
+    const wanted = els.poster.value;
+    const designs = assetBySlug(els.asset.value).designs;
+    els.poster.innerHTML = designs
+      .map((p) => `<option value="${p.slug}">${p.label}</option>`).join('');
+    if (designs.some((d) => d.slug === wanted)) els.poster.value = wanted;
+  }
+
   function fillSelects() {
     els.location.innerHTML = LOCATIONS
       .map((l) => `<option value="${l}">${l.charAt(0).toUpperCase() + l.slice(1)}</option>`).join('');
-    els.poster.innerHTML = POSTERS
-      .map((p) => `<option value="${p.slug}">${p.label}</option>`).join('');
+    els.asset.innerHTML = ASSETS
+      .map((a) => `<option value="${a.slug}">${a.label} — ${a.note}</option>`).join('');
+    fillDesigns();
     els.palette.innerHTML = Object.entries(KinQRStyle.PALETTES)
       .map(([key, p]) => `<option value="${key}">${p.label}</option>`).join('');
   }
@@ -156,6 +225,54 @@
   }
 
   let current = null;
+
+  // ---- Reading a hand-typed URL back -------------------------------
+  // The custom field is where a URL from somewhere else gets checked, so this
+  // has to recognise every shape the Worker still answers — including the two
+  // shapes we never mint any more. A code already on paper is not a mistake
+  // to be flagged; only a code about to be printed is.
+  const TRACKED_RE = /^https:\/\/api\.(?:hellomin\.app|kinapp\.social)\/([a-z0-9-]+)\/([a-z0-9-]+)(?:\/([a-z0-9-]+))?$/;
+  const WRONG_HOST_RE = /^https:\/\/(?:hellomin\.app|kinapp\.social)\/[a-z0-9-]+\/[a-z0-9-]+(?:\/[a-z0-9-]+)?\/?$/;
+
+  function customUrlNote(url) {
+    const m = TRACKED_RE.exec(url);
+    if (m) {
+      const legacyHost = url.startsWith(LEGACY_API);
+      // Two segments means no asset in the URL, which the Worker reads as a
+      // poster — the permanent meaning of every code printed before the asset
+      // layer existed.
+      const shortForm = !m[3];
+      const location = m[1];
+      const asset = shortForm ? LEGACY_ASSET : m[2];
+      const design = shortForm ? m[2] : m[3];
+
+      const entry = ASSETS.find((a) => a.slug === asset);
+      const known = LOCATIONS.includes(location) &&
+        !!entry && entry.designs.some((d) => d.slug === design);
+
+      if (!known) {
+        return [{ kind: 'warn', text: `The Worker does not know "${location}/${asset}/${design}". A scan will ` +
+          'still reach the homepage, but it will not be counted — add the slug to min-waitlist-worker ' +
+          'src/index.js and to the lists at the top of this file first.' }];
+      }
+      const out = [{ kind: 'ok', text: `This is a tracked ${asset} URL.` }];
+      if (legacyHost) {
+        out.push({ kind: 'warn', text: 'On the old api.kinapp.social host. That route stays live for artwork ' +
+          'already printed — anything new should point at api.hellomin.app.' });
+      }
+      if (shortForm) {
+        out.push({ kind: 'warn', text: 'No asset type in the path, so the Worker will count it as a poster. ' +
+          'That is correct for codes printed before 2026-09-22 and wrong for anything new — print the ' +
+          'three-segment form instead.' });
+      }
+      return out;
+    }
+    if (WRONG_HOST_RE.test(url)) {
+      return [{ kind: 'bad', text: 'This looks like a tracking URL on the wrong host. hellomin.app is the ' +
+        'static site — it will 404 and count nothing. Tracking lives on api.hellomin.app.' }];
+    }
+    return [{ kind: 'warn', text: 'Untracked URL. Scans of this code will not appear in the poster scoreboard.' }];
+  }
 
   function update() {
     const target = currentTarget();
@@ -189,25 +306,11 @@
       `level ${built.qr.level} · mask ${built.qr.mask}`;
 
     const notes = [];
-    if (mode === 'poster') {
-      notes.push({ kind: 'ok', text: 'Tracked: the Worker counts this scan, then forwards to the waitlist ' +
-        'with the location and poster attached.' });
-    } else if (/^https:\/\/api\.(hellomin\.app|kinapp\.social)\/[a-z0-9-]+\/[a-z0-9-]+$/.test(target.url)) {
-      const legacy = target.url.startsWith(LEGACY_API);
-      const [, l, p] = target.url.replace(`${legacy ? LEGACY_API : API}/`, '/').split('/');
-      const known = LOCATIONS.includes(l) && POSTERS.some((x) => x.slug === p);
-      notes.push(!known
-        ? { kind: 'warn', text: `The Worker does not know "${l}/${p}". A scan will still reach the waitlist, ` +
-            'but it will not be counted — add the slug to min-waitlist-worker src/index.js first.' }
-        : legacy
-          ? { kind: 'warn', text: 'Tracked, but on the old api.kinapp.social host. That route stays live for posters ' +
-              'already printed — anything new should point at api.hellomin.app.' }
-          : { kind: 'ok', text: 'This is a tracked poster URL.' });
-    } else if (/^https:\/\/(hellomin\.app|kinapp\.social)\/[a-z0-9-]+\/[a-z0-9-]+\/?$/.test(target.url)) {
-      notes.push({ kind: 'bad', text: 'This looks like a tracking URL on the wrong host. hellomin.app is the ' +
-        'static site — it will 404 and count nothing. Tracking lives on api.hellomin.app.' });
+    if (mode === 'tracked') {
+      notes.push({ kind: 'ok', text: 'Tracked: the Worker counts this scan, then forwards to the landing page ' +
+        'with the location, the asset type and the design attached.' });
     } else {
-      notes.push({ kind: 'warn', text: 'Untracked URL. Scans of this code will not appear in the poster scoreboard.' });
+      notes.push(...customUrlNote(target.url));
     }
     for (const w of KinQRStyle.audit(built.qr, options)) notes.push({ kind: 'warn', text: w });
     if (options.logo) {
@@ -236,21 +339,27 @@
   function allTargets() {
     const out = [];
     for (const l of LOCATIONS) {
-      for (const p of POSTERS) out.push({ location: l, poster: p, url: posterUrl(l, p.slug) });
+      for (const a of ASSETS) {
+        for (const p of a.designs) {
+          out.push({ location: l, asset: a, poster: p, url: posterUrl(l, a.slug, p.slug) });
+        }
+      }
     }
     return out;
   }
 
   function renderSheet(options) {
     const targets = allTargets();
-    els.sheetNote.textContent = `${targets.length} codes — every location crossed with every poster, ` +
-      'in the style set above. Labels sit beside each code, never inside it.';
+    els.sheetNote.textContent = `${targets.length} codes — every location crossed with every asset type ` +
+      'and its designs, in the style set above. Labels sit beside each code, never inside it.';
     els.sheet.innerHTML = targets.map((t) => {
       const { svg } = build(t.url, { ...options, pixels: 300, idScope: 'sheet' });
       return `<figure class="sheet-cell">${svg}` +
-        `<figcaption><p class="sheet-cell__label">${t.location}<b>${escapeHtml(t.poster.label)}</b></p>` +
+        `<figcaption><p class="sheet-cell__label">${t.location}` +
+        `<b>${escapeHtml(`${t.asset.label} · ${t.poster.label}`)}</b></p>` +
         `<p class="sheet-cell__sub">${t.url.replace(API, '')}</p></figcaption>` +
-        `<button type="button" class="sheet-cell__dl" data-l="${t.location}" data-p="${t.poster.slug}">SVG</button>` +
+        `<button type="button" class="sheet-cell__dl" data-l="${t.location}" ` +
+        `data-a="${t.asset.slug}" data-p="${t.poster.slug}">SVG</button>` +
         `</figure>`;
     }).join('');
   }
@@ -373,12 +482,18 @@
           `${options.palette} palette · ${options.moduleShape} modules · ${options.eyeStyle} eyes · ` +
           `${options.frame} ground · badge ${options.logo ? 'on' : 'off'} · quiet zone ${options.quiet}`,
         '',
-        'Each file is named for the URL it encodes: kin-qr-<location>-<poster>.',
-        `That URL is ${API}/<location>/<poster> — the Worker's host, not the`,
-        'site\'s. The Worker counts the scan, then forwards to',
-        `${SITE}/waitlist/?l=&p=. Print the file whose name matches`,
-        'the poster and the wall it is going on — a mismatch is not visible on the',
-        'poster and quietly ruins the numbers.',
+        'Each file is named for the URL it encodes:',
+        'kin-qr-<location>-<asset>-<design>.',
+        `That URL is ${API}/<location>/<asset>/<design> — the Worker's host,`,
+        'not the site\'s. The Worker counts the scan, then forwards to',
+        `${SITE}/?l=&a=&p=&v=&s=. Print the file whose name matches the artwork,`,
+        'what it is being printed on, and where it is going — a mismatch is not',
+        'visible on the artwork and quietly ruins the numbers.',
+        '',
+        'The asset type is the middle segment: poster or card. It is a dimension',
+        'of the measurement, not a label. A poster is walked past by hundreds and',
+        'a card is handed to one person, so the same design converts at rates that',
+        'cannot be pooled — which is why the two are never the same file.',
         '',
         'The SVGs are vector and self-contained: no linked images, no webfonts.',
         `The PNGs are ${options.pixels} px wide.`,
@@ -394,14 +509,16 @@
       ].join('\n');
       files.push({ name: 'README.txt', bytes: enc.encode(readme) });
 
+      // Foldered by asset type as well as format, so a print run for cards is
+      // one folder to hand over rather than a filename prefix to filter on.
       for (const t of allTargets()) {
         const { svg } = build(t.url, options);
-        const base = `kin-qr-${t.location}-${t.poster.slug}`;
-        files.push({ name: `svg/${base}.svg`, bytes: enc.encode(svg) });
+        const base = `kin-qr-${t.location}-${t.asset.slug}-${t.poster.slug}`;
+        files.push({ name: `${t.asset.slug}/svg/${base}.svg`, bytes: enc.encode(svg) });
         const png = await toPng(svg, options.pixels);
-        files.push({ name: `png/${base}.png`, bytes: new Uint8Array(await png.arrayBuffer()) });
+        files.push({ name: `${t.asset.slug}/png/${base}.png`, bytes: new Uint8Array(await png.arrayBuffer()) });
       }
-      download(zip(files), `kin-poster-qr-${level.toLowerCase()}-${options.palette}.zip`);
+      download(zip(files), `kin-print-qr-${level.toLowerCase()}-${options.palette}.zip`);
     } catch (err) {
       showNotes([{ kind: 'bad', text: `Could not build the ZIP: ${err.message}` }]);
     } finally {
@@ -418,6 +535,9 @@
     const btn = e.target.closest('.toggle');
     if (btn) setMode(btn.dataset.mode);
   });
+
+  // The asset owns the design list, so it rebuilds that list before the redraw.
+  els.asset.addEventListener('change', () => { fillDesigns(); update(); });
 
   for (const el of [els.location, els.poster, els.palette, els.shape, els.eye, els.frame,
                     els.level, els.quiet, els.pixels, els.logo]) {
@@ -453,9 +573,9 @@
   els.sheet.addEventListener('click', (e) => {
     const btn = e.target.closest('.sheet-cell__dl');
     if (!btn) return;
-    const { l, p } = btn.dataset;
-    const { svg } = build(posterUrl(l, p), readOptions());
-    download(svgBlob(svg), `kin-qr-${l}-${p}.svg`);
+    const { l, a, p } = btn.dataset;
+    const { svg } = build(posterUrl(l, a, p), readOptions());
+    download(svgBlob(svg), `kin-qr-${l}-${a}-${p}.svg`);
   });
 
   els.dlZip.addEventListener('click', downloadAll);
