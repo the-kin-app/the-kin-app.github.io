@@ -5,18 +5,25 @@
    through, because two copies of it would drift and the drift
    would look like a result rather than a bug.
 
-   A poster's QR points at the Worker, never at the site:
+   Printed artwork's QR points at the Worker, never at the site:
 
-     api.hellomin.app/<location>/<poster>
+     api.hellomin.app/<location>/<asset>/<design>
         │  counts the scan, draws a side of the landing A/B,
         │  mints a token for this one scan
         ▼
-     hellomin.app/?l=kumpula&p=unclesam&v=a&s=<token>
-     hellomin.app/waitlist/?l=kumpula&p=unclesam&v=b&s=<token>
+     hellomin.app/?l=kumpula&a=poster&p=unclesam&v=a&s=<token>
+     hellomin.app/waitlist/?l=kumpula&a=card&p=happy&v=b&s=<token>
 
-   Four values arrive:
-     l  where the poster hangs
-     p  which poster design
+   Five values arrive:
+     l  where the artwork was
+     p  which design
+     a  what it was printed on — poster or card (added 2026-09-22).
+        A poster is walked past by hundreds and a card is handed to one
+        person, so the same design converts at rates that have no
+        meaningful average; the Worker keys every count on the pair.
+        Always sent, including for a code printed before the asset layer,
+        where the Worker resolves the short two-segment URL and says
+        'poster' outright rather than leaving it to be guessed here.
      v  which of the two landing pages the Worker sent this scan to —
         a is the homepage, b is /waitlist/ (changed 2026-09-16; the
         letters named two homepages before that)
@@ -48,8 +55,10 @@
 export const API_BASE = (window.KIN_API_BASE || 'https://api.hellomin.app').replace(/\/$/, '');
 
 /* Shapes only. min-waitlist-worker src/index.js holds the authoritative
-   vocabularies (POSTERS, LOCATIONS, VARIANTS) and stores anything it does not
-   recognise as NULL, so adding a poster stays a one-file edit over there. */
+   vocabularies (DESIGNS, ASSETS, LOCATIONS, VARIANTS) and stores anything it
+   does not recognise as NULL, so adding a design or an asset type stays an
+   edit over there — plus assets/js/qrgenerator.js, which has to mint the
+   code offline, and nothing here. */
 const SLUG_RE = /^[a-z0-9-]{1,32}$/;
 const TOKEN_RE = /^[0-9a-f]{16}$/;
 
@@ -75,6 +84,13 @@ const fromQuery = params.get('v');
 
 export const attribution = {
   poster: readMatch('p', SLUG_RE),
+  /* What that design was printed on. Not defaulted to 'poster' when it is
+     missing: the Worker sends it on every scan including the legacy ones, so
+     an absent ?a= means somebody hand-edited the address or the page was
+     reached without a scan at all. Filling it in here would invent a poster
+     the Worker never counted. The Worker applies its own default on the way
+     in, where it can see whether a design came with it. */
+  asset: readMatch('a', SLUG_RE),
   location: readMatch('l', SLUG_RE),
   /* The page wins over the query string. ?v= says which side the Worker
      drew; the attribute says which side actually rendered. They agree on a

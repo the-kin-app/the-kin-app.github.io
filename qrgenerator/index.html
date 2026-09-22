@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Min — QR generator</title>
-<meta name="description" content="Generates the Min-styled tracking QR codes that go on the printed posters.">
+<meta name="description" content="Generates the Min-styled tracking QR codes that go on the printed posters and cards.">
 <!-- An internal workbench, same stance as /poster/ and /qr/: it makes print
      artefacts and has nothing to offer a search result. -->
 <meta name="robots" content="noindex, nofollow">
@@ -21,17 +21,25 @@
 <!-- ══════════════════════════════════════════════════════════
      THE QR WORKBENCH
      ──────────────────────────────────────────────────────────
-     Every printed poster carries a QR pointing at
-     api.hellomin.app/<location>/<poster> — the WORKER's host, not
-     the site's. The Worker counts that scan, draws a side of the
-     landing A/B and forwards to hellomin.app/?l=&p=&v=a&s= or
-     hellomin.app/waitlist/?l=&p=&v=b&s=, which is how the poster
-     scoreboard at /admin/posters knows which artwork worked,
-     where, and which of the two landing pages it was read on. A code aimed at hellomin.app/<location>/<poster>
-     instead just 404s on Pages and counts nothing. So these codes are measurement instruments — the
-     vocabulary below has to match min-waitlist-worker src/index.js exactly, or a
-     scan lands on the fallback and the row it should have filled
-     stays empty.
+     Every printed code points at
+     api.hellomin.app/<location>/<asset>/<design> — the WORKER's host,
+     not the site's. The Worker counts that scan, draws a side of the
+     landing A/B and forwards to hellomin.app/?l=&a=&p=&v=a&s= or
+     hellomin.app/waitlist/?l=&a=&p=&v=b&s=, which is how the
+     scoreboard at /admin/posters knows which artwork worked, on what
+     it was printed, where, and which of the two landing pages it was
+     read on. A code aimed at hellomin.app/<location>/... instead just
+     404s on Pages and counts nothing. So these codes are measurement
+     instruments — the vocabulary below has to match
+     min-waitlist-worker src/index.js exactly, or a scan lands on the
+     fallback and the row it should have filled stays empty.
+
+     The middle segment is the asset type: poster or card. It is a
+     dimension, not a label — a poster is walked past by hundreds and a
+     card is handed to one person, so the same design converts at rates
+     that have no meaningful average. Codes printed before 2026-09-22
+     have no middle segment; the Worker reads those as posters, forever,
+     and this page recognises them without ever minting another.
 
      Nothing here talks to a server. The encoder, the styling and
      the ZIP are all local, so this page works offline and the
@@ -45,9 +53,10 @@
     <div>
       <h1 class="qrg__title">QR generator</h1>
       <p class="qrg__lede">
-        Min-styled codes for the printed posters. Every code points at a tracking URL the
-        Worker counts before it forwards to the waitlist, so what you print here is what
-        shows up in the poster scoreboard.
+        Min-styled codes for the printed posters and cards. Every code points at a tracking
+        URL the Worker counts before it forwards to the landing page, so what you print here
+        is what shows up in the scoreboard — filed under the artwork <em>and</em> what it was
+        printed on.
       </p>
     </div>
     <span class="qrg__badge">Internal tool</span>
@@ -61,17 +70,26 @@
         <h2 class="panel__title">What it points at</h2>
 
         <div class="toggles" id="mode-toggles" role="group" aria-label="Target type">
-          <button type="button" class="toggle" data-mode="poster" aria-pressed="true">Poster tracking</button>
+          <button type="button" class="toggle" data-mode="tracked" aria-pressed="true">Tracked artwork</button>
           <button type="button" class="toggle" data-mode="custom" aria-pressed="false">Custom URL</button>
         </div>
 
+        <!-- Location, then asset type, then design — the order the three
+             segments appear in the URL, so the controls read the way the
+             printed address does. The design list is rebuilt from the asset
+             type: each one owns its own artwork, and a card is not a small
+             poster. -->
         <div class="ctl-grid" id="poster-fields" style="margin-top:var(--space-4);">
           <label class="ctl">
             <span class="ctl__label">Location</span>
             <select id="location"></select>
           </label>
           <label class="ctl">
-            <span class="ctl__label">Poster</span>
+            <span class="ctl__label">Printed on</span>
+            <select id="asset"></select>
+          </label>
+          <label class="ctl ctl--wide">
+            <span class="ctl__label">Design</span>
             <select id="poster"></select>
           </label>
         </div>
@@ -160,7 +178,7 @@
 
   <!-- ── the whole print run, in the style set above ── -->
   <section class="panel" style="margin-top:var(--space-6);">
-    <h2 class="panel__title">Every poster code</h2>
+    <h2 class="panel__title">Every printed code</h2>
     <p class="panel__note qrg__print-hide" id="sheet-note"></p>
     <div class="btn-row qrg__print-hide">
       <button type="button" class="btn-q" id="dl-zip">Download all as ZIP</button>
