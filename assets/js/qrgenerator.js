@@ -44,11 +44,12 @@
   // count on the pair — so the code has to carry both.
   //
   // Each asset type owns its own design list, because a design that reads at
-  // three metres is not the design that reads in a hand. Two asset types may
-  // share a slug ('happy' on both); they stay two separate cells everywhere
-  // downstream. Designs are named after their tagline, so a filename says
-  // which artwork it is. Labels are only for this page — the slugs are what
-  // gets printed.
+  // three metres is not the design that reads in a hand. The lists are
+  // disjoint today, but nothing here assumes that: two asset types may share a
+  // design slug, and if they ever do they stay two separate cells everywhere
+  // downstream, because the PAIR is the key and not the design. Designs are
+  // named after their tagline, so a filename says which artwork it is. Labels
+  // are only for this page — the slugs are what gets printed.
   const ASSETS = [
     {
       slug: 'poster',
@@ -65,7 +66,8 @@
       label: 'Card',
       note: 'handed over',
       designs: [
-        { slug: 'happy', label: 'Happy' },
+        { slug: 'unclemin', label: 'Uncle Min' },
+        { slug: 'help', label: 'Help' },
       ],
     },
   ];

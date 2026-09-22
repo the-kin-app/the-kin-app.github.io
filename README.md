@@ -328,11 +328,13 @@ is handed to one person. The same design converts at rates that have no
 meaningful average, so the Worker keys every count on the (asset, design) pair
 and the two are never pooled.
 
-Each asset type owns its own design list. Two of them may share a slug —
-`happy` exists as a poster and as a card — and they stay separate cells
-everywhere downstream, including in the filenames the generator exports, so a
-card and a poster of one design cannot overwrite each other in a download
-folder.
+Each asset type owns its own design list: posters are `unclesam`,
+`unclesam-footer` and `happy`; cards are `unclemin` and `help`. The lists are
+disjoint today, but nothing depends on that — two asset types may share a
+design slug, and if they ever do they stay separate cells everywhere
+downstream, including in the filenames the generator exports, so a card and a
+poster of one design cannot overwrite each other in a download folder. The pair
+is the key, never the design on its own.
 
 **Codes printed before 2026-09-22 have no asset segment**, and
 `api.hellomin.app/<location>/<design>` resolves to a poster permanently. Paper
