@@ -307,26 +307,53 @@ worth re-checking at 390×844 if you add copy to a slide.
 ## The QR generator (`/qrgenerator`)
 
 Makes the codes that go on the printed posters and cards. Every one carries a
-QR pointing at `api.hellomin.app/<location>/<asset>/<design>` — the **Worker's**
-host, not the site's. The Worker counts that scan, draws a side of the landing
+QR pointing at `api.hellomin.app/<location>/<asset>/<design>`, or
+`api.hellomin.app/<asset>/<design>` for artwork that has no location — the
+**Worker's** host, not the site's. The Worker counts that scan, draws a side of the landing
 A/B and forwards to `hellomin.app/?l=&a=&p=&v=a&s=` or
 `hellomin.app/waitlist/?l=&a=&p=&v=b&s=`, which is how `/admin/posters` knows
 which artwork worked, on what it was printed, where, and which of the two
 landing pages it was read on. A code aimed at `hellomin.app/<location>/…`
 instead just 404s on Pages and counts nothing, so the page flags that shape
 as an error rather than a warning. **The codes are measurement instruments** — the
-location, asset and design lists in `assets/js/qrgenerator.js` must match
+location, asset and design lists in `assets/js/qrgenerator.js` — including each
+asset's `located` flag — must match
 `min-waitlist-worker src/index.js`, or a scan lands on the fallback redirect and the
 scoreboard row it should have filled stays empty. Adding a design or an asset
 type is an edit in both files.
 
 ### The asset type
 
-`<asset>` is the middle segment — `poster` or `card` — and it is a **dimension
-of the measurement, not a label**. A poster is walked past by hundreds; a card
-is handed to one person. The same design converts at rates that have no
-meaningful average, so the Worker keys every count on the (asset, design) pair
-and the two are never pooled.
+`<asset>` is `poster` or `card`, and it is a **dimension of the measurement,
+not a label**. A poster is walked past by hundreds; a card is handed to one
+person. The same design converts at rates that have no meaningful average, so
+the Worker keys every count on the (asset, design) pair and the two are never
+pooled.
+
+### The location is an optional leading segment
+
+A poster hangs on a wall, and **which wall is half of what it measures** — the
+same design pulls different numbers off a hospital corridor and a university
+foyer, which is the reason to put one in both. So a poster is one code per
+location per design: 12 × 3 = 36 codes.
+
+A card is handed over. It has no wall, it travels in a pocket, and the place it
+changed hands says nothing anyone could act on. Recording one would put an
+invented dimension in every scoreboard looking exactly like a measurement. So a
+card is **one code per design, with no location at all** — `/card/unclemin` and
+`/card/help`, two codes, and the same file is the one to print wherever the
+cards are going. 38 codes in a full print run.
+
+Two segments are told apart by what the first one is: an asset type means
+`/<asset>/<design>`, a location means the pre-2026-09-22 `/<location>/<design>`.
+No slug is ever both — the Worker throws at startup if that changes, because
+the day somebody adds a location called `card` every card scan would quietly be
+filed as a poster in a place of that name.
+
+**Cards printed before 2026-09-22 carry `/<location>/card/<design>`.** They keep
+counting: the Worker reads the location off the path and then drops it, rather
+than refusing the scan. Paper cannot be reissued. The generator flags that shape
+and tells you the locationless URL to print instead.
 
 Each asset type owns its own design list: posters are `unclesam`,
 `unclesam-footer` and `happy`; cards are `unclemin` and `help`. The lists are
