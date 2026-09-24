@@ -30,7 +30,30 @@
    not — so the shot rendered 290px wide by its full 1748px tall, the hero
    grew to 1976px and the headline went below the fold. With height auto
    the aspect-ratio takes over, which is what it is there for. */
-.app-phone__shot { position: absolute; left: 5.333%; top: 2.5%; width: 89.333%; height: 95%; display: block; object-fit: cover; border-radius: 18.41% / 8.47%; }
+.app-phone__shot { position: absolute; left: 5.333%; top: 2.5%; width: 89.333%; height: 95%; display: block; object-fit: cover; border-radius: 18.41% / 8.47%; transform: scale(1.015); }
+/* min-ui/*.png screens (e.g. matchv2.png) are exported as a sheet with its
+   own smaller baked-in rounded top corner, below a band of background art
+   that already accounts for the status bar / Dynamic Island — real content,
+   so it can't be cropped off, and this radius can't be tightened to the
+   sheet's own either: that undershoots the rim's true hole and opens a gap
+   at each corner where the page background shows through. The corner seam
+   this leaves is fixed in the asset itself: matchv2-corners.png has the two
+   top corners pre-darkened to bridge into the bezel, so the sheet's own
+   corner no longer reads as a second, lighter curve inside the frame's.
+
+   The tiny scale(1.015) above is a separate fix, for a separate seam: once
+   .app-phone's rotate(deg) is applied, this layer's own rounded-corner clip
+   and the rim's transparent hole above it are each anti-aliased on their
+   own, and don't quite agree on the curve at rotated (non-axis-aligned)
+   angles — a hairline of whatever sits behind both (the page background)
+   peeks through right on the seam. Scaling the shot up by 1.5% bleeds its
+   edge out past the rim's opening, where the rim's opaque bezel hides the
+   overlap, so there's no gap left for the page background to show through.
+   Confirmed by rendering rotated at 3x device-pixel-ratio: no scale still
+   showed a hairline; 1.015 closed it. A wrapper + ::after (to paint a
+   corner-darkening gradient instead of baking it into the asset) has this
+   same seam even worse, since the ::after is a second independently
+   clipped/rotated layer on top of the first — hence baking into pixels. */
 .app-phone__rim { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
 .app-phone__status { display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding: 0 8px 20px; }
 .app-phone__island { width: 88px; height: 23px; border-radius: 20px; background: #211c1b; }
