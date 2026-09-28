@@ -431,6 +431,66 @@
  :root.is-short .hero--app .fineprint { margin-top: 10px; }
 }
 
+/* ── Mobile, homepage only: the phone bleeds under the signup ──
+   Sized to fit between the headline and the form, the phone came out
+   ~170px wide on a 390px screen — too small to read the screen it is
+   there to show. So it is sized to the SCREEN instead, and simply allowed
+   to run past its own box: the form and fineprint stack over its lower
+   part (mostly empty background in the match shot), and .hero--app's
+   overflow: hidden crops it at the section edge — a phone rising out of
+   the fold, which also says there is more below.
+
+   Opt-in by class: the Helsinki page shares this file but shows the
+   chat shot, whose reply field sits at the very
+   bottom, exactly where the form would land. */
+@media (max-width: 800px) {
+ /* The box runs 72px on under the input, and its bottom edge is where the
+    phone dissolves into the room: seen through the frosted input, the
+    timer, the slider and the bezel edge were noise behind the one thing
+    to tap. The mask sits on this box, not on .app-phone — on the phone it
+    would also clip the drop-shadow to the phone's own rectangle, which
+    showed as a faint square edge. So this box spans the full screen width
+    (past the column's gutters) and the shadow keeps its soft sides; the
+    24px of top padding is its headroom. */
+ .hero--bleed .hero__preview {
+   position: relative;
+   z-index: 0;
+   align-items: flex-start;
+   min-height: 0;
+   width: 100vw;
+   margin: -8px calc(50% - 50vw) -72px;
+   padding-top: 24px;
+   -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 128px), transparent calc(100% - 20px));
+           mask-image: linear-gradient(to bottom, #000 calc(100% - 128px), transparent calc(100% - 20px));
+ }
+ /* Sized from the room it actually has, not from the screen: how much
+    space the headline leaves above the form changes phone to phone (how
+    the lines and the fineprint wrap), so a fixed share of the height left
+    the avatar clear on one phone and buried under the input on the next.
+    The box above is a size container whose height is exactly that room
+    (flex slack, never content), and the phone is scaled until the match's
+    avatar — ~66% down the frame — lands just above the input:
+
+      phone top → input top = 100cqh − 74px   (padding and margins, measured)
+      height = (that − 10px of air) ÷ 0.66
+
+    cqh rather than a % height for the reason spelled out on the base rule:
+    WebKit drops a % height here to auto; a container unit is definite in
+    both engines. The floor keeps the smallest phones from shrinking the
+    frame back to a thumbnail (there the avatar is allowed under the glass);
+    the ceiling stops it outgrowing the screen's width. The :root in the
+    selector is only there to outrank the :root.is-short size above. */
+ .hero--bleed .hero__preview { container-type: size; }
+ :root .hero--app.hero--bleed .app-phone {
+   height: clamp(300px, (100cqh - 84px) * 1.515, 175vw);
+   max-width: none;
+ }
+ .hero--bleed .hero__actions,
+ .hero--bleed .fineprint { position: relative; z-index: 1; }
+
+ :root.is-short .hero--bleed .hero__preview { margin: -14px calc(50% - 50vw) -72px; }
+}
+
 /* ── the signup, inline ────────────────────────────────────────
    The homepage asks for the address where the wanting happens — the hero
    and the closer — instead of linking to /waitlist and spending a tap on

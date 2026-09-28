@@ -44,10 +44,16 @@ body.center {
 }
 
 /* Top-aligned reading page (privacy policy). */
+/* The falling-logo mark up top is baked for a dark ground. Rather than
+   a glow shaped tight to the artwork, darken the whole top band of the
+   page — full-bleed, fading into the normal page gradient before the
+   fold — so the mark sits on its own ground instead of nearly
+   vanishing into the cream prose background. */
 body.page {
   display: flex;
   justify-content: center;
   padding: var(--space-12) var(--space-6) 80px;
+  background-image: linear-gradient(to bottom, var(--world-cave) 0%, transparent 170px), var(--gradient-page-bg);
 }
 
 a { color: var(--violet-ink); }

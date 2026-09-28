@@ -1,38 +1,39 @@
 /* ============================================================
-   Min — the Pro survey (what to gate, and at what price)
+   Min — the Pro survey (will people pay, and for which extras)
    ------------------------------------------------------------
    Sibling to survey.js, built on the same parts: the same reveal
    observer, the same submit, the same honeypot. What is new is
-   question 5, which names a person's own question 4 ticks back to
-   them and asks what that costs.
+   question 2, which lists a person's own question 1 ticks back as
+   "which of these do you pay for", and question 7, which names
+   their question 6 ticks back and asks what that costs.
+
+   Source: min-brain/Business/Narrative/user facing question.md
 
    The page is an instrument before it is a page, so its rules
    live in code rather than in copy:
 
+     • Discovery before the pitch. Part 1 never names Min.
      • Explain the free product first, price second. Nothing is
        priced until the person has read what the free version does
-       and said what they would use it for. Asking earlier prices
-       a blank.
-     • Every extra is a tick, never a rating. The gating question
-       is "who wants this", and a tick answers it; a five-point
-       scale returns four out of five for everything.
-     • We name no figure. Question 5 is their number against their
-       own ticks, which means every person prices a different
-       bundle. The analysis is a cross-tab, not an average.
+       and said what they would use it for.
+     • Every extra is a tick, never a rating.
+     • We name no figure. Question 7 is their number against their
+       own ticks. The analysis is a cross-tab, read against what
+       they already spend (question 2).
      • Nothing is required. The only validation is the shape of an
        email and the shape of a number, and only when somebody
-       typed one. A survey that blocks gets abandoned, and a
-       partial answer beats no answer.
+       typed one.
 
    ⚠️ No list in this file mentions AI, and none should.
 
    1. reveals()  — IntersectionObserver adds .in; CSS runs the
                    emergence recipe, shared with the landing page.
-   2. checks()   — builds the three tick grids from the lists below.
-   3. picks()    — question 4 read back into question 5, live.
-   4. minBodies()— Min in the wordmark's i-dot, and on the thanks.
-   5. buttons()  — the submerge press on .btn.
-   6. form()     — validation + submit to the Worker.
+   2. checks()   — builds the tick grids from the lists below.
+   3. paid()     — question 1 read back into question 2.
+   4. picks()    — question 6 read back into question 7, live.
+   5. minBodies()— Min in the wordmark's i-dot, and on the thanks.
+   6. buttons()  — the submerge press on .btn.
+   7. form()     — validation + submit to the Worker.
    ============================================================ */
 
 import { buttons } from '/assets/js/press.js';
@@ -40,117 +41,78 @@ import { minBodies } from '/assets/js/min.js';
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* ---------- question 1: what they've already paid for -------
-   Not a subscription audit. Every row is something somebody pays
-   for in order to have a social life, because the question worth
-   answering is whether this cohort treats meeting people as
-   something you can buy at all. A page of empty ticks would be a
-   finding about the whole tier, not about its price.
+/* ---------- question 1: what they use --------------------
+   Categories from the outline, with brands only as examples so
+   every row reads the same to everybody. Written for a Helsinki
+   student: Kide.app, Jodel and guilds belong here.
 
-   Written for a Helsinki student specifically: guild and student
-   association fees belong here and would be missing from any
-   generic list.
+   `short` is what question 2 lists back as "which of these do you
+   pay for", so it drops the examples.
 
-   Keys are what the Worker stores, so they are lowercase slugs
-   and must stay in step with SERVICE_KEYS in min-waitlist-worker
-   src/index.js. Anything it doesn't recognise is dropped. */
+   Keys are what the Worker stores, so they are lowercase slugs.
+   Anything it doesn't recognise should be dropped. */
 const SERVICES = [
-  ['dating',      'A dating app (Tinder, Bumble, Hinge…)'],
-  ['gym',         'A gym or fitness club'],
-  ['sports_club', 'A sports team or club fees'],
-  ['guild',       'A student association or guild (AYY, HYY, a guild)'],
-  ['hobby_club',  'A hobby club or society'],
-  ['language',    'A language or conversation club'],
-  ['course',      'A course you took partly to meet people'],
-  ['meetup',      'A meetup or community membership'],
-  ['events',      'Tickets to something you went to mainly to meet people'],
-  ['online',      'A paid online community (Discord, Patreon…)'],
-  ['none',        'None of these'],
+  ['social',    'Social media',      'Instagram, TikTok, Jodel, Snapchat…',     'Social media'],
+  ['dating',    'Dating apps',       'Tinder, Bumble, Hinge…',                  'Dating apps'],
+  ['community', 'Communities',       'Discord, guilds, student associations…',  'Communities'],
+  ['events',    'Events',            'Kide.app, Meetup, Eventbrite…',           'Events'],
+  ['hobbies',   'Hobbies',           'Sports clubs, gyms, courses…',            'Hobbies'],
+  ['groups',    'Groups',            'WhatsApp or Telegram groups, Facebook groups…', 'Groups'],
+  ['wellbeing', 'Fitness and wellbeing apps', 'Strava, Headspace, running or workout apps…', 'Fitness and wellbeing apps'],
+  ['none',      'None of these'],
 ];
 
-/* ---------- question 3: intent ------------------------------
-   The user-facing wording of the intents the product actually
-   models. Min carries several at once rather than one label (see
-   min-brain Product/Features/Min.md), so this is a multi-select
-   and not a single choice.
-
-   `dating` is on the list on purpose. The FAQ says Min is not a
-   dating app and that what a meeting becomes is up to the two
-   people. Leaving the row off would not change how many people
-   want it, only our ability to see how many. */
+/* ---------- question 5: intent ------------------------------
+   The outline's five, multi-select. `dating` is on the list on
+   purpose: leaving it off would not change how many people want
+   it, only our ability to see how many. */
 const INTENTS = [
-  ['friends',    'Making actual friends'],
-  ['activity',   'Someone to do a specific thing with (sport, gym, games…)'],
-  ['company',    'Company right now, not a friendship, just someone to talk to'],
-  ['new_city',   'Meeting people outside my usual circle, or I’m new here'],
-  ['language',   'Practising a language'],
-  ['dating',     'Something that might turn into dating'],
-  ['work',       'People in my field, or to work on something with'],
-  ['curious',    'Not sure, just curious'],
+  ['dating',  'Dating'],
+  ['friends', 'Making friends'],
+  ['hobbies', 'Hobbies, or trying new ones'],
+  ['chats',   'Just chatting with someone new'],
+  ['career',  'Career and people in my field'],
 ];
 
-/* ---------- question 4: the extras --------------------------
-   Things that could sit on top of the free version. Each row has
-   to read as something somebody could want on its own, because
-   question 5 names them back individually.
+/* ---------- question 6: the extras --------------------------
+   Three groups, from the outline. Each row has to read as
+   something somebody could want on its own, because question 7
+   names them back individually.
 
-   The first three rows are the three variables an encounter has:
-   WHO, WHEN and WHERE. They sit together and first because the
-   open question in min-brain's "chance vs control as the pro
-   line" note is whether the paid tier sells control over those
-   variables or sells planning as one thing. Separate rows are
-   what makes that readable: if `when` and `where` are only ever
-   ticked together, the tier is planning; if they come apart, it
-   is control, and they can be gated apart.
+     filter — scored SPLIT BY GENDER. A safety feature to one half
+              of the cohort and a filtering feature to the other,
+              and the largest single risk in the subscription
+              model. The only reason question 8 asks gender.
+     more   — read against `filter`. Both ticked, male-skewed, is
+              the filter spiral.
 
-   Three rows are not what they look like, and all three matter
-   more than their tick count:
-
-     choose  — scored SPLIT BY GENDER. It is a safety feature to
-               one half of the cohort and a filtering feature to
-               the other, and that difference is the largest
-               single risk in the subscription model. It is the
-               only reason question 6 asks gender.
-     when    — read against `choose`. A male-skewed tick on both
-               is the filter spiral wearing a calendar, which is
-               the objection that note raises against itself.
-     travel  — a control. Nobody who has not used the app can know
-               whether another city is worth anything, so ticks
-               here measure the appeal of the sentence rather than
-               of the feature. A high count is not a reason to
-               build it sooner.
-
-   `short` is what question 5 lists back. It is a phrase in a
-   list, so it drops the explanatory half of the label. */
-const EXTRAS = [
-  ['choose', 'Choose who you meet',
-             'Say who you’re comfortable meeting, and only get introduced to those people',
-             'choosing who you meet'],
-  ['when',   'Pick when you meet',
-             'Line up a meeting for a time that suits you, instead of waiting for one to come up',
-             'picking when you meet'],
-  ['where',  'Pick where you meet',
-             'Choose the spot yourself, instead of taking the one Min suggests',
-             'picking where you meet'],
-  ['sooner', 'Skip the wait',
-             'Get introduced sooner when there are people around',
-             'skipping the wait'],
-  ['more',   'More time with Min',
-             'Talk to Min as much as you like, instead of a set amount each day',
-             'more time with Min'],
-  ['knows',  'A Min that knows you better',
-             'It remembers more, and gets the introduction right more often',
-             'a Min that knows you better'],
-  ['groups', 'Curated group things',
-             'Small organised activities, picked rather than open to everyone',
-             'curated group things'],
-  ['custom', 'Make Min yours',
-             'Change how Min looks and sounds',
-             'making Min yours'],
-  ['travel', 'Works in other cities',
-             'Use it properly when you travel',
-             'using it in other cities'],
-];
+   `short` is what question 7 lists back. */
+const EXTRAS = {
+  app: [
+    ['filter', 'Choose your matches',
+               'More control over what kind of people Min matches you with',
+               'choosing your matches'],
+    ['more',   'More matches',
+               'Min usually lets you know when it finds someone. This lets you ask for one',
+               'asking for more matches'],
+    ['groups', 'Group matching',
+               'Match your group of friends with another group, instead of one on one',
+               'group matching'],
+  ],
+  irl: [
+    ['events', 'Scheduled group events',
+               'Planned activities with a matched group of people',
+               'scheduled group events'],
+  ],
+  self: [
+    ['talk',    'More time with Min',
+                'More conversations and questions with Min',
+                'more time with Min'],
+    ['insight', 'Deeper insight into yourself',
+                'See what Min has learned about you and your memories',
+                'deeper insight into yourself'],
+  ],
+};
 
 /* ---------- 1. reveals -------------------------------------- */
 
@@ -239,11 +201,65 @@ function checks(host, rows, { exclusive = null, event = null } = {}) {
   };
 }
 
-/* ---------- 3. question 4, read back into question 5 --------
+/* ---------- 3. question 1, read back into question 2 --------
+   A yes opens the follow-up: their own question 1 picks as ticks,
+   and one monthly total. The list rebuilds on every question 1
+   tick and keeps whatever was already ticked, so going back up to
+   add a row doesn't wipe the answer.
+
+   With nothing picked in question 1 (or only "None"), the list
+   hides and only the total shows. */
+function paid(services) {
+  const field = document.getElementById('paid-field');
+  const set = document.querySelector('[data-paid-set]');
+  const host = document.querySelector('[data-paid]');
+  if (!field || !set || !host) return { picked: () => [] };
+
+  const SHORT = new Map(SERVICES.map(([key, label, , short]) => [key, short || label]));
+  const ticked = new Set();
+
+  const write = () => {
+    host.replaceChildren();
+    const rows = services.picked().filter((k) => k !== 'none');
+    for (const key of rows) {
+      const wrap = document.createElement('label');
+      wrap.className = 'option';
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.name = `paid_${key}`;
+      input.value = key;
+      input.checked = ticked.has(key);
+      input.addEventListener('change', () => {
+        input.checked ? ticked.add(key) : ticked.delete(key);
+      });
+      const text = document.createElement('span');
+      text.textContent = SHORT.get(key) || key;
+      wrap.append(input, text);
+      host.appendChild(wrap);
+    }
+    set.hidden = !rows.length;
+  };
+
+  document.querySelectorAll('input[name="pays"]').forEach((input) => {
+    input.addEventListener('change', () => {
+      field.hidden = !(input.checked && input.value === 'yes');
+    });
+  });
+  document.addEventListener('services:change', write);
+  write();
+
+  return {
+    // Only rows still on screen count: a tick on a service they
+    // later unticked in question 1 is not an answer.
+    picked: () => services.picked().filter((k) => ticked.has(k)),
+  };
+}
+
+/* ---------- 4. question 6, read back into question 7 --------
    The thing being priced has to be the thing they just chose, so
    the list rebuilds on every tick. With nothing ticked the block
    hides entirely rather than showing an empty list: somebody who
-   wants none of the extras is about to answer question 5 with the
+   wants none of the extras is about to answer question 7 with the
    checkbox, and a heading saying "you'd be paying for" above
    nothing would read as a bug. */
 function picks(extras) {
@@ -251,7 +267,7 @@ function picks(extras) {
   const list = document.querySelector('[data-picks-list]');
   if (!block || !list) return;
 
-  const SHORT = new Map(EXTRAS.map(([key, , , short]) => [key, short]));
+  const SHORT = new Map(Object.values(EXTRAS).flat().map(([key, , , short]) => [key, short]));
 
   const write = () => {
     const chosen = extras.picked();
@@ -282,12 +298,17 @@ function picks(extras) {
 function wouldNotPay() {
   const box = document.getElementById('would_not_pay');
   const price = document.getElementById('price');
+  const followups = document.querySelector('[data-pay-followups]');
   if (!box || !price) return;
 
+  // "Would you sign up at that price" and "how would you pay" only
+  // mean something to someone who would pay, so a decided "no"
+  // hides them instead of collecting guesses.
   box.addEventListener('change', () => {
     price.disabled = box.checked;
     if (box.checked) price.value = '';
     price.closest('.field')?.classList.toggle('is-disabled', box.checked);
+    if (followups) followups.hidden = box.checked;
   });
 
   // Typing an amount contradicts the checkbox, so the checkbox gives way.
@@ -310,7 +331,7 @@ function selfDescribe() {
   });
 }
 
-/* ---------- 6. the form -------------------------------------
+/* ---------- 7. the form -------------------------------------
    Served from a local static server, talk to a local `wrangler dev`
    instead of production — otherwise previewing the page writes test
    rows into the live database. Any other host is production, so this
@@ -323,7 +344,7 @@ const DEFAULT_API = LOCAL_HOSTS.has(location.hostname)
 const API_BASE = (window.KIN_API_BASE || DEFAULT_API).replace(/\/$/, '');
 const SUBMIT_URL = API_BASE + '/pricing';
 
-function form(services, intents, extras) {
+function form(services, paidFor, intents, extras) {
   const el = document.getElementById('pro-form');
   if (!el) return;
 
@@ -331,6 +352,8 @@ function form(services, intents, extras) {
   const emailError = document.getElementById('email-error');
   const priceInput = document.getElementById('price');
   const priceError = document.getElementById('price-error');
+  const spendInput = document.getElementById('spend');
+  const spendError = document.getElementById('spend-error');
   const wontPay = document.getElementById('would_not_pay');
   const formStatus = document.getElementById('form-status');
   const submitButton = el.querySelector('button.submit');
@@ -364,8 +387,19 @@ function form(services, intents, extras) {
 
     emailError.textContent = '';
     priceError.textContent = '';
+    spendError.textContent = '';
     formStatus.textContent = '';
     formStatus.className = 'status';
+
+    // Only read when the follow-up is open: a "no" with a stale
+    // amount still in the hidden field is a "no".
+    const pays = radioValue('pays');
+    const spend = pays === 'yes' ? parsePrice(spendInput.value) : { ok: true, value: null };
+    if (!spend.ok) {
+      fail(spendInput, spendError, 'Just a number is fine, like 20 or 12.50.',
+           'Almost, that amount needs a look.');
+      return;
+    }
 
     const price = parsePrice(priceInput.value);
     if (!price.ok) {
@@ -384,18 +418,28 @@ function form(services, intents, extras) {
     }
 
     const payload = {
-      services_paid:  services.picked(),
-      services_other: text('services_other'),
+      // Part 1: discovery
+      services_used:    services.picked(),
+      services_other:   text('services_other'),
+      pays:             pays,
+      services_paid:    pays === 'yes' ? paidFor.picked() : [],
+      spend_monthly:    spend.value,
+      satisfaction:     radioValue('satisfaction'),
+      satisfaction_why: text('satisfaction_why'),
+      // Part 2: reaction
       reaction:       radioValue('reaction'),
       reaction_why:   text('reaction_why'),
       intents:        intents.picked(),
-      // The two halves of question 5, kept separate on purpose: what
-      // they want, and what they'd pay for exactly that. A price with
-      // no extras list beside it cannot be read.
+      frequency:      radioValue('frequency'),
+      // What they want, and what they'd pay for exactly that, kept
+      // side by side. A price with no extras list beside it cannot
+      // be read.
       extras_wanted:  extras.picked(),
       price:          price.value,
       would_not_pay:  !!wontPay?.checked,
-      billing_pref:   radioValue('billing_pref'),
+      // Blank when they won't pay: the questions were hidden.
+      commitment:     wontPay?.checked ? null : radioValue('commitment'),
+      billing_pref:   wontPay?.checked ? null : radioValue('billing_pref'),
       email:          email || null,
       campus:         text('campus'),
       gender:         radioValue('gender'),
@@ -441,12 +485,17 @@ function form(services, intents, extras) {
 /* ---------- boot -------------------------------------------- */
 
 reveals();
-const services = checks('[data-checks="services"]', SERVICES, { exclusive: 'none' });
-const intents  = checks('[data-checks="intents"]',  INTENTS);
-const extras   = checks('[data-checks="extras"]',   EXTRAS, { event: 'extras:change' });
+const services = checks('[data-checks="services"]', SERVICES,
+                        { exclusive: 'none', event: 'services:change' });
+const paidFor  = paid(services);
+const intents  = checks('[data-checks="intents"]', INTENTS);
+// Three hosts, one question: read back as a single list.
+const extraGroups = Object.entries(EXTRAS).map(([group, rows]) =>
+  checks(`[data-extras="${group}"]`, rows, { event: 'extras:change' }));
+const extras = { picked: () => extraGroups.flatMap((g) => g.picked()) };
 picks(extras);
 wouldNotPay();
 selfDescribe();
 minBodies();
 buttons();
-form(services, intents, extras);
+form(services, paidFor, intents, extras);

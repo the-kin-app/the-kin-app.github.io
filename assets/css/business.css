@@ -90,10 +90,24 @@ html:not(.js-ready) .wordmark--hero .wordmark__dot { display: block; }
   text-align: center;
 }
 
+/* The falling-logo static mark (replacing the live glass wordmark on
+   /survey/pro/) is baked for a dark ground, not this page's cream
+   "daylight" floor. Darken the masthead band itself rather than glow
+   the mark, so it reads as its own dark strip at the top of the page.
+   The section already spans full width (no side padding above it). */
+.pro-survey .biz-masthead {
+  background: linear-gradient(to bottom, var(--world-cave), transparent);
+}
+
 .biz-masthead .wordmark--hero {
   width: min(84px, 22vw);
   margin-bottom: var(--space-3);
 }
+
+/* Tighter than /business/'s live wordmark — the static falling-logo
+   artwork already carries less internal weight, so it doesn't need
+   as much air around it. */
+.pro-survey .biz-masthead .wordmark--hero { margin-bottom: var(--space-1); }
 
 /* The one line that says whose page this is. Small, spaced, quiet —
    the wordmark above it is already the brand. */

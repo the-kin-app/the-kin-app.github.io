@@ -22,7 +22,7 @@
    is delay. Same band as /business/, with a little more air above
    it because there is no nav to sit under. */
 
-.pro-survey .biz-masthead { padding-top: clamp(28px, 6vh, 56px); }
+.pro-survey .biz-masthead { padding-top: clamp(16px, 3vh, 28px); padding-bottom: var(--space-2); }
 
 /* ---- the patch, at the end ---------------------------------
    It is a reason to FINISH, so it lives above the submit button
@@ -146,3 +146,55 @@
   opacity: 0.55;
   cursor: not-allowed;
 }
+
+/* ---- part labels -------------------------------------------
+   The survey has two halves, discovery then reaction, and the
+   switch is the moment Min is first mentioned. A quiet label
+   between the cards marks it, at the step marker's scale so it
+   reads as structure rather than a heading competing with the
+   questions. */
+
+.survey-part {
+  margin: var(--space-4) 0 calc(var(--space-2) * -1);
+  text-align: center;
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+}
+
+.survey-part:first-child { margin-top: 0; }
+
+/* ---- question 2: the follow-up -----------------------------
+   Opens on a yes. The ticks and the total need a gap between
+   them, and [hidden] has to win over the grid that .field and
+   .option-group set. */
+
+#paid-field { display: grid; gap: var(--space-5); margin-top: var(--space-5); }
+#paid-field[hidden],
+[data-paid-set][hidden] { display: none; }
+
+/* ---- question 6: the three groups --------------------------
+   Each group is its own fieldset with its legend as a small
+   heading, so the list reads as three short lists rather than
+   one long one. */
+
+.extras-group + .extras-group { margin-top: var(--space-6); }
+
+.extras-group > legend {
+  font-size: var(--text-sm);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+}
+
+/* ---- question 7: after the price ---------------------------
+   The commitment and billing questions, hidden outright when
+   somebody ticks "I wouldn't pay". */
+
+.pay-followups { display: grid; gap: var(--space-6); margin-top: var(--space-6); }
+.pay-followups[hidden] { display: none; }
+
+/* Question 5's second half, how often. */
+.frequency { margin-top: var(--space-6); }

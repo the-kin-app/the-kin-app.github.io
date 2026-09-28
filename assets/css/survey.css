@@ -22,6 +22,22 @@
 .survey .biz-hero { min-height: auto; padding-top: clamp(84px, 12vh, 132px); }
 .survey .biz-hero .lede { max-width: 46ch; }
 
+/* Both survey pages swapped the live glass wordmark for the static
+   falling-logo artwork, which is a baked 300×212 box, not the flat
+   letterforms' 138×68. Override the shared aspect-ratio so the <img>
+   keeps its own proportions instead of being squashed into it. */
+img.wordmark--hero { aspect-ratio: 300 / 212; object-fit: contain; }
+
+/* The artwork is baked for a dark ground, not this page's cream
+   "daylight" floor. Darken the whole top band of the page instead of
+   glowing just the mark — background paints across the section's own
+   padding-top too, so this reaches the literal top edge of the page —
+   and fade it out before the eyebrow/heading below. */
+.survey .biz-hero {
+  background: linear-gradient(to bottom, var(--world-cave) 0%, transparent 320px);
+}
+.hero-mark-band { display: flex; justify-content: center; }
+
 /* The patch is the reason most people are on this page. It gets
    its own line, in the accent, rather than a clause in the lede. */
 .survey-patch {
