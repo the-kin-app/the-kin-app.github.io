@@ -67,6 +67,7 @@
         { slug: 'unclesam', label: 'Uncle Sam' },
         { slug: 'unclesam-footer', label: 'Uncle Sam footer' },
         { slug: 'happy', label: 'Happy' },
+        { slug: 'trump', label: 'Trump' },
       ],
     },
     {
