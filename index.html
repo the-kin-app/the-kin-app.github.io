@@ -15,21 +15,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Min — Say hello to your neighbour</title>
-<meta name="description" content="Spontaneous IRL meetings right around the corner. Say hello to your neighbour, a campus crush, that familiar face. No profile pictures, no swiping, no feed. Helsinki first.">
+<title>min — Meet new people nearby, in real life</title>
+<meta name="description" content="min is an IRL social app for meeting new people nearby. Say hello to your neighbour, a campus crush, that familiar face. No profile pictures, no swiping, no feed. Launching in Helsinki in early 2027.">
 <meta name="theme-color" content="#2F333F">
 <link rel="canonical" href="https://hellomin.app/">
 
-<meta property="og:title" content="Min — Say hello to your neighbour">
-<meta property="og:description" content="The app that introduces you to the right people and moments around you, at the right moment.">
+<meta property="og:title" content="min — Meet new people nearby, in real life">
+<meta property="og:description" content="The app that introduces you to the right people nearby, at the right moment. Then you go say hello.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hellomin.app/">
-<meta property="og:site_name" content="Min">
-<meta property="og:locale" content="en">
+<meta property="og:site_name" content="min">
+<meta property="og:locale" content="en_GB">
 <meta property="og:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Min: a softly glowing pebble with two lit eyes, waving hello in dusk light.">
+<meta property="og:image:alt" content="min: a softly glowing pebble with two lit eyes, waving hello in dusk light.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
 
@@ -40,15 +40,30 @@
     {
       "@type": "Organization",
       "@id": "https://hellomin.app/#organization",
-      "name": "Min",
+      "name": "min",
       "url": "https://hellomin.app/",
       "logo": "https://hellomin.app/assets/img/min-logo-flat.svg",
-      "description": "Min is an in-real-life social app that introduces you to the right people and moments around you. Launching in Helsinki."
+      "email": "hello@hellomin.app",
+      "foundingLocation": { "@type": "City", "name": "Helsinki" },
+      "description": "min is an IRL social app that introduces you to people nearby, so you can meet new people in real life. No profiles, no swiping, no chat. Launching for Helsinki-area students in early 2027."
+    },
+    {
+      "@type": "MobileApplication",
+      "@id": "https://hellomin.app/#app",
+      "name": "min",
+      "url": "https://hellomin.app/",
+      "operatingSystem": "iOS",
+      "applicationCategory": "SocialNetworkingApplication",
+      "description": "An IRL social app that introduces you to one person nearby, based on a conversation with min. Accept the intro, walk over and say hello. Not a dating app: no profiles, no swiping, no chat, no feed.",
+      "areaServed": { "@type": "City", "name": "Helsinki", "containedInPlace": { "@type": "Country", "name": "Finland" } },
+      "audience": { "@type": "Audience", "audienceType": "Students in the Helsinki area" },
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "publisher": { "@id": "https://hellomin.app/#organization" }
     },
     {
       "@type": "WebSite",
       "@id": "https://hellomin.app/#website",
-      "name": "Min",
+      "name": "min",
       "url": "https://hellomin.app/",
       "inLanguage": "en",
       "publisher": { "@id": "https://hellomin.app/#organization" }
@@ -59,6 +74,8 @@
       "mainEntity": [
         { "@type": "Question", "name": "Is min a dating app?",
           "acceptedAnswer": { "@type": "Answer", "text": "No. We usually say that min is a \"social lubricant\" app — meaning its only goal is to make saying hello to people around you easier. What the relationship becomes after that — a friend, a running group, or a date — that's up to the two of you." } },
+        { "@type": "Question", "name": "How is min different from Meetup, Bumble BFF or other friend apps?",
+          "acceptedAnswer": { "@type": "Answer", "text": "min is not a friend app either. There is no profile to build, nothing to swipe and no group chat to keep alive. You talk to min, min introduces you to one person nearby, and if you both accept, you walk over and say hello." } },
         { "@type": "Question", "name": "What does min actually store about me?",
           "acceptedAnswer": { "@type": "Answer", "text": "The conversation you have with min is used by min to tune your memory shape — then deleted. Your memory shape is only stored on your phone. During matching, it sends an anonymized version of your memory to find the right person, then is disposed. We don't sell your private data because we literally don't have access to it." } },
         { "@type": "Question", "name": "Can people find me on this? Is it safe?",
@@ -102,7 +119,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <!-- ?v= is a cache bust — see the note on the same links in /waitlist/. -->
 <link rel="stylesheet" href="/assets/css/tokens.css?v=20260910b">
-<link rel="stylesheet" href="/assets/css/landing.css?v=20260917b">
+<link rel="stylesheet" href="/assets/css/landing.css?v=20260928c">
 <link rel="stylesheet" href="/assets/css/home-hero.css?v=20260928a">
 <link rel="stylesheet" href="/assets/css/home-sections.css?v=20260916a">
 <link rel="stylesheet" href="/assets/css/home-hero-flip.css?v=20260916a">
@@ -132,12 +149,12 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
     <div class="shell">
       <div class="hero__copy">
 
-      <!-- The Min · Resin wordmark artwork, minus the i-dot: Min sits in
+      <!-- The min · Resin wordmark artwork, minus the i-dot: min sits in
            that gap. Inlined (not <img>) so the glass panels' backdrop-filter
            can actually sample the page behind it. Forms once on load, same
            beat sheet as the app's splash screen (SplashScreen.swift /
            Figma "Splash · motion" 288:693): shade pools first, then the
-           mark's edge, then its fill+bloom, then Min. -->
+           mark's edge, then its fill+bloom, then min. -->
       <div class="wordmark--hero wordmark--hero-resin" role="img" aria-label="min">
         <svg class="wordmark-resin-svg" viewBox="0 0 182 107" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
 <!-- the glow: a blurred duplicate of the letterforms themselves, not a
@@ -249,7 +266,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 </defs>
         </svg>
         <div class="wordmark__min wordmark__min--resin" aria-hidden="true">
-          <div class="min min--hero" data-min data-phase="1.9"></div>
+          <img class="min min--hero" src="/assets/img/min-character/floating%20Min.png" alt="">
         </div>
       </div>
 
@@ -310,7 +327,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
             </span>
             <div>
               <strong>You're on the list</strong>
-              <span>We'll email you the moment Min opens in your neighbourhood</span>
+              <span>We'll email you the moment min opens in your neighbourhood</span>
             </div>
           </div>
         </div>
@@ -318,9 +335,9 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
       <p class="fineprint rise" data-delay="5">Launching for <b>all Helsinki students</b> first. Coming <b>Early 2027</b>.</p>
       </div>
 
-      <figure class="hero__preview rise" data-delay="3" aria-label="Min's match interface, introducing you to someone nearby">
+      <figure class="hero__preview rise" data-delay="3" aria-label="min's match interface, introducing you to someone nearby">
         <div class="app-phone">
-          <img class="app-phone__shot" src="/assets/img/min-ui/matchv2-corners.png" alt="Min match screen: Min suggests someone you might vibe with, with a swipe-to-accept intro" width="402" height="874">
+          <img class="app-phone__shot" src="/assets/img/min-ui/matchv2-corners.png" alt="min match screen: min suggests someone you might vibe with, with a swipe-to-accept intro" width="402" height="874">
           <img class="app-phone__rim" src="/assets/img/iphone-frame.png" alt="" aria-hidden="true" width="900" height="1840" decoding="async">
         </div>
       </figure>
@@ -356,7 +373,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 
     <!-- ── how it works ─────────────────────────────────────────
          Three steps, told by the phone: one screen per step, held
-         in front of the reader while the steps scroll past it. Min
+         in front of the reader while the steps scroll past it. min
          himself stays inside the screen — he is the app here, not a
          mascot standing next to it. -->
     <section class="steps" id="how" data-reveal>
@@ -402,13 +419,13 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
               <img class="pmock__rim" src="/assets/img/iphone-frame.png" alt="" aria-hidden="true"
                    width="900" height="1840" decoding="async" loading="lazy">
 
-              <!-- 1 · talk to Min — the real screen. -->
+              <!-- 1 · talk to min — the real screen. -->
               <div class="pscreen pscreen--shot" data-screen="1">
                 <img src="/assets/img/min-ui/chat.png" alt=""
                      width="402" height="874" decoding="async" loading="lazy">
               </div>
 
-              <!-- 2 · Min finds your people — the real screen. -->
+              <!-- 2 · min finds your people — the real screen. -->
               <div class="pscreen pscreen--shot" data-screen="2">
                 <img src="/assets/img/min-ui/match.png" alt=""
                      width="402" height="874" decoding="async" loading="lazy">
@@ -451,7 +468,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
                 <b>min finds your people</b>
                 <div class="steps__reveal">
                   <p>
-                    min is social and will find people around you who you might
+                    min is social and will find people nearby who you might
                     vibe with.
                   </p>
                 </div>
@@ -498,7 +515,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
             </div>
             <b>No swiping or chatting</b>
             <p>
-              This isn't a dating app or a friend-making app. It just makes saying
+              This isn't a dating app or another friend-making app. It just makes saying
               hello to the people around you normal again. Once you're matched
               there is one thing left to do — walk over and say it. No match to
               unmatch, and no chat left hanging if it goes nowhere.
@@ -513,7 +530,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
             </div>
             <b>No profiles</b>
             <p>
-              No profile picture, no bio to keep updated. Min simply learns about
+              No profile picture, no bio to keep updated. min simply learns about
               you and keeps that memory on your device. Nobody is sorted by their
               face, and there is no profile for us to sell — because there is no
               profile.
@@ -559,6 +576,14 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
               only goal is to make saying hello to people around you easier. What the
               relationship becomes after that — a friend, a running group, or a date —
               that's up to the two of you.
+            </p></div>
+          </details>
+          <details class="faq__item resin rise" data-delay="1">
+            <summary>How is min different from Meetup, Bumble BFF or other friend apps?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              min is not a friend app either. There is no profile to build, nothing
+              to swipe and no group chat to keep alive. You talk to min, min introduces you to one person nearby,
+              and if you both accept, you walk over and say hello.
             </p></div>
           </details>
           <details class="faq__item resin rise" data-delay="2">
@@ -634,7 +659,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
               </span>
               <div>
                 <strong>You're on the list</strong>
-                <span>We'll email you the moment Min opens in your neighbourhood</span>
+                <span>We'll email you the moment min opens in your neighbourhood</span>
               </div>
             </div>
           </div>
@@ -647,7 +672,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 
 <footer class="footer footer--tight">
   <div class="footer__row">
-    <span>© 2026 Min</span>
+    <span>© 2026 min</span>
     <span>
       <a href="/privacy-policy/">Privacy Policy</a> ·
       <a href="/waitlist/">Waitlist</a>
@@ -677,7 +702,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 <script type="module">
   import { waitlistForms } from '/assets/js/waitlist-form.js?v=20260922a';
   import { howItWorks } from '/assets/js/home-steps.js?v=20260915b';
-  import { heroFlip } from '/assets/js/hero-flip.js?v=20260917b';
+  import { heroFlip } from '/assets/js/hero-flip.js?v=20260928a';
   // The scan -> arrival ping rides in on that first import: waitlist-form.js
   // pulls in scan-attribution.js, which reports back to the Worker that this
   // page actually rendered, if and only if a QR scan sent us here with a ?s=
@@ -685,7 +710,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
   // report zero arrivals when someone forgot, which reads as a page nobody
   // reaches rather than as a missing line.
   waitlistForms();   // hero + closer, the same module /waitlist posts through
-  howItWorks();      // the three steps, and Min's pose following them
+  howItWorks();      // the three steps, and min's pose following them
   heroFlip();        // the hero's changing last word — the thing being tested
 </script>
 </body>

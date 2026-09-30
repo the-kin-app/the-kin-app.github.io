@@ -1,44 +1,43 @@
 <!DOCTYPE html>
-<!-- PROPOSAL, not live. Helsinki city landing page, drafted 2026-09-24.
-     Would live at https://hellomin.app/helsinki/
+<!-- NOT RELEASED YET: noindex, and nothing links here, until the manual
+     translation is done. To release: drop the robots meta below, add the
+     page to sitemap.xml and llms.txt, and link it from the homepage footer.
 
-     Built from the homepage (/) so it looks and behaves the same: same
-     wordmark, hero, steps, facts, FAQ and closer, same CSS and JS. Only the
-     words change, towards Helsinki and the searches in
-     min-brain/Ideas/Inbox/seo/2026-09-24 round-1.md.
+     Helsinki city landing page. Built from the homepage (/) so it looks
+     and behaves the same: same wordmark, hero, steps, facts, FAQ and closer,
+     same CSS and JS. Only the words change, towards Helsinki and the
+     searches in min-brain/Ideas/Inbox/seo/.
 
      No data-variant on <html>, on purpose: this page is outside the QR
      landing A/B, so its signups file as variant = NULL (same as /ads/)
      rather than counting for side a or b.
 
-     The hero's changing word is NOT switched on here. hero-flip.js has
-     its word list hard-coded to the homepage's; see the change list in
-     ../2026-09-24 round-2 helsinki.md. With JS off the line reads with its
-     first word, which is exactly what renders now. -->
+     The hero's changing word reads its own list from data-words. -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Min Helsinki: meet people IRL, right around the corner</title>
-<meta name="description" content="Min is an IRL social app for Helsinki. Talk to Min, get introduced to someone nearby, and go say hello. No profiles, no swiping, no chat. Launching for Helsinki-area students in early 2027.">
+<title>Make friends in Helsinki, in real life | min</title>
+<meta name="description" content="min is an IRL social app for meeting new people and making friends in Helsinki. Talk to min, get introduced to someone nearby, and go say hello. No profiles, no swiping, no chat. Launching for Helsinki-area students, exchange students included, in early 2027.">
 <meta name="theme-color" content="#2F333F">
+<meta name="robots" content="noindex, follow">
 <link rel="canonical" href="https://hellomin.app/helsinki/">
 
-<meta property="og:title" content="Min Helsinki: meet people IRL, right around the corner">
+<meta property="og:title" content="Make friends in Helsinki, in real life | min">
 <meta property="og:description" content="The app that introduces you to the right people around you in Helsinki. Then you go say hello.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hellomin.app/helsinki/">
-<meta property="og:site_name" content="Min">
-<meta property="og:locale" content="en">
+<meta property="og:site_name" content="min">
+<meta property="og:locale" content="en_GB">
 <meta property="og:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Min: a softly glowing pebble with two lit eyes, waving hello in dusk light.">
+<meta property="og:image:alt" content="min: a softly glowing pebble with two lit eyes, waving hello in dusk light.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
 
 <!-- Same @ids as the homepage graph, so search engines read this as one
-     more page of the same organisation and site, not a second Min. Every
+     more page of the same organisation and site, not a second min. Every
      answer below is word for word what the visible FAQ says. -->
 <script type="application/ld+json">
 {
@@ -48,24 +47,36 @@
       "@type": "WebPage",
       "@id": "https://hellomin.app/helsinki/#page",
       "url": "https://hellomin.app/helsinki/",
-      "name": "Min Helsinki: meet people IRL, right around the corner",
+      "name": "Make friends in Helsinki, in real life | min",
       "inLanguage": "en",
       "isPartOf": { "@id": "https://hellomin.app/#website" },
-      "about": { "@id": "https://hellomin.app/#organization" },
-      "spatialCoverage": { "@type": "City", "name": "Helsinki" }
+      "about": { "@id": "https://hellomin.app/#app" },
+      "publisher": { "@id": "https://hellomin.app/#organization" },
+      "spatialCoverage": { "@type": "City", "name": "Helsinki", "containedInPlace": { "@type": "Country", "name": "Finland" } },
+      "breadcrumb": { "@id": "https://hellomin.app/helsinki/#breadcrumb" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://hellomin.app/helsinki/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "min", "item": "https://hellomin.app/" },
+        { "@type": "ListItem", "position": 2, "name": "Helsinki", "item": "https://hellomin.app/helsinki/" }
+      ]
     },
     {
       "@type": "FAQPage",
       "@id": "https://hellomin.app/helsinki/#faq",
       "mainEntity": [
-        { "@type": "Question", "name": "When does Min launch in Helsinki?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Min launches first for all students in the Helsinki area in early 2027. Join the waitlist and we'll email you when it opens." } },
+        { "@type": "Question", "name": "When does min launch in Helsinki?",
+          "acceptedAnswer": { "@type": "Answer", "text": "min launches first for all students in the Helsinki area in early 2027. Join the waitlist and we'll email you when it opens." } },
         { "@type": "Question", "name": "Which schools does the student launch cover?",
           "acceptedAnswer": { "@type": "Answer", "text": "All students in the Helsinki area: Aalto University, Arcada, Diak, Haaga-Helia, Hanken, Humak, Laurea, Metropolia, Uniarts, the University of Helsinki and more." } },
+        { "@type": "Question", "name": "Can international and exchange students use min?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. min opens for every student in the Helsinki area, international and exchange students included. New to the city is exactly when a hello from someone nearby counts most." } },
         { "@type": "Question", "name": "Is min a dating app?",
           "acceptedAnswer": { "@type": "Answer", "text": "No. We usually say that min is a \"social lubricant\" app, meaning its only goal is to make saying hello to people around you easier. What the relationship becomes after that, a friend, a running group, or a date, is up to the two of you." } },
         { "@type": "Question", "name": "How is min different from Meetup, Bumble BFF or other friend apps?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There is no profile to build, nothing to swipe and no group chat to keep alive. You talk to min, min introduces you to one person nearby, and if you both accept, you walk over and say hello."} },
+          "acceptedAnswer": { "@type": "Answer", "text": "min is not a friend app either. There is no profile to build, nothing to swipe and no group chat to keep alive. You talk to min, min introduces you to one person nearby, and if you both accept, you walk over and say hello."} },
         { "@type": "Question", "name": "Can people find me on this? Is it safe?",
           "acceptedAnswer": { "@type": "Answer", "text": "There's no search, no profiles to browse and no followers. min acts as the intermediary that maintains each user's anonymity until an introduction is mutually accepted. The meeting only happens in a public, populated area, and there is always a smooth option to back out of the meeting at any time." } },
         { "@type": "Question", "name": "What does min actually store about me?",
@@ -114,12 +125,12 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
     <div class="shell">
       <div class="hero__copy">
 
-      <!-- The Min · Resin wordmark artwork, minus the i-dot: Min sits in
+      <!-- The min · Resin wordmark artwork, minus the i-dot: min sits in
            that gap. Inlined (not <img>) so the glass panels' backdrop-filter
            can actually sample the page behind it. Forms once on load, same
            beat sheet as the app's splash screen (SplashScreen.swift /
            Figma "Splash · motion" 288:693): shade pools first, then the
-           mark's edge, then its fill+bloom, then Min. -->
+           mark's edge, then its fill+bloom, then min. -->
       <div class="wordmark--hero wordmark--hero-resin" role="img" aria-label="min">
         <svg class="wordmark-resin-svg" viewBox="0 0 182 107" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
 <!-- the glow: a blurred duplicate of the letterforms themselves, not a
@@ -242,19 +253,17 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
         <span class="hero__line hero__line--lit">IRL meetings</span>
         <span class="hero__line hero__headline-soft">around Helsinki</span>
       </h1>
-      <!-- Static until hero-flip.js can take a per-page word list. The
-           data-words list is what it would cycle through. Endings stay at
-           20 characters or fewer: home-hero-flip.css sizes the mobile line
-           for "a friend of a friend". width: auto because hero-flip.js is
-           what normally sets the width, and it isn't called here. -->
+      <!-- hero-flip.js cycles the data-words list. Endings stay at 20
+           characters or fewer: home-hero-flip.css sizes the mobile line
+           for "a friend of a friend". -->
       <p class="hero__flipline rise" data-delay="3">
         <span class="hero__flipline-lead">say hello to</span>
-        <span class="flipwords" data-flipwords aria-hidden="true" style="width: auto"
-              data-words="someone on campus|a Kumpula classmate|a Kallio neighbour|a face on the metro|a running partner|a friend of a friend">
+        <span class="flipwords" data-flipwords aria-hidden="true" data-words="someone on campus|a Kumpula classmate|a Kallio neighbour|a face on the metro|a running partner|a friend of a friend">
           <span class="flipwords__word">someone on campus</span>
           <span class="flipwords__ruler"></span>
         </span>
-        <span class="visually-hidden">say hello to someone on campus.</span>
+        <span class="visually-hidden">say hello to someone on campus, a Kumpula classmate,
+          a Kallio neighbour, a face on the metro, a running partner, or a friend of a friend.</span>
       </p>
       <div class="hero__actions">
         <div class="signup-block rise" data-delay="4">
@@ -285,7 +294,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
             </span>
             <div>
               <strong>You're on the list</strong>
-              <span>We'll email you the moment Min opens in Helsinki</span>
+              <span>We'll email you the moment min opens in Helsinki</span>
             </div>
           </div>
         </div>
@@ -293,9 +302,9 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
       <p class="fineprint rise" data-delay="5">Launching for <b>all Helsinki-area students</b> first. Coming <b>Early 2027</b>.</p>
       </div>
 
-      <figure class="hero__preview rise" data-delay="3" aria-label="Min's chat interface, where you tell Min about yourself">
+      <figure class="hero__preview rise" data-delay="3" aria-label="min's chat interface, where you tell min about yourself">
         <div class="app-phone">
-          <img class="app-phone__shot" src="/assets/img/min-chat-day.jpg" alt="Min chat screen: Min asks about your week while you type a reply" width="804" height="1748">
+          <img class="app-phone__shot" src="/assets/img/min-chat-day.jpg" alt="min chat screen: min asks about your week while you type a reply" width="804" height="1748">
           <img class="app-phone__rim" src="/assets/img/iphone-frame.png" alt="" aria-hidden="true" width="900" height="1840" decoding="async">
         </div>
       </figure>
@@ -423,7 +432,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
             </div>
             <b>No profiles</b>
             <p>
-              No profile picture, no bio to keep updated. Min simply learns about
+              No profile picture, no bio to keep updated. min simply learns about
               you and keeps that memory on your device. Nobody is sorted by their
               face, and there is no profile for us to sell, because there is no
               profile.
@@ -459,9 +468,9 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 
         <div class="faq__list">
           <details class="faq__item resin rise" data-delay="1">
-            <summary>When does Min launch in Helsinki?<i aria-hidden="true"></i></summary>
+            <summary>When does min launch in Helsinki?<i aria-hidden="true"></i></summary>
             <div class="faq__answer"><p>
-              Min launches first for all students in the Helsinki area in early 2027.
+              min launches first for all students in the Helsinki area in early 2027.
               Join the waitlist and we'll email you when it opens.
             </p></div>
           </details>
@@ -471,6 +480,14 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
               All students in the Helsinki area: Aalto University, Arcada, Diak,
               Haaga-Helia, Hanken, Humak, Laurea, Metropolia, Uniarts, the
               University of Helsinki and more.
+            </p></div>
+          </details>
+          <details class="faq__item resin rise" data-delay="1">
+            <summary>Can international and exchange students use min?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              Yes. min opens for every student in the Helsinki area, international and
+              exchange students included. New to the city is exactly when a hello from
+              someone nearby counts most.
             </p></div>
           </details>
           <details class="faq__item resin rise" data-delay="2">
@@ -485,8 +502,8 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
           <details class="faq__item resin rise" data-delay="2">
             <summary>How is min different from Meetup, Bumble BFF or other friend apps?<i aria-hidden="true"></i></summary>
             <div class="faq__answer"><p>
-              There is no profile to build, nothing to swipe and no group chat to
-              keep alive. You talk to min, min introduces you to one person nearby,
+              min is not a friend app either. There is no profile to build, nothing
+              to swipe and no group chat to keep alive. You talk to min, min introduces you to one person nearby,
               and if you both accept, you walk over and say hello.
             </p></div>
           </details>
@@ -562,7 +579,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
               </span>
               <div>
                 <strong>You're on the list</strong>
-                <span>We'll email you the moment Min opens in Helsinki</span>
+                <span>We'll email you the moment min opens in Helsinki</span>
               </div>
             </div>
           </div>
@@ -575,10 +592,11 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 
 <footer class="footer footer--tight">
   <div class="footer__row">
-    <span>© 2026 Min</span>
+    <span>© 2026 min</span>
     <span>
       <a href="/">Home</a> ·
-      <a href="/privacy-policy/">Privacy Policy</a>
+      <a href="/privacy-policy/">Privacy Policy</a> ·
+      <a href="/waitlist/">Waitlist</a>
     </span>
   </div>
 </footer>
@@ -595,10 +613,10 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 <script type="module">
   import { waitlistForms } from '/assets/js/waitlist-form.js?v=20260922a';
   import { howItWorks } from '/assets/js/home-steps.js?v=20260915b';
+  import { heroFlip } from '/assets/js/hero-flip.js?v=20260928a';
   waitlistForms();
   howItWorks();
-  // heroFlip() stays off until it reads [data-words]; called now it would
-  // cycle the homepage's list on a Helsinki page.
+  heroFlip();   // reads this page's own endings off [data-words]
 </script>
 </body>
 </html>

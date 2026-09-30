@@ -1,5 +1,5 @@
 /* ============================================================
-   Min — landing page
+   min — landing page
    ------------------------------------------------------------
    Built on tokens.css, and on the creative direction:
 
@@ -50,7 +50,7 @@
   --dock-gap: calc(var(--space-4) + max(env(safe-area-inset-bottom, 0px), 12px));
   --dock-clear: calc(var(--dock-h) + var(--dock-gap) + var(--space-5));
 
-  /* the wordmark letterforms, minus the i-dot — Min occupies that himself */
+  /* the wordmark letterforms, minus the i-dot — min occupies that himself */
   --mask-min: url('/assets/img/min-letters-mask.svg');
 }
 
@@ -218,7 +218,7 @@ p { margin: 0; }
   text-wrap: pretty;
 }
 
-/* Min, memos — the app's own nouns. Named things in running copy, so they
+/* min, memos — the app's own nouns. Named things in running copy, so they
    read as parts of the product and not as ordinary words. */
 .term {
   font-weight: var(--font-weight-semibold);
@@ -715,8 +715,8 @@ p { margin: 0; }
 }
 .nav__link:hover { color: var(--ink); }
 
-/* ---- the wordmark, and Min inside it -----------------------
-   Min is the dot of the lowercase i. He only detaches later, so the visitor
+/* ---- the wordmark, and min inside it -----------------------
+   min is the dot of the lowercase i. He only detaches later, so the visitor
    feels they discovered him. He carries the accent only in the small flat mark —
    at hero size he is the same pearl resin as everything else. */
 
@@ -728,11 +728,11 @@ p { margin: 0; }
 }
 
 /* ---- the resin wordmark (homepage hero only) ----------------
-   The baked "Min · Resin" artwork, dropped in whole rather than rebuilt as a
+   The baked "min · Resin" artwork, dropped in whole rather than rebuilt as a
    CSS mask+backdrop-filter effect. Its own viewBox (182×107) carries a wider
    margin than the flat 138×68 letterforms — that's headroom for its filter
    shadows, not part of the mark — so this box uses that ratio instead, and
-   Min's position/size below are recomputed against it (same 22,15-unit
+   min's position/size below are recomputed against it (same 22,15-unit
    offset the artwork adds around the flat letterforms). Other pages keep the
    CSS-built glass wordmark for now. */
 .wordmark--hero-resin {
@@ -788,7 +788,7 @@ p { margin: 0; }
    else on screen, THEN this white pass washes over and fades, revealing the
    material fill underneath. Painted last (on top).
    Timeline: park 0–700 · border in 80–460 · border holds alone to 300
-   · flash 300–780 (Min flashes on the same frame) · fill 340–700
+   · flash 300–780 (min flashes on the same frame) · fill 340–700
    · glow 620–1040. Previously the flash fired at 750ms — 50ms after the
    border STARTED fading in — so it read as the flash coming first.
 
@@ -831,7 +831,7 @@ p { margin: 0; }
   to   { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
 }
 
-/* Min sits in the resin artwork's i-dot gap: centre 57.64% / 22.71% of the
+/* min sits in the resin artwork's i-dot gap: centre 57.64% / 22.71% of the
    182×107 box (the 60.08%/13.68% flat-box position, carried through the
    artwork's added margin). Sized down to match — the resin box is wider
    relative to the letters than the flat one, so the percentage shrinks even
@@ -850,12 +850,12 @@ p { margin: 0; }
    from fighting over the same property. */
 .wordmark__min.wordmark__min--resin {
   left: 57.64%;
-  top: 22.71%;
-  width: 11.5%;
+  top: 19%;
+  width: 44%;
 }
-/* Min DESCENDS into the dot's spot while the wordmark is still rising.
+/* min DESCENDS into the dot's spot while the wordmark is still rising.
    The two are made of the same resin, so they resolve together rather than
-   taking turns — the wordmark's outline-only window and Min's orb-outline
+   taking turns — the wordmark's outline-only window and min's orb-outline
    window are deliberately the SAME moment (0.85–1.75s), and the two park
    within 100ms of each other. An earlier version ran them sequentially and
    took 7.6s; it read as two animations queued up.
@@ -863,12 +863,12 @@ p { margin: 0; }
    Source of truth: Figma "WEB · logo emerge" (QR landing page, 679:404),
    4.60s. Full beat sheet in claude/min-logo-emerge-spec.md.
 
-     0.10  Min starts descending          0.62  flash rolls up
+     0.10  min starts descending          0.62  flash rolls up
      0.08  BOTH outlines begin            0.70  morph starts (100ms behind)
      0.27  eyes open                      0.80  limbs · 0.90 feet
      0.46  BOTH are empty shells          0.95  flash full
      0.70  wordmark parks                 1.10  morph complete
-     0.80  Min parks                      1.50  flash rolled off
+     0.80  min parks                      1.50  flash rolled off
 
    The descent runs on `transform` and the idle float on `translate` — two
    independent CSS properties, so the one-shot arrival and the forever-float
@@ -879,7 +879,7 @@ p { margin: 0; }
   --min-entry: 180ms;
 }
 /* ~0.9x his own height, the same proportion as Figma's 150px against a 167px
-   Min. Expressed in em so it tracks the mark at every size it is used at. */
+   min. Expressed in em so it tracks the mark at every size it is used at. */
 @keyframes min-descend {
   from { transform: translateY(-0.95em); }
   to   { transform: translateY(0); }
@@ -943,7 +943,7 @@ p { margin: 0; }
 }
 
 /* ---- the nav mark ------------------------------------------
-   The hero mark at 50px: the same bloom, cast glass and Min in the i-dot. It
+   The hero mark at 50px: the same bloom, cast glass and min in the i-dot. It
    is never "entering" — the dock surfaces long after the hero has played — so
    every entry animation is switched off and the final state is the base one.
    The only thing that differs from the hero is the backdrop maths: the nav
@@ -990,7 +990,7 @@ p { margin: 0; }
   animation: none;
 }
 
-/* Min, at nav scale. His morph and eye-glow loops come from .min, so all he
+/* min, at nav scale. His morph and eye-glow loops come from .min, so all he
    needs here is a float sized to a 15px body — the hero's -11px would launch
    him out of the pebble. */
 .min--nav { animation: float-nav 9s ease-in-out infinite; }
@@ -1012,8 +1012,8 @@ p { margin: 0; }
   box-shadow: 0 0 5px 1px color-mix(in srgb, var(--color-accent) 45%, transparent);
 }
 
-/* Min sits exactly where the i-dot is: centre 60.08% / 13.68% of the 138×68
-   box. The flat dot is 13.48% of the width, but Min's body only fills ~60% of
+/* min sits exactly where the i-dot is: centre 60.08% / 13.68% of the 138×68
+   box. The flat dot is 13.48% of the width, but min's body only fills ~60% of
    his own square — and his ears reach past that again — so the square has to
    be larger to land at the same size. He gets a little extra beyond that,
    because he's a character, not punctuation. */
@@ -1028,7 +1028,7 @@ p { margin: 0; }
   animation: surface 750ms var(--ease-emergence) 700ms forwards;
 }
 
-/* ---- Min ---------------------------------------------------
+/* ---- min ---------------------------------------------------
    Exact geometry + motion from Figma "MIN · idle breathe" (node 598:356,
    file PmauZKhA4iyowYabC3XOJE) — a dome body, two ear flaps, two foot pads,
    two hot eyes that blink. min.js stamps the markup once; everything below
@@ -1036,10 +1036,10 @@ p { margin: 0; }
    (percentages kept as authored, radians converted to degrees). Colour is
    the exported warm cream-to-tan gradient — no departure needed there. */
 
-/* ---- Min's own entrance, same beat as the wordmark: eyes, then an
+/* ---- min's own entrance, same beat as the wordmark: eyes, then an
    outline, then a white flash standing in for a reflection, then the
    real material fades up underneath as the flash clears. Runs once
-   whenever a Min mounts; composes with whatever the parent context
+   whenever a min mounts; composes with whatever the parent context
    does to reveal him (a container fade, the fall-and-bounce, etc.) —
    this is his own arrival, independent of theirs. */
 /* Order: eyes fade up and OPEN (lids part) → ~450ms of nothing → outline
@@ -1055,7 +1055,7 @@ p { margin: 0; }
 /* the outline is a PASS, not a resting state — it fades in, holds
    briefly, then fades back out as the material takes over. Previously
    it only faded in ("forwards" held it at 1 forever), which left a
-   permanent white rim around Min — not the intent. */
+   permanent white rim around min — not the intent. */
 /* The orb border rides the SAME window as the wordmark's outline — both
    marks are an empty shell at 1.75s, then both fill. That shared beat is
    the whole point of the sequence. */
@@ -1107,6 +1107,7 @@ p { margin: 0; }
   --min-phase: 0s;
 }
 .min svg { position: relative; width: 100%; height: 100%; overflow: visible; display: block; }
+img.min { object-fit: contain; }
 
 /* a floating blob being — gravity doesn't apply to him, so even at rest
    he drifts: a slow bob plus a faint rotation, never fully still. */
@@ -1292,7 +1293,7 @@ p { margin: 0; }
 
 /* ---- hero -------------------------------------------------- */
 
-/* A centred composition, so Min — who is the dot of the i, at 49.6% of the
+/* A centred composition, so min — who is the dot of the i, at 49.6% of the
    wordmark — lands on the horizontal centre of the screen. */
 .hero {
   position: relative;
@@ -1413,7 +1414,7 @@ p { margin: 0; }
 
 /* ---- the ring ----------------------------------------------
    Eight people standing around each other with a hole in the middle, which
-   is exactly where Min ends up. Positions come from --x / --y in the
+   is exactly where min ends up. Positions come from --x / --y in the
    markup, so the formation is authored once and never computed twice. */
 
 .ring {
@@ -1429,7 +1430,7 @@ p { margin: 0; }
   width: clamp(30px, 11%, 62px);
   aspect-ratio: 1 / 1.06;
   translate: -50% -50%;
-  /* Min's silhouette: a wide dome, tucked slightly at the bottom */
+  /* min's silhouette: a wide dome, tucked slightly at the bottom */
   border-radius: 46% 46% 52% 52% / 48% 48% 54% 54%;
   /* Mixed from --ink, not from white: the scene ends in daylight, and --ink
      is a registered property, so these bodies crossfade from pale glass on
@@ -1441,7 +1442,7 @@ p { margin: 0; }
 }
 
 /* the two lights a person can be under, cross-faded by --cold / --warm:
-   the screen in their hands, and Min's light once they've looked up */
+   the screen in their hands, and min's light once they've looked up */
 .blob::before,
 .blob::after {
   content: '';
@@ -1458,7 +1459,7 @@ p { margin: 0; }
     rgba(150, 178, 205, 0.78), rgba(150, 178, 205, 0) 70%);
   opacity: var(--cold, 1);
 }
-/* Min's light, falling on them from the middle — his own violet, so it still
+/* min's light, falling on them from the middle — his own violet, so it still
    reads once the page is in daylight. */
 .blob::before {
   background: radial-gradient(72% 54% at 50% 16%,
@@ -1468,7 +1469,7 @@ p { margin: 0; }
 }
 
 /* ---- the links ---------------------------------------------
-   Lines from the middle out to each person: they start just inside Min's
+   Lines from the middle out to each person: they start just inside min's
    silhouette and stop at the edge of the body they reach, so nothing ever
    crosses a translucent object. Drawn by unwinding a dash one unit longer
    than the longest of them. */
@@ -1489,7 +1490,7 @@ p { margin: 0; }
   stroke-dasharray: 24;
 }
 
-/* Min holds the middle. He breathes rather than floats here — the links are
+/* min holds the middle. He breathes rather than floats here — the links are
    fixed geometry, so a big bob would pull their ends out from under him. */
 .min--dawn {
   position: absolute;
@@ -1551,7 +1552,7 @@ p { margin: 0; }
 .scene.is-armed .blob {
   opacity: var(--in, 0);
   scale: calc(0.9 + 0.1 * var(--in, 0));
-  /* connected bodies pick up a little of Min's light on their own edge */
+  /* connected bodies pick up a little of min's light on their own edge */
   border-color: rgba(255, 240, 222, calc(0.16 + 0.22 * var(--warm, 0)));
 }
 .scene.is-armed .ring__links line {
@@ -1568,7 +1569,7 @@ p { margin: 0; }
   translate: 0 calc(10px - 10px * var(--in, 0));
 }
 
-/* ---- Min section ------------------------------------------- */
+/* ---- min section ------------------------------------------- */
 
 .split {
   display: grid;
@@ -1639,7 +1640,7 @@ p { margin: 0; }
   color: rgba(250, 247, 242, 0.5);
 }
 .phone__avatar { width: 30px; height: 30px; flex: none; }
-/* the memo screen is headed by a pin rather than by Min */
+/* the memo screen is headed by a pin rather than by min */
 .phone__avatar--pin { color: var(--color-accent-soft); padding: 2px; }
 
 .bubble {
@@ -1684,7 +1685,7 @@ p { margin: 0; }
 
 /* ---- the memo map, inside the phone ------------------------
    Schematic, not a real map — a placeholder for a real capture: the streets
-   as faint rules, the radius Min can see, and memos pinned inside it.
+   as faint rules, the radius min can see, and memos pinned inside it.
    Percentages only, so it reflows with the screen. */
 
 .mmap {
@@ -1761,7 +1762,7 @@ p { margin: 0; }
 }
 
 /* the memo the map has selected, sitting where the input bar sits in the
-   Min screen — same object, different job */
+   min screen — same object, different job */
 .memo {
   margin-top: 8px;
   padding: 11px 14px;
@@ -2029,7 +2030,7 @@ p { margin: 0; }
 }
 
 /* ---- ORB → MIN -------------------------------------------------------
-   Min arrives as an ORB, and only once the material has been revealed does
+   min arrives as an ORB, and only once the material has been revealed does
    the shape settle and the limbs and feet grow out of the torso.
 
    This is possible where the waving arm was not, and the difference is worth
@@ -2074,10 +2075,10 @@ p { margin: 0; }
    ORB AND BORDER ARE HERO-ONLY — GLOBAL DEFAULT IS HIDDEN
 
    Both belong to the forming sequence and to nothing else. Without this
-   block they leak into every other Min on the site:
+   block they leak into every other min on the site:
 
    · .min__orb is a mask contributor, so at full opacity it unions a big
-     circle into the silhouette — every Min renders as a round blob with
+     circle into the silhouette — every min renders as a round blob with
      limbs stuck on the sides rather than as his own shape.
    · .min__border draws a hard ring around him, everywhere.
 
@@ -2185,25 +2186,20 @@ p { margin: 0; }
   100%    { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
 }
 
-/* ---- 679:433 Min — falls from above, parks at 47.826% (2200ms) --------
+/* ---- 679:433 min — falls from above, parks at 47.826% (2200ms) --------
    translateY in PERCENT, so it scales with the rendered mark. Figma's
-   −150px against a 167-tall Min is −90%. It was authored as −0.95em, which
-   resolves against font-size (16px), not Min's height (21px) — Min barely
+   −150px against a 167-tall min is −90%. It was authored as −0.95em, which
+   resolves against font-size (16px), not min's height (21px) — min barely
    moved, which is why he did not read as arriving from above. */
+.wordmark--hero-resin .wordmark__min { opacity: 1; animation: none; }
 .wordmark--hero-resin .min--hero {
-  animation: wmx-min-fall var(--T) linear both,
-             float-min 9s ease-in-out infinite 2400ms;
+  animation: wmx-min-float-in var(--T) linear both,
+             float-min 9s ease-in-out infinite 3000ms;
 }
-/* Min falls 150px in Figma, where he is 93 units wide. He renders 22px wide
-   here, so the faithful travel is 150 x (22/93) = ~35px — and against his own
-   21px height that is 170%, not the 90% I had. At 90% he moved 19px, which is
-   under half, and read as fading in at the dot rather than landing on it.
-   He parks on MAGNET: magnetic arrival, no overshoot. */
-@keyframes wmx-min-fall {
-  0%      { transform: translateY(-170%); }
-  15.217% { animation-timing-function: cubic-bezier(0.16, 0.82, 0.22, 1); transform: translateY(-170%); }
-  47.826% { transform: translateY(0); }
-  100%    { transform: translateY(0); }
+/* min drifts down from the top-left and fades in, slowing to a stop — weightless, no bounce. */
+@keyframes wmx-min-float-in {
+  0%, 20% { opacity: 0; transform: translate(-110%, -120%) rotate(-10deg); animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1); }
+  60%, 100% { opacity: 1; transform: none; }
 }
 
 /* ---- 690:392 Orb — dissolves OUTWARD, it never shrinks ---------------- */
@@ -2229,7 +2225,7 @@ p { margin: 0; }
   100%    { translate: 0 0; }
 }
 
-/* ---- 715:374 Min · border — the SAME window as the wordmark's outline -
+/* ---- 715:374 min · border — the SAME window as the wordmark's outline -
    both marks are an empty shell at 38.043%, then both fill. That shared
    beat is the whole point of the sequence. */
 .wordmark--hero-resin .min__border {
@@ -2254,7 +2250,7 @@ p { margin: 0; }
    transform only — so min-morph-body never runs here and the torso was
    stuck on that start shape for the whole sequence: a body 205 units wide
    wearing limbs and feet drawn for one 280 wide. That is the entire reason
-   Min read as a mushroom cap with wings. The geometry was never wrong; the
+   min read as a mushroom cap with wings. The geometry was never wrong; the
    hero was simply never letting it finish. */
 .wordmark--hero-resin .min__torso {
   transform-box: fill-box;
@@ -2374,12 +2370,12 @@ p { margin: 0; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   THE RING — Min belongs AT the hub
+   THE RING — min belongs AT the hub
 
    The eight links are drawn from a radius of ~15 units out to each person,
    so they all point at the centre of the ring. But .min--dawn is an in-flow
    block with `margin-inline: auto`, which centres it horizontally and leaves
-   its vertical position to the document flow — so Min sat below the hub and
+   its vertical position to the document flow — so min sat below the hub and
    eight lines converged on empty space. He is placed explicitly now.
    ═══════════════════════════════════════════════════════════════════════ */
 .ring .min--dawn,

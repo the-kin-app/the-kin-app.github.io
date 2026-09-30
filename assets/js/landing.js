@@ -1,9 +1,9 @@
 /* ============================================================
-   Min — homepage behaviour
+   min — homepage behaviour
    ------------------------------------------------------------
    1. reveals()      — IntersectionObserver adds .in; CSS runs the material
                        emergence recipe from the Figma splash handoff.
-   2. minBodies()    — Min's body morphs on an exact 5s loop; his gaze
+   2. minBodies()    — min's body morphs on an exact 5s loop; his gaze
                        follows you with inertia. He does not blink.
                        Lives in min.js — the pitch deck shows him too.
    3. buttons()      — the submerge press: the object sinks, goes clear,

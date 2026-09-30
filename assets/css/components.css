@@ -1,5 +1,5 @@
 /* ============================================================
-   Min — Components
+   min — Components
    Reusable UI blocks. Each maps to a Figma component of the same
    name. Style with tokens only (see tokens.css) — no literals.
    Depends on tokens.css + base.css.

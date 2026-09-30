@@ -1,5 +1,5 @@
 /* ============================================================
-   Min — the signup form
+   min — the signup form
    ------------------------------------------------------------
    One address, posted to the Worker. Lifted out of
    waitlist-hero.js so /waitlist and the homepage post through

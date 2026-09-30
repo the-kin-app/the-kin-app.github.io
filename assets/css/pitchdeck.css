@@ -1,8 +1,8 @@
 /* ============================================================
-   Min — the public pitch deck
+   min — the public pitch deck
    ------------------------------------------------------------
    Slides made of web, not of exported rectangles: the same optical
-   resin, the same Min, the same fog as the landing page. This file
+   resin, the same min, the same fog as the landing page. This file
    loads *after* landing.css and only does two things:
 
      1. turns a scrolling document into a paged, swipeable deck

@@ -1,4 +1,4 @@
-Subject: You're on the Min waitlist
+Subject: You're on the min waitlist
 
 Thanks, you're now on the waitlist!
 
@@ -15,7 +15,7 @@ https://t.me/mincommunity
 Go to the site:
 https://hellomin.app
 
-— the Min team
+— the min team
 
 You're getting this because you joined the waitlist at hellomin.app.
 Privacy policy: https://hellomin.app/privacy-policy/

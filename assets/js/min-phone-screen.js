@@ -41,7 +41,7 @@ export async function phoneScreenTexture(THREE, scale = 1) {
   c.textAlign='center';text('You',360,724,23,'#ddcfe0');text('Good company, a short walk away',360,849,22,'#cbbfc8');c.textAlign='left';
   round(37,891,646,453,45,'#ffffff09','#e9d7dd40');
   c.fillStyle='#d4dfbe';c.beginPath();c.arc(73,936,5,0,Math.PI*2);c.fill();
-  text('A little nudge from Min',90,945,23,'#e4d6e9');text('now',610,945,21,'#bcb1b7');
+  text('A little nudge from min',90,945,23,'#e4d6e9');text('now',610,945,21,'#bcb1b7');
   round(66,987,82,86,36,'#9a829f'); text('J',97,1041,36,'#fff');
   text('Meet Jules',169,1028,38,'#fff7ef',700);text('5 min walk · Up for a coffee',169,1064,22,'#d0c3bd');text('✧',607,1041,50,'#d7bfe3');
   text('You both love slow mornings and finding',67,1122,25,'#e0d3cc');

@@ -1,0 +1,20 @@
+# Min
+
+> Min is an IRL social app that introduces you to people nearby so you can meet new people in real life. You talk to Min, Min introduces you to one person around you, and if you both accept, you walk over and say hello. Not a dating app: no profiles, no swiping, no chat, no feed. Launching first for all students in the Helsinki area, Finland, in early 2027.
+
+## Key facts
+
+- What it is: an app for meeting people nearby, in person. What the relationship becomes — a friend, a running group, or a date — is up to the two of you.
+- How it works: (1) Min gets to know you through conversation. (2) Min finds people nearby you might vibe with. (3) Accept the intro, walk over and say hello, somewhere public.
+- How it differs from Meetup, Bumble BFF or other friend apps: no profile to build, nothing to swipe and no group chat to keep alive.
+- Privacy: your memory shape is stored only on your phone; the conversation is deleted after use. Anonymity holds until an introduction is mutually accepted.
+- Price: talking to Min and getting introductions are free forever. A subscription with more control and curated group events is planned; price not set.
+- Where and when: Helsinki area first (Aalto University, Arcada, Diak, Haaga-Helia, Hanken, Humak, Laurea, Metropolia, Uniarts, University of Helsinki and more), including international and exchange students. Early 2027.
+- Contact: hello@hellomin.app
+
+## Pages
+
+- [Home](https://hellomin.app/): what Min is, how it works, FAQ
+- [Pitch deck](https://hellomin.app/pitchdeck/): why real-life connection disappeared and what Min does about it
+- [Waitlist](https://hellomin.app/waitlist/)
+- [Privacy policy](https://hellomin.app/privacy-policy/)

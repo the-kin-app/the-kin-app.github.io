@@ -114,7 +114,7 @@
   .hero__preview-note { display: none; }
 }
 
-/* Min's sunlit home: the room belongs to the hero only. */
+/* min's sunlit home: the room belongs to the hero only. */
 .hero--app {
   isolation: isolate;
   color: #3A3733;
@@ -151,7 +151,7 @@
    the sizing to the shot's aspect-ratio, exactly as on mobile. 160px is
    the section's own padding (40 + 100) plus 20px of air; the preview's
    margin and padding are zeroed here because both were reserving room for
-   things this layout no longer has (the caption, and the Pause Min
+   things this layout no longer has (the caption, and the Pause min
    button), and 26px of stale margin is what kept it 18px over. */
 @media (min-width: 801px) {
   .hero__preview {
@@ -197,7 +197,7 @@
   font-weight: var(--font-weight-semibold);
 }
 
-/* The lede carries one emphasised clause — the thing Min actually
+/* The lede carries one emphasised clause — the thing min actually
    gives you. Not an italic, and no highlighter: a weight step and the
    full-strength ink against the softer ink around it. */
 .hero--app .lede {
@@ -307,7 +307,7 @@
    pointer-events: none;
    /* 1250ms is --T, the length of the whole emerge track (landing.css,
       the wmx-* keyframes: outline 80–460, fill 340–700, glow lands at
-      1040, and Min is still morphing limbs and feet past that to the end).
+      1040, and min is still morphing limbs and feet past that to the end).
       Nothing under the mark gives anything back until the last of it has
       landed. `both` is what holds frame one at the loud value through
       the delay — without it the element would paint at its own opacity of

@@ -60,7 +60,7 @@ const ART = {
 const DISCS = [
   { k: 'p3', p: 3, t: 0.00, x: 30.56, y:  5.00, w: 50.07,
     cx: 32.60, cy: 15.43, cw: 46.00,
-    h: 'Min, always with you',
+    h: 'min, always with you',
     l: ['A companion that understands', 'and grows with you'] },
   { k: 'p1', p: 1, t: 0.55, x: 17.15, y: 30.97, w: 45.69,
     cx: 17.00, cy: 39.59, cw: 46.00,

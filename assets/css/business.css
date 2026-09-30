@@ -1,12 +1,12 @@
 /* ============================================================
-   Min for Business
+   min for Business
    ------------------------------------------------------------
    The business questionnaire, in the landing page's world: cave
    light, drifting fog, cast-glass wordmark, and the questions
    themselves carried on slabs of optical resin.
 
    This file loads *after* landing.css and re-invents nothing. The
-   environment, the wordmark, Min, .btn, .resin and the .rise reveal
+   environment, the wordmark, min, .btn, .resin and the .rise reveal
    recipe all come from there — what's added here is the one thing
    the landing page has never needed: form controls.
 
@@ -60,7 +60,7 @@ html.reveal-armed .biz .rise.in {
    never runs, so the page is stuck at cave — and .resin over cave is
    a pale wash on a dark floor, which is murk, not a lit object. The
    cards therefore carry their own opaque material until the ramp is
-   there to light them. Same idea for the i-dot: Min is drawn by the
+   there to light them. Same idea for the i-dot: min is drawn by the
    module, so the flat dot stands in when he can't be. */
 
 html:not(.js-ready) .biz-card,

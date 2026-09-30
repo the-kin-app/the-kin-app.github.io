@@ -1,10 +1,10 @@
 /* ============================================================
-   Min — the creature
+   min — the creature
    ------------------------------------------------------------
-   Replaces the old procedurally-morphed Min with the exact geometry and
+   Replaces the old procedurally-morphed min with the exact geometry and
    material from Figma's "MIN · idle breathe" (node 598:356, file
    PmauZKhA4iyowYabC3XOJE) — a dome body with two ear flaps, two foot pads,
-   and two hot eyes. Unlike the old Min, THIS one blinks (Figma's own spec
+   and two hot eyes. Unlike the old min, THIS one blinks (Figma's own spec
    for this variant), and the body no longer morphs point-by-point — it
    breathes via transform only (translate/scale on the whole rig, the ears
    and feet), which is what Figma's own motion track does too.
@@ -13,8 +13,8 @@
    gradient); geometry is copied verbatim from the exported shell path.
 
    Shared by every page that shows him (landing, deck, business, waitlist),
-   so there is one Min, not four that drift apart. Any element with
-   [data-min] becomes a Min:
+   so there is one min, not four that drift apart. Any element with
+   [data-min] becomes a min:
 
      <div class="min" data-min data-phase="1.9"></div>
 
@@ -29,14 +29,14 @@ const LOOP = 4; // seconds — matches the Figma "idle breathe" track exactly
 
 /* The visible content of the exported shell sits inside x:10-342, y:18-324
    of its own 352×632 canvas (the "Mat · base" rect in shell.svg) — the rest
-   of that canvas is empty headroom. This viewBox crops to just that, so Min
+   of that canvas is empty headroom. This viewBox crops to just that, so min
    fills his box the way the old radial version did. */
 const VB_W = 332;
 const VB_H = 306;
 const SHELL_DX = -10;
 const SHELL_DY = -18;
 
-/* Min is authored here rather than in the markup, and stamped into each
+/* min is authored here rather than in the markup, and stamped into each
    host as real DOM, same reasoning as before: an <svg><use> clone can't be
    reached by per-instance CSS or per-instance gaze, and every copy would
    share one animation phase. `n` keeps gradient/mask/filter ids unique. */
@@ -77,7 +77,7 @@ export const minFigure = (n) => `
       <stop stop-color="#F7F1E8"/><stop offset=".24" stop-color="#F3E6D4"/><stop offset=".52" stop-color="#EBD6B8"/>
       <stop offset=".78" stop-color="#DDC29F"/><stop offset=".93" stop-color="#D2B48F"/><stop offset="1" stop-color="#CDAD88"/>
     </linearGradient>
-    <!-- CORE DENSITY. Min is translucent, so light bends to the EDGES and the
+    <!-- CORE DENSITY. min is translucent, so light bends to the EDGES and the
          CENTRE of the body is the densest, darkest part. This used to be a bright
          warm pool (#FFE7C0) - inverted optics, and the direct cause of the eyes
          vanishing: it lit the exact region the eyes have to read against. -->
@@ -93,7 +93,7 @@ export const minFigure = (n) => `
          An earlier version put a dense r62 pool behind each eye. It gave the
          contrast but read as a drop shadow painted in the eye area — a local
          patch, not a property of the material. The darkening now comes ENTIRELY
-         from gdens, the body-wide core density above: Min is translucent, light
+         from gdens, the body-wide core density above: min is translucent, light
          bends to his edges, and the middle of his body is simply thick. The eyes
          are bright inclusions sitting in that thickness. If the eyes ever need
          more contrast, deepen gdens — do not reintroduce a local pool. -->
@@ -106,7 +106,7 @@ export const minFigure = (n) => `
     </radialGradient>
     <!-- NO SVG FILTERS ANYWHERE. feGaussianBlur / feMorphology / feComposite are
          raster ops: the browser rasterises the filter region at the element's
-         RENDERED size, and Min renders at 35px in the hero. That produced hard
+         RENDERED size, and min renders at 35px in the hero. That produced hard
          aliased stair-steps on every silhouette edge. Every effect below is a
          gradient or a stroked path instead, so it stays vector at any size. -->
     <radialGradient id="gcore${n}" gradientUnits="objectBoundingBox" cx=".5" cy=".5" r=".5">
@@ -131,7 +131,7 @@ export const minFigure = (n) => `
          feet vanish into one continuous alpha shape with no seams — then
          minOutline dilates that shape and subtracts the original,
          leaving only a ring around the true outer boundary. -->
-    <!-- THE ORB BORDER — the empty shell Min forms inside, and the exact
+    <!-- THE ORB BORDER — the empty shell min forms inside, and the exact
          counterpart of the wordmark's outline-only stage. Deliberately NOT
          masked by mshell: a ring clipped by the silhouette renders as a
          crescent, which is the bug this replaced. Same centre and radius as
@@ -166,7 +166,7 @@ export const minFigure = (n) => `
       </g>
     </g>
 
-    <!-- THE FLASH IS THE TOP LAYER. The whole of Min gets flashed - body,
+    <!-- THE FLASH IS THE TOP LAYER. The whole of min gets flashed - body,
          material AND eyes. It used to sit below .min__material and below
          .min__face, so the body washed out while the eyes stayed unlit and
          the material painted straight over the light. Masked to the shell so

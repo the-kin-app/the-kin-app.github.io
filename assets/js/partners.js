@@ -1,8 +1,8 @@
 /* ============================================================
-   Min for venues — /partners/
+   min for venues — /partners/
    ------------------------------------------------------------
    The page behaves like the landing page, minus the scrubbed
-   sequence: same Min, same submerge press, same material-emergence
+   sequence: same min, same submerge press, same material-emergence
    reveals, same atmosphere. The only motion that is this page's own
    is the daybreak, and it is not decoration — .resin is a pale,
    very translucent material, so a card only reads as a lit object
@@ -11,7 +11,7 @@
 
    1. reveals()    — IntersectionObserver adds .in; CSS runs the
                      emergence recipe (shared with the landing page).
-   2. minBodies()  — Min in the wordmark's i-dot, and on the closer.
+   2. minBodies()  — min in the wordmark's i-dot, and on the closer.
    3. buttons()    — the submerge press on .btn.
    4. daybreak()   — the colour ramp + the people-in-fog field.
 
@@ -26,7 +26,7 @@ import { minBodies } from '/assets/js/min.js';
 
 /* Marks that this module parsed and is running, so the stylesheet can
    keep static fallbacks for the two things only JS can deliver: the
-   light behind the cards, and Min in the wordmark's i-dot. If the
+   light behind the cards, and min in the wordmark's i-dot. If the
    module never loads, neither class arrives and CSS covers for it. */
 document.documentElement.classList.add('js-ready');
 

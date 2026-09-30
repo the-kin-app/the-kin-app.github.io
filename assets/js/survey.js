@@ -1,5 +1,5 @@
 /* ============================================================
-   Min — the waitlist survey
+   min — the waitlist survey
    ------------------------------------------------------------
    The questionnaire behind the welcome email's "Fill in the
    survey" button. Same shape as business.js, minus the sunrise:
@@ -12,7 +12,7 @@
                     emergence recipe, shared with the landing page.
    2. sliders()   — builds every rail from the lists below and
                     keeps the readout and the fill in step.
-   3. minBodies() — Min in the wordmark's i-dot, and on the thanks.
+   3. minBodies() — min in the wordmark's i-dot, and on the thanks.
    4. buttons()   — the submerge press on .btn.
    5. form()      — validation + submit to the Worker.
 

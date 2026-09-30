@@ -1,5 +1,5 @@
 /* ============================================================
-   Min — the ad landing page (/ads)
+   min — the ad landing page (/ads)
    ------------------------------------------------------------
    Loads on top of waitlist-hero.css and changes exactly one
    thing: the form asks a second question.
@@ -77,7 +77,7 @@
    Under 520px tall the scan page already drops the figure to keep
    its form on screen; this form is one line taller, so it needs the
    same room a step earlier. Nothing else moves — the banner still
-   explains Min, it just does it in words for the shortest screens. */
+   explains min, it just does it in words for the shortest screens. */
 
 @media (max-height: 600px) {
   .wlq .hslide__fig { display: none; }

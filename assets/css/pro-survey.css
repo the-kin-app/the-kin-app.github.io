@@ -1,5 +1,5 @@
 /* ============================================================
-   Min — the Pro survey (/survey/pro/)
+   min — the Pro survey (/survey/pro/)
    ------------------------------------------------------------
    Loads on top of landing.css, business.css and survey.css. Those
    three already own the world, the cards and every control, so
@@ -149,7 +149,7 @@
 
 /* ---- part labels -------------------------------------------
    The survey has two halves, discovery then reaction, and the
-   switch is the moment Min is first mentioned. A quiet label
+   switch is the moment min is first mentioned. A quiet label
    between the cards marks it, at the step marker's scale so it
    reads as structure rather than a heading competing with the
    questions. */

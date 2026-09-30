@@ -1,5 +1,5 @@
 /* ============================================================
-   Min — QR encoder
+   min — QR encoder
    ------------------------------------------------------------
    A QR Model 2 encoder, byte mode, versions 1–10. No dependencies,
    no CDN: the rest of the site ships its own assets, and a QR that

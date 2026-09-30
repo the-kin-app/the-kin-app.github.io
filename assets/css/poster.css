@@ -1,5 +1,5 @@
 /* ============================================================
-   Min — Printable poster (A3 portrait, 297 × 420 mm)
+   min — Printable poster (A3 portrait, 297 × 420 mm)
    ------------------------------------------------------------
    A wall poster, not a web page: it is sized in millimetres, laid
    out once, and never reflows. Everything below is the site's own
@@ -148,7 +148,7 @@ html, body {
    Two rows. The line gets the full width of the sheet, because it is the
    only sentence on the poster and squeezing it into a middle column
    between two artwork slots wraps it in the wrong place. Under it sit the
-   two reserved corners: Min at the left, QR at the right. */
+   two reserved corners: min at the left, QR at the right. */
 .poster__footer {
   padding-top: 10mm;
   border-top: 0.6mm solid rgba(35, 33, 30, 0.14);
@@ -171,7 +171,7 @@ html, body {
   justify-content: center;
 }
 
-/* Min gets the wider, taller frame: a character reads at full height, and
+/* min gets the wider, taller frame: a character reads at full height, and
    it can grow up into the quiet band under the shout without moving
    anything else, since the flex row is bottom-aligned. */
 .poster__slot--min {

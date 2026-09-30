@@ -1,12 +1,12 @@
 /* ============================================================
-   Min for venues  (/partners/)
+   min for venues  (/partners/)
    ------------------------------------------------------------
    The pitch we hand to a café or a bar, in the landing page's
    world: cave light under the hero, daybreak as you reach the
    argument, and every claim carried on a slab of optical resin.
 
    This file loads *after* landing.css and re-invents nothing.
-   The environment, the wordmark, Min, .btn, .resin, .shell and
+   The environment, the wordmark, min, .btn, .resin, .shell and
    the .rise emergence recipe all come from there. What's added
    here is only this page's layout.
 
@@ -49,7 +49,7 @@ html.reveal-armed .pt .rise.in {
    never runs and the page is stuck at cave — and .resin over cave is
    a pale wash on a dark floor, which is murk, not a lit object. So
    the cards carry their own opaque material until there is light
-   behind them to make them read. Same for the i-dot: Min is drawn by
+   behind them to make them read. Same for the i-dot: min is drawn by
    the module, so the flat dot stands in when he can't be. */
 
 html:not(.js-ready) .pt .resin {

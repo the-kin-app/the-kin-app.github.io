@@ -1,5 +1,5 @@
 /* ============================================================
-   Min — the hero's flipping word  (homepage variant B)
+   min — the hero's flipping word  (homepage variant B)
    ------------------------------------------------------------
    One sentence whose last word keeps changing:
 
@@ -22,7 +22,7 @@
    region rewriting itself every two seconds.
    ============================================================ */
 
-const WORDS = [
+const DEFAULT_WORDS = [
   'your neighbour',
   'a campus crush',
   'that familiar face',
@@ -54,6 +54,10 @@ export function heroFlip(root = document) {
   const word = el.querySelector('.flipwords__word');
   const ruler = el.querySelector('.flipwords__ruler');
   if (!word || !ruler) return;
+
+  /* A page can bring its own endings as data-words="a|b|c" (the city
+     pages do); without it, the homepage's list above. */
+  const WORDS = el.dataset.words ? el.dataset.words.split('|') : DEFAULT_WORDS;
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 

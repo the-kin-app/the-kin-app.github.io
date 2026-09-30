@@ -1,4 +1,4 @@
-// three, the loaders and Min's mesh are ~600 KB and a standing GPU load, so
+// three, the loaders and min's mesh are ~600 KB and a standing GPU load, so
 // nothing is fetched until we know this device actually wants them. THREE is
 // module-scoped rather than a static import for the same reason: the helpers
 // below need it, boot() supplies it.
@@ -14,7 +14,7 @@ const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const net=navigator.connection;
 const thin=net?.saveData===true||/(^|-)2g$/.test(net?.effectiveType||'')||navigator.deviceMemory<=2;
 let paused=reduced.matches, visible=true, sync=()=>{};
-const updateButton=()=>{ button.textContent=paused?'Play Min':'Pause Min';button.setAttribute('aria-pressed',String(paused)); };
+const updateButton=()=>{ button.textContent=paused?'Play min':'Pause min';button.setAttribute('aria-pressed',String(paused)); };
 updateButton();
 button.addEventListener('click',()=>{paused=!paused;updateButton();sync();});
 reduced.addEventListener('change',e=>{paused=e.matches;updateButton();sync();});
@@ -76,7 +76,7 @@ async function boot() {
     const p=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:texture,transparent:true,opacity,depthWrite:false,toneMapped:false}));
     p.rotation.x=-Math.PI/2;p.position.set(x,.004,z);scene.add(p);return p;
   }
-  // Min's mesh streams in while the phone and its screen texture are built.
+  // min's mesh streams in while the phone and its screen texture are built.
   const gltfPromise=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync('/assets/models/min-home.glb');
   const phone=new THREE.Group();
   const metal=new THREE.MeshStandardMaterial({color:0x8d8075,metalness:.85,roughness:.28,envMapIntensity:.85});
@@ -133,13 +133,13 @@ async function boot() {
   const warm=radialTexture([[0,'rgba(255,190,88,.65)'],[.28,'rgba(255,190,88,.23)'],[1,'rgba(255,190,88,0)']]);
   const pool=floorPatch(warm,-1.25,.93,2.8,2.2,.65);pool.position.y=.007;
   const bounce=new THREE.PointLight(0xffb95d,.45,3,1);bounce.position.set(-1.25,.3,1.03);scene.add(bounce);
-  // Eye bloom uses soft world-space halos; it never moves independently of Min.
+  // Eye bloom uses soft world-space halos; it never moves independently of min.
   const haloMap=radialTexture([[0,'rgba(255,228,174,.5)'],[.23,'rgba(255,201,111,.22)'],[1,'rgba(255,191,94,0)']]);
   for(const eye of eyes){const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:haloMap,transparent:true,depthWrite:false,toneMapped:false,opacity:.65}));halo.scale.set(.72,.72,1);halo.position.copy(eye.mesh.position);halo.position.z+=.03;model.add(halo);eye.halo=halo;}
 
   const draw=()=>renderer.render(scene,camera);
   // Mobile toolbars retract on scroll and hand the observer a one- or
-  // two-pixel height change; reframing on that is what made Min pulse.
+  // two-pixel height change; reframing on that is what made min pulse.
   let lastW=0,lastH=0;
   const resize=()=>{
     const w=Math.round(host.clientWidth),h=Math.round(host.clientHeight);
@@ -198,4 +198,4 @@ async function boot() {
 }
 
 if(thin){button.hidden=true;}
-else boot().catch(error=>{sync=()=>{};button.hidden=true;figure.classList.remove('is-3d-ready');host.classList.remove('is-ready');console.warn('Min’s 3D room is unavailable; showing the still preview.',error);});
+else boot().catch(error=>{sync=()=>{};button.hidden=true;figure.classList.remove('is-3d-ready');host.classList.remove('is-ready');console.warn('min’s 3D room is unavailable; showing the still preview.',error);});

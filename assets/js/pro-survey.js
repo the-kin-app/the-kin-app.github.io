@@ -1,5 +1,5 @@
 /* ============================================================
-   Min — the Pro survey (will people pay, and for which extras)
+   min — the Pro survey (will people pay, and for which extras)
    ------------------------------------------------------------
    Sibling to survey.js, built on the same parts: the same reveal
    observer, the same submit, the same honeypot. What is new is
@@ -12,7 +12,7 @@
    The page is an instrument before it is a page, so its rules
    live in code rather than in copy:
 
-     • Discovery before the pitch. Part 1 never names Min.
+     • Discovery before the pitch. Part 1 never names min.
      • Explain the free product first, price second. Nothing is
        priced until the person has read what the free version does
        and said what they would use it for.
@@ -31,7 +31,7 @@
    2. checks()   — builds the tick grids from the lists below.
    3. paid()     — question 1 read back into question 2.
    4. picks()    — question 6 read back into question 7, live.
-   5. minBodies()— Min in the wordmark's i-dot, and on the thanks.
+   5. minBodies()— min in the wordmark's i-dot, and on the thanks.
    6. buttons()  — the submerge press on .btn.
    7. form()     — validation + submit to the Worker.
    ============================================================ */
@@ -90,10 +90,10 @@ const INTENTS = [
 const EXTRAS = {
   app: [
     ['filter', 'Choose your matches',
-               'More control over what kind of people Min matches you with',
+               'More control over what kind of people min matches you with',
                'choosing your matches'],
     ['more',   'More matches',
-               'Min usually lets you know when it finds someone. This lets you ask for one',
+               'min usually lets you know when it finds someone. This lets you ask for one',
                'asking for more matches'],
     ['groups', 'Group matching',
                'Match your group of friends with another group, instead of one on one',
@@ -105,11 +105,11 @@ const EXTRAS = {
                'scheduled group events'],
   ],
   self: [
-    ['talk',    'More time with Min',
-                'More conversations and questions with Min',
-                'more time with Min'],
+    ['talk',    'More time with min',
+                'More conversations and questions with min',
+                'more time with min'],
     ['insight', 'Deeper insight into yourself',
-                'See what Min has learned about you and your memories',
+                'See what min has learned about you and your memories',
                 'deeper insight into yourself'],
   ],
 };

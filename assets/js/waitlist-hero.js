@@ -1,5 +1,5 @@
 /* ============================================================
-   Min — the scan-and-join page (/waitlist)
+   min — the scan-and-join page (/waitlist)
    ------------------------------------------------------------
    Two small machines on one screen:
 

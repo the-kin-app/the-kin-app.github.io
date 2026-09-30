@@ -1,5 +1,5 @@
 /* ============================================================
-   Min — "Talking to strangers", the three-minute deck (figures)
+   min — "Talking to strangers", the three-minute deck (figures)
    ------------------------------------------------------------
    Ten pages. This file loads *last*, on top of:
 
@@ -323,7 +323,7 @@
    marks, because "social apps" is a category and Instagram is a fact.
 
    Everything is identical between the two pages except what sits in
-   column 2: a hole on page 5, Min on page 6. The hole is the argument. */
+   column 2: a hole on page 5, min on page 6. The hole is the argument. */
 
 .cats {
   width: 100%;
@@ -371,7 +371,7 @@
    friend. This was an arc leaping over the middle column, and the leap
    read as a flourish rather than a fact — a lone curve on a page of
    straight lines looks like decoration. It is a straight run now, in its
-   own row below Min's slot, and its LENGTH does the work: it starts in
+   own row below min's slot, and its LENGTH does the work: it starts in
    the stranger column and doesn't stop until it is most of the way to
    close ties. Nobody gets off in the middle.
 
@@ -419,7 +419,7 @@
    — it is doing work, unlike the per-icon plate that used to sit behind
    each individual mark.
 
-   Row 3 is the social-media band, row 4 is Min's slot, row 5 is matching
+   Row 3 is the social-media band, row 4 is min's slot, row 5 is matching
    apps. Top to bottom: what people already use for the people they have,
    the hole in the middle, and the one product that reaches across
    strangers — and misses. */
@@ -471,15 +471,15 @@
 }
 .icos { display: flex; align-items: center; gap: 10px; }
 
-/* ---- Min, as an app icon ----------------------------------
-   Wherever Min stands in a row of real App Store marks he has to be one
+/* ---- min, as an app icon ----------------------------------
+   Wherever min stands in a row of real App Store marks he has to be one
    of them, or he reads as a mascot that wandered into a chart. Same
    squircle, same optical weight — on the platform's own corner ratio
    (~23% of the side), which is what makes a tile read as an app icon
    rather than as a rounded box.
 
    The ground is the brand's own ramp, violet into cave, and it is not
-   decoration: Min is warm opal lit from the inside, so he needs
+   decoration: min is warm opal lit from the inside, so he needs
    something dark behind him at any size. This tile is how he gets it in
    a row of light icons without a plate under the whole row.
 
@@ -540,7 +540,7 @@
   color: color-mix(in srgb, var(--ink) 52%, transparent);
 }
 
-/* page 6: the same slot, filled. Min stands in it under his own light,
+/* page 6: the same slot, filled. min stands in it under his own light,
    and this is the only lit object on the page. */
 .cats__min {
   grid-column: 2;
@@ -581,13 +581,13 @@
 }
 
 /* page 6: the competitors stay on the page — the hole only means
-   something next to them — but they step back so Min's slot is what the
+   something next to them — but they step back so min's slot is what the
    eye lands on. */
 .cats--filled .serve,
 .cats--filled .reach { opacity: 0.4; }
 
 /* page 6: one step, drawn. Stranger -> familiar stranger, the only move
-   Min asks anyone to make, and the deliberate opposite of the leap above
+   min asks anyone to make, and the deliberate opposite of the leap above
    it.
 
    It lives INSIDE .cats__min and reaches leftwards out of it, rather than
@@ -665,8 +665,8 @@
   stroke-linejoin: round;
 }
 
-/* Min, inside beat 1's figure. He is on the right because the words
-   arrive from the left: the picture reads "you -> Min", which is what
+/* min, inside beat 1's figure. He is on the right because the words
+   arrive from the left: the picture reads "you -> min", which is what
    the beat says. */
 .talk__min {
   position: absolute;
@@ -680,7 +680,7 @@
 
 /* ---- the notification, off its stage ----------------------
    Page 7 sits on --resin-volume, the deepest warm surface in the system,
-   because Min is warm opal lit from inside and on the daylight tones he
+   because min is warm opal lit from inside and on the daylight tones he
    simply disappeared — a pale creature on a pale page. On this one he
    glows, which is the whole reason he is drawn rather than described.
 
@@ -796,7 +796,7 @@
 }
 .leap .ico { width: 40px; height: 40px; border-radius: 10px; }
 
-/* Min stands on his own segment, as an app icon among app icons — a
+/* min stands on his own segment, as an app icon among app icons — a
    little larger than the marks riding the arcs above him, because he is
    what the figure is for. */
 .leap__min { width: 54px; height: 54px; }
@@ -811,7 +811,7 @@
 /* Pages 8 and 9 are a pair — why we are not a matching app, and why we
    are not social media — so page 9 carries the marks it is arguing
    against, exactly as page 8 does. The chart geometry is SVG; the app
-   marks and the two line names are HTML on top of it, because Min has to
+   marks and the two line names are HTML on top of it, because min has to
    be a live element and a live element cannot live inside an <svg>. */
 .money {
   position: relative;

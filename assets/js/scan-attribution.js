@@ -1,5 +1,5 @@
 /* ============================================================
-   Min — where this visit came from, and whether it arrived
+   min — where this visit came from, and whether it arrived
    ------------------------------------------------------------
    One module owns the query-string contract the Worker redirects
    through, because two copies of it would drift and the drift

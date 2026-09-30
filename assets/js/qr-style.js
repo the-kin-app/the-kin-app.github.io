@@ -1,8 +1,8 @@
 /* ============================================================
-   Min — QR styling
+   min — QR styling
    ------------------------------------------------------------
    Turns the boolean grid from qr-encode.js into an SVG that looks
-   like the rest of Min: warm ink, one violet accent, resin
+   like the rest of min: warm ink, one violet accent, resin
    surfaces, pebble corners.
 
    The whole file works in module units — one module is 1 unit, and
@@ -188,7 +188,7 @@
   // Pebble modules: a corner is rounded only where nothing dark sits
   // beside it, so runs of modules flow into one shape and lone modules
   // come out as circles. That neighbour test is the whole look — it is
-  // what makes the code read as Min's material rather than as a grid.
+  // what makes the code read as min's material rather than as a grid.
   function pebblePath(dark, size, offset, radius) {
     const at = (r, c) => (r >= 0 && c >= 0 && r < size && c < size ? dark[r][c] : false);
     const parts = [];
@@ -322,7 +322,7 @@
 
     // Centre badge: a resin pebble with the wordmark in it. Without the
     // wordmark loaded it falls back to the violet dot alone, which is
-    // still unmistakably Min and never a broken-image box.
+    // still unmistakably min and never a broken-image box.
     let logo = '';
     if (o.logo) {
       const bx = box.x + quiet;
@@ -362,7 +362,7 @@
 
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${px}" height="${pxH}" ` +
       `viewBox="0 0 ${fmt(grid)} ${fmt(height)}" role="img" ` +
-      `aria-label="${esc(o.label ? `QR code for ${o.label}` : 'Min QR code')}">` +
+      `aria-label="${esc(o.label ? `QR code for ${o.label}` : 'min QR code')}">` +
       defs + ground + modules + eyes + logo + '</svg>';
   }
 

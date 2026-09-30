@@ -1,5 +1,5 @@
 /* ============================================================
-   Min — the public pitch deck
+   min — the public pitch deck
    ------------------------------------------------------------
    1. deck()      — paging: swipe is native (scroll-snap), this adds the
                     keyboard, the wheel, the toolbar and the URL hash.
@@ -8,7 +8,7 @@
                     cave → daylight → cave the way the landing page does.
    3. ring()      — slide 4's constellation, played on entry instead of
                     scrubbed by a scroll. Same CSS, different driver.
-   4. minBodies() — Min himself (min.js), shared with the landing page.
+   4. minBodies() — min himself (min.js), shared with the landing page.
    5. buttons()   — the submerge press (press.js), shared with everything.
 
    The deck degrades in one step: without this file the track is still a
@@ -133,7 +133,7 @@ function ring() {
       l.style.setProperty('--in', drawn.toFixed(3));
       l.style.setProperty('--dash', (DASH * (1 - drawn)).toFixed(2));
     });
-    // Min arrives in the hole in the middle before any link is drawn —
+    // min arrives in the hole in the middle before any link is drawn —
     // the connections are his, so he has to be there first
     min?.style.setProperty('--in', seg(t, 0.34, 0.5).toFixed(3));
   }

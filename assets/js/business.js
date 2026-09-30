@@ -1,13 +1,13 @@
 /* ============================================================
-   Min for Business — questionnaire
+   min for Business — questionnaire
    ------------------------------------------------------------
    The page behaves like the landing page, minus the scrubbed
-   sequence: same Min, same submerge press, same material-emergence
+   sequence: same min, same submerge press, same material-emergence
    reveals, same atmosphere — the palette just stays at cave.
 
    1. reveals()    — IntersectionObserver adds .in; CSS runs the
                      emergence recipe (shared with the landing page).
-   2. minBodies()  — Min in the wordmark's i-dot, and on the thank-you.
+   2. minBodies()  — min in the wordmark's i-dot, and on the thank-you.
    3. buttons()    — the submerge press on .btn.
    4. atmosphere() — the people-in-fog field, gathering as you scroll.
    5. form()       — validation + submit to the Worker.
@@ -24,7 +24,7 @@ import { minBodies } from '/assets/js/min.js';
 
 /* Marks that this module parsed and is running, so the stylesheet can
    keep static fallbacks for the two things only JS can deliver: the
-   sunrise behind the cards, and Min in the wordmark's i-dot. If the
+   sunrise behind the cards, and min in the wordmark's i-dot. If the
    module never loads, neither class arrives and CSS covers for it. */
 document.documentElement.classList.add('js-ready');
 

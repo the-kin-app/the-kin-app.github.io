@@ -1,9 +1,9 @@
 /* ============================================================
-   Min — the scan-and-join page (/waitlist)
+   min — the scan-and-join page (/waitlist)
    ------------------------------------------------------------
    One screen, no scroll. Somebody points a phone at a QR code in a
    bar and has about four seconds of attention: a banner that tells
-   them what Min is while they read, and a single field under it.
+   them what min is while they read, and a single field under it.
 
    THE CONSTRAINT: everything fits in 100svh on the shortest phone
    we care about. That is why this file is written as a three-row
@@ -13,7 +13,7 @@
    pushing the form off the bottom of the screen.
 
    The three slides are pages 2, 4 and 5 of /pitchdeck/short — the
-   near-miss, what Min is, how it works — with the same materials.
+   near-miss, what min is, how it works — with the same materials.
    The figures are lifted from pitchdeck.css rather than that file
    being loaded, because pitchdeck.css turns the body into a
    horizontal scroll-snap deck, which is the opposite of this page.
@@ -89,7 +89,7 @@ body.wlq {
    to set that one value. */
 .wlq .wordmark--hero {
   --mark-w: min(196px, 45vw);
-  /* Min's float, in proportion: the hero's -5px on its 300px box is the
+  /* min's float, in proportion: the hero's -5px on its 300px box is the
      ratio, and at this size the unscaled amplitude lifts him clean out of
      the i-dot he is supposed to be sitting in. */
   --min-lift: calc(var(--mark-w) * 0.017);
@@ -108,7 +108,7 @@ body.wlq {
   height: 100%;
   display: block;
 }
-/* Min lands just behind the mark, which surfaces on the first frame here
+/* min lands just behind the mark, which surfaces on the first frame here
    (see the reveal block at the foot of this file). The homepage's drop is
    timed to its letter-by-letter forming beat, and this page has four seconds
    of attention in total — he'd arrive after the reader had already moved on.
@@ -537,8 +537,8 @@ body.wlq[data-scene="shore"] .hdots-pill {
 }
 
 /* ============================================================
-   figure 2 — what Min is
-   The ring from landing.css, sized to the banner. Min holds the
+   figure 2 — what min is
+   The ring from landing.css, sized to the banner. min holds the
    middle and every screen is off.
    ============================================================ */
 
@@ -769,7 +769,7 @@ body.wlq[data-scene="shore"] .hdots-pill {
      the opener, where it is the other half of the sentence and dropping
      it would leave three verbs and no point. */
   .hslide:not(.hslide--problem) p { display: none; }
-  /* --mark-w, not width: the box's headroom compensation and Min's float
+  /* --mark-w, not width: the box's headroom compensation and min's float
      amplitude both derive from it. */
   .wlq .wordmark--hero { --mark-w: min(158px, 40vw); }
   .wlq-head { gap: var(--space-2); }
