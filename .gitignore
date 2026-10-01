@@ -2,3 +2,4 @@ _site.tgz
 _to_delete/
 *.tgz
 *.bak-*
+.DS_Store
