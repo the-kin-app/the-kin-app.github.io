@@ -20,4 +20,6 @@ you the day min opens.
 
 You're getting this because you joined the waitlist at hellomin.app.
 Privacy policy: https://hellomin.app/privacy-policy/
+Instagram: https://www.instagram.com/hellomin.app/
+TikTok: https://www.tiktok.com/@hellomin.app
 Unsubscribe: {{unsubscribe_url}}
