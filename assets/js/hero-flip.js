@@ -26,10 +26,12 @@ const DEFAULT_WORDS = [
   'your neighbour',
   'a campus crush',
   'that familiar face',
+  'a future cofounder',
   'your barista',
   'a future flatmate',
   'a running partner',
-  'a friend of a friend'
+  'a friend of a friend',
+  'a more social week'
 ];
 
 /* Beats. OUT and IN are the transition durations authored in
