@@ -335,14 +335,14 @@ pooled.
 A poster hangs on a wall, and **which wall is half of what it measures** — the
 same design pulls different numbers off a hospital corridor and a university
 foyer, which is the reason to put one in both. So a poster is one code per
-location per design: 12 × 4 = 48 codes.
+location per design: 12 × 5 = 60 codes.
 
 A card is handed over. It has no wall, it travels in a pocket, and the place it
 changed hands says nothing anyone could act on. Recording one would put an
 invented dimension in every scoreboard looking exactly like a measurement. So a
 card is **one code per design, with no location at all** — `/card/unclemin` and
 `/card/help`, two codes, and the same file is the one to print wherever the
-cards are going. 50 codes in a full print run.
+cards are going. 62 codes in a full print run.
 
 Two segments are told apart by what the first one is: an asset type means
 `/<asset>/<design>`, a location means the pre-2026-09-22 `/<location>/<design>`.
@@ -356,7 +356,7 @@ than refusing the scan. Paper cannot be reissued. The generator flags that shape
 and tells you the locationless URL to print instead.
 
 Each asset type owns its own design list: posters are `unclesam`,
-`unclesam-footer`, `happy` and `trump`; cards are `unclemin` and `help`. The lists are
+`unclesam-footer`, `happy`, `trump` and `nirvana`; cards are `unclemin` and `help`. The lists are
 disjoint today, but nothing depends on that — two asset types may share a
 design slug, and if they ever do they stay separate cells everywhere
 downstream, including in the filenames the generator exports, so a card and a
