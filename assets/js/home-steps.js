@@ -89,9 +89,25 @@ export function howItWorks() {
      that smooth-scrolled the page to the middle of a step's band 240ms
      after you stopped — so the page carried on moving ~100px on its own
      after you let go. That is the section moving itself, which is exactly
-     what it must not do. */
+     what it must not do. The one exception is a tap on a step, below:
+     that is the reader asking for the move. */
   function onScroll(){if(!queued){queued=true;requestAnimationFrame(update);}}
   addEventListener('scroll',onScroll,{passive:true});
+  /* A tapped step opens by moving the page to the middle of that step's
+     stretch of the track, and update() opens it from there. Setting .is-on
+     directly would last until the next scroll frame, which would put it
+     straight back; this way the scroll position stays the one thing that
+     decides. Instant while the band is parked, because nothing on screen
+     moves then except the step, and a smooth scroll would flash the step
+     in between on its way past. Before the band parks the page has to
+     visibly travel to get there, so that one is smooth. */
+  grid.querySelector('.steps__list').addEventListener('click',e=>{
+    const i=items.indexOf(e.target.closest('.steps__item'));
+    const t=track();
+    if(i<0||t.span<=40)return;   // no runway: update() keeps step 1 open regardless
+    const parked=scrollY>=t.start-1&&scrollY<=t.start+t.span+1;
+    scrollTo({top:t.start+t.span*(i+0.5)/items.length,behavior:parked?'instant':'smooth'});
+  });
   addEventListener('resize',()=>{measure();update();},{passive:true});
   reduced.addEventListener('change',update);
   new ResizeObserver(()=>{measure();update();}).observe(grid);

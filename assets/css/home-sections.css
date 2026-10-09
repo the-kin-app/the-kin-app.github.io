@@ -469,6 +469,10 @@
    is supposed to be nailed down. Dimming says "not this one" without
    moving anything. */
 .steps__grid .steps__item { opacity: 0.62; }
+/* Tapping a step opens it once home-steps.js is live. No tap highlight: the
+   step opening is the feedback, and the grey flash phones paint by default
+   would be a second, unstyled one. */
+.steps__grid.is-live .steps__item { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 /* The open step: taller, full width, full strength. */
 .steps__grid .steps__item.is-on {
   height: var(--steps-open, 168px);
@@ -906,7 +910,13 @@
     sticks is .steps__band — a child of the pin. Left on .steps__grid the
     runway was outside the band's reach and nothing stuck at all. */
  .steps__grid { margin-top: 32px; min-height: 0; }
- .steps__pin { min-height: calc(var(--vh-fixed, 100svh) * 2.5); }
+ /* The runway itself: an explicit length of scroll under the band, for the
+    band to park through. It used to be a 2.5-screen min-height on the whole
+    pin, which made the runway whatever the heading and the band left over —
+    ~1320px on a 390x844 phone, half a screen of swiping per step with
+    nothing moving, and people took the section for frozen. 0.8 of a screen
+    is ~225px per step there. */
+ .steps__pin::after { content: ''; display: block; height: calc(var(--vh-fixed, 100svh) * 0.8); }
  /* Here the HEADING scrolls and the band parks. Parking the heading too
     would cost the band ~130px it doesn't have: phone + three pebbles
     already fill a phone screen. So the pin goes static and .steps__band —
@@ -917,6 +927,11 @@
  .steps__head h2 { font-size: clamp(1.7rem, 6.4vw, 2.1rem); }
  .steps .section-lede { margin-top: var(--space-2); font-size: var(--text-md); }
  .facts .section-lede { margin-bottom: 0; }
+}
+/* No runway where every step is already open. After the rule above, not in
+   the reduced-motion block further up, or the runway wins on order. */
+@media (max-width: 900px) and (prefers-reduced-motion: reduce) {
+ .steps__pin::after { display: none; }
 }
 /* Between 600 and 700px tall the band still parks, but phone + three
    pebbles ran 16px past the fold. Everything in it gives a little. */
@@ -931,6 +946,7 @@
     the three pebbles just stack and stay open, each as tall as its own copy
     needs rather than all reserving room for the longest. */
  :root.is-tiny .steps__pin { position: static; height: auto; min-height: 0; }
+ :root.is-tiny .steps__pin::after { display: none; }
  :root.is-tiny .steps__band { position: static; }
  :root.is-tiny .steps__list { height: auto; padding-block: 0; }
  :root.is-tiny .steps__item { height: auto; }

@@ -559,8 +559,11 @@ through so a straggler with an old `/b/?l=…&p=…` URL in their history still
 signs up attributed. Delete it once those have aged out — nothing generates
 them any more.
 
-**Ending the test:** point both sides of `VARIANT_PATHS` at `/` and every scan
-lands on the homepage.
+**The test ended on 2026-10-09.** `LANDING_SPLIT = false` in
+`min-waitlist-worker src/index.js` sends every scan to the homepage as side
+`a`. `/waitlist/` still works and still declares `b` for anyone who opens it
+directly. Don't end a test by pointing both sides of `VARIANT_PATHS` at `/`:
+that changes what `b` means and needs the variant data cleared.
 
 ## Backend
 
