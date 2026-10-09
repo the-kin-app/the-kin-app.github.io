@@ -581,15 +581,14 @@
   padding: var(--space-5) var(--space-6) var(--space-6);
   border-radius: var(--radius-2xl);
 }
-/* The heading is the negative claim, so it carries the card, and the
-   visual above it shows what that negative buys you. */
+/* The heading is the negative claim, so it carries the card. */
 .fact > b {
   display: block;
   font-size: var(--text-lg);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--tracking-tight);
   line-height: 1.2;
-  margin: var(--space-5) 0 var(--space-3);
+  margin: 0 0 var(--space-3);
 }
 .fact > p {
   margin: 0;
@@ -597,29 +596,6 @@
   line-height: var(--leading-normal);
   color: color-mix(in srgb, var(--ink) 84%, transparent);
   text-wrap: pretty;
-}
-
-/* ── the visual ────────────────────────────────────────────────
-   One image per card, above its claim. Same treatment as the Figma
-   deck (Min-app · 1569:385): no plate, no border — the photo just
-   dissolves into the resin through a feathered rounded-rect mask, so
-   it reads as part of the card rather than a picture placed on it.
-   The mask is a blurred rounded rect in Figma; a radial ellipse with
-   a long falloff is the closest CSS gets without a filter pass. */
-.fact__media {
-  position: relative;
-  aspect-ratio: 3 / 2;
-  margin: 0 calc(var(--space-3) * -1);
-  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 55%, transparent 100%);
-          mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 55%, transparent 100%);
-}
-/* Empty slot — hide it rather than show a placeholder. */
-.fact__media:not(:has(img)) { display: none; }
-.fact__media > img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
 }
 
 /* ══════════════════════════════════════════════════════════════
