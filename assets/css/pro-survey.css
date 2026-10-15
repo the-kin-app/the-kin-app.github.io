@@ -198,3 +198,17 @@
 
 /* Question 5's second half, how often. */
 .frequency { margin-top: var(--space-6); }
+
+/* ---- the intro line (/survey/v2/) --------------------------
+   What the survey is about, said once under the logo instead of
+   on a card, so question 1 is the first card on the page. */
+
+.survey-intro {
+  max-width: 34em;
+  margin: var(--space-3) var(--space-5) 0;
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--ink-secondary);
+}
+
+.survey-intro b { font-weight: var(--font-weight-semibold); color: var(--ink-primary); }

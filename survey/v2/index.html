@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>min — Social moments (2-minute survey)</title>
+<meta name="description" content="A short, anonymous survey about social moments: how you meet new people now, and the moments you'd want more of.">
+<meta name="theme-color" content="#2A2320">
+<!-- Sent to a recruited cohort, never found in search. Same stance as
+     /survey/: noindex, and absent from sitemap.xml. -->
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://hellomin.app/survey/v2/">
+
+<meta property="og:title" content="Social moments: a 2-minute anonymous survey">
+<meta property="og:description" content="How you meet new people now, and the moments you'd want more of. Anonymous, two minutes.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hellomin.app/survey/v2/">
+<meta property="og:site_name" content="min">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="min: a softly glowing pebble with two lit eyes, waving hello in dusk light.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
+
+<link rel="icon" href="/assets/img/min-character/floating-min-favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/landing.css">
+<link rel="stylesheet" href="/assets/css/business.css">
+<link rel="stylesheet" href="/assets/css/survey.css">
+<link rel="stylesheet" href="/assets/css/pro-survey.css">
+
+<script>document.documentElement.classList.add('reveal-armed');</script>
+</head>
+
+<!-- ══════════════════════════════════════════════════════════
+     THE SURVEY, v2  (social moments)
+     ──────────────────────────────────────────────────────────
+     Sits next to /survey/ rather than replacing it. Same world,
+     same cards, same controls; only the questions are new.
+
+     A "social moment" is an interesting social situation where
+     you meet new people. Three parts, in this order:
+
+       1  NOW.     How they meet people, how they find things
+                   to do, and whether any of it costs money.
+       2  WANT.    Which moments they'd actually do, how often, and what
+                   they'd pay a month.
+       3  WHO.     Profession, gender, age, how long in the city.
+
+     Anonymous: there is no email field and there must not be
+     one. Nothing is required.
+
+     Posts to POST /survey/v2 on the Worker
+     (min-waitlist-worker, migrations/0011_moments_survey.sql).
+     ══════════════════════════════════════════════════════════ -->
+
+<body class="biz survey pro-survey">
+
+<div class="env" aria-hidden="true">
+  <span class="fog fog--1"></span>
+  <span class="fog fog--2"></span>
+  <span class="fog fog--3"></span>
+</div>
+
+<main>
+
+  <section class="biz-masthead" data-reveal>
+    <h1 class="visually-hidden">Social moments</h1>
+    <img class="wordmark--hero rise" src="/assets/img/Logo/min-falling-logo.png" alt="min" width="138" height="98">
+    <!-- what this is, once, right under the logo -->
+    <p class="survey-intro rise" data-delay="1">
+      This survey is about <b>social moments</b>: interesting situations
+      where you end up talking to new people. It's anonymous, every question
+      is optional, and it takes about two minutes.
+    </p>
+  </section>
+
+  <section class="biz-form-section">
+    <form id="moments-form" class="biz-form" novalidate>
+
+      <!-- ══ PART 1 · NOW ═════════════════════════════════════ -->
+      <p class="survey-part" data-reveal><span class="rise">Part 1 · How you do it now</span></p>
+
+      <!-- 1 ─ how they meet people. Rows from moments-survey.js (MEET). -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 1 of 7</span>
+          <h2 class="rise" data-delay="1">How do you meet new people these days?</h2>
+          <p class="biz-card__note rise" data-delay="2">Tick everything that's true.</p>
+        </div>
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend class="visually-hidden">How you meet new people</legend>
+          <div class="option-group option-group--grid" data-checks="meet"></div>
+        </fieldset>
+      </div>
+
+      <!-- 2 ─ how they find things to do. Rows from moments-survey.js (FIND). -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 2 of 7</span>
+          <h2 class="rise" data-delay="1">How do you find interesting things to do outside your home?</h2>
+          <p class="biz-card__note rise" data-delay="2">Tick everything that's true.</p>
+        </div>
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend class="visually-hidden">How you find things to do</legend>
+          <div class="option-group option-group--grid" data-checks="find"></div>
+        </fieldset>
+        <div class="field rise" data-delay="4">
+          <label for="find_other">Anything else? <span class="opt">(optional)</span></label>
+          <input class="input" type="text" id="find_other" name="find_other"
+                 placeholder="An app, a place, a person" maxlength="150">
+        </div>
+      </div>
+
+      <!-- 3 ─ do they pay. One monthly total, only after a yes. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 3 of 7</span>
+          <h2 class="rise" data-delay="1">Do you pay for any of these?</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            Subscriptions, memberships, tickets, boosts. Anything that costs money.
+          </p>
+        </div>
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend class="visually-hidden">Do you pay for any of these?</legend>
+          <div class="yesno">
+            <label class="option"><input type="radio" name="pays" value="yes"><span>Yes</span></label>
+            <label class="option"><input type="radio" name="pays" value="no"><span>No</span></label>
+          </div>
+        </fieldset>
+        <div class="field--conditional" id="spend-field" hidden>
+          <div class="field">
+            <label for="spend">About how much, all together? <span class="opt">(€ a month)</span></label>
+            <input class="input" type="text" id="spend" name="spend"
+                   inputmode="decimal" maxlength="10">
+            <div class="field-error" id="spend-error"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PART 2 · WANT ════════════════════════════════════ -->
+      <p class="survey-part" data-reveal><span class="rise">Part 2 · What you'd want</span></p>
+
+      <!-- 4 ─ which moments they'd actually do, not what sounds nice.
+           Rows from moments-survey.js (MOMENTS). -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 4 of 7</span>
+          <h2 class="rise" data-delay="1">Which of these would you actually do?</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            Each of these would be with strangers, people you haven't met yet. Which would you really show up for? Tick all that apply.
+          </p>
+        </div>
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend class="visually-hidden">The social moments you would actually do</legend>
+          <div class="option-group" data-checks="moments"></div>
+        </fieldset>
+      </div>
+
+      <!-- 5 ─ how often -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 5 of 7</span>
+          <h2 class="rise" data-delay="1">How often would you want a moment like this?</h2>
+        </div>
+        <fieldset class="fieldset rise" data-delay="2">
+          <legend class="visually-hidden">How often you would want a social moment</legend>
+          <div class="option-group">
+            <label class="option"><input type="radio" name="frequency" value="few_week"><span>A few times a week</span></label>
+            <label class="option"><input type="radio" name="frequency" value="weekly"><span>About once a week</span></label>
+            <label class="option"><input type="radio" name="frequency" value="few_month"><span>A couple of times a month</span></label>
+            <label class="option"><input type="radio" name="frequency" value="monthly_less"><span>Once a month or less</span></label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 6 ─ their price. We name no figure, and "I wouldn't pay" is a
+           decision, not a blank. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 6 of 7</span>
+          <h2 class="rise" data-delay="1">What would you pay a month to summon moments like these with a single tap?</h2>
+          <p class="biz-card__note rise" data-delay="2">Your number, we haven't set one.</p>
+        </div>
+        <div class="field rise" data-delay="3">
+          <label for="price">What you'd pay a month <span class="opt">(€)</span></label>
+          <input class="input" type="text" id="price" name="price"
+                 inputmode="decimal" maxlength="10">
+          <div class="field-error" id="price-error"></div>
+        </div>
+        <label class="option option--standalone rise" data-delay="4">
+          <input type="checkbox" id="would_not_pay" name="would_not_pay">
+          <span>I wouldn't pay for this</span>
+        </label>
+      </div>
+
+      <!-- ══ PART 3 · WHO ═════════════════════════════════════ -->
+      <p class="survey-part" data-reveal><span class="rise">Part 3 · A bit about you</span></p>
+
+      <!-- 7 ─ profession, gender, age, relationship, city -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 7 of 7</span>
+          <h2 class="rise" data-delay="1">Who are you?</h2>
+          <p class="biz-card__note rise" data-delay="2">All optional, and still anonymous.</p>
+        </div>
+
+        <div class="field rise" data-delay="3">
+          <label for="profession">What do you do? <span class="opt">(optional)</span></label>
+          <input class="input" type="text" id="profession" name="profession"
+                 placeholder="e.g. student, designer, nurse" maxlength="100">
+        </div>
+
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend>Gender <span class="opt">(optional)</span></legend>
+          <div class="option-group">
+            <label class="option"><input type="radio" name="gender" value="woman"><span>Woman</span></label>
+            <label class="option"><input type="radio" name="gender" value="man"><span>Man</span></label>
+            <label class="option"><input type="radio" name="gender" value="non_binary"><span>Non-binary</span></label>
+            <label class="option"><input type="radio" name="gender" value="self_describe"><span>Prefer to self-describe</span></label>
+            <label class="option"><input type="radio" name="gender" value="prefer_not"><span>Prefer not to say</span></label>
+          </div>
+          <div class="field--conditional" id="gender_self_describe-field" style="display:none;">
+            <label class="visually-hidden" for="gender_self_describe">How would you describe it?</label>
+            <input class="input" type="text" id="gender_self_describe" name="gender_self_describe"
+                   placeholder="In your own words" maxlength="60">
+          </div>
+        </fieldset>
+
+        <fieldset class="fieldset rise" data-delay="4">
+          <legend>Age <span class="opt">(optional)</span></legend>
+          <div class="option-group option-group--grid">
+            <label class="option"><input type="radio" name="age" value="under_18"><span>Under 18</span></label>
+            <label class="option"><input type="radio" name="age" value="18_24"><span>18–24</span></label>
+            <label class="option"><input type="radio" name="age" value="25_34"><span>25–34</span></label>
+            <label class="option"><input type="radio" name="age" value="35_44"><span>35–44</span></label>
+            <label class="option"><input type="radio" name="age" value="45_plus"><span>45 or over</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="fieldset rise" data-delay="4">
+          <legend>Relationship status <span class="opt">(optional)</span></legend>
+          <div class="option-group">
+            <label class="option"><input type="radio" name="relationship" value="single"><span>Single</span></label>
+            <label class="option"><input type="radio" name="relationship" value="relationship"><span>In a relationship</span></label>
+            <label class="option"><input type="radio" name="relationship" value="married"><span>Married</span></label>
+            <label class="option"><input type="radio" name="relationship" value="complicated"><span>It's complicated</span></label>
+            <label class="option"><input type="radio" name="relationship" value="prefer_not"><span>Prefer not to say</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="fieldset rise" data-delay="4">
+          <legend>How long have you lived in your city? <span class="opt">(optional)</span></legend>
+          <div class="option-group">
+            <label class="option"><input type="radio" name="city_tenure" value="under_1y"><span>Less than a year, I'm new here</span></label>
+            <label class="option"><input type="radio" name="city_tenure" value="1_3y"><span>1 to 3 years</span></label>
+            <label class="option"><input type="radio" name="city_tenure" value="3y_plus"><span>More than 3 years</span></label>
+            <label class="option"><input type="radio" name="city_tenure" value="grew_up"><span>I grew up here</span></label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- the open box, on its own after the last question -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <h2 class="rise" data-delay="1"><label for="comments">Anything else?</label></h2>
+          <p class="biz-card__note rise" data-delay="2">Optional. Whatever the boxes above didn't cover.</p>
+        </div>
+        <div class="field rise" data-delay="3">
+          <textarea class="textarea" id="comments" name="comments" rows="4"
+                    maxlength="1000"></textarea>
+        </div>
+      </div>
+
+      <!-- Honeypot: hidden from humans, bots tend to fill it. Leave empty. -->
+      <input class="visually-hidden" type="text" id="website" name="website"
+             tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <div class="biz-submit" data-reveal>
+        <button type="submit" class="btn btn--primary btn--lg submit rise" data-delay="1">
+          <span class="btn__fill" aria-hidden="true"></span>
+          <span class="btn__label">Send my answers</span>
+          <svg class="btn__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <p class="consent rise" data-delay="2">
+          Anonymous. See our <a href="/privacy-policy/">Privacy Policy</a>.
+        </p>
+        <div class="status" id="form-status" role="status"></div>
+      </div>
+    </form>
+
+    <div id="success-view" class="resin biz-success">
+      <div class="min" data-min data-phase="0.6" aria-hidden="true"></div>
+      <h2>Thank you, that helps a lot</h2>
+      <p>Your answers shape which moments min learns to make.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer__row">
+    <span>© 2026 min</span>
+    <span>
+      <a href="/privacy-policy/">Privacy Policy</a> ·
+      <a href="/">About min</a> ·
+      <a href="https://www.instagram.com/hellomin.app/" target="_blank" rel="noopener">Instagram</a> ·
+      <a href="https://www.tiktok.com/@hellomin.app" target="_blank" rel="noopener">TikTok</a>
+    </span>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/moments-survey.js"></script>
+
+</body>
+</html>
