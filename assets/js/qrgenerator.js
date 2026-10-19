@@ -69,6 +69,7 @@
         { slug: 'happy', label: 'Happy' },
         { slug: 'trump', label: 'Trump' },
         { slug: 'nirvana', label: 'Nirvana' },
+        { slug: 'wanted', label: 'Wanted' },
       ],
     },
     {
