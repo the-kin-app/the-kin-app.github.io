@@ -54,6 +54,7 @@ const BLOCKERS = [
   ['no_time', 'No time or energy'],
   ['forced',  'Events feel forced'],
   ['cost',    'It costs too much'],
+  ['unsafe',  "Meeting strangers doesn't feel safe"],
   ['fine',    "Nothing, I'm happy as I am"],
 ];
 const BLOCKERS_MAX = 2;
@@ -70,17 +71,6 @@ const MOMENTS = [
   ['group_to_group', 'Going out with your friends to meet another group of friends'],
   ['none',           'None of these'],
 ];
-
-/* Short enough to sit inside a sentence: question 9 names the
-   question-8 pick ("A casual chat with someone into your thing,
-   set up for you…"). */
-const MOMENT_SHORT = {
-  one_on_one:     'A casual chat with someone into your thing',
-  one_activity:   'An activity with one new person',
-  group_activity: 'A shared activity with a like-minded group',
-  mixer:          'A bigger social event to mingle at',
-  group_to_group: 'A night out where your friends meet another group',
-};
 
 /* ---------- question 9: the price check -------------------
    One yes/no at a price drawn per visit, per unit. Must match
@@ -197,14 +187,13 @@ function blockers() {
 /* Questions 7 → 8 → 9. Question 8 offers only what 7 ticked (all
    of it when 7 was skipped) and hides when 7 has one tick, which is
    then the pick. "None of these" stands alone, opens "what instead"
-   and hides 8 and 9. The pick names itself in question 9's note. */
+   and hides 8 and 9. */
 function moments() {
   const order = shuffled(MOMENTS);
   const used = build('[data-checks="use_moments"]', order, 'checkbox', false);
   const picks = build('[data-radios="top_moment"]', order.filter(([k]) => k !== 'none'), 'radio', false);
   const topCard = document.getElementById('top-card');
   const priceCard = document.getElementById('price-card');
-  const named = document.getElementById('price-moment');
   const other = document.getElementById('top_moment_other-field');
   const exclusive = 'none';
 
@@ -228,7 +217,6 @@ function moments() {
     }
     if (other) other.hidden = !none;
     if (priceCard) priceCard.hidden = none;
-    if (named) named.textContent = MOMENT_SHORT[top()] ?? 'Moments like these';
   };
 
   for (const [key, input] of used) {

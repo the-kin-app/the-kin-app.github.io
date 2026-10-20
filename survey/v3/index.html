@@ -198,11 +198,12 @@
         <div class="concept rise" data-delay="2">
           <p>
             <b>min sets up small real-life moments with new people nearby.</b>
-            A chat or an activity with someone into the same thing as you, a
-            small group or a bigger mixer, or a night out where your friends
-            meet another group. You tap once; min finds the people and
-            suggests when and where.
-            No profile pictures, no swiping, no texting.
+            You talk to min about what you're into, and it gets to know you
+            over time. Then it finds you a chat or an activity with someone
+            into the same thing, a small group or a bigger mixer, or a night
+            out where your friends meet another group. You tap once; min finds
+            the people and suggests when and where.
+            No profile pictures, no swiping, no texting strangers.
           </p>
         </div>
         <fieldset class="fieldset rise" data-delay="3">
@@ -256,15 +257,17 @@
            a price drawn at random for that unit (#price-check-amount, the
            demand curve), then how much would feel fair. The yes/no comes
            first so it isn't anchored on their own number. "I wouldn't pay"
-           is a decision, not a blank, and closes both. The pick from
-           question 8 is named in #price-moment by the JS. -->
+           is a decision, not a blank, and closes both. It prices min as a
+           whole, not the question-8 pick: a subscription covers every
+           moment, and the sample can't carry a price per moment type.
+           Split the answers by top_moment to compare, roughly. -->
       <div class="resin biz-card" id="price-card" data-reveal>
         <div class="biz-card__head">
           <span class="biz-card__step rise">Question 9 of 11</span>
-          <h2 class="rise" data-delay="1">If you had to pay for it, how would you want to pay?</h2>
+          <h2 class="rise" data-delay="1">If you had to pay for min, how would you want to pay?</h2>
           <p class="biz-card__note rise" data-delay="2">
-            <span id="price-moment">Moments like these</span>, set up for you
-            with a single tap.
+            The moments you picked, and any others you'd want, set up with a
+            single tap.
           </p>
         </div>
         <fieldset class="fieldset rise" data-delay="3">
@@ -277,7 +280,7 @@
         </fieldset>
         <div class="field--conditional" id="price-field" hidden>
           <fieldset class="fieldset price-check">
-            <legend>Would you pay <span id="price-check-amount">€6 per moment</span> for it?</legend>
+            <legend>Would you pay <span id="price-check-amount">€6 per moment</span> for min?</legend>
             <div class="option-group option-group--grid">
               <label class="option"><input type="radio" name="price_check" value="yes"><span>Yes</span></label>
               <label class="option"><input type="radio" name="price_check" value="no"><span>No</span></label>
