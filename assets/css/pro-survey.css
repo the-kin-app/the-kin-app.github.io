@@ -212,3 +212,45 @@
 }
 
 .survey-intro b { font-weight: var(--font-weight-semibold); color: var(--ink-primary); }
+
+/* ---- /survey/v2/ question 5: the one they'd pick -----------
+   The card hides on "None of these" and the rows follow the
+   question-4 ticks; [hidden] has to win over .biz-card's grid
+   and .option's flex. */
+
+#top-card[hidden],
+[data-radios="top_moment"] .option[hidden] { display: none; }
+
+/* ---- /survey/v3/ ------------------------------------------- */
+
+/* Question 5 at two picks: the rest grey out. */
+.option.is-disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* "None of these" in question 7 skips the price. */
+#price-card[hidden] { display: none; }
+
+.biz-success .success-ask { margin-top: var(--space-5); }
+
+/* ---- /business/v2/ -----------------------------------------
+   Questions 7–9 follow question 6 and hide until it has a
+   delivery ticked; [hidden] has to win over .biz-card's grid.
+   Question 8 is one row per delivery: its name, then five
+   buckets on one line, phone width included. The lit pebble is
+   the mark, so the dot inside it goes (still focusable, still
+   read out). */
+
+#values-card[hidden],
+#pay-card[hidden] { display: none; }
+
+.value-rows { display: grid; gap: var(--space-5); }
+.value-row > legend {
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-2);
+}
+.value-scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-2); }
+.value-scale .option { justify-content: center; padding: 12px 2px; }
+.value-scale .option input { position: absolute; opacity: 0; pointer-events: none; }
+.value-scale .option span { font-size: var(--text-sm); font-weight: var(--font-weight-semibold); white-space: nowrap; }
+
+/* v3 question 9: the yes/no at a drawn price, above the open amount. */
+.price-check { margin-bottom: var(--space-5); }

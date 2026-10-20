@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>min for Business — Four minutes on new customers</title>
+<meta name="description" content="min is working out how to send people through the doors of Helsinki venues. Tell us which kinds of guests would help you, and what they'd be worth. Four minutes.">
+<meta name="theme-color" content="#F0EBE2">
+<!-- A research instrument handed to specific businesses, not a page meant
+     to be found. Same stance as /business/: noindex, and absent from
+     sitemap.xml. -->
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://hellomin.app/business/v2/">
+
+<meta property="og:title" content="min for Business">
+<meta property="og:description" content="Which kinds of new guests would help your place, and what they'd be worth. Four minutes.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hellomin.app/business/v2/">
+<meta property="og:site_name" content="min">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="min: a softly glowing pebble with two lit eyes, waving hello in dusk light.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
+
+<link rel="icon" href="/assets/img/min-character/floating-min-favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/landing.css">
+<link rel="stylesheet" href="/assets/css/business.css">
+<link rel="stylesheet" href="/assets/css/survey.css">
+<link rel="stylesheet" href="/assets/css/pro-survey.css">
+
+<script>document.documentElement.classList.add('reveal-armed');</script>
+</head>
+
+<!-- ══════════════════════════════════════════════════════════
+     THE BUSINESS SURVEY, v2
+     ──────────────────────────────────────────────────────────
+     Sits next to /business/ rather than replacing it. Built on
+     the consumer survey's cards and controls (/survey/v3/).
+
+     Its job: which kinds of customer delivery a venue wants, and
+     roughly what each is worth. A funnel, facts first:
+
+       1–4   YOUR PLACE. What it is, when it's quiet, what a guest
+                         spends, what it spends to get one. The
+                         anchors every value below is read against.
+       5     CONCEPT.    min for a venue, then one reaction.
+       6     WHICH.      Up to three useful deliveries.
+       7     FIRST.      The one they'd want first.  → what to build
+       8     VALUE.      € per guest, for each one.  → what to charge
+       9     PAY.        Per guest, capped, or monthly.
+       10    NEXT.       The real ask: launch partner or not.
+
+     business_name is the only required answer. Posts to POST
+     /business/v2 on the Worker (min-waitlist-worker, migration 0014).
+     ══════════════════════════════════════════════════════════ -->
+
+<body class="biz survey pro-survey">
+
+<div class="env" aria-hidden="true">
+  <span class="fog fog--1"></span>
+  <span class="fog fog--2"></span>
+  <span class="fog fog--3"></span>
+</div>
+
+<main>
+
+  <section class="biz-masthead" data-reveal>
+    <h1 class="visually-hidden">min for Business</h1>
+    <img class="wordmark--hero rise" src="/assets/img/Logo/min-falling-logo.png" alt="min" width="138" height="98">
+    <p class="survey-intro rise" data-delay="1">
+      We're working out how to send <b>new guests</b> through the doors of
+      Helsinki venues. Tell us which kinds would help your place and what
+      they'd be worth. About four minutes; only your business name is required.
+    </p>
+  </section>
+
+  <section class="biz-form-section">
+    <form id="biz2-form" class="biz-form" novalidate>
+
+      <!-- ══ PART 1 · YOUR PLACE ══════════════════════════════ -->
+      <p class="survey-part" data-reveal><span class="rise">Part 1 · Your place</span></p>
+
+      <!-- 1 ─ who, and what kind of place: the segment everything splits by -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 1 of 10</span>
+          <h2 class="rise" data-delay="1">Tell us about your place</h2>
+        </div>
+        <div class="field rise" data-delay="2">
+          <label for="business_name">What's your business called?</label>
+          <input class="input" type="text" id="business_name" name="business_name"
+                 placeholder="e.g. Café Aurinko" required autocomplete="organization" maxlength="120">
+          <div class="field-error" id="business_name-error"></div>
+        </div>
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend>What kind of place is it?</legend>
+          <div class="option-group option-group--grid">
+            <label class="option"><input type="radio" name="business_type" value="cafe"><span>Café</span></label>
+            <label class="option"><input type="radio" name="business_type" value="bar"><span>Bar</span></label>
+            <label class="option"><input type="radio" name="business_type" value="restaurant"><span>Restaurant</span></label>
+            <label class="option option--noted"><input type="radio" name="business_type" value="activity"><span>Activity venue<small class="option__note">Climbing, bowling, a studio, games…</small></span></label>
+            <label class="option"><input type="radio" name="business_type" value="other"><span>Something else</span></label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 2 ─ when it's quiet: where a delivered guest is worth the most.
+           Rows from biz2-survey.js (QUIET); "rarely quiet" stands alone. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 2 of 10</span>
+          <h2 class="rise" data-delay="1">When do you usually have empty tables or space?</h2>
+          <p class="biz-card__note rise" data-delay="2">Tick all that apply.</p>
+        </div>
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend class="visually-hidden">When your place is usually quiet</legend>
+          <div class="option-group option-group--grid" data-checks="quiet"></div>
+        </fieldset>
+      </div>
+
+      <!-- 3 ─ what one guest spends: the ceiling on what a delivered guest
+           can be worth. Read against question 8. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 3 of 10</span>
+          <h2 class="rise" data-delay="1">What does one guest usually spend per visit?</h2>
+        </div>
+        <fieldset class="fieldset rise" data-delay="2">
+          <legend class="visually-hidden">What one guest usually spends per visit</legend>
+          <div class="option-group option-group--grid">
+            <label class="option"><input type="radio" name="avg_spend" value="under_10"><span>Under €10</span></label>
+            <label class="option"><input type="radio" name="avg_spend" value="10_20"><span>€10 to €20</span></label>
+            <label class="option"><input type="radio" name="avg_spend" value="20_40"><span>€20 to €40</span></label>
+            <label class="option"><input type="radio" name="avg_spend" value="over_40"><span>Over €40</span></label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 4 ─ money already spent getting customers: the budget a value
+           in question 8 has to come out of. Same bands as /business/. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 4 of 10</span>
+          <h2 class="rise" data-delay="1">In a typical month, roughly how much do you spend attracting new customers?</h2>
+          <p class="biz-card__note rise" data-delay="2">Ads, promotions, flyers, deal apps. All together.</p>
+        </div>
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend class="visually-hidden">Monthly spend on attracting new customers</legend>
+          <div class="option-group option-group--grid">
+            <label class="option"><input type="radio" name="marketing_spend" value="nothing"><span>Nothing at all</span></label>
+            <label class="option"><input type="radio" name="marketing_spend" value="under_100"><span>Under €100</span></label>
+            <label class="option"><input type="radio" name="marketing_spend" value="100_500"><span>€100 to €500</span></label>
+            <label class="option"><input type="radio" name="marketing_spend" value="500_1500"><span>€500 to €1,500</span></label>
+            <label class="option"><input type="radio" name="marketing_spend" value="1500_plus"><span>Over €1,500</span></label>
+            <label class="option"><input type="radio" name="marketing_spend" value="never_worked_out"><span>We've never worked it out</span></label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- ══ PART 2 · THE IDEA ════════════════════════════════ -->
+      <p class="survey-part" data-reveal><span class="rise">Part 2 · An idea</span></p>
+
+      <!-- 5 ─ the concept from the venue's side, then one reaction. Three
+           options and no middle one, as on /survey/v3/. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 5 of 10</span>
+          <h2 class="rise" data-delay="1">Here's the idea. What do you think?</h2>
+        </div>
+        <div class="concept rise" data-delay="2">
+          <p>
+            <b>min matches people nearby who are up for meeting someone new,
+            and sends them to one specific place to do it.</b> Two people
+            meeting for a chat, a small group doing an activity, or friend
+            groups meeting each other. Your venue could be that place, and
+            you'd pay only for guests who actually walk in. No ads, nothing
+            to post, nothing extra for your staff.
+          </p>
+        </div>
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend class="visually-hidden">Your reaction to the idea</legend>
+          <div class="option-group">
+            <label class="option option--noted"><input type="radio" name="appeal" value="perfect"><span>This is perfect for us<small class="option__note">I can see it bringing us guests regularly</small></span></label>
+            <label class="option option--noted"><input type="radio" name="appeal" value="interesting"><span>Sounds interesting<small class="option__note">I'd test it out</small></span></label>
+            <label class="option option--noted"><input type="radio" name="appeal" value="not_for_us"><span>Not for us<small class="option__note">We wouldn't use it</small></span></label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 6 ─ which deliveries are useful, up to three so they pick the
+           real ones and question 8 stays short. Rows from biz2-survey.js
+           (DELIVERIES), shuffled; "None of these" pinned last, skips 7–9. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 6 of 10</span>
+          <h2 class="rise" data-delay="1">Which kinds of guests would actually help your place?</h2>
+          <p class="biz-card__note rise" data-delay="2">Pick up to three.</p>
+        </div>
+        <fieldset class="fieldset rise" data-delay="3">
+          <legend class="visually-hidden">Useful kinds of guests, up to three</legend>
+          <div class="option-group" data-checks="deliveries"></div>
+        </fieldset>
+      </div>
+
+      <!-- 7 ─ the forced choice among what they ticked. Hidden until two
+           are ticked; one tick is already their pick. -->
+      <div class="resin biz-card" id="top-card" data-reveal hidden>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 7 of 10</span>
+          <h2 class="rise" data-delay="1">If we could only start with one, which should it be?</h2>
+        </div>
+        <fieldset class="fieldset rise" data-delay="2">
+          <legend class="visually-hidden">The one kind of guest you would want first</legend>
+          <div class="option-group" data-radios="top_delivery"></div>
+        </fieldset>
+      </div>
+
+      <!-- 8 ─ the value of each, in one unit (€ per guest who walks in) so
+           the deliveries compare. Buckets, not a box: owners know the
+           rough figure, not the exact one. One row per ticked delivery,
+           built by biz2-survey.js. -->
+      <div class="resin biz-card" id="values-card" data-reveal hidden>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 8 of 10</span>
+          <h2 class="rise" data-delay="1">Roughly what would one guest be worth paying for?</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            Per person who actually walks in, and who wasn't coming otherwise.
+            Your guess, we haven't set prices.
+          </p>
+        </div>
+        <div class="value-rows rise" data-delay="3" id="value-rows"></div>
+      </div>
+
+      <!-- 9 ─ the shape of paying. No "not sure": the cap option is the
+           middle ground for anyone wary of an open meter. -->
+      <div class="resin biz-card" id="pay-card" data-reveal hidden>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 9 of 10</span>
+          <h2 class="rise" data-delay="1">How would you rather pay?</h2>
+        </div>
+        <fieldset class="fieldset rise" data-delay="2">
+          <legend class="visually-hidden">How you would rather pay</legend>
+          <div class="option-group">
+            <label class="option"><input type="radio" name="pay_model" value="per_guest"><span>Per guest who walks in</span></label>
+            <label class="option"><input type="radio" name="pay_model" value="per_guest_capped"><span>Per guest, with a monthly limit we can't go past</span></label>
+            <label class="option"><input type="radio" name="pay_model" value="monthly"><span>A flat monthly fee</span></label>
+            <label class="option"><input type="radio" name="pay_model" value="not_pay"><span>We wouldn't pay for this</span></label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- ══ PART 3 · NEXT ════════════════════════════════════ -->
+      <p class="survey-part" data-reveal><span class="rise">Part 3 · What's next</span></p>
+
+      <!-- 10 ─ the real ask. A launch-partner yes is the strongest signal
+           this page can collect; "show me numbers" is polite interest. -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 10 of 10</span>
+          <h2 class="rise" data-delay="1">We're starting in one Helsinki neighbourhood. Want in?</h2>
+        </div>
+        <fieldset class="fieldset rise" data-delay="2">
+          <legend class="visually-hidden">Whether you want to be part of the launch</legend>
+          <div class="option-group">
+            <label class="option option--noted"><input type="radio" name="followup" value="launch_partner"><span>Yes, we'd be a launch partner<small class="option__note">We'd talk details in person</small></span></label>
+            <label class="option"><input type="radio" name="followup" value="show_numbers"><span>Come back when you have real numbers</span></label>
+            <label class="option"><input type="radio" name="followup" value="not_now"><span>Not right now</span></label>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <h2 class="rise" data-delay="1"><label for="comments">Anything else?</label></h2>
+          <p class="biz-card__note rise" data-delay="2">Optional. Questions, worries, ideas, whatever the boxes above didn't cover.</p>
+        </div>
+        <div class="field rise" data-delay="3">
+          <textarea class="textarea" id="comments" name="comments" rows="4"
+                    maxlength="2000"></textarea>
+        </div>
+      </div>
+
+      <!-- Honeypot: hidden from humans, bots tend to fill it. Leave empty. -->
+      <input class="visually-hidden" type="text" id="website" name="website"
+             tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <div class="biz-submit" data-reveal>
+        <button type="submit" class="btn btn--primary btn--lg submit rise" data-delay="1">
+          <span class="btn__fill" aria-hidden="true"></span>
+          <span class="btn__label">Send it over</span>
+          <svg class="btn__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <p class="consent rise" data-delay="2">
+          By sending this you agree to our <a href="/privacy-policy/">Privacy Policy</a>.
+          We'll only use it to work out what to build.
+        </p>
+        <div class="status" id="form-status" role="status"></div>
+      </div>
+    </form>
+
+    <div id="success-view" class="resin biz-success">
+      <div class="min" data-min data-phase="0.6" aria-hidden="true"></div>
+      <h2>Thanks, that's genuinely useful</h2>
+      <p>
+        Your answers decide which kinds of guests min learns to send first.
+        When we have real numbers from the first neighbourhood, we'll come
+        back to you with them.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer__row">
+    <span>© 2026 min</span>
+    <span>
+      <a href="/privacy-policy/">Privacy Policy</a> ·
+      <a href="/">About min</a> ·
+      <a href="https://www.instagram.com/hellomin.app/" target="_blank" rel="noopener">Instagram</a> ·
+      <a href="https://www.tiktok.com/@hellomin.app" target="_blank" rel="noopener">TikTok</a>
+    </span>
+  </div>
+</footer>
+
+<script type="module" src="/assets/js/biz2-survey.js"></script>
+
+</body>
+</html>

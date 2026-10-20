@@ -9,7 +9,7 @@ waitlist submissions.
 ```
 /
 ├── index.html              Homepage — the long-form landing page, hero headline finishing on a changing word. Side A of the landing A/B
-├── b/index.html            A redirect stub to /. Was the variant homepage until 2026-09-16; kept only for URLs already in the wild
+├── b/index.html            Side B of the landing A/B: the homepage with a different hero headline ("a dose of social moment, delivered across your street")
 ├── pitchdeck/index.html    The public pitch deck — swipeable slides (see below)
 ├── waitlist/index.html     The scan page — a three-slide banner + one-field signup, all above the fold
 ├── ads/index.html          The ad landing page — /waitlist/ plus a required school dropdown, and the only page paid social points at (see below)
@@ -555,16 +555,29 @@ data was cleared rather than summed with the new — see
 `min-waitlist-worker migrations/0008_variant_letters_moved.sql`. The poster
 A/B kept every row of its history; only the page label was cleared.
 
-`b/index.html` is now a redirect stub to `/`, carrying the query string
-through so a straggler with an old `/b/?l=…&p=…` URL in their history still
-signs up attributed. Delete it once those have aged out — nothing generates
-them any more.
-
 **The test ended on 2026-10-09.** `LANDING_SPLIT = false` in
 `min-waitlist-worker src/index.js` sends every scan to the homepage as side
-`a`. `/waitlist/` still works and still declares `b` for anyone who opens it
-directly. Don't end a test by pointing both sides of `VARIANT_PATHS` at `/`:
+`a`. `/waitlist/` still works, but declares no variant any more: `b` is `/b/`
+now. Don't end a test by pointing both sides of `VARIANT_PATHS` at `/`:
 that changes what `b` means and needs the variant data cleared.
+
+### The headline test (from 2026-10-13)
+
+`/b/` is a copy of the homepage with one change, the hero headline:
+
+| | Headline |
+| --- | --- |
+| `/` — side A | spontaneous / **IRL meetings** / right around the corner |
+| `/b/` — side B | a dose of / **social moment** / delivered across your street |
+
+Everything else is the same, so the test measures the headline alone. Copy any
+homepage edit into `b/index.html` too, or the two sides drift apart. On phones
+`/b/` sets the headline a little smaller so its longer third line stays on one
+line. That is the only style it adds.
+
+To run it, in `min-waitlist-worker src/index.js`: set `VARIANT_PATHS.b` to
+`'/b/'`, turn `LANDING_SPLIT` back on, and clear the old `b` variant data
+first. Until 2026-10-09 `b` meant `/waitlist/`.
 
 ## Backend
 

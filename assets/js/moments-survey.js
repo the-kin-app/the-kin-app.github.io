@@ -8,7 +8,7 @@
      • Anonymous. No email, no name, nothing that identifies.
      • Nothing is required. The only validation is the shape of a
        number, and only when somebody typed one.
-     • We name no price. Question 5 is their number, and "I
+     • We name no price. Question 7 is their two numbers, and "I
        wouldn't pay" is a decision, not a blank.
 
    1. reveals()  — IntersectionObserver adds .in.
@@ -54,6 +54,15 @@ const MOMENTS = [
   ['group_to_group', 'Going out with your friends to meet another group of friends'],
   ['none',           'None of these'],
 ];
+
+/* The same moments, short enough to sit inside a sentence: question 7
+   names their question-5 pick ("A coffee with someone into your thing,
+   set up for you…"). */
+const MOMENT_SHORT = {
+  one_on_one:     'A coffee or a drink with someone into your thing',
+  group_activity: 'A shared activity with a like-minded group',
+  group_to_group: 'A night out where your friends meet another group',
+};
 
 /* ---------- 1. reveals -------------------------------------- */
 
@@ -142,22 +151,84 @@ function pays() {
   });
 }
 
-/* ---------- question 6: "I wouldn't pay" -------------------
-   Ticking it empties and disables the amount; typing an amount
+/* ---------- question 5: the one they'd pick ----------------
+   Rows are the moments they ticked in question 4 (all three when
+   they ticked none yet); "None of these" hides the card. One tick
+   is already their pick, so it comes pre-chosen. Question 7's note
+   follows the pick. */
+function topPick(moments) {
+  const card = document.getElementById('top-card');
+  const host = document.querySelector('[data-radios="top_moment"]');
+  const named = document.getElementById('price-moment');
+  if (!card || !host) return { picked: () => null };
+
+  const rows = MOMENTS.filter(([key]) => key !== 'none');
+  const radios = new Map();
+  for (const [key, label] of rows) {
+    const wrap = document.createElement('label');
+    wrap.className = 'option';
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'top_moment';
+    input.value = key;
+    const text = document.createElement('span');
+    text.textContent = label;
+    wrap.append(input, text);
+    host.appendChild(wrap);
+    radios.set(key, input);
+  }
+
+  const picked = () => {
+    if (card.hidden) return null;
+    for (const [key, input] of radios) if (input.checked) return key;
+    return null;
+  };
+
+  const name = () => {
+    if (named) named.textContent = MOMENT_SHORT[picked()] ?? 'One moment like these';
+  };
+
+  const sync = () => {
+    const ticked = moments.picked();
+    card.hidden = ticked.includes('none');
+    const shown = ticked.length && !card.hidden ? ticked : rows.map(([key]) => key);
+    for (const [key, input] of radios) {
+      const on = shown.includes(key);
+      input.closest('label').hidden = !on;
+      if (!on) input.checked = false;
+    }
+    if (shown.length === 1 && !card.hidden) radios.get(shown[0]).checked = true;
+    name();
+  };
+
+  for (const input of radios.values()) input.addEventListener('change', name);
+  document.addEventListener('moments:change', sync);
+  sync();
+  return { picked };
+}
+
+/* ---------- question 7: "I wouldn't pay" -------------------
+   Ticking it empties and disables both amounts; typing an amount
    unticks it. A row with both is a row nobody can read. */
 function wouldNotPay() {
   const box = document.getElementById('would_not_pay');
-  const price = document.getElementById('price');
-  if (!box || !price) return;
+  const prices = ['price_bargain', 'price_too_much']
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+  if (!box || !prices.length) return;
 
   box.addEventListener('change', () => {
-    price.disabled = box.checked;
-    if (box.checked) price.value = '';
-    price.closest('.field')?.classList.toggle('is-disabled', box.checked);
+    for (const price of prices) {
+      price.disabled = box.checked;
+      if (box.checked) price.value = '';
+      price.closest('.field')?.classList.toggle('is-disabled', box.checked);
+    }
   });
-  price.addEventListener('input', () => {
-    if (price.value.trim() && box.checked) box.checked = false;
-  });
+  for (const price of prices) {
+    price.addEventListener('input', () => {
+      if (price.value.trim() && box.checked) box.checked = false;
+    });
+  }
 }
 
 function selfDescribe() {
@@ -183,12 +254,14 @@ const DEFAULT_API = LOCAL_HOSTS.has(location.hostname)
 const API_BASE = (window.KIN_API_BASE || DEFAULT_API).replace(/\/$/, '');
 const SUBMIT_URL = API_BASE + '/survey/v2';
 
-function form(meet, find, moments) {
+function form(meet, find, moments, top) {
   const el = document.getElementById('moments-form');
   if (!el) return;
 
-  const priceInput = document.getElementById('price');
-  const priceError = document.getElementById('price-error');
+  const bargainInput = document.getElementById('price_bargain');
+  const bargainError = document.getElementById('price_bargain-error');
+  const tooMuchInput = document.getElementById('price_too_much');
+  const tooMuchError = document.getElementById('price_too_much-error');
   const spendInput = document.getElementById('spend');
   const spendError = document.getElementById('spend-error');
   const wontPay = document.getElementById('would_not_pay');
@@ -219,7 +292,8 @@ function form(meet, find, moments) {
   el.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    priceError.textContent = '';
+    bargainError.textContent = '';
+    tooMuchError.textContent = '';
     spendError.textContent = '';
     formStatus.textContent = '';
     formStatus.className = 'status';
@@ -232,9 +306,19 @@ function form(meet, find, moments) {
       return;
     }
 
-    const price = parsePrice(priceInput.value);
-    if (!price.ok) {
-      fail(priceInput, priceError, 'Just a number is fine, like 5 or 7.50.');
+    const bargain = parsePrice(bargainInput.value);
+    if (!bargain.ok) {
+      fail(bargainInput, bargainError, 'Just a number is fine, like 5 or 7.50.');
+      return;
+    }
+    const tooMuch = parsePrice(tooMuchInput.value);
+    if (!tooMuch.ok) {
+      fail(tooMuchInput, tooMuchError, 'Just a number is fine, like 15 or 20.');
+      return;
+    }
+    // A bargain above "too expensive" is two boxes swapped, not an answer.
+    if (bargain.value !== null && tooMuch.value !== null && bargain.value >= tooMuch.value) {
+      fail(tooMuchInput, tooMuchError, 'This one should be higher than the bargain price.');
       return;
     }
 
@@ -248,9 +332,12 @@ function form(meet, find, moments) {
       spend_monthly:   spend.value,
       // Part 2: want
       moments:         moments.picked(),
-      price:           price.value,
-      would_not_pay:   !!wontPay?.checked,
+      top_moment:      top.picked(),
       frequency:       radioValue('frequency'),
+      price_bargain:   bargain.value,
+      price_too_much:  tooMuch.value,
+      would_not_pay:   !!wontPay?.checked,
+      pay_model:       radioValue('pay_model'),
       // Part 3: who
       profession:      text('profession'),
       gender,
@@ -300,10 +387,11 @@ function form(meet, find, moments) {
 reveals();
 const meet = checks('[data-checks="meet"]', MEET, { exclusive: 'no_way' });
 const find = checks('[data-checks="find"]', FIND);
-const moments = checks('[data-checks="moments"]', MOMENTS, { exclusive: 'none' });
+const moments = checks('[data-checks="moments"]', MOMENTS, { exclusive: 'none', event: 'moments:change' });
+const top = topPick(moments);
 pays();
 wouldNotPay();
 selfDescribe();
 minBodies();
 buttons();
-form(meet, find, moments);
+form(meet, find, moments, top);

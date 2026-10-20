@@ -48,15 +48,16 @@
 
        1  NOW.     How they meet people, how they find things
                    to do, and whether any of it costs money.
-       2  WANT.    Which moments they'd actually do, how often, and what
-                   they'd pay a month.
+       2  WANT.    Which moments they'd actually do, the ONE they'd pick,
+                   how often, what one of it is worth (a bargain / too
+                   expensive), and how they'd rather pay.
        3  WHO.     Profession, gender, age, how long in the city.
 
      Anonymous: there is no email field and there must not be
      one. Nothing is required.
 
      Posts to POST /survey/v2 on the Worker
-     (min-waitlist-worker, migrations/0011_moments_survey.sql).
+     (min-waitlist-worker, migrations 0011 and 0012).
      ══════════════════════════════════════════════════════════ -->
 
 <body class="biz survey pro-survey">
@@ -89,7 +90,7 @@
       <!-- 1 ─ how they meet people. Rows from moments-survey.js (MEET). -->
       <div class="resin biz-card" data-reveal>
         <div class="biz-card__head">
-          <span class="biz-card__step rise">Question 1 of 7</span>
+          <span class="biz-card__step rise">Question 1 of 9</span>
           <h2 class="rise" data-delay="1">How do you meet new people these days?</h2>
           <p class="biz-card__note rise" data-delay="2">Tick everything that's true.</p>
         </div>
@@ -102,7 +103,7 @@
       <!-- 2 ─ how they find things to do. Rows from moments-survey.js (FIND). -->
       <div class="resin biz-card" data-reveal>
         <div class="biz-card__head">
-          <span class="biz-card__step rise">Question 2 of 7</span>
+          <span class="biz-card__step rise">Question 2 of 9</span>
           <h2 class="rise" data-delay="1">How do you find interesting things to do outside your home?</h2>
           <p class="biz-card__note rise" data-delay="2">Tick everything that's true.</p>
         </div>
@@ -120,7 +121,7 @@
       <!-- 3 ─ do they pay. One monthly total, only after a yes. -->
       <div class="resin biz-card" data-reveal>
         <div class="biz-card__head">
-          <span class="biz-card__step rise">Question 3 of 7</span>
+          <span class="biz-card__step rise">Question 3 of 9</span>
           <h2 class="rise" data-delay="1">Do you pay for any of these?</h2>
           <p class="biz-card__note rise" data-delay="2">
             Subscriptions, memberships, tickets, boosts. Anything that costs money.
@@ -150,7 +151,7 @@
            Rows from moments-survey.js (MOMENTS). -->
       <div class="resin biz-card" data-reveal>
         <div class="biz-card__head">
-          <span class="biz-card__step rise">Question 4 of 7</span>
+          <span class="biz-card__step rise">Question 4 of 9</span>
           <h2 class="rise" data-delay="1">Which of these would you actually do?</h2>
           <p class="biz-card__note rise" data-delay="2">
             Each of these would be with strangers, people you haven't met yet. Which would you really show up for? Tick all that apply.
@@ -162,10 +163,25 @@
         </fieldset>
       </div>
 
-      <!-- 5 ─ how often -->
+      <!-- 5 ─ the one they'd pick. Q4 alone comes out flat (most tick two or
+           three), so this is the forced choice that ranks them. Rows follow
+           what they ticked in Q4; the card hides on "None of these".
+           Rows from moments-survey.js (MOMENTS). -->
+      <div class="resin biz-card" id="top-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 5 of 9</span>
+          <h2 class="rise" data-delay="1">If min could only make one of these for you, which one?</h2>
+        </div>
+        <fieldset class="fieldset rise" data-delay="2">
+          <legend class="visually-hidden">The one social moment you would most want</legend>
+          <div class="option-group" data-radios="top_moment"></div>
+        </fieldset>
+      </div>
+
+      <!-- 6 ─ how often -->
       <div class="resin biz-card" data-reveal>
         <div class="biz-card__head">
-          <span class="biz-card__step rise">Question 5 of 7</span>
+          <span class="biz-card__step rise">Question 6 of 9</span>
           <h2 class="rise" data-delay="1">How often would you want a moment like this?</h2>
         </div>
         <fieldset class="fieldset rise" data-delay="2">
@@ -179,24 +195,53 @@
         </fieldset>
       </div>
 
-      <!-- 6 ─ their price. We name no figure, and "I wouldn't pay" is a
-           decision, not a blank. -->
+      <!-- 7 ─ their price for ONE of their pick, as two bounds (a light Van
+           Westendorp). One open number is noisy and runs high; a range is
+           steadier. We name no figure, and "I wouldn't pay" is a decision,
+           not a blank. The pick is named in #price-moment by the JS. -->
       <div class="resin biz-card" data-reveal>
         <div class="biz-card__head">
-          <span class="biz-card__step rise">Question 6 of 7</span>
-          <h2 class="rise" data-delay="1">What would you pay a month to summon moments like these with a single tap?</h2>
-          <p class="biz-card__note rise" data-delay="2">Your number, we haven't set one.</p>
+          <span class="biz-card__step rise">Question 7 of 9</span>
+          <h2 class="rise" data-delay="1">What would one be worth to you?</h2>
+          <p class="biz-card__note rise" data-delay="2">
+            <span id="price-moment">One moment like these</span>, set up for you
+            with a single tap. Your numbers, we haven't set any.
+          </p>
         </div>
         <div class="field rise" data-delay="3">
-          <label for="price">What you'd pay a month <span class="opt">(€)</span></label>
-          <input class="input" type="text" id="price" name="price"
+          <label for="price_bargain">A bargain, I'd book it without thinking <span class="opt">(€)</span></label>
+          <input class="input" type="text" id="price_bargain" name="price_bargain"
                  inputmode="decimal" maxlength="10">
-          <div class="field-error" id="price-error"></div>
+          <div class="field-error" id="price_bargain-error"></div>
+        </div>
+        <div class="field rise" data-delay="3">
+          <label for="price_too_much">Too expensive, I'd skip it <span class="opt">(€)</span></label>
+          <input class="input" type="text" id="price_too_much" name="price_too_much"
+                 inputmode="decimal" maxlength="10">
+          <div class="field-error" id="price_too_much-error"></div>
         </div>
         <label class="option option--standalone rise" data-delay="4">
           <input type="checkbox" id="would_not_pay" name="would_not_pay">
           <span>I wouldn't pay for this</span>
         </label>
+      </div>
+
+      <!-- 8 ─ how they'd rather pay. Without it a "wouldn't pay" can't tell
+           "not for this" from "not monthly". -->
+      <div class="resin biz-card" data-reveal>
+        <div class="biz-card__head">
+          <span class="biz-card__step rise">Question 8 of 9</span>
+          <h2 class="rise" data-delay="1">How would you rather pay?</h2>
+        </div>
+        <fieldset class="fieldset rise" data-delay="2">
+          <legend class="visually-hidden">How you would rather pay</legend>
+          <div class="option-group">
+            <label class="option"><input type="radio" name="pay_model" value="per_moment"><span>Per moment, only when I go</span></label>
+            <label class="option"><input type="radio" name="pay_model" value="monthly"><span>A monthly plan, as many as I like</span></label>
+            <label class="option"><input type="radio" name="pay_model" value="free_extras"><span>Free, and pay for extras</span></label>
+            <label class="option"><input type="radio" name="pay_model" value="not_pay"><span>I wouldn't pay either way</span></label>
+          </div>
+        </fieldset>
       </div>
 
       <!-- ══ PART 3 · WHO ═════════════════════════════════════ -->
@@ -205,7 +250,7 @@
       <!-- 7 ─ profession, gender, age, relationship, city -->
       <div class="resin biz-card" data-reveal>
         <div class="biz-card__head">
-          <span class="biz-card__step rise">Question 7 of 7</span>
+          <span class="biz-card__step rise">Question 9 of 9</span>
           <h2 class="rise" data-delay="1">Who are you?</h2>
           <p class="biz-card__note rise" data-delay="2">All optional, and still anonymous.</p>
         </div>
