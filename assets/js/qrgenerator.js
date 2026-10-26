@@ -70,6 +70,7 @@
         { slug: 'trump', label: 'Trump' },
         { slug: 'nirvana', label: 'Nirvana' },
         { slug: 'wanted', label: 'Wanted' },
+        { slug: 'halloween', label: 'Halloween' },
       ],
     },
     {
