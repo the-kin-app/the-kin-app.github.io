@@ -1,8 +1,8 @@
 /* ============================================================
    min — the business survey, v2 (/business/v2/)
    ------------------------------------------------------------
-   Built on the same parts as v3-survey.js: the same reveal
-   observer, shuffled lists, honeypot and submit.
+   Built on the same parts as the consumer surveys: the same
+   reveal observer, shuffled lists, honeypot and submit.
 
      • business_name is the only required answer; the only other
        validation is that, and only on submit.

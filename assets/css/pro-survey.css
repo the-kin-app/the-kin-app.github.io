@@ -199,7 +199,7 @@
 /* Question 5's second half, how often. */
 .frequency { margin-top: var(--space-6); }
 
-/* ---- the intro line (/survey/v2/) --------------------------
+/* ---- the intro line (/survey/v2/, /business/v2/) ----------
    What the survey is about, said once under the logo instead of
    on a card, so question 1 is the first card on the page. */
 
@@ -213,23 +213,105 @@
 
 .survey-intro b { font-weight: var(--font-weight-semibold); color: var(--ink-primary); }
 
-/* ---- /survey/v2/ question 5: the one they'd pick -----------
-   The card hides on "None of these" and the rows follow the
-   question-4 ticks; [hidden] has to win over .biz-card's grid
-   and .option's flex. */
-
-#top-card[hidden],
-[data-radios="top_moment"] .option[hidden] { display: none; }
-
-/* ---- /survey/v3/ ------------------------------------------- */
-
-/* Question 5 at two picks: the rest grey out. */
+/* At two picks, the rest grey out. */
 .option.is-disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* "None of these" in question 7 skips the price. */
-#price-card[hidden] { display: none; }
+/* ---- /survey/v2/ -------------------------------------------
+   A skipped question hides; [hidden] has to win over .biz-card's
+   grid. */
 
-.biz-success .success-ask { margin-top: var(--space-5); }
+[data-q][hidden],
+.field--conditional[hidden] { display: none; }
+
+/* The counter: − / the number / +, the buttons as small pebbles.
+   Empty until the first tap, when the middle reads as a hint. */
+.counter {
+  display: grid;
+  grid-template-columns: 56px 1fr 56px;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  border: 1px solid rgba(35, 33, 30, 0.07);
+  border-radius: var(--radius-pebble);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 1px 2px rgba(15, 13, 20, 0.06);
+}
+.counter__btn {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.5));
+  box-shadow: var(--shadow-contact);
+  color: var(--violet-ink);
+  cursor: pointer;
+  transition: transform var(--duration-quick) ease, opacity var(--duration-quick) ease;
+}
+.counter__btn:active:not(:disabled) { transform: scale(0.94); }
+.counter__btn:focus-visible { outline: 3px solid color-mix(in srgb, var(--color-accent) 40%, transparent); outline-offset: 2px; }
+.counter__btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.counter__value {
+  text-align: center;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.counter.is-empty .counter__value {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-normal);
+  color: var(--ink-faint);
+}
+
+/* The notification: a phone banner, frosted, on the card. Its
+   buttons are a picture of buttons, not controls. */
+.notif {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(var(--blur-resin));
+  -webkit-backdrop-filter: blur(var(--blur-resin));
+  box-shadow: var(--shadow-lift);
+  font-size: var(--text-base);
+  line-height: 1.4;
+  color: var(--ink);
+}
+.notif__top { display: flex; align-items: center; gap: var(--space-2); margin-bottom: 6px; }
+.notif__icon { width: 20px; height: 20px; border-radius: 5px; }
+.notif__app {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.notif__time { margin-left: auto; font-size: var(--text-sm); color: var(--ink-faint); }
+.notif__body { margin: 0; }
+.notif__body b { font-weight: var(--font-weight-semibold); }
+.notif__actions { display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-3); }
+.notif__btn {
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: rgba(35, 33, 30, 0.07);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+}
+.notif__btn--primary { background: var(--violet-ink); color: var(--ink-inverse); }
+
+/* The question under the notification reads as a question. */
+.fieldset > legend.fieldset__question {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--leading-tight);
+  margin-bottom: var(--space-4);
+}
+
+.invite { margin-top: var(--space-6); }
+.field-hint { margin: var(--space-2) 0 0; font-size: var(--text-sm); color: var(--ink-faint); }
 
 /* ---- /business/v2/ -----------------------------------------
    Questions 7–9 follow question 6 and hide until it has a
@@ -252,5 +334,3 @@
 .value-scale .option input { position: absolute; opacity: 0; pointer-events: none; }
 .value-scale .option span { font-size: var(--text-sm); font-weight: var(--font-weight-semibold); white-space: nowrap; }
 
-/* v3 question 9: the yes/no at a drawn price, above the open amount. */
-.price-check { margin-bottom: var(--space-5); }

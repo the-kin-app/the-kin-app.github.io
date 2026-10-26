@@ -16,7 +16,7 @@ waitlist submissions.
 ├── privacy-policy/index.html
 ├── qr/index.html           QR code that links to the waitlist
 ├── survey/pro/index.html   The Pro survey — six questions on what to gate and at what price (see below)
-├── survey/v2/index.html    The social moments survey — anonymous, seven questions, posts to POST /survey/v2
+├── survey/v2/index.html    The IRL moments survey — anonymous, seven questions, posts to POST /survey/v2 (spec: min/my survey.md)
 ├── qrgenerator/index.html  QR workbench — makes the poster tracking codes (see below)
 ├── assets/
 │   ├── css/
