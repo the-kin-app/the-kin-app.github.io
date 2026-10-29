@@ -357,7 +357,10 @@ than refusing the scan. Paper cannot be reissued. The generator flags that shape
 and tells you the locationless URL to print instead.
 
 Each asset type owns its own design list: posters are `unclesam`,
-`unclesam-footer`, `happy`, `trump`, `nirvana`, `wanted` and `halloween`; cards are `unclemin` and `help`. The lists are
+`unclesam-footer`, `happy`, `trump`, `nirvana`, `wanted` and `halloween`; cards are `unclemin` and `help`.
+Posters also have `halloween-event`, which carries `to:` because the Worker
+sends it to Instagram instead of the landing page (`OUTBOUND` in the Worker).
+It is counted by location in its own table and never in a conversion rate. The lists are
 disjoint today, but nothing depends on that — two asset types may share a
 design slug, and if they ever do they stay separate cells everywhere
 downstream, including in the filenames the generator exports, so a card and a

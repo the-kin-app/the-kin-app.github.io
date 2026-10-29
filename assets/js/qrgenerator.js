@@ -71,6 +71,10 @@
         { slug: 'nirvana', label: 'Nirvana' },
         { slug: 'wanted', label: 'Wanted' },
         { slug: 'halloween', label: 'Halloween' },
+        // `to` means the Worker counts the scan and sends it somewhere other
+        // than the landing page (OUTBOUND in the Worker). Same URL shape, so
+        // it is printed exactly like any other poster code.
+        { slug: 'halloween-event', label: 'Halloween event → Instagram', to: 'instagram.com/hellomin.app' },
       ],
     },
     {
@@ -191,7 +195,8 @@
     // rather than the select: an unlocated asset takes no location even though
     // there is still one sitting in the control.
     const l = assetBySlug(a).located ? els.location.value : null;
-    return { url: targetUrl(l, a, p), name: targetName(l, a, p) };
+    const design = assetBySlug(a).designs.find((d) => d.slug === p);
+    return { url: targetUrl(l, a, p), name: targetName(l, a, p), to: design ? design.to : undefined };
   }
 
   function setMode(next, quiet) {
@@ -362,7 +367,10 @@
       `level ${built.qr.level} · mask ${built.qr.mask}`;
 
     const notes = [];
-    if (mode === 'tracked') {
+    if (mode === 'tracked' && target.to) {
+      notes.push({ kind: 'ok', text: `Tracked by location, then sent to ${target.to}. It never reaches the ` +
+        'signup page, so it is counted on its own and has no conversion rate.' });
+    } else if (mode === 'tracked') {
       notes.push({ kind: 'ok', text: 'Tracked: the Worker counts this scan, then forwards to the landing page ' +
         'with the location, the asset type and the design attached.' });
     } else {
