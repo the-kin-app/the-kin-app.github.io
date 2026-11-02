@@ -9,8 +9,8 @@
        a  /    "spontaneous / IRL meetings / right around the corner"
                + the "say hello to ▸ …" flip line + the app screenshot
        c  /c/  "stop wasting your life / on screens. / go do something."
-               + "min is here to help." and min waving. No screenshot,
-               no flip line: the pitch is the feeling, not the feature.
+               under the logo, then the form. No screenshot, no flip
+               line: the pitch is the feeling, not the feature.
      From 2026-11-02 the copy below the fold differs too: this page
      describes the current idea (IRL activity on demand: see what's on
      nearby, join or ask min, prepay and go), per the 2026-10-31
@@ -66,7 +66,7 @@
       "url": "https://hellomin.app/",
       "operatingSystem": "iOS",
       "applicationCategory": "SocialNetworkingApplication",
-      "description": "Open min and see a few things to do within walking distance, right now. Join one in a tap or tell min what you're up for, prepay the activity item, and go. Alone, with a friend, or with people nearby who share an interest.",
+      "description": "Open min and see live offers close by that you can go to right now. Join one in a tap or tell min what you're up for, prepay the activity item, and go. Alone, with a friend, or with people nearby who share an interest.",
       "areaServed": { "@type": "City", "name": "Helsinki", "containedInPlace": { "@type": "Country", "name": "Finland" } },
       "audience": { "@type": "Audience", "audienceType": "Students in the Helsinki area" },
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
@@ -89,7 +89,7 @@
         { "@type": "Question", "name": "Do I have to go with strangers?",
           "acceptedAnswer": { "@type": "Answer", "text": "No. Go alone, bring a friend, or join people nearby who are up for the same thing. Solo activities skip the wait entirely." } },
         { "@type": "Question", "name": "How is min different from Meetup or event apps?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Events are planned days ahead, often across town, and often pricey. min is for the free hour you have right now: walking distance, everyday prices, and the time, place and payment already sorted in one tap." } },
+          "acceptedAnswer": { "@type": "Answer", "text": "Events are planned days or weeks ahead. min is for the free hour you have right now: live offers close by that you can go to straight away, with the time, place and payment already sorted in one tap." } },
         { "@type": "Question", "name": "Does it cost money?",
           "acceptedAnswer": { "@type": "Answer", "text": "Using min is free, with no subscription. When you join an activity you prepay its item, like the coffee or the museum ticket, plus a small service fee. You see the full price before you accept, and if a group doesn't fill in time you get your money back." } },
         { "@type": "Question", "name": "What does min know about me?",
@@ -120,51 +120,33 @@
 <link rel="stylesheet" href="/assets/css/home-hero.css?v=20260928a">
 <link rel="stylesheet" href="/assets/css/home-sections.css?v=20261009a">
 <!-- The styles this page adds. One centred column: with no phone there
-     is no second column to balance. min waves above the headline; the
-     wordmark sits small in the corner like a header. -->
+     is no second column to balance. Just the logo, the headline and the
+     form; the logo sits centred above the headline, not in the corner. -->
 <style>
   .hero--cry .shell { grid-template-columns: 1fr; justify-items: center; }
-  .hero--cry .hero__copy { display: flex; flex-direction: column; align-items: center; text-align: center; }
-
-  /* min, waving. The art is 136x142, so he stays near that size: any
-     bigger and he goes soft. float-min (landing.css) runs on translate/
-     rotate, so it composes with .rise's own entrance. */
-  .hero--cry .cry-min {
-    display: block;
-    width: 136px;
-    height: auto;
-    margin: 0 auto 18px;
-    filter: drop-shadow(0 14px 28px rgba(255, 214, 150, 0.35));
-    animation: float-min 8s ease-in-out infinite 1.6s;
-    pointer-events: none;
-  }
-  @media (prefers-reduced-motion: reduce) { .hero--cry .cry-min { animation: none; } }
 
   /* The first two lines are the problem, set soft; the third is the
      push, set loud. */
-  .hero--cry h1 { margin-bottom: 20px; }
+  .hero--cry h1 { margin-bottom: 0; }
   .hero--cry .cry-soft { font-weight: var(--font-weight-semibold); color: var(--ink-soft); }
-  .hero--cry .lede { margin-inline: auto; max-width: 34ch; }
-  .hero--cry .lede em { display: block; margin-bottom: 4px; font-size: 1.15em; }
 
   @media (min-width: 801px) {
+    /* Desktop only: on phones home-hero.css sets .hero__copy to
+       display: contents, and the column is the shell itself. */
+    .hero--cry .hero__copy { display: flex; flex-direction: column; align-items: center; text-align: center; }
     .hero--app.hero--cry .shell { align-items: stretch; min-height: calc(var(--vh-fixed, 100svh) - 154px); }
-    /* 50% - 50vw steps out of the centred column to the screen's left edge. */
-    .hero--app.hero--cry .wordmark--hero { width: 104px; align-self: flex-start; margin: -20px 0 0 calc(50% - 50vw + 28px); }
-    .hero--cry .cry-min { margin-top: auto; }
-    .hero--app.hero--cry .hero__actions { justify-content: center; margin-top: auto; padding-top: 44px; }
+    /* The two margin-top: autos split the spare height: above the logo,
+       and above the form. */
+    .hero--app.hero--cry .wordmark--hero { width: 190px; margin: auto 0 18px; }
+    .hero--app.hero--cry .hero__actions { justify-content: center; margin-top: auto; padding-top: 48px; }
     .hero--app.hero--cry .signup-block { margin-inline: auto; }
   }
 
   @media (max-width: 800px) {
-    .hero--app.hero--cry .wordmark--hero { width: 80px; margin: 0 auto; }
-    /* The two margin-top: autos split the spare height: above min, and
-       above the form. */
-    .hero--cry .cry-min { order: 2; width: 112px; margin: auto auto 14px; padding-top: 20px; box-sizing: content-box; }
+    .hero--app.hero--cry .wordmark--hero { width: 140px; margin: auto auto 14px; }
     .hero--app.hero--cry h1 { font-size: clamp(1.9rem, 9vw, 3rem); line-height: 1.06; }
-    .hero--app.hero--cry .lede { margin-top: 16px; }
     .hero--app.hero--cry .hero__actions { margin-top: auto; padding-top: 36px; }
-    :root.is-short .hero--cry .cry-min { width: 84px; padding-top: 8px; margin-bottom: 8px; }
+    :root.is-short .hero--app.hero--cry .wordmark--hero { width: 108px; margin-bottom: 8px; }
   }
 
   /* The "live near you" placeholder screen: one card per offer, in the
@@ -333,15 +315,13 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
       </div>
 
       <!-- The variant's whole idea: name the feeling first (the hours
-           lost to a screen), then the push, then min as the help. Three
+           lost to a screen), then the push. Three
            authored lines, each its own block so the break never moves. -->
-      <img class="cry-min rise" data-delay="1" src="/assets/img/min-character/Min%20waving.png" alt="min waving hello" width="136" height="142">
       <h1 class="rise" data-delay="2">
         <span class="hero__line cry-soft">stop wasting your life</span>
         <span class="hero__line cry-soft">on screens.</span>
         <span class="hero__line hero__line--lit">go do something.</span>
       </h1>
-      <p class="lede rise" data-delay="3"><em>min is here to help.</em> Tap once and see a few things to do nearby, right now. Alone or with people.</p>
       <!-- The signup itself, not a link to it: /waitlist is one more tap
            between wanting in and being in. Same <form> contract, same
            Worker, bound by waitlist-form.js. -->
@@ -434,7 +414,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
                that is deliberately nailed down. -->
           <div class="steps__head">
             <h2 class="rise">how it works</h2>
-            <p class="lede section-lede rise" data-delay="1">From bored to out the door in about fifteen minutes</p>
+            <p class="lede section-lede rise" data-delay="1">From bored to doing something, in a single tap</p>
           </div>
 
           <!-- The phone and the pebbles, as one box. On desktop this is
@@ -471,17 +451,17 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
                 <div class="poffer">
                   <b>coffee &amp; pulla</b>
                   <i>with 2 students into literature</i>
-                  <span><em>6 min walk</em><em>€4.50</em><em class="poffer__hot">1 spot left</em></span>
+                  <span><em>starts 16:20</em><em>€4.50</em><em class="poffer__hot">1 spot left</em></span>
                 </div>
                 <div class="poffer">
                   <b>board game session</b>
                   <i>a group from your campus</i>
-                  <span><em>12 min walk</em><em>€3</em><em>2 spots left</em></span>
+                  <span><em>starts 16:30</em><em>€3</em><em>2 spots left</em></span>
                 </div>
                 <div class="poffer">
                   <b>an hour at the art museum</b>
                   <i>just you, on the way home</i>
-                  <span><em>9 min walk</em><em>€12</em><em>solo</em></span>
+                  <span><em>open now</em><em>€12</em><em>solo</em></span>
                 </div>
                 <div class="pscreen__cta">ask min for something else<i></i></div>
               </div>
@@ -492,7 +472,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
                      width="402" height="874" decoding="async" loading="lazy">
               </div>
 
-              <!-- 3 · go: it filled, it's prepaid, walk over. Placeholder. -->
+              <!-- 3 · go: it filled, it's prepaid, head over. Placeholder. -->
               <div class="pscreen" data-screen="3">
                 <div class="pscreen__bar">
                   <span class="pscreen__avatar"></span>
@@ -506,7 +486,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
                   <p>Your coffee and pulla are prepaid. Just show this at the counter.</p>
                   <span class="pinvite__map"></span>
                 </div>
-                <div class="pscreen__cta">on my way · 6 min<i></i></div>
+                <div class="pscreen__cta">on my way<i></i></div>
               </div>
 
               <span class="pmock__home"></span>
@@ -528,9 +508,9 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
                 <b>See what's on nearby</b>
                 <div class="steps__reveal">
                   <p>
-                    Open min and see a few things you could be doing right now,
-                    within walking distance: the place, the time, the price,
-                    who's joined and how many spots are left.
+                    Open min and see live offers close by: things you could go
+                    and do right now. Each one shows the place, the time, the
+                    price, who's joined and how many spots are left.
                   </p>
                 </div>
               </div>
@@ -554,7 +534,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
                 <div class="steps__reveal">
                   <p>
                     Prepay the coffee or the ticket to hold your spot. When the
-                    spots fill, walk over. Going solo? Just go. If it doesn't
+                    spots fill, head over. Going solo? Just go. If it doesn't
                     fill in time, switch, extend or get your money back.
                   </p>
                 </div>
@@ -589,11 +569,11 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
           </li>
 
           <li class="fact resin rise" data-delay="3">
-            <b>Everyday prices</b>
+            <b>Pay once, then just go</b>
             <p>
-              A coffee, a lunch set, a museum ticket. Not pricey events planned
-              weeks ahead. You prepay the item when you join, so there is nothing
-              to book, split or sort out at the counter.
+              The coffee, the lunch set, the museum ticket: you pay for it in the
+              app when you join. Nothing to book, split or sort out at the counter
+              when you get there.
             </p>
           </li>
 
@@ -638,7 +618,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
           <details class="faq__item resin rise" data-delay="3">
             <summary>How is min different from Meetup or event apps?<i aria-hidden="true"></i></summary>
             <div class="faq__answer"><p>
-              Events are planned days ahead, often across town, and often pricey. min is for the free hour you have right now: walking distance, everyday prices, and the time, place and payment already sorted in one tap.
+              Events are planned days or weeks ahead. min is for the free hour you have right now: live offers close by that you can go to straight away, with the time, place and payment already sorted in one tap.
             </p></div>
           </details>
           <details class="faq__item resin rise" data-delay="4">

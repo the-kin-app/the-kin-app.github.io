@@ -585,9 +585,9 @@ first. Until 2026-10-09 `b` meant `/waitlist/`.
 
 ### Side C: the emotional hero (draft, from 2026-11-02)
 
-`/c/` is the homepage with the hero swapped: min waving (`assets/img/min-character/Min waving.png`)
-above "stop wasting your life / on screens. / **go do something.**", then
-"min is here to help." No app screenshot, no flip line. It declares
+`/c/` is the homepage with the hero swapped: the logo, centred, above "stop
+wasting your life / on screens. / **go do something.**", then the form. No
+sub-line, no app screenshot, no flip line. It declares
 `data-variant="c"` and is `noindex`.
 
 Its copy below the fold is rewritten for the current idea (IRL activity on
