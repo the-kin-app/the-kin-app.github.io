@@ -10,6 +10,7 @@ waitlist submissions.
 /
 ├── index.html              Homepage — the long-form landing page, hero headline finishing on a changing word. Side A of the landing A/B
 ├── b/index.html            Side B of the landing A/B: the homepage with a different hero headline ("a dose of social moment, delivered across your street")
+├── c/index.html            Side C (draft): the homepage with an emotional hero — "stop wasting your life on screens. go do something." + min waving
 ├── pitchdeck/index.html    The public pitch deck — swipeable slides (see below)
 ├── waitlist/index.html     The scan page — a three-slide banner + one-field signup, all above the fold
 ├── ads/index.html          The ad landing page — /waitlist/ plus a required school dropdown, and the only page paid social points at (see below)
@@ -581,6 +582,17 @@ line. That is the only style it adds.
 To run it, in `min-waitlist-worker src/index.js`: set `VARIANT_PATHS.b` to
 `'/b/'`, turn `LANDING_SPLIT` back on, and clear the old `b` variant data
 first. Until 2026-10-09 `b` meant `/waitlist/`.
+
+### Side C: the emotional hero (draft, from 2026-11-02)
+
+`/c/` is the homepage with the hero swapped: min waving (`assets/img/min-character/Min waving.png`)
+above "stop wasting your life / on screens. / **go do something.**", then
+"min is here to help." No app screenshot, no flip line. Same signup, same
+sections below. It declares `data-variant="c"` and is `noindex`.
+
+Not live yet. The Worker only accepts `a` and `b` (`VARIANTS` in
+`min-waitlist-worker src/index.js`), so a `/c/` signup is stored with no
+variant until `'c'` is added there, along with `VARIANT_PATHS.c = '/c/'`.
 
 ## Backend
 
