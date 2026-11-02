@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>min — IRL moments (2-minute survey)</title>
-<meta name="description" content="A short, anonymous survey about IRL moments: how many you have, how many you'd want, and what gets in the way.">
+<title>min — IRL activities (a short survey)</title>
+<meta name="description" content="A short, anonymous survey about IRL activities: how many you do, how many you'd want, and what gets in the way.">
 <meta name="theme-color" content="#2A2320">
 <!-- Sent to a recruited cohort, never found in search. Same stance as
      /survey/: noindex, and absent from sitemap.xml. -->
 <meta name="robots" content="noindex, follow">
 <link rel="canonical" href="https://hellomin.app/survey/v2/">
 
-<meta property="og:title" content="Help shape min: a 2-minute survey">
-<meta property="og:description" content="How many IRL moments you have, and how many you'd want. Anonymous, two minutes.">
+<meta property="og:title" content="Help shape min: a short survey">
+<meta property="og:description" content="How you spend your free time, and what gets in the way of doing more IRL. Anonymous, a few minutes.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hellomin.app/survey/v2/">
 <meta property="og:site_name" content="min">
@@ -38,29 +38,32 @@
 </head>
 
 <!-- ══════════════════════════════════════════════════════════
-     THE SURVEY, v2  (IRL moments)
+     THE SURVEY, v2  (IRL activities)
      ──────────────────────────────────────────────────────────
-     Sits next to /survey/ rather than replacing it. Same world,
-     same cards, same controls. Spec: min/my survey.md.
+     Spec: min/surveys/user survey.md. One page at a time, with
+     back / next. Every question is required unless it says
+     "optional"; "next" stays put until the page is answered.
 
-       1   How many IRL moments last week.  (counter, 0 to 10+)
-       2   Who with.                        (skipped at 0)
-       3   How many they'd want in a week.  (counter, 0 to 10+)
-       4   Who they'd want them with.       (skipped at 0)
-       5   What keeps them from more.       (up to 2)
-       6   A min notification at their last free hour: what
-           would they have done? "in 15 min" or "in 2 hours",
-           drawn per visit, nothing else changes. A "joined"
-           opens the optional invite email.
-       7   About them.
+       1   intro: what counts as an IRL activity
+       2   your week: how many, how many wanted     (counters)
+       3   those activities: alone / only friends /
+           friends + new / only new,
+           decided same day                          (skipped at 0)
+       4   your last free hour: what, and when
+       5   wanted to but didn't: up to 2, + a story (optional)
+       6   what you'd like more of, and who with
+       7   min: one offer, for the first activity they ticked
+           on 6, at a random €0.25 / €1.00 fee
+       8   about you
+       9   anything else (optional), win a patch (optional email)
 
-     The answers are anonymous. The email in 6 goes to its own
+     The answers are anonymous. The email in 9 goes to its own
      table in the Worker, never on the response row. ?src=
-     (waitlist, campus, social, friend) is stored on the row,
-     so waitlist answers can be reported separately.
+     (waitlist, campus, social, friend), the fee drawn and the
+     start / finish times ride along on the row.
 
      Posts to POST /survey/v2 on the Worker
-     (min-waitlist-worker, migration 0015).
+     (min-waitlist-worker, migration 0017).
      ══════════════════════════════════════════════════════════ -->
 
 <body class="biz survey pro-survey">
@@ -74,226 +77,401 @@
 <main>
 
   <section class="biz-masthead" data-reveal>
-    <h1 class="visually-hidden">IRL moments</h1>
+    <h1 class="visually-hidden">IRL activities</h1>
     <img class="wordmark--hero rise" src="/assets/img/Logo/min-falling-logo.png" alt="min" width="138" height="98">
     <p class="survey-intro rise" data-delay="1">
-      We're students building something for people's social lives.
-      2 minutes, anonymous.
+      We're building min, an app that turns free time into something real
+      to do nearby. A few minutes, anonymous.
     </p>
   </section>
 
   <section class="biz-form-section">
     <form id="survey-form" class="biz-form" novalidate>
 
-      <!-- what an "IRL moment" is, once, before anything is asked -->
-      <div class="resin biz-card" data-reveal>
-        <div class="concept rise">
-          <p>
-            This is a survey about <b>"IRL moments"</b>: any IRL activity
-            involving people and something to do (not class or work). Anything
-            as casual as coffee with another person, a museum with a group, or a
-            night out with a large group. With friends, new people, or a mix of
-            both.
-          </p>
+      <!-- ── page 1: intro ─────────────────────────────────── -->
+      <div class="sv-page" data-page="intro">
+        <div class="resin biz-card" data-reveal>
+          <div class="biz-card__head">
+            <h2 class="rise" data-delay="1">This is a survey about "IRL activities"</h2>
+          </div>
+          <div class="concept rise" data-delay="2">
+            <p>
+              <b>What counts?</b> Doing something out in the real world in your
+              free time. Alone, with friends, or with new people.
+            </p>
+            <ul class="counts-list">
+              <li><span aria-hidden="true">✅</span> <b>Counts:</b> coffee or lunch out, a bar or night out, a museum, gym or hobbies, a concert or event, a walk or picnic in the park, a student event</li>
+              <li><span aria-hidden="true">❌</span> <b>Doesn't count:</b> lectures, work, errands or groceries, hanging out at someone's home</li>
+            </ul>
+            <p>A night out across a few places counts as one.</p>
+          </div>
         </div>
       </div>
 
-      <!-- 1 ─ a count. Starts empty: − gives 0, + gives 1. -->
-      <div class="resin biz-card" data-reveal data-q>
-        <div class="biz-card__head">
-          <span class="biz-card__step rise" data-step></span>
-          <h2 class="rise" data-delay="1" id="past-q">In the past week, how many "IRL moments" did you take part in?</h2>
+      <!-- ── page 2: your week ─────────────────────────────── -->
+      <div class="sv-page" data-page="week" hidden>
+        <div class="resin biz-card" data-reveal>
+          <div class="biz-card__head">
+            <span class="biz-card__step rise" data-step></span>
+            <h2 class="rise" data-delay="1" id="past-q">In the past 7 days, how many IRL activities did you do?</h2>
+            <p class="biz-card__note rise" data-delay="2">Not lectures, work, errands or someone's home.</p>
+          </div>
+          <div class="counter rise" data-delay="2" data-counter="acts_past" role="group" aria-labelledby="past-q"></div>
         </div>
-        <div class="counter rise" data-delay="2" data-counter="moments_past" role="group" aria-labelledby="past-q"></div>
+
+        <div class="resin biz-card" data-reveal>
+          <div class="biz-card__head">
+            <h2 class="rise" data-delay="1" id="want-q">If you could choose, how many would you want in a week?</h2>
+          </div>
+          <div class="counter rise" data-delay="2" data-counter="acts_want" role="group" aria-labelledby="want-q"></div>
+        </div>
       </div>
 
-      <!-- 2 ─ skipped when 1 is 0 -->
-      <div class="resin biz-card" data-reveal data-q id="with-past-card">
-        <div class="biz-card__head">
-          <span class="biz-card__step rise" data-step></span>
-          <h2 class="rise" data-delay="1">Who were they mostly with?</h2>
-        </div>
-        <fieldset class="fieldset rise" data-delay="2">
-          <legend class="visually-hidden">Who your IRL moments were mostly with</legend>
-          <div class="option-group">
-            <label class="option"><input type="radio" name="with_past" value="friends"><span>Just friends</span></label>
-            <label class="option"><input type="radio" name="with_past" value="mix"><span>Friends, plus some new people</span></label>
-            <label class="option"><input type="radio" name="with_past" value="new"><span>Mostly new people</span></label>
+      <!-- ── page 3: those activities (skipped at 0) ───────── -->
+      <div class="sv-page" data-page="those" hidden>
+        <div class="resin biz-card" data-reveal>
+          <div class="biz-card__head">
+            <span class="biz-card__step rise" data-step></span>
+            <h2 class="rise" data-delay="1">Of those <span data-past-n></span>, how many were…</h2>
+            <p class="biz-card__note rise" data-delay="2">
+              The four need to add up to <span data-past-sum></span>.
+            </p>
           </div>
-        </fieldset>
+          <div class="split rise" data-delay="2">
+            <div class="split__row">
+              <span class="split__label" id="alone-l">Alone</span>
+              <div class="counter counter--sm" data-counter="past_alone" role="group" aria-labelledby="alone-l"></div>
+            </div>
+            <div class="split__row">
+              <span class="split__label" id="friends-l">With only friends</span>
+              <div class="counter counter--sm" data-counter="past_friends" role="group" aria-labelledby="friends-l"></div>
+            </div>
+            <div class="split__row">
+              <span class="split__label" id="mixed-l">With friends and new people</span>
+              <div class="counter counter--sm" data-counter="past_mixed" role="group" aria-labelledby="mixed-l"></div>
+            </div>
+            <div class="split__row">
+              <span class="split__label" id="new-l">With only new people</span>
+              <div class="counter counter--sm" data-counter="past_new" role="group" aria-labelledby="new-l"></div>
+            </div>
+            <p class="split__total" id="split-total" aria-live="polite"></p>
+          </div>
+        </div>
+
+        <div class="resin biz-card" data-reveal>
+          <div class="biz-card__head">
+            <h2 class="rise" data-delay="1" id="same-q">How many of those did you decide on the same day?</h2>
+          </div>
+          <div class="counter rise" data-delay="2" data-counter="past_same_day" role="group" aria-labelledby="same-q"></div>
+        </div>
       </div>
 
-      <!-- 3 ─ the want, the same counter -->
-      <div class="resin biz-card" data-reveal data-q>
-        <div class="biz-card__head">
-          <span class="biz-card__step rise" data-step></span>
-          <h2 class="rise" data-delay="1" id="want-q">If you could choose, how many "IRL moments" would you want in a week?</h2>
+      <!-- ── page 4: your last free time ───────────────────── -->
+      <div class="sv-page" data-page="free" hidden>
+        <div class="resin biz-card" data-reveal>
+          <div class="biz-card__head">
+            <span class="biz-card__step rise" data-step></span>
+            <h2 class="rise" data-delay="1">Think of the last time you had at least an hour free with nothing planned. What did you mostly do?</h2>
+            <p class="biz-card__note rise" data-delay="2">Pick one.</p>
+          </div>
+          <fieldset class="fieldset rise" data-delay="3" data-required="last_free">
+            <legend class="visually-hidden">What you mostly did in your last free hour</legend>
+            <div class="option-group">
+              <label class="option"><input type="radio" name="last_free" value="phone"><span>Scrolled my phone</span></label>
+              <label class="option"><input type="radio" name="last_free" value="watched"><span>Watched something</span></label>
+              <label class="option"><input type="radio" name="last_free" value="gamed"><span>Gamed</span></label>
+              <label class="option"><input type="radio" name="last_free" value="rested"><span>Rested or slept</span></label>
+              <label class="option"><input type="radio" name="last_free" value="studied"><span>Studied or worked</span></label>
+              <label class="option"><input type="radio" name="last_free" value="irl"><span>Did an IRL activity</span></label>
+              <label class="option"><input type="radio" name="last_free" value="home"><span>Hung out at someone's home</span></label>
+              <label class="option"><input type="radio" name="last_free" value="other"><span>Something else</span></label>
+            </div>
+            <div class="field--conditional" data-other-for="last_free" hidden>
+              <label class="visually-hidden" for="last_free_other">What else?</label>
+              <input class="input" type="text" id="last_free_other" name="last_free_other" placeholder="What was it?" maxlength="80">
+            </div>
+          </fieldset>
         </div>
-        <div class="counter rise" data-delay="2" data-counter="moments_want" role="group" aria-labelledby="want-q"></div>
+
+        <div class="resin biz-card" data-reveal>
+          <div class="biz-card__head">
+            <h2 class="rise" data-delay="1">When was it?</h2>
+          </div>
+          <fieldset class="fieldset rise" data-delay="2" data-required="last_free_when">
+            <legend class="visually-hidden">When your last free hour was</legend>
+            <div class="option-group">
+              <label class="option"><input type="radio" name="last_free_when" value="weekday_day"><span>Weekday, before 5 pm</span></label>
+              <label class="option"><input type="radio" name="last_free_when" value="weekday_evening"><span>Weekday, after 5 pm</span></label>
+              <label class="option"><input type="radio" name="last_free_when" value="weekend"><span>Weekend</span></label>
+            </div>
+          </fieldset>
+        </div>
       </div>
 
-      <!-- 4 ─ skipped when 3 is 0 -->
-      <div class="resin biz-card" data-reveal data-q id="with-want-card">
-        <div class="biz-card__head">
-          <span class="biz-card__step rise" data-step></span>
-          <h2 class="rise" data-delay="1">And who would you ideally want them with?</h2>
-        </div>
-        <fieldset class="fieldset rise" data-delay="2">
-          <legend class="visually-hidden">Who you would ideally want them with</legend>
-          <div class="option-group">
-            <label class="option"><input type="radio" name="with_want" value="friends"><span>Just friends</span></label>
-            <label class="option"><input type="radio" name="with_want" value="mix"><span>Friends, plus some new people</span></label>
-            <label class="option"><input type="radio" name="with_want" value="new"><span>Mostly new people</span></label>
+      <!-- ── page 5: what gets in the way ──────────────────── -->
+      <div class="sv-page" data-page="missed" hidden>
+        <div class="resin biz-card" data-reveal>
+          <div class="biz-card__head">
+            <span class="biz-card__step rise" data-step></span>
+            <h2 class="rise" data-delay="1">Think of the last time you wanted to do something IRL but didn't end up doing it. What were the main reasons?</h2>
+            <p class="biz-card__note rise" data-delay="2">Pick up to two.</p>
           </div>
-        </fieldset>
+          <fieldset class="fieldset rise" data-delay="3">
+            <legend class="visually-hidden">Why you didn't end up doing it, up to two</legend>
+            <div class="option-group" data-checks="missed_reasons"></div>
+            <div class="field--conditional" data-other-for="missed_reasons" hidden>
+              <label class="visually-hidden" for="missed_other">What else?</label>
+              <input class="input" type="text" id="missed_other" name="missed_other" placeholder="What was it?" maxlength="80">
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="resin biz-card" data-reveal id="story-card">
+          <div class="biz-card__head">
+            <h2 class="rise" data-delay="1"><label for="missed_story">What happened? <span class="opt">(optional)</span></label></h2>
+            <p class="biz-card__note rise" data-delay="2">Tell us in a sentence or two.</p>
+          </div>
+          <textarea class="textarea rise" data-delay="2" id="missed_story" name="missed_story" rows="3" maxlength="600"></textarea>
+        </div>
       </div>
 
-      <!-- 5 ─ up to two. Rows from survey-v2.js (BLOCKERS), shuffled;
-           "I don't want more" stays on top and stands alone. -->
-      <div class="resin biz-card" data-reveal data-q>
-        <div class="biz-card__head">
-          <span class="biz-card__step rise" data-step></span>
-          <h2 class="rise" data-delay="1">What's keeping you from taking part in more "IRL moments"?</h2>
-          <p class="biz-card__note rise" data-delay="2">Pick up to two.</p>
+      <!-- ── page 6: what you'd like more of ───────────────── -->
+      <div class="sv-page" data-page="more" hidden>
+        <div class="resin biz-card" data-reveal>
+          <div class="biz-card__head">
+            <span class="biz-card__step rise" data-step></span>
+            <h2 class="rise" data-delay="1">Which IRL activities would you like to do more of?</h2>
+            <p class="biz-card__note rise" data-delay="2">Pick up to two.</p>
+          </div>
+          <fieldset class="fieldset rise" data-delay="3">
+            <legend class="visually-hidden">Activities you'd like more of, up to two</legend>
+            <div class="option-group" data-checks="more_kinds"></div>
+            <div class="field--conditional" data-other-for="more_kinds" hidden>
+              <label class="visually-hidden" for="more_kinds_other">What else?</label>
+              <input class="input" type="text" id="more_kinds_other" name="more_kinds_other" placeholder="What would it be?" maxlength="80">
+            </div>
+          </fieldset>
         </div>
-        <fieldset class="fieldset rise" data-delay="3">
-          <legend class="visually-hidden">What keeps you from more IRL moments, up to two</legend>
-          <div class="option-group" data-checks="blockers"></div>
-        </fieldset>
+
+        <div class="resin biz-card" data-reveal>
+          <div class="biz-card__head">
+            <h2 class="rise" data-delay="1">Who would you like to do them with?</h2>
+            <p class="biz-card__note rise" data-delay="2">Pick all that interest you.</p>
+          </div>
+          <fieldset class="fieldset rise" data-delay="3">
+            <legend class="visually-hidden">Who you'd like to do them with</legend>
+            <div class="option-group" data-checks="more_with"></div>
+          </fieldset>
+        </div>
       </div>
 
-      <!-- 6 ─ the notification, set at a real free hour of theirs.
-           #notif-lead is "15 min" or "2 hours", drawn in survey-v2.js. -->
-      <div class="resin biz-card" data-reveal data-q>
-        <div class="biz-card__head">
-          <span class="biz-card__step rise" data-step></span>
-          <h2 class="rise" data-delay="1">Think of the last time you had an hour free with nothing planned.</h2>
-          <p class="biz-card__note rise" data-delay="2">Say this popped up on your phone:</p>
+      <!-- ── page 7: min ───────────────────────────────────── -->
+      <div class="sv-page" data-page="min" hidden>
+        <div class="resin biz-card" data-reveal>
+          <div class="biz-card__head">
+            <span class="biz-card__step rise" data-step></span>
+            <h2 class="rise" data-delay="1">Say min showed you this offer in your free time today:</h2>
+          </div>
+
+          <!-- The offer, as min's app shows it. Filled in survey-v2.js:
+               the activity from OFFERS (first page 6 pick, coffee by
+               default), the people block from PEOPLE (a random one of
+               their "who with" picks). #offer-fee is "€0.25" or "€1.00",
+               drawn per visit; nothing else changes between the two.
+               The slider at the bottom is only a picture; the answer is
+               the Yes / No under the card. -->
+          <div class="offer rise" data-delay="2" role="group" aria-label="An offer from min">
+            <div class="offer__top">
+              <img class="offer__app-icon" src="/assets/img/min-character/floating-min-favicon.png" alt="" width="22" height="22">
+              <span class="offer__app">min</span>
+              <span class="offer__live"><span class="offer__live-dot" aria-hidden="true"></span>live near you</span>
+            </div>
+
+            <div class="offer__hero">
+              <span class="offer__pebble" id="offer-icon" aria-hidden="true">☕</span>
+              <div>
+                <p class="offer__title" id="offer-title">Coffee + pulla</p>
+                <p class="offer__venue" id="offer-venue">Kahvila Kanelitaivas, Kallio</p>
+                <p class="offer__walk" id="offer-meta">6 min walk</p>
+              </div>
+            </div>
+
+            <p class="offer__price">
+              <span id="offer-price"><b>€4.00</b> set <s>menu €5.00</s></span>
+              <span class="offer__fee">+ <span id="offer-fee">€0.25</span> fee</span>
+            </p>
+
+            <div class="offer__group">
+              <p class="offer__size" id="offer-size">👥 3–5 people · 2 joined</p>
+              <ul class="offer__who" id="offer-who"></ul>
+            </div>
+
+            <div class="offer__timer" id="offer-timer">
+              <p class="offer__lock" id="offer-lock" hidden>🔒 Friends only</p>
+              <p class="offer__timer-main" id="offer-timer-main">⏱ 9:41 left to fill</p>
+              <p class="offer__timer-sub" id="offer-timer-sub">goes ahead at 3 · money back if not</p>
+            </div>
+
+            <!-- Just the picture of the app's accept slider; it doesn't move.
+                 The answer is the Yes / No question under the card. -->
+            <div class="offer__accept" aria-hidden="true">
+              <div class="slide">
+                <span class="slide__fill"></span>
+                <span class="slide__label">Slide to accept</span>
+                <span class="slide__knob">
+                  <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <fieldset class="fieldset rise" data-delay="3" data-required="would_book">
+            <legend class="sv-q">Would you accept this?</legend>
+            <div class="option-group">
+              <label class="option"><input type="radio" name="would_book" value="yes"><span>Yes</span></label>
+              <label class="option"><input type="radio" name="would_book" value="no"><span>No</span></label>
+            </div>
+          </fieldset>
         </div>
 
-        <figure class="notif rise" data-delay="2">
-          <div class="notif__top">
-            <img class="notif__icon" src="/assets/img/min-character/floating-min-favicon.png" alt="" width="20" height="20">
-            <span class="notif__app">min</span>
-            <span class="notif__time">now</span>
+        <div class="resin biz-card" data-reveal>
+          <div class="biz-card__head">
+            <h2 class="rise" data-delay="1">If min worked like this near you, how often would you realistically use it?</h2>
           </div>
-          <p class="notif__body">
-            <b>3 people nearby are grabbing coffee at Café Regatta in <span id="notif-lead">15 min</span>.</b>
-            You all: into climbing · new in town. 5 min walk.
-          </p>
-          <div class="notif__actions" aria-hidden="true">
-            <span class="notif__btn notif__btn--primary">Join</span>
-            <span class="notif__btn">Not now</span>
-          </div>
-        </figure>
+          <fieldset class="fieldset rise" data-delay="2" data-required="use_freq">
+            <legend class="visually-hidden">How often you'd use min</legend>
+            <div class="option-group">
+              <label class="option"><input type="radio" name="use_freq" value="never"><span>Never</span></label>
+              <label class="option"><input type="radio" name="use_freq" value="monthly"><span>About once a month</span></label>
+              <label class="option"><input type="radio" name="use_freq" value="2_3_month"><span>2–3 times a month</span></label>
+              <label class="option"><input type="radio" name="use_freq" value="weekly"><span>About once a week</span></label>
+              <label class="option"><input type="radio" name="use_freq" value="several_week"><span>Several times a week</span></label>
+            </div>
+          </fieldset>
+        </div>
+      </div>
 
-        <fieldset class="fieldset rise" data-delay="3">
-          <legend class="fieldset__question">If this had popped up then, what would you have done?</legend>
-          <div class="option-group">
-            <label class="option"><input type="radio" name="reaction" value="joined"><span>Joined</span></label>
-            <label class="option"><input type="radio" name="reaction" value="joined_friends"><span>Joined, if I could bring my friend(s)</span></label>
-            <label class="option"><input type="radio" name="reaction" value="more_notice"><span>Wanted more notice</span></label>
-            <label class="option"><input type="radio" name="reaction" value="kept_going"><span>Kept doing what I was doing</span></label>
-            <label class="option"><input type="radio" name="reaction" value="depends"><span>Depends…</span></label>
+      <!-- ── page 8: about you ─────────────────────────────── -->
+      <div class="sv-page" data-page="you" hidden>
+        <div class="resin biz-card" data-reveal>
+          <div class="biz-card__head">
+            <span class="biz-card__step rise" data-step></span>
+            <h2 class="rise" data-delay="1">Tell us about you</h2>
+            <p class="biz-card__note rise" data-delay="2">Still anonymous.</p>
           </div>
-          <div class="field--conditional" id="depends-field" hidden>
-            <label class="visually-hidden" for="reaction_depends">Depends on what?</label>
-            <input class="input" type="text" id="reaction_depends" name="reaction_depends"
-                   placeholder="Depends on…" maxlength="150">
-          </div>
-        </fieldset>
 
-        <!-- after a "joined": the invite. Kept apart from the answers:
-             the Worker writes it to its own table. -->
-        <div class="field--conditional invite" id="invite-field" hidden>
-          <div class="field">
-            <label for="email">Want a real invite when we launch on your campus? <span class="opt">(optional)</span></label>
+          <fieldset class="fieldset rise" data-delay="3" data-required="status">
+            <legend>What do you do?</legend>
+            <div class="option-group">
+              <label class="option"><input type="radio" name="status" value="first_year"><span>1st-year student</span></label>
+              <label class="option"><input type="radio" name="status" value="later_year"><span>Later-year student</span></label>
+              <label class="option"><input type="radio" name="status" value="exchange"><span>Exchange student</span></label>
+              <label class="option"><input type="radio" name="status" value="working"><span>Working</span></label>
+              <label class="option"><input type="radio" name="status" value="other"><span>Other</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="fieldset rise" data-delay="3" data-required="moved_recently">
+            <legend>Did you move to this city in the last year?</legend>
+            <div class="option-group yesno">
+              <label class="option"><input type="radio" name="moved_recently" value="yes"><span>Yes</span></label>
+              <label class="option"><input type="radio" name="moved_recently" value="no"><span>No</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="fieldset rise" data-delay="4" data-required="age">
+            <legend>Age</legend>
+            <div class="option-group">
+              <label class="option"><input type="radio" name="age" value="18_19"><span>18–19</span></label>
+              <label class="option"><input type="radio" name="age" value="20_24"><span>20–24</span></label>
+              <label class="option"><input type="radio" name="age" value="25_29"><span>25–29</span></label>
+              <label class="option"><input type="radio" name="age" value="30_plus"><span>30+</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="fieldset rise" data-delay="4" data-required="gender">
+            <legend>Gender</legend>
+            <div class="option-group">
+              <label class="option"><input type="radio" name="gender" value="woman"><span>Woman</span></label>
+              <label class="option"><input type="radio" name="gender" value="man"><span>Man</span></label>
+              <label class="option"><input type="radio" name="gender" value="non_binary"><span>Non-binary</span></label>
+              <label class="option"><input type="radio" name="gender" value="self_describe"><span>Prefer to self-describe</span></label>
+              <label class="option"><input type="radio" name="gender" value="prefer_not"><span>Prefer not to say</span></label>
+            </div>
+            <div class="field--conditional" data-other-for="gender" hidden>
+              <label class="visually-hidden" for="gender_self_describe">How would you describe it?</label>
+              <input class="input" type="text" id="gender_self_describe" name="gender_self_describe"
+                     placeholder="In your own words" maxlength="60">
+            </div>
+          </fieldset>
+        </div>
+      </div>
+
+      <!-- ── page 9: win a patch (optional) ────────────────── -->
+      <div class="sv-page" data-page="patch" hidden>
+        <div class="resin biz-card" data-reveal>
+          <div class="biz-card__head">
+            <span class="biz-card__step rise" data-step></span>
+            <h2 class="rise" data-delay="1"><label for="anything_else">Anything else you'd like to tell us, or anything about min that worries you? <span class="opt">(optional)</span></label></h2>
+          </div>
+          <textarea class="textarea rise" data-delay="2" id="anything_else" name="anything_else" rows="3" maxlength="1000"></textarea>
+        </div>
+
+        <div class="resin biz-card" data-reveal>
+          <div class="biz-card__head">
+            <h2 class="rise" data-delay="1">Win a min patch and get early access <span class="opt">(optional)</span></h2>
+          </div>
+
+          <div class="field rise" data-delay="2">
+            <label for="email">Email</label>
             <input class="input" type="email" id="email" name="email"
                    autocomplete="email" inputmode="email" maxlength="254"
                    placeholder="you@example.com">
-            <p class="field-hint">Stored separately from your answers.</p>
             <div class="field-error" id="email-error"></div>
           </div>
+
+          <div class="option-group rise" data-delay="3">
+            <label class="option"><input type="checkbox" name="draw" id="draw"><span>Enter me in the draw for a min patch</span></label>
+            <label class="option"><input type="checkbox" name="waitlist" id="waitlist"><span>Add me to the min waitlist</span></label>
+          </div>
+
+          <p class="field-hint rise" data-delay="3">
+            We only use your email for the draw and the waitlist, never to spam
+            you. It's stored apart from your answers.
+            <a href="/privacy-policy/">Privacy notice</a>
+          </p>
         </div>
-      </div>
-
-      <!-- 7 ─ the splits. Optional, all of it. -->
-      <div class="resin biz-card" data-reveal data-q>
-        <div class="biz-card__head">
-          <span class="biz-card__step rise" data-step></span>
-          <h2 class="rise" data-delay="1">Tell us about you</h2>
-          <p class="biz-card__note rise" data-delay="2">Still anonymous, and all optional.</p>
-        </div>
-
-        <fieldset class="fieldset rise" data-delay="3">
-          <legend>What do you do?</legend>
-          <div class="option-group">
-            <label class="option"><input type="radio" name="status" value="first_year"><span>1st-year student</span></label>
-            <label class="option"><input type="radio" name="status" value="later_year"><span>Later-year student</span></label>
-            <label class="option"><input type="radio" name="status" value="exchange"><span>Exchange student</span></label>
-            <label class="option"><input type="radio" name="status" value="working"><span>Working</span></label>
-            <label class="option"><input type="radio" name="status" value="other"><span>Other</span></label>
-          </div>
-        </fieldset>
-
-        <fieldset class="fieldset rise" data-delay="3">
-          <legend>Did you move to this city in the last year?</legend>
-          <div class="option-group">
-            <label class="option"><input type="radio" name="moved_recently" value="yes"><span>Yes</span></label>
-            <label class="option"><input type="radio" name="moved_recently" value="no"><span>No</span></label>
-          </div>
-        </fieldset>
-
-        <fieldset class="fieldset rise" data-delay="4">
-          <legend>Age</legend>
-          <div class="option-group">
-            <label class="option"><input type="radio" name="age" value="under_20"><span>Under 20</span></label>
-            <label class="option"><input type="radio" name="age" value="20_24"><span>20–24</span></label>
-            <label class="option"><input type="radio" name="age" value="25_29"><span>25–29</span></label>
-            <label class="option"><input type="radio" name="age" value="30_plus"><span>30+</span></label>
-          </div>
-        </fieldset>
-
-        <fieldset class="fieldset rise" data-delay="4">
-          <legend>Gender</legend>
-          <div class="option-group">
-            <label class="option"><input type="radio" name="gender" value="woman"><span>Woman</span></label>
-            <label class="option"><input type="radio" name="gender" value="man"><span>Man</span></label>
-            <label class="option"><input type="radio" name="gender" value="non_binary"><span>Non-binary</span></label>
-            <label class="option"><input type="radio" name="gender" value="self_describe"><span>Prefer to self-describe</span></label>
-            <label class="option"><input type="radio" name="gender" value="prefer_not"><span>Prefer not to say</span></label>
-          </div>
-          <div class="field--conditional" id="gender_self_describe-field" style="display:none;">
-            <label class="visually-hidden" for="gender_self_describe">How would you describe it?</label>
-            <input class="input" type="text" id="gender_self_describe" name="gender_self_describe"
-                   placeholder="In your own words" maxlength="60">
-          </div>
-        </fieldset>
       </div>
 
       <!-- Honeypot: hidden from humans, bots tend to fill it. Leave empty. -->
       <input class="visually-hidden" type="text" id="website" name="website"
              tabindex="-1" autocomplete="off" aria-hidden="true">
 
-      <div class="biz-submit" data-reveal>
-        <button type="submit" class="btn btn--primary btn--lg submit rise" data-delay="1">
-          <span class="btn__fill" aria-hidden="true"></span>
-          <span class="btn__label">Send my answers</span>
-          <svg class="btn__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-        <p class="consent rise" data-delay="2">
-          Anonymous. See our <a href="/privacy-policy/">Privacy Policy</a>.
-        </p>
+      <div class="biz-submit sv-nav">
+        <div class="sv-nav__row">
+          <button type="button" class="btn btn--quiet btn--lg" id="back" hidden>
+            <span class="btn__label">Back</span>
+          </button>
+          <button type="submit" class="btn btn--primary btn--lg submit" id="next">
+            <span class="btn__fill" aria-hidden="true"></span>
+            <span class="btn__label">Start</span>
+            <svg class="btn__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
         <div class="status" id="form-status" role="status"></div>
+        <p class="consent">
+          Anonymous, and you can close this at any time.
+          See our <a href="/privacy-policy/">Privacy Policy</a>.
+        </p>
       </div>
     </form>
 
     <div id="success-view" class="resin biz-success">
-      <div class="min" data-min data-phase="0.6" aria-hidden="true"></div>
-      <h2>Thank you, that helps a lot</h2>
-      <p>Your answers shape the moments min learns to make.</p>
+      <img class="biz-success__min" src="/assets/img/min-character/floating%20Min.png" alt="" width="132" height="132">
+      <h2>Thanks! That helps us a lot</h2>
+      <p>Your answers shape what min learns to suggest.</p>
     </div>
   </section>
 
