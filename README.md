@@ -587,8 +587,16 @@ first. Until 2026-10-09 `b` meant `/waitlist/`.
 
 `/c/` is the homepage with the hero swapped: min waving (`assets/img/min-character/Min waving.png`)
 above "stop wasting your life / on screens. / **go do something.**", then
-"min is here to help." No app screenshot, no flip line. Same signup, same
-sections below. It declares `data-variant="c"` and is `noindex`.
+"min is here to help." No app screenshot, no flip line. It declares
+`data-variant="c"` and is `noindex`.
+
+Its copy below the fold is rewritten for the current idea (IRL activity on
+demand, from the 2026-10-31 business plan): how it works is "see what's on
+nearby / join one, or ask min / prepay and go", plus new facts and FAQ. The
+homepage still describes the older one-to-one intro, so A against C compares
+the whole page, not just the hero. The phone in "how it works" shows CSS
+placeholder screens for steps 1 and 3 (the `.poffer` cards in the page's
+`<style>`) until the real app screens are exported.
 
 Not live yet. The Worker only accepts `a` and `b` (`VARIANTS` in
 `min-waitlist-worker src/index.js`), so a `/c/` signup is stored with no

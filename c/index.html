@@ -11,22 +11,25 @@
        c  /c/  "stop wasting your life / on screens. / go do something."
                + "min is here to help." and min waving. No screenshot,
                no flip line: the pitch is the feeling, not the feature.
-     Everything else — signup, sections below the fold — is the
-     homepage's. Edit the homepage and copy the edit here, or the sides
-     drift and the result stops meaning anything. -->
+     From 2026-11-02 the copy below the fold differs too: this page
+     describes the current idea (IRL activity on demand: see what's on
+     nearby, join or ask min, prepay and go), per the 2026-10-31
+     business plan and min/PRODUCT.md. The homepage still describes the
+     older one-to-one intro. Steps 1 and 3 are CSS placeholder screens
+     until the new app screens are exported. -->
 <html lang="en" data-variant="c">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>min — Meet new people nearby, in real life</title>
-<meta name="description" content="min is an IRL social app for meeting new people nearby. Say hello to your neighbour, a campus crush, that familiar face. No profile pictures, no swiping, no feed. Launching in Helsinki in early 2027.">
+<title>min — Something real to do nearby, right now</title>
+<meta name="description" content="Stop wasting your life on screens. min offers a few things to do nearby, right now, alone or with people. Tap once, prepay the coffee or the ticket, and go. No feed, no swiping, no chat. Launching in Helsinki in early 2027.">
 <meta name="theme-color" content="#2F333F">
 <link rel="canonical" href="https://hellomin.app/">
 <!-- A duplicate of / by design: keep it out of search, point credit home. -->
 <meta name="robots" content="noindex,follow">
 
-<meta property="og:title" content="min — Meet new people nearby, in real life">
-<meta property="og:description" content="The app that introduces you to the right people nearby, at the right moment. Then you go say hello.">
+<meta property="og:title" content="min — Something real to do nearby, right now">
+<meta property="og:description" content="Stop wasting your life on screens. Go do something. min is here to help.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hellomin.app/">
 <meta property="og:site_name" content="min">
@@ -54,7 +57,7 @@
         "https://www.instagram.com/hellomin.app/",
         "https://www.tiktok.com/@hellomin.app"
       ],
-      "description": "min is an IRL social app that introduces you to people nearby, so you can meet new people in real life. No profiles, no swiping, no chat. Launching for Helsinki-area students in early 2027."
+      "description": "min is IRL activity on demand: a few concrete things to do nearby, right now, alone or with people. No feed, no swiping, no chat. Launching for Helsinki-area students in early 2027."
     },
     {
       "@type": "MobileApplication",
@@ -63,7 +66,7 @@
       "url": "https://hellomin.app/",
       "operatingSystem": "iOS",
       "applicationCategory": "SocialNetworkingApplication",
-      "description": "An IRL social app that introduces you to one person nearby, based on a conversation with min. Accept the intro, walk over and say hello. Not a dating app: no profiles, no swiping, no chat, no feed.",
+      "description": "Open min and see a few things to do within walking distance, right now. Join one in a tap or tell min what you're up for, prepay the activity item, and go. Alone, with a friend, or with people nearby who share an interest.",
       "areaServed": { "@type": "City", "name": "Helsinki", "containedInPlace": { "@type": "Country", "name": "Finland" } },
       "audience": { "@type": "Audience", "audienceType": "Students in the Helsinki area" },
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
@@ -82,15 +85,17 @@
       "@id": "https://hellomin.app/#faq",
       "mainEntity": [
         { "@type": "Question", "name": "Is min a dating app?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. We usually say that min is a \"social lubricant\" app — meaning its only goal is to make saying hello to people around you easier. What the relationship becomes after that — a friend, a running group, or a date — that's up to the two of you." } },
-        { "@type": "Question", "name": "How is min different from Meetup, Bumble BFF or other friend apps?",
-          "acceptedAnswer": { "@type": "Answer", "text": "min is not a friend app either. There is no profile to build, nothing to swipe and no group chat to keep alive. You talk to min, min introduces you to one person nearby, and if you both accept, you walk over and say hello." } },
-        { "@type": "Question", "name": "What does min actually store about me?",
-          "acceptedAnswer": { "@type": "Answer", "text": "The conversation you have with min is used by min to tune your memory shape — then deleted. Your memory shape is only stored on your phone. During matching, it sends an anonymized version of your memory to find the right person, then is disposed. We don't sell your private data because we literally don't have access to it." } },
-        { "@type": "Question", "name": "Can people find me on this? Is it safe?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There's no search, no profiles to browse and no followers. min acts as the intermediary that maintains each user's anonymity until an introduction is mutually accepted. Also, the meeting only happens in a public, populated area, and there is always a smooth option to back out of the meeting at any time. On top of our design for safety, people tend to behave in a civilized manner when they are socializing IRL." } },
+          "acceptedAnswer": { "@type": "Answer", "text": "No. min finds you something to do nearby, alone or with people who share an interest. The activity is the point. What happens after it is up to you." } },
+        { "@type": "Question", "name": "Do I have to go with strangers?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Go alone, bring a friend, or join people nearby who are up for the same thing. Solo activities skip the wait entirely." } },
+        { "@type": "Question", "name": "How is min different from Meetup or event apps?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Events are planned days ahead, often across town, and often pricey. min is for the free hour you have right now: walking distance, everyday prices, and the time, place and payment already sorted in one tap." } },
         { "@type": "Question", "name": "Does it cost money?",
-          "acceptedAnswer": { "@type": "Answer", "text": "The basic use of talking to min and getting introductions from min are free forever. We are planning a subscription to give users more control over when and who they get introduced to, as well as curated group events, but the price is not yet determined." } }
+          "acceptedAnswer": { "@type": "Answer", "text": "Using min is free, with no subscription. When you join an activity you prepay its item, like the coffee or the museum ticket, plus a small service fee. You see the full price before you accept, and if a group doesn't fill in time you get your money back." } },
+        { "@type": "Question", "name": "What does min know about me?",
+          "acceptedAnswer": { "@type": "Answer", "text": "What you tell it in short chats and which activities you go to, so the offers fit you better. You can see, correct or delete it at any time. We don't sell your data, and min is built for GDPR from day one." } },
+        { "@type": "Question", "name": "Is it safe?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Activities happen in public venues, never anyone's home. min is 18+, with your date of birth confirmed at signup. Others only see a nickname, avatar, short intro and age range. You can cancel up to the meeting with a neutral “plans changed”, and block or report in one tap. Every report is reviewed by a person within 24 hours." } }
       ]
     }
   ]
@@ -161,6 +166,24 @@
     .hero--app.hero--cry .hero__actions { margin-top: auto; padding-top: 36px; }
     :root.is-short .hero--cry .cry-min { width: 84px; padding-top: 8px; margin-bottom: 8px; }
   }
+
+  /* The "live near you" placeholder screen: one card per offer, in the
+     same dusk glass as the steps' other placeholder blocks. */
+  .poffer {
+    padding: 10px 12px;
+    border-radius: 15px;
+    background: linear-gradient(145deg, rgba(255, 237, 218, 0.12), rgba(216, 184, 235, 0.05));
+    box-shadow: inset 0 1px 0 rgba(255, 250, 233, 0.16), 0 6px 18px rgba(10, 8, 16, 0.3);
+  }
+  .poffer b { display: block; font-size: 11.5px; font-weight: var(--font-weight-bold); }
+  .poffer i { display: block; font-style: normal; font-size: 9px; color: rgba(250, 247, 242, 0.62); }
+  .poffer span { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
+  .poffer em {
+    font-style: normal; font-size: 8.5px; padding: 2px 7px; border-radius: 999px;
+    background: rgba(250, 247, 242, 0.09); color: rgba(250, 247, 242, 0.82);
+  }
+  .poffer em.poffer__hot { background: rgba(251, 205, 159, 0.22); color: #fbd9b4; }
+  .pscreen[data-screen="1"] .pscreen__cta { margin-top: auto; }
 </style>
 
 <script>
@@ -318,7 +341,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
         <span class="hero__line cry-soft">on screens.</span>
         <span class="hero__line hero__line--lit">go do something.</span>
       </h1>
-      <p class="lede rise" data-delay="3"><em>min is here to help.</em> Tell it what you're into, and it finds someone nearby to go do it with.</p>
+      <p class="lede rise" data-delay="3"><em>min is here to help.</em> Tap once and see a few things to do nearby, right now. Alone or with people.</p>
       <!-- The signup itself, not a link to it: /waitlist is one more tap
            between wanting in and being in. Same <form> contract, same
            Worker, bound by waitlist-form.js. -->
@@ -411,7 +434,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
                that is deliberately nailed down. -->
           <div class="steps__head">
             <h2 class="rise">how it works</h2>
-            <p class="lede section-lede rise" data-delay="1">So simple yet it feels so different</p>
+            <p class="lede section-lede rise" data-delay="1">From bored to out the door in about fifteen minutes</p>
           </div>
 
           <!-- The phone and the pebbles, as one box. On desktop this is
@@ -437,22 +460,53 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
               <img class="pmock__rim" src="/assets/img/iphone-frame.png" alt="" aria-hidden="true"
                    width="900" height="1840" decoding="async" loading="lazy">
 
-              <!-- 1 · talk to min — the real screen. -->
-              <div class="pscreen pscreen--shot" data-screen="1">
+              <!-- 1 · open: what's live nearby. A placeholder built in CSS
+                   until the real screen is exported. Offers are the
+                   business plan's own example afternoon. -->
+              <div class="pscreen" data-screen="1">
+                <div class="pscreen__bar">
+                  <span class="pscreen__avatar"></span>
+                  <div><b>live near you</b><i>Tue 16:05 · Kallio</i></div>
+                </div>
+                <div class="poffer">
+                  <b>coffee &amp; pulla</b>
+                  <i>with 2 students into literature</i>
+                  <span><em>6 min walk</em><em>€4.50</em><em class="poffer__hot">1 spot left</em></span>
+                </div>
+                <div class="poffer">
+                  <b>board game session</b>
+                  <i>a group from your campus</i>
+                  <span><em>12 min walk</em><em>€3</em><em>2 spots left</em></span>
+                </div>
+                <div class="poffer">
+                  <b>an hour at the art museum</b>
+                  <i>just you, on the way home</i>
+                  <span><em>9 min walk</em><em>€12</em><em>solo</em></span>
+                </div>
+                <div class="pscreen__cta">ask min for something else<i></i></div>
+              </div>
+
+              <!-- 2 · ask min — the real chat screen. -->
+              <div class="pscreen pscreen--shot" data-screen="2">
                 <img src="/assets/img/min-ui/chat.png" alt=""
                      width="402" height="874" decoding="async" loading="lazy">
               </div>
 
-              <!-- 2 · min finds you a social moment — the real screen. -->
-              <div class="pscreen pscreen--shot" data-screen="2">
-                <img src="/assets/img/min-ui/match.png" alt=""
-                     width="402" height="874" decoding="async" loading="lazy">
-              </div>
-
-              <!-- 3 · go say hello — the real screen. -->
-              <div class="pscreen pscreen--shot" data-screen="3">
-                <img src="/assets/img/min-ui/find.png" alt=""
-                     width="402" height="874" decoding="async" loading="lazy">
+              <!-- 3 · go: it filled, it's prepaid, walk over. Placeholder. -->
+              <div class="pscreen" data-screen="3">
+                <div class="pscreen__bar">
+                  <span class="pscreen__avatar"></span>
+                  <div><b>you're in!</b><i>coffee &amp; pulla · starts 16:20</i></div>
+                </div>
+                <div class="pinvite">
+                  <div class="pinvite__who">
+                    <span class="pinvite__face"></span>
+                    <div><b>all spots filled</b><i>you + 2 students into literature</i></div>
+                  </div>
+                  <p>Your coffee and pulla are prepaid. Just show this at the counter.</p>
+                  <span class="pinvite__map"></span>
+                </div>
+                <div class="pscreen__cta">on my way · 6 min<i></i></div>
               </div>
 
               <span class="pmock__home"></span>
@@ -471,12 +525,12 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
             <li class="steps__item resin" data-step="1">
               <span class="steps__num" aria-hidden="true">1</span>
               <div class="steps__copy">
-                <b>min gets to know you</b>
+                <b>See what's on nearby</b>
                 <div class="steps__reveal">
                   <p>
-                    min is curious and eager to learn about you. Through conversation,
-                    min will understand you deeper than just your interests:
-                    your personality, intents, social style, and more.
+                    Open min and see a few things you could be doing right now,
+                    within walking distance: the place, the time, the price,
+                    who's joined and how many spots are left.
                   </p>
                 </div>
               </div>
@@ -484,12 +538,11 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
             <li class="steps__item resin" data-step="2">
               <span class="steps__num" aria-hidden="true">2</span>
               <div class="steps__copy">
-                <b>min finds you a social moment</b>
+                <b>Join one, or ask min</b>
                 <div class="steps__reveal">
                   <p>
-                    min goes out to your surroundings and looks for someone you
-                    might vibe with. Because min knows you, every introduction
-                    should be an interesting social moment for the two of you.
+                    Join in one tap. Or tell min roughly what you're up for,
+                    and min turns it into an offer that people nearby can join.
                   </p>
                 </div>
               </div>
@@ -497,11 +550,12 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
             <li class="steps__item resin" data-step="3">
               <span class="steps__num" aria-hidden="true">3</span>
               <div class="steps__copy">
-                <b>Walk over and say hello</b>
+                <b>Prepay and go</b>
                 <div class="steps__reveal">
                   <p>
-                    Instead of another chat screen, min decides on a nearby
-                    meeting spot. All that's left for you is to say hello.
+                    Prepay the coffee or the ticket to hold your spot. When the
+                    spots fill, walk over. Going solo? Just go. If it doesn't
+                    fill in time, switch, extend or get your money back.
                   </p>
                 </div>
               </div>
@@ -518,40 +572,36 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
          Static cards — no slider, no JS. -->
     <section class="facts" id="different" data-reveal>
       <div class="shell">
-        <h2 class="rise" style="max-width: 22ch">not like all the other <span class="facts__scare">“social”</span> apps</h2>
+        <h2 class="rise" style="max-width: 22ch">built to get you off your phone</h2>
         <p class="lede section-lede rise" data-delay="1">
-          the <span class="facts__scare">“social”</span> apps you’re used to are
-          antisocial. min is here to change that.
+          Screen-time limits make the phone harder. min makes real life easier.
         </p>
 
         <ul class="facts__grid">
 
           <li class="fact resin rise" data-delay="2">
-            <b>No swiping or chatting</b>
+            <b>One tap, not six steps</b>
             <p>
-              This isn't a dating app or another friend-making app. It just makes saying
-              hello to the people around you normal again. Once you're matched
-              there is one thing left to do — walk over and say it. No match to
-              unmatch, and no chat left hanging if it goes nowhere.
+              Deciding what to do, finding company, agreeing on a time and place,
+              paying. Usually that's three apps and a group chat, and the free hour
+              is gone. With min, every offer comes with all of it already sorted.
             </p>
           </li>
 
           <li class="fact resin rise" data-delay="3">
-            <b>No profiles</b>
+            <b>Everyday prices</b>
             <p>
-              No profile picture, no bio to keep updated. min simply learns about
-              you and keeps that memory on your device. Nobody is sorted by their
-              face, and there is no profile for us to sell — because there is no
-              profile.
+              A coffee, a lunch set, a museum ticket. Not pricey events planned
+              weeks ahead. You prepay the item when you join, so there is nothing
+              to book, split or sort out at the counter.
             </p>
           </li>
 
           <li class="fact resin rise" data-delay="4">
-            <b>No feed</b>
+            <b>No feed, no swiping, no chat</b>
             <p>
-              We want you socialising out there, not scrolling to watch other people
-              do it. Our business model is the opposite of the usual one: we make
-              money when you get off your phone, not by maximising your screen time.
+              We want you out there, not scrolling to watch other people do it.
+              min makes money when you go do something, not from your screen time.
               The app is meant to be boring to hold.
             </p>
           </li>
@@ -576,48 +626,37 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
           <details class="faq__item resin rise" data-delay="1">
             <summary>Is min a dating app?<i aria-hidden="true"></i></summary>
             <div class="faq__answer"><p>
-              No. We usually say that min is a "social lubricant" app — meaning its
-              only goal is to make saying hello to people around you easier. What the
-              relationship becomes after that — a friend, a running group, or a date —
-              that's up to the two of you.
-            </p></div>
-          </details>
-          <details class="faq__item resin rise" data-delay="1">
-            <summary>How is min different from Meetup, Bumble BFF or other friend apps?<i aria-hidden="true"></i></summary>
-            <div class="faq__answer"><p>
-              min is not a friend app either. There is no profile to build, nothing
-              to swipe and no group chat to keep alive. You talk to min, min introduces you to one person nearby,
-              and if you both accept, you walk over and say hello.
+              No. min finds you something to do nearby, alone or with people who share an interest. The activity is the point. What happens after it is up to you.
             </p></div>
           </details>
           <details class="faq__item resin rise" data-delay="2">
-            <summary>What does min actually store about me?<i aria-hidden="true"></i></summary>
+            <summary>Do I have to go with strangers?<i aria-hidden="true"></i></summary>
             <div class="faq__answer"><p>
-              The conversation you have with min is used by min to tune your memory
-              shape — then deleted. Your memory shape is only stored on your phone.
-              During matching, it sends an anonymized version of your memory to find
-              the right person, then is disposed. We don't sell your private data
-              because we literally don't have access to it.
+              No. Go alone, bring a friend, or join people nearby who are up for the same thing. Solo activities skip the wait entirely.
             </p></div>
           </details>
           <details class="faq__item resin rise" data-delay="3">
-            <summary>Can people find me on this? Is it safe?<i aria-hidden="true"></i></summary>
+            <summary>How is min different from Meetup or event apps?<i aria-hidden="true"></i></summary>
             <div class="faq__answer"><p>
-              There's no search, no profiles to browse and no followers. min acts as
-              the intermediary that maintains each user's anonymity until an
-              introduction is mutually accepted. Also, the meeting only happens in a
-              public, populated area — and there is always a smooth option to back out
-              of the meeting at any time. On top of our design for safety, people tend
-              to behave in a civilized manner when they are socializing IRL.
+              Events are planned days ahead, often across town, and often pricey. min is for the free hour you have right now: walking distance, everyday prices, and the time, place and payment already sorted in one tap.
             </p></div>
           </details>
           <details class="faq__item resin rise" data-delay="4">
             <summary>Does it cost money?<i aria-hidden="true"></i></summary>
             <div class="faq__answer"><p>
-              The basic use of talking to min and getting introductions from min are
-              free forever. We are planning a subscription to give users more control
-              over when and who they get introduced to, as well as curated group
-              events — but the price is not yet determined.
+              Using min is free, with no subscription. When you join an activity you prepay its item, like the coffee or the museum ticket, plus a small service fee. You see the full price before you accept, and if a group doesn't fill in time you get your money back.
+            </p></div>
+          </details>
+          <details class="faq__item resin rise" data-delay="4">
+            <summary>What does min know about me?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              What you tell it in short chats and which activities you go to, so the offers fit you better. You can see, correct or delete it at any time. We don't sell your data, and min is built for GDPR from day one.
+            </p></div>
+          </details>
+          <details class="faq__item resin rise" data-delay="4">
+            <summary>Is it safe?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              Activities happen in public venues, never anyone's home. min is 18+, with your date of birth confirmed at signup. Others only see a nickname, avatar, short intro and age range. You can cancel up to the meeting with a neutral “plans changed”, and block or report in one tap. Every report is reviewed by a person within 24 hours.
             </p></div>
           </details>
         </div>
@@ -631,8 +670,8 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
              width="287" height="350" decoding="async" loading="lazy">
         <h2 class="rise">min is coming to Helsinki first</h2>
         <p class="lede rise" data-delay="2">
-          min will first launch for all students in the Helsinki area in early 2027.
-          Be one of the first and help shape the future of how we socialize.
+          min launches for students in the Helsinki area in early 2027. Join the
+          waitlist and be one of the first to swap a scroll for something real.
         </p>
         <div class="hero__actions rise" data-delay="3">
           <div class="signup-block">
