@@ -75,6 +75,12 @@
         // than the landing page (OUTBOUND in the Worker). Same URL shape, so
         // it is printed exactly like any other poster code.
         { slug: 'halloween-event', label: 'Halloween event → Instagram', to: 'instagram.com/hellomin.app' },
+        // `note` replaces the generic "never reaches the signup page" line.
+        // The survey is our own page, so the Worker sends ?src=poster&l=&p=
+        // with it and the dashboard can set finished surveys against scans.
+        { slug: 'survey', label: 'Survey → /survey/v2/', to: 'the survey at /survey/v2/',
+          note: 'Tracked by location, then sent to the IRL activities survey at /survey/v2/ with the location ' +
+            'attached. The dashboard counts finished surveys against scans for each place.' },
       ],
     },
     {
@@ -196,7 +202,10 @@
     // there is still one sitting in the control.
     const l = assetBySlug(a).located ? els.location.value : null;
     const design = assetBySlug(a).designs.find((d) => d.slug === p);
-    return { url: targetUrl(l, a, p), name: targetName(l, a, p), to: design ? design.to : undefined };
+    return {
+      url: targetUrl(l, a, p), name: targetName(l, a, p),
+      to: design ? design.to : undefined, toNote: design ? design.note : undefined,
+    };
   }
 
   function setMode(next, quiet) {
@@ -368,8 +377,8 @@
 
     const notes = [];
     if (mode === 'tracked' && target.to) {
-      notes.push({ kind: 'ok', text: `Tracked by location, then sent to ${target.to}. It never reaches the ` +
-        'signup page, so it is counted on its own and has no conversion rate.' });
+      notes.push({ kind: 'ok', text: target.toNote || `Tracked by location, then sent to ${target.to}. It never ` +
+        'reaches the signup page, so it is counted on its own and has no conversion rate.' });
     } else if (mode === 'tracked') {
       notes.push({ kind: 'ok', text: 'Tracked: the Worker counts this scan, then forwards to the landing page ' +
         'with the location, the asset type and the design attached.' });

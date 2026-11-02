@@ -358,9 +358,12 @@ and tells you the locationless URL to print instead.
 
 Each asset type owns its own design list: posters are `unclesam`,
 `unclesam-footer`, `happy`, `trump`, `nirvana`, `wanted` and `halloween`; cards are `unclemin` and `help`.
-Posters also have `halloween-event`, which carries `to:` because the Worker
-sends it to Instagram instead of the landing page (`OUTBOUND` in the Worker).
-It is counted by location in its own table and never in a conversion rate. The lists are
+Posters also have `halloween-event` and `survey`, which carry `to:` because
+the Worker sends them somewhere other than the landing page (`OUTBOUND` in the
+Worker): Instagram, and the IRL activities survey at `/survey/v2/`. They are
+counted by location in their own table and never in a signup conversion rate.
+The survey one arrives with `?src=poster&l=&p=`, which the survey sends on, so
+the dashboard can set finished surveys against scans per place. The lists are
 disjoint today, but nothing depends on that — two asset types may share a
 design slug, and if they ever do they stay separate cells everywhere
 downstream, including in the filenames the generator exports, so a card and a

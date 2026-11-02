@@ -15,8 +15,10 @@
        from a random one of their "who with" picks, and a €0.25 or
        a €1.00 fee drawn per visit. The fee is the only thing the
        draw changes, so the "yes" rates of the two can be compared.
-     • ?src= (waitlist, campus, social, friend), the fee drawn and
-       the start / finish times ride along.
+     • ?src= (waitlist, campus, social, friend, poster), the fee
+       drawn and the start / finish times ride along. A survey
+       poster's QR code sends ?src=poster with ?l= (the place) and
+       ?p= (the design), and those ride along too.
 
    1. reveals()  — IntersectionObserver adds .in.
    2. controls   — counters, tick lists, the conditional fields.
@@ -180,7 +182,13 @@ function showOffer(key, people) {
 }
 
 /* Where the link was shared. Must match source in the Worker. */
-const SOURCE = new URLSearchParams(location.search).get('src')?.toLowerCase() || null;
+const PARAMS = new URLSearchParams(location.search);
+const SOURCE = PARAMS.get('src')?.toLowerCase() || null;
+/* Which survey poster, when its QR code sent them. The Worker
+   checks both against its own lists and keeps them only with
+   src=poster. */
+const POSTER_LOCATION = PARAMS.get('l') || null;
+const POSTER = PARAMS.get('p') || null;
 
 const STARTED_AT = new Date().toISOString();
 
@@ -492,6 +500,8 @@ function survey() {
       draw:     $('#draw').checked,
       waitlist: $('#waitlist').checked,
       source:   SOURCE,
+      poster_location: POSTER_LOCATION,
+      poster:   POSTER,
       started_at:  STARTED_AT,
       finished_at: new Date().toISOString(),
       website: document.getElementById('website')?.value ?? '' // honeypot
