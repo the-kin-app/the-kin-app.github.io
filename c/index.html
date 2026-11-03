@@ -128,6 +128,11 @@
   /* The first two lines are the problem, set soft; the third is the
      push, set loud. */
   .hero--cry h1 { margin-bottom: 0; }
+  /* The one line under the headline. Plain lede ink; only "easier"
+     leans. */
+  .hero--app.hero--cry .cry-sub { margin: 18px auto 0; max-width: none; font-size: 20px; }
+  .hero--cry .cry-sub i { font-style: italic; font-weight: var(--font-weight-semibold); color: var(--ink); }
+  @media (max-width: 800px) { .hero--app.hero--cry .cry-sub { margin-top: 14px; font-size: 17px; } }
   .hero--cry .cry-soft { font-weight: var(--font-weight-semibold); color: var(--ink-soft); }
 
   @media (min-width: 801px) {
@@ -322,6 +327,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
         <span class="hero__line cry-soft">on screens.</span>
         <span class="hero__line hero__line--lit">go do something.</span>
       </h1>
+      <p class="lede cry-sub rise" data-delay="3">min is here to make it <i>easier</i>.</p>
       <!-- The signup itself, not a link to it: /waitlist is one more tap
            between wanting in and being in. Same <form> contract, same
            Worker, bound by waitlist-form.js. -->
