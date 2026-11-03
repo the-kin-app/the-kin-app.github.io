@@ -27,6 +27,8 @@ waitlist submissions.
 │   │   ├── landing.css      Homepage only (does not load base/components)
 │   │   ├── pitchdeck.css    Deck paging + per-slide figures; loads on top of landing.css
 │   │   ├── qrgenerator.css  The QR workbench + its print sheet
+│   │   ├── offer-card.css   min's offer card — /survey/v2/ shows one, /c/ a coverflow of them
+│   │   ├── offer-flow.css   /c/ only: the coverflow that places the offer cards
 │   │   ├── pro-survey.css   The Pro survey's tick grids + the question 5 read-back; loads on top of business.css and survey.css
 │   │   ├── waitlist.css     The waitlist card, form and inputs; loads on top of landing.css
 │   │   ├── ads.css          /ads only: the school select and its two-row form; loads on top of waitlist-hero.css
@@ -38,6 +40,7 @@ waitlist submissions.
 │   │   ├── qr-encode.js     QR encoder — byte mode, versions 1–10, no dependencies
 │   │   ├── qr-style.js      Draws an encoded grid as a Min-styled SVG
 │   │   ├── qrgenerator.js   The workbench page: controls, print sheet, SVG/PNG/ZIP export
+│   │   ├── offer-flow.js    /c/ only: steps the coverflow (auto, swipe, keys, dots)
 │   │   ├── pro-survey.js    The Pro survey: the three tick grids, the question 5 read-back, submit
 │   │   ├── press.js         The submerge button press (shared by every page)
 │   │   ├── min.js           Min himself: anatomy, the 5s morph loop, the gaze (shared)
@@ -585,9 +588,16 @@ first. Until 2026-10-09 `b` meant `/waitlist/`.
 
 ### Side C: the emotional hero (draft, from 2026-11-02)
 
-`/c/` is the homepage with the hero swapped: the logo, centred, above "stop
-wasting your life / on screens. / **go do something.**", then the form. No
-sub-line, no app screenshot, no flip line. It declares
+`/c/` is the homepage with the hero swapped: "stop wasting your life / on
+screens. / **go do something.**" and "min is here to make it *easier*." on the
+left, and where the homepage has its phone, a coverflow of min's offer cards.
+The card is the one from `/survey/v2/`, now in its own file
+(`assets/css/offer-card.css`, moved out of `pro-survey.css`) so both pages draw
+the same card. `assets/css/offer-flow.css` places the cards and
+`assets/js/offer-flow.js` steps them: auto-advance while visible (never with
+reduced motion), plus swipe, arrow keys, a tap on a side card, or the dots.
+The five offers are written in the page; the venues are the survey's made-up
+ones. It declares
 `data-variant="c"` and is `noindex`.
 
 Its copy below the fold is rewritten for the current idea (IRL activity on

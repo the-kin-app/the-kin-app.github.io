@@ -9,8 +9,9 @@
        a  /    "spontaneous / IRL meetings / right around the corner"
                + the "say hello to ▸ …" flip line + the app screenshot
        c  /c/  "stop wasting your life / on screens. / go do something."
-               under the logo, then the form. No screenshot, no flip
-               line: the pitch is the feeling, not the feature.
+               under the logo, "min is here to make it easier.", and a
+               coverflow of min's offer cards (offer-flow.js) where the
+               homepage has its phone. No flip line.
      From 2026-11-02 the copy below the fold differs too: this page
      describes the current idea (IRL activity on demand: see what's on
      nearby, join or ask min, prepay and go), per the 2026-10-31
@@ -119,39 +120,40 @@
 <link rel="stylesheet" href="/assets/css/landing.css?v=20260928c">
 <link rel="stylesheet" href="/assets/css/home-hero.css?v=20260928a">
 <link rel="stylesheet" href="/assets/css/home-sections.css?v=20261009a">
-<!-- The styles this page adds. One centred column: with no phone there
-     is no second column to balance. Just the logo, the headline and the
-     form; the logo sits centred above the headline, not in the corner. -->
+<link rel="stylesheet" href="/assets/css/offer-card.css?v=20261103a">
+<link rel="stylesheet" href="/assets/css/offer-flow.css?v=20261103a">
+<!-- The styles this page adds. Desktop keeps the homepage's two
+     columns: the words on the left, and where the homepage has its
+     phone, a coverflow of min's offer cards. On phones it all stacks:
+     logo, headline, one line, the cards, the form. -->
 <style>
-  .hero--cry .shell { grid-template-columns: 1fr; justify-items: center; }
-
   /* The first two lines are the problem, set soft; the third is the
      push, set loud. */
   .hero--cry h1 { margin-bottom: 0; }
-  /* The one line under the headline. Plain lede ink; only "easier"
-     leans. */
-  .hero--app.hero--cry .cry-sub { margin: 18px auto 0; max-width: none; font-size: 20px; }
-  .hero--cry .cry-sub i { font-style: italic; font-weight: var(--font-weight-semibold); color: var(--ink); }
-  @media (max-width: 800px) { .hero--app.hero--cry .cry-sub { margin-top: 14px; font-size: 17px; } }
   .hero--cry .cry-soft { font-weight: var(--font-weight-semibold); color: var(--ink-soft); }
 
+  /* The one line under the headline. Plain lede ink; only "easier"
+     leans. */
+  .hero--app.hero--cry .cry-sub { margin: 18px 0 0; max-width: none; font-size: 20px; }
+  .hero--cry .cry-sub i { font-style: italic; font-weight: var(--font-weight-semibold); color: var(--ink); }
+
   @media (min-width: 801px) {
-    /* Desktop only: on phones home-hero.css sets .hero__copy to
-       display: contents, and the column is the shell itself. */
-    .hero--cry .hero__copy { display: flex; flex-direction: column; align-items: center; text-align: center; }
-    .hero--app.hero--cry .shell { align-items: stretch; min-height: calc(var(--vh-fixed, 100svh) - 154px); }
-    /* The two margin-top: autos split the spare height: above the logo,
-       and above the form. */
-    .hero--app.hero--cry .wordmark--hero { width: 190px; margin: auto 0 18px; }
-    .hero--app.hero--cry .hero__actions { justify-content: center; margin-top: auto; padding-top: 48px; }
-    .hero--app.hero--cry .signup-block { margin-inline: auto; }
+    .hero--app.hero--cry .shell { grid-template-columns: 1fr 1.05fr; }
+    .hero--cry .oflow { --flow-scale: 0.86; }
+  }
+  @media (min-width: 801px) and (max-width: 1100px) {
+    .hero--cry .oflow { --flow-scale: 0.7; }
   }
 
   @media (max-width: 800px) {
-    .hero--app.hero--cry .wordmark--hero { width: 140px; margin: auto auto 14px; }
-    .hero--app.hero--cry h1 { font-size: clamp(1.9rem, 9vw, 3rem); line-height: 1.06; }
-    .hero--app.hero--cry .hero__actions { margin-top: auto; padding-top: 36px; }
-    :root.is-short .hero--app.hero--cry .wordmark--hero { width: 108px; margin-bottom: 8px; }
+    .hero--app.hero--cry .wordmark--hero { width: 112px; margin: 0 auto 10px; }
+    .hero--app.hero--cry h1 { font-size: clamp(1.75rem, 8.4vw, 3rem); line-height: 1.06; }
+    .hero--app.hero--cry .cry-sub { margin: 10px auto 0; font-size: 17px; }
+    /* The cards take the slack between the line and the form. */
+    .hero--cry .oflow { order: 4; --flow-scale: 0.6; margin: auto 0; padding-block: 12px; box-sizing: content-box; }
+    .hero--app.hero--cry .hero__actions { margin-top: 0; }
+    :root.is-short .hero--cry .oflow { --flow-scale: 0.46; padding-block: 6px; }
+    :root.is-short .hero--app.hero--cry .wordmark--hero { width: 84px; margin-bottom: 6px; }
   }
 
   /* The "live near you" placeholder screen: one card per offer, in the
@@ -366,6 +368,170 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
         </div>
       </div>
       <p class="fineprint rise" data-delay="5">Launching for <b>all Helsinki students</b> first. Coming <b>Early 2027</b>.</p>
+      </div>
+
+      <!-- min's live offers, as the app shows them: a coverflow of the
+           survey's offer card (offer-card.css), placed by offer-flow.css
+           and stepped by offer-flow.js. Example offers; the venues are
+           made up (as in the survey), so no real business is implied. -->
+      <div class="oflow rise" data-delay="4" data-offer-flow tabindex="0"
+           role="region" aria-roledescription="carousel" aria-label="Example offers from min">
+        <div class="oflow__track">
+            <div class="offer oflow__card" role="group" aria-roledescription="slide" aria-label="1 of 5: Coffee + pulla">
+                <div class="offer__top">
+                  <img class="offer__app-icon" src="/assets/img/min-character/floating-min-favicon.png" alt="" width="22" height="22">
+                  <span class="offer__app">min</span>
+                  <span class="offer__live"><span class="offer__live-dot" aria-hidden="true"></span>live near you</span>
+                </div>
+                <div class="offer__hero">
+                  <span class="offer__pebble" aria-hidden="true">☕</span>
+                  <div>
+                    <p class="offer__title">Coffee + pulla</p>
+                    <p class="offer__venue">Kahvila Kanelitaivas, Kallio</p>
+                    <p class="offer__walk">starts in 15 min</p>
+                  </div>
+                </div>
+                <p class="offer__price"><span><b>€4.00</b> set <s>menu €5.00</s></span><span class="offer__fee">+ small service fee</span></p>
+                <div class="offer__group">
+                  <p class="offer__size">👥 3–5 people · 2 joined</p>
+                  <ul class="offer__who"><li class="offer__person"><span class="offer__avatar" aria-hidden="true">L</span><span class="offer__name">Leo</span><span class="offer__detail">an interest in common</span></li><li class="offer__person"><span class="offer__avatar" aria-hidden="true">S</span><span class="offer__name">Sara</span><span class="offer__detail">at the same stage of life</span></li><li class="offer__person offer__person--add"><span class="offer__avatar" aria-hidden="true">+</span><span class="offer__name">Bring a friend</span><span class="offer__detail">+1, after you join</span></li></ul>
+                </div>
+                <div class="offer__timer">
+                  <p class="offer__timer-main">⏱ 9:41 left to fill</p>
+                  <p class="offer__timer-sub">goes ahead at 3 · money back if not</p>
+                </div>
+                <div class="offer__accept" aria-hidden="true">
+                  <div class="slide">
+                    <span class="slide__fill"></span>
+                    <span class="slide__label">Slide to accept</span>
+                    <span class="slide__knob"><svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  </div>
+                </div>
+              </div>
+            <div class="offer oflow__card" role="group" aria-roledescription="slide" aria-label="2 of 5: Board game table">
+                <div class="offer__top">
+                  <img class="offer__app-icon" src="/assets/img/min-character/floating-min-favicon.png" alt="" width="22" height="22">
+                  <span class="offer__app">min</span>
+                  <span class="offer__live"><span class="offer__live-dot" aria-hidden="true"></span>live near you</span>
+                </div>
+                <div class="offer__hero">
+                  <span class="offer__pebble" aria-hidden="true">🎲</span>
+                  <div>
+                    <p class="offer__title">Board game table</p>
+                    <p class="offer__venue">Noppakolo Game Café, Sörnäinen</p>
+                    <p class="offer__walk">starts at 17:00</p>
+                  </div>
+                </div>
+                <p class="offer__price"><span><b>€6.00</b> a person</span><span class="offer__fee">+ small service fee</span></p>
+                <div class="offer__group">
+                  <p class="offer__size">👥 3–6 people · 1 joined</p>
+                  <ul class="offer__who"><li class="offer__person"><span class="offer__avatar" aria-hidden="true">L</span><span class="offer__name">Leo</span><span class="offer__detail">a similar background</span></li><li class="offer__person offer__person--add"><span class="offer__avatar" aria-hidden="true">+</span><span class="offer__name">Bring a friend</span><span class="offer__detail">+1, after you join</span></li></ul>
+                </div>
+                <div class="offer__timer">
+                  <p class="offer__timer-main">⏱ 14:20 left to fill</p>
+                  <p class="offer__timer-sub">goes ahead at 3 · money back if not</p>
+                </div>
+                <div class="offer__accept" aria-hidden="true">
+                  <div class="slide">
+                    <span class="slide__fill"></span>
+                    <span class="slide__label">Slide to accept</span>
+                    <span class="slide__knob"><svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  </div>
+                </div>
+              </div>
+            <div class="offer oflow__card" role="group" aria-roledescription="slide" aria-label="3 of 5: Art museum, student ticket">
+                <div class="offer__top">
+                  <img class="offer__app-icon" src="/assets/img/min-character/floating-min-favicon.png" alt="" width="22" height="22">
+                  <span class="offer__app">min</span>
+                  <span class="offer__live"><span class="offer__live-dot" aria-hidden="true"></span>live near you</span>
+                </div>
+                <div class="offer__hero">
+                  <span class="offer__pebble" aria-hidden="true">🖼</span>
+                  <div>
+                    <p class="offer__title">Art museum, student ticket</p>
+                    <p class="offer__venue">Valohalli Art Museum, Töölö</p>
+                    <p class="offer__walk">open now</p>
+                  </div>
+                </div>
+                <p class="offer__price"><span><b>€8.00</b></span><span class="offer__fee">+ small service fee</span></p>
+                <div class="offer__group">
+                  <p class="offer__size">👤 Just you</p>
+                </div>
+                <div class="offer__timer">
+                  <p class="offer__timer-main">Go now, no wait</p>
+                </div>
+                <div class="offer__accept" aria-hidden="true">
+                  <div class="slide">
+                    <span class="slide__fill"></span>
+                    <span class="slide__label">Slide to accept</span>
+                    <span class="slide__knob"><svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  </div>
+                </div>
+              </div>
+            <div class="offer oflow__card" role="group" aria-roledescription="slide" aria-label="4 of 5: Live music tonight">
+                <div class="offer__top">
+                  <img class="offer__app-icon" src="/assets/img/min-character/floating-min-favicon.png" alt="" width="22" height="22">
+                  <span class="offer__app">min</span>
+                  <span class="offer__live"><span class="offer__live-dot" aria-hidden="true"></span>live near you</span>
+                </div>
+                <div class="offer__hero">
+                  <span class="offer__pebble" aria-hidden="true">🎵</span>
+                  <div>
+                    <p class="offer__title">Live music tonight</p>
+                    <p class="offer__venue">Bar Vinyylikettu, Punavuori</p>
+                    <p class="offer__walk">starts at 20:00</p>
+                  </div>
+                </div>
+                <p class="offer__price"><span><b>€5.00</b> entry</span><span class="offer__fee">+ small service fee</span></p>
+                <div class="offer__group">
+                  <p class="offer__size">👥 2–8 people · 1 joined</p>
+                  <ul class="offer__who"><li class="offer__person"><span class="offer__avatar" aria-hidden="true">M</span><span class="offer__name">Mia</span><span class="offer__detail">your friend</span></li><li class="offer__person offer__person--add"><span class="offer__avatar" aria-hidden="true">+</span><span class="offer__name">Invite friends</span><span class="offer__detail">after you join</span></li></ul>
+                </div>
+                <div class="offer__timer">
+                  <p class="offer__lock">🔒 Friends only</p>
+                  <p class="offer__timer-main">⏱ 22:05 left to fill</p>
+                  <p class="offer__timer-sub">goes ahead at 2 · money back if not</p>
+                </div>
+                <div class="offer__accept" aria-hidden="true">
+                  <div class="slide">
+                    <span class="slide__fill"></span>
+                    <span class="slide__label">Slide to accept</span>
+                    <span class="slide__knob"><svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  </div>
+                </div>
+              </div>
+            <div class="offer oflow__card" role="group" aria-roledescription="slide" aria-label="5 of 5: Drop-in yoga, student price">
+                <div class="offer__top">
+                  <img class="offer__app-icon" src="/assets/img/min-character/floating-min-favicon.png" alt="" width="22" height="22">
+                  <span class="offer__app">min</span>
+                  <span class="offer__live"><span class="offer__live-dot" aria-hidden="true"></span>live near you</span>
+                </div>
+                <div class="offer__hero">
+                  <span class="offer__pebble" aria-hidden="true">🧘</span>
+                  <div>
+                    <p class="offer__title">Drop-in yoga, student price</p>
+                    <p class="offer__venue">Studio Sykevirta, Hakaniemi</p>
+                    <p class="offer__walk">starts at 18:30</p>
+                  </div>
+                </div>
+                <p class="offer__price"><span><b>€8.00</b> <s>normally €12.00</s></span><span class="offer__fee">+ small service fee</span></p>
+                <div class="offer__group">
+                  <p class="offer__size">👥 3–6 people · 2 joined</p>
+                  <ul class="offer__who"><li class="offer__person"><span class="offer__avatar" aria-hidden="true">S</span><span class="offer__name">Sara</span><span class="offer__detail">at the same stage of life</span></li><li class="offer__person"><span class="offer__avatar" aria-hidden="true">L</span><span class="offer__name">Leo</span><span class="offer__detail">a similar background</span></li><li class="offer__person offer__person--add"><span class="offer__avatar" aria-hidden="true">+</span><span class="offer__name">Bring a friend</span><span class="offer__detail">+1, after you join</span></li></ul>
+                </div>
+                <div class="offer__timer">
+                  <p class="offer__timer-main">⏱ 6:12 left to fill</p>
+                  <p class="offer__timer-sub">goes ahead at 3 · money back if not</p>
+                </div>
+                <div class="offer__accept" aria-hidden="true">
+                  <div class="slide">
+                    <span class="slide__fill"></span>
+                    <span class="slide__label">Slide to accept</span>
+                    <span class="slide__knob"><svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  </div>
+                </div>
+              </div>
+        </div>
       </div>
 
     </div>
@@ -733,6 +899,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 <script type="module">
   import { waitlistForms } from '/assets/js/waitlist-form.js?v=20260922a';
   import { howItWorks } from '/assets/js/home-steps.js?v=20261009a';
+  import { offerFlow } from '/assets/js/offer-flow.js?v=20261103a';
   // The scan -> arrival ping rides in on that first import: waitlist-form.js
   // pulls in scan-attribution.js, which reports back to the Worker that this
   // page actually rendered, if and only if a QR scan sent us here with a ?s=
@@ -741,6 +908,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
   // reaches rather than as a missing line.
   waitlistForms();   // hero + closer, the same module /waitlist posts through
   howItWorks();      // the three steps, and min's pose following them
+  offerFlow();       // the hero's coverflow of offer cards
 </script>
 </body>
 </html>

@@ -1,0 +1,116 @@
+/* ============================================================
+   min — a coverflow of offer cards  (/c/ hero)
+   ------------------------------------------------------------
+   A few of min's live offers, one in front and its neighbours
+   turned away on either side, like a row of record sleeves. The
+   cards are the app's own (.offer, offer-card.css); this file only
+   places them. offer-flow.js sets each card's place in the row:
+
+       --o   its offset from the front card: … -2 -1 0 1 2 …
+       --d   how far that is, 0 / 1 / 2 (capped)
+       --t   which way it turns: -1 left, 0 front, 1 right
+
+   and the row's size: --card-h, the tallest card in px, so the
+   box takes the room the cards need. --flow-scale shrinks the
+   whole row to fit; the card itself is always drawn at its real
+   340px, so it looks exactly like the survey's.
+
+   Two away (--d: 2) a card is faded out. That's also where a card
+   wraps from one end of the row to the other, so the jump across
+   happens while it's invisible.
+   ============================================================ */
+
+.oflow {
+  --flow-scale: 0.78;
+  --card-h: 500px;
+  position: relative;
+  width: 100%;
+  height: calc(var(--card-h) * var(--flow-scale) + 34px);
+  text-align: left;             /* the card is the app's, not the hero's centred column */
+  touch-action: pan-y;          /* sideways drags are ours, scrolling isn't */
+  user-select: none;
+  -webkit-user-select: none;
+  outline: none;
+}
+
+.oflow__track {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 340px;
+  height: var(--card-h);
+  margin-left: -170px;
+  transform: scale(var(--flow-scale));
+  transform-origin: top center;
+  perspective: 1300px;
+  /* One shared 3D space, so the cards are drawn by real depth: the
+     front card is nearest, so it is always on top. With each card
+     flattened on its own, the browser fell back to source order and
+     a side card later in the markup was drawn over the front one;
+     z-index alone didn't stop it. */
+  transform-style: preserve-3d;
+}
+
+.oflow__card {
+  --o: 0; --d: 0; --t: 0;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  translate: 0 -50%;
+  margin: 0;
+  width: 340px;
+  transform:
+    translateX(calc(var(--o) * 56%))
+    translateZ(calc(var(--d) * -170px))
+    rotateY(calc(var(--t) * -38deg));
+  transition:
+    transform 700ms var(--ease-emergence),
+    opacity 420ms ease,
+    filter 420ms ease;
+  will-change: transform;
+  cursor: pointer;
+}
+.oflow__card[data-pos="center"] { z-index: 3; cursor: grab; }
+.oflow__card[data-pos="side"] {
+  z-index: 2;
+  opacity: 0.88;
+  filter: saturate(0.85) brightness(0.96);
+}
+.oflow__card[data-pos="off"] { z-index: 1; opacity: 0; pointer-events: none; }
+
+/* Without the script every card sits in front; show just the first. */
+.oflow:not(.is-live) .oflow__card:not(:first-child) { display: none; }
+
+/* The dots: which card is in front, and a way to pick one. */
+.oflow__dots {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin: 0; padding: 0;
+  list-style: none;
+}
+.oflow:not(.is-live) .oflow__dots { display: none; }
+.oflow__dot {
+  display: grid;
+  place-items: center;
+  width: 22px; height: 22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.oflow__dot::before {
+  content: "";
+  width: 7px; height: 7px;
+  border-radius: 999px;
+  background: rgba(90, 69, 54, 0.22);
+  transition: width 300ms var(--ease-emergence), background 300ms ease;
+}
+.oflow__dot[aria-current="true"]::before { width: 18px; background: rgba(90, 69, 54, 0.6); }
+.oflow__dot:focus-visible { outline: 2px solid rgba(90, 69, 54, 0.5); outline-offset: -2px; border-radius: 999px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .oflow__card { transition: opacity 200ms ease; }
+}
