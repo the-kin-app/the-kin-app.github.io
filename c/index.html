@@ -292,6 +292,54 @@
     color: color-mix(in srgb, var(--ink) 55%, transparent);
   }
   .ow__tag--min { color: var(--night-amber); }
+  .ow__tag em { font-style: normal; text-decoration: underline; text-underline-offset: 3px; }
+
+  /* Step 2, the key one: two dead ends, each with its app. */
+  .ow__step--key { box-shadow: inset 0 0 0 1px rgba(255, 140, 116, 0.28), 0 18px 40px -20px rgba(8, 9, 14, 0.7); }
+  .ow__forks { display: grid; gap: 8px; margin-top: 8px; }
+  .ow__forks p {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin: 0;
+    font-size: 14.5px; line-height: 1.4;
+    color: color-mix(in srgb, var(--ink) 66%, transparent);
+  }
+  .ow__forks img { flex: none; width: 22px; height: 22px; border-radius: 6px; margin-top: 1px; }
+  .ow__forks i {
+    display: block;
+    font-style: normal; font-size: 11.5px; font-weight: var(--font-weight-bold);
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: color-mix(in srgb, var(--ink) 45%, transparent);
+  }
+
+  /* Who's going, on the min card. */
+  .ow__people { display: grid; gap: 10px; justify-items: center; }
+  .ow__faces { list-style: none; margin: 0; padding: 0; display: flex; }
+  .ow__faces li {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: rgba(250, 247, 242, 0.12);
+    box-shadow: 0 0 0 2.5px rgba(30, 33, 44, 0.95);
+  }
+  .ow__faces li + li { margin-left: -10px; }
+  .ow__faces img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+  .ow__faces li.ow__you {
+    display: grid; place-items: center;
+    outline: 1.5px dashed rgba(251, 205, 159, 0.7);
+    outline-offset: -4px;
+    background: transparent;
+  }
+  .ow__you span {
+    font-size: 12px; font-weight: var(--font-weight-bold);
+    color: var(--night-amber);
+    opacity: 0.6;
+  }
+  .ow__people p {
+    margin: 0; max-width: 30ch;
+    font-size: 14.5px; line-height: 1.4;
+    color: color-mix(in srgb, var(--ink) 70%, transparent);
+  }
+  .ow__people p b { color: var(--ink); font-weight: var(--font-weight-bold); }
 
   /* The chain. A dashed thread runs behind the numbers, the hand-off
      from one app to the next. */
@@ -478,6 +526,8 @@
   .in .ow__ring       { animation: ow-ring 900ms ease-out calc(var(--ow-start) + 120ms) both; }
   .in .ow__done li    { animation: ow-check 420ms var(--ease-emergence) calc(var(--ow-start) + 380ms + var(--k) * 110ms) both; }
   .in .ow__done span  { animation: ow-tick 420ms ease calc(var(--ow-start) + 380ms + var(--k) * 110ms) both; }
+  .in .ow__faces .ow__you { animation: ow-you 500ms var(--ease-emergence) calc(var(--ow-start) + 200ms) both; }
+  .in .ow__you span   { animation: ow-you-label 500ms ease calc(var(--ow-start) + 200ms) both; }
   .in .ow__go         { animation: ow-go 600ms var(--ease-emergence) calc(var(--ow-start) + 950ms) both; }
   .ow__card.is-replay * { animation: none !important; }
   .ow__card.is-replay-go { --ow-start: 0ms; }
@@ -486,12 +536,20 @@
   @keyframes ow-ring  { 0% { opacity: 0.9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.8); } }
   @keyframes ow-check { from { opacity: 0.25; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
   @keyframes ow-tick  { from { background: rgba(250, 247, 242, 0.2); } to { background: var(--night-amber); } }
-  @keyframes ow-go    { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes ow-you {
+    0%   { background: transparent; outline-color: rgba(251, 205, 159, 0.7); transform: scale(1); }
+    50%  { transform: scale(1.15); }
+    100% { background: var(--night-amber); outline-color: transparent; transform: scale(1); }
+  }
+  @keyframes ow-you-label { to { color: #3A2A1E; opacity: 1; } }
+  @keyframes ow-go   { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
   @media (prefers-reduced-motion: reduce) {
     .ow__step { opacity: 1; transform: none; transition: none; }
     .ow__plans i { transition: none; }
-    .ow__tap, .ow__ring, .ow__done li, .ow__done span, .ow__go { animation: none !important; }
+    .ow__tap, .ow__ring, .ow__done li, .ow__done span, .ow__go, .ow__you, .ow__you span { animation: none !important; }
+    .ow__faces li.ow__you { background: var(--night-amber); outline-color: transparent; }
+    .ow__you span { color: #3A2A1E; opacity: 1; }
     .ow__done li, .ow__go { opacity: 1; }
     .ow__done span { background: var(--night-amber); }
   }
@@ -842,7 +900,8 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
           <h2 class="rise">doing something real shouldn't take six apps</h2>
           <p class="lede section-lede rise" data-delay="1">
             From “I'm bored” to actually going out takes six steps and three
-            or four apps. Most plans die somewhere along the way.
+            or four apps. And most plans die at the same one: there's no one
+            to go with.
           </p>
         </div>
 
@@ -867,17 +926,23 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
                 <span class="ow__plans" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
               </li>
 
-              <li class="ow__step resin is-death" style="--i:1" data-alive="3">
+              <!-- The step the whole section turns on: no one to go with.
+                   Two dead ends side by side — friends who are busy, and
+                   meet-new-people apps that book you in for next week.
+                   min's card answers exactly this, with new people who
+                   are already going. -->
+              <li class="ow__step ow__step--key resin is-death" style="--i:1" data-alive="3">
                 <span class="ow__num" aria-hidden="true">2</span>
                 <div class="ow__body">
-                  <b>Find people</b>
-                  <p class="ow__pain">“anyone free tonight?” Seen by 4. No replies.</p>
-                  <em class="ow__dies">most plans die here</em>
+                  <b>Find someone to go with</b>
+                  <div class="ow__forks">
+                    <p><img src="/assets/img/apps/whatsapp.png" alt="WhatsApp" width="22" height="22" loading="lazy">
+                      <span><i>your friends</i>“anyone free tonight?” Seen by 4. No replies.</span></p>
+                    <p><img src="/assets/img/apps/timeleft.png" alt="Timeleft" width="22" height="22" loading="lazy">
+                      <span><i>new people</i>Next dinner with strangers: Wednesday.</span></p>
+                  </div>
+                  <em class="ow__dies">most plans die here: no one to go with</em>
                 </div>
-                <span class="ow__apps">
-                  <img src="/assets/img/apps/whatsapp.png" alt="WhatsApp" width="32" height="32" loading="lazy">
-                  <img src="/assets/img/apps/timeleft.png" alt="Timeleft" width="32" height="32" loading="lazy">
-                </span>
                 <span class="ow__plans" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
               </li>
 
@@ -939,14 +1004,27 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 
           <!-- ┌─ min ─────────────────────────────────────────────┐ -->
           <div class="ow__new">
-            <p class="ow__tag ow__tag--min">with min</p>
+            <p class="ow__tag ow__tag--min">with min: the plan <em>and</em> the people</p>
             <div class="ow__card resin" data-ow-card>
               <div class="ow__app">
                 <img src="/assets/img/apps/min.png" alt="" width="52" height="52" loading="lazy">
                 <div>
-                  <b>coffee &amp; pulla</b>
-                  <i>Kallio · starts 16:20 · €4.50</i>
+                  <b>board games</b>
+                  <i>Kallio · starts 16:30 · €3</i>
                 </div>
+              </div>
+
+              <!-- Who's going: new people min picked because they fit
+                   you. The dashed spot is yours; the tap fills it. -->
+              <div class="ow__people">
+                <ul class="ow__faces" aria-hidden="true">
+                  <li><img src="/assets/img/offers/avatar-dalia.png" alt="" width="132" height="125" loading="lazy"></li>
+                  <li><img src="/assets/img/offers/avatar-tim.png" alt="" width="132" height="125" loading="lazy"></li>
+                  <li><img src="/assets/img/offers/avatar-jane.png" alt="" width="132" height="125" loading="lazy"></li>
+                  <li class="ow__you"><span>you</span></li>
+                </ul>
+                <p><b>Dalia, Tim and Jane</b> are going. You haven't met yet,
+                  but you're into the same things.</p>
               </div>
 
               <button class="ow__tap" type="button" data-ow-tap aria-label="Tap to join (plays the demo again)">
@@ -956,9 +1034,9 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 
               <ul class="ow__done">
                 <li style="--k:0"><span aria-hidden="true">✓</span> something to do</li>
-                <li style="--k:1"><span aria-hidden="true">✓</span> people said yes</li>
+                <li style="--k:1"><span aria-hidden="true">✓</span> new people who fit you</li>
                 <li style="--k:2"><span aria-hidden="true">✓</span> time and place</li>
-                <li style="--k:3"><span aria-hidden="true">✓</span> coffee prepaid</li>
+                <li style="--k:3"><span aria-hidden="true">✓</span> already paid</li>
               </ul>
 
               <p class="ow__go">just walk over</p>
