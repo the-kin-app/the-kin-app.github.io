@@ -311,35 +311,6 @@
     color: color-mix(in srgb, var(--ink) 45%, transparent);
   }
 
-  /* Who's going, on the min card. */
-  .ow__people { display: grid; gap: 10px; justify-items: center; }
-  .ow__faces { list-style: none; margin: 0; padding: 0; display: flex; }
-  .ow__faces li {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    overflow: hidden;
-    background: rgba(250, 247, 242, 0.12);
-    box-shadow: 0 0 0 2.5px rgba(30, 33, 44, 0.95);
-  }
-  .ow__faces li + li { margin-left: -10px; }
-  .ow__faces img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
-  .ow__faces li.ow__you {
-    display: grid; place-items: center;
-    outline: 1.5px dashed rgba(251, 205, 159, 0.7);
-    outline-offset: -4px;
-    background: transparent;
-  }
-  .ow__you span {
-    font-size: 12px; font-weight: var(--font-weight-bold);
-    color: var(--night-amber);
-    opacity: 0.6;
-  }
-  .ow__people p {
-    margin: 0; max-width: 30ch;
-    font-size: 14.5px; line-height: 1.4;
-    color: color-mix(in srgb, var(--ink) 70%, transparent);
-  }
-  .ow__people p b { color: var(--ink); font-weight: var(--font-weight-bold); }
 
   /* The chain. A dashed thread runs behind the numbers, the hand-off
      from one app to the next. */
@@ -452,111 +423,38 @@
   .ow__total b { font-weight: var(--font-weight-bold); color: color-mix(in srgb, var(--ink) 86%, transparent); }
   .ow__total--new b { color: var(--night-amber); }
 
-  /* ── the min card ───────────────────────────────────────── */
-  .ow__new { position: sticky; top: 18vh; }
-  .ow__card {
-    padding: 22px 22px 24px;
-    border-radius: var(--radius-2xl);
-    display: grid;
-    gap: 18px;
-    justify-items: center;
+  /* ── the min side: the hero's offer card ───────────────── */
+  .ow__new { position: sticky; top: 14vh; display: grid; justify-items: center; }
+  .ow__new .ow__tag { justify-self: stretch; text-align: center; }
+  .ow__offer {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+    transition:
+      opacity var(--duration-emergence) ease,
+      transform 700ms var(--ease-emergence);
+    transition-delay: 1700ms;   /* after the six steps have arrived */
+  }
+  .in .ow__offer { opacity: 1; transform: none; }
+  .ow__cap {
+    margin: var(--space-5) 0 0;
+    max-width: 32ch;
     text-align: center;
+    font-size: 15px;
+    line-height: 1.45;
+    color: color-mix(in srgb, var(--ink) 72%, transparent);
   }
-  .ow__app { display: flex; align-items: center; gap: 12px; justify-self: stretch; text-align: left; }
-  .ow__app img { width: 52px; height: 52px; border-radius: 13px; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35); }
-  .ow__app b { display: block; font-size: var(--text-base); font-weight: var(--font-weight-bold); }
-  .ow__app i { display: block; font-style: normal; font-size: 13.5px; color: color-mix(in srgb, var(--ink) 62%, transparent); }
-
-  /* The one tap. A warm pebble; on play it presses in, and a ring
-     ripples out of it. */
-  .ow__tap {
-    position: relative;
-    width: 92px; height: 92px;
-    border: 0;
-    border-radius: 50%;
-    cursor: pointer;
-    font: inherit;
-    font-size: 17px;
-    font-weight: var(--font-weight-bold);
-    color: #3A2A1E;
-    background: radial-gradient(circle at 38% 30%, #FFE7CC, #FBCD9F 55%, #E9A970);
-    box-shadow:
-      inset 0 2px 0 rgba(255, 255, 255, 0.55),
-      inset 0 -6px 14px rgba(150, 82, 30, 0.28),
-      0 14px 30px -10px rgba(251, 180, 120, 0.55);
-  }
-  .ow__tap:focus-visible { outline: 2px solid var(--night-amber); outline-offset: 4px; }
-  .ow__ring {
-    position: absolute; inset: 0;
-    border-radius: 50%;
-    border: 2px solid var(--night-amber);
-    opacity: 0;
-  }
-
-  .ow__done { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; justify-self: stretch; text-align: left; }
-  .ow__done li {
-    display: flex; align-items: center; gap: 10px;
-    padding: 9px 12px;
-    border-radius: var(--radius-md);
-    font-size: 14.5px;
-    background: rgba(250, 247, 242, 0.06);
-    opacity: 0.25;
-  }
-  .ow__done span {
-    display: grid; place-items: center;
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    font-size: 12px;
-    font-weight: var(--font-weight-bold);
-    color: #3A2A1E;
-    background: rgba(250, 247, 242, 0.2);
-  }
-  .ow__go {
-    margin: 0;
-    font-size: var(--text-lg);
-    font-weight: var(--font-weight-bold);
-    color: var(--night-amber);
-    opacity: 0;
-  }
-
-  /* The play. Starts once the chain has finished arriving (~1.9s) so
-     the reader sees the long way first. .is-replay restarts it. */
-  .ow { --ow-start: 1900ms; }
-  .in .ow__tap        { animation: ow-press 520ms var(--ease-emergence) var(--ow-start) both; }
-  .in .ow__ring       { animation: ow-ring 900ms ease-out calc(var(--ow-start) + 120ms) both; }
-  .in .ow__done li    { animation: ow-check 420ms var(--ease-emergence) calc(var(--ow-start) + 380ms + var(--k) * 110ms) both; }
-  .in .ow__done span  { animation: ow-tick 420ms ease calc(var(--ow-start) + 380ms + var(--k) * 110ms) both; }
-  .in .ow__faces .ow__you { animation: ow-you 500ms var(--ease-emergence) calc(var(--ow-start) + 200ms) both; }
-  .in .ow__you span   { animation: ow-you-label 500ms ease calc(var(--ow-start) + 200ms) both; }
-  .in .ow__go         { animation: ow-go 600ms var(--ease-emergence) calc(var(--ow-start) + 950ms) both; }
-  .ow__card.is-replay * { animation: none !important; }
-  .ow__card.is-replay-go { --ow-start: 0ms; }
-
-  @keyframes ow-press { 0%, 100% { transform: scale(1); } 35% { transform: scale(0.9); } }
-  @keyframes ow-ring  { 0% { opacity: 0.9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.8); } }
-  @keyframes ow-check { from { opacity: 0.25; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
-  @keyframes ow-tick  { from { background: rgba(250, 247, 242, 0.2); } to { background: var(--night-amber); } }
-  @keyframes ow-you {
-    0%   { background: transparent; outline-color: rgba(251, 205, 159, 0.7); transform: scale(1); }
-    50%  { transform: scale(1.15); }
-    100% { background: var(--night-amber); outline-color: transparent; transform: scale(1); }
-  }
-  @keyframes ow-you-label { to { color: #3A2A1E; opacity: 1; } }
-  @keyframes ow-go   { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .ow__new .ow__total { text-align: center; margin-top: var(--space-2); }
 
   @media (prefers-reduced-motion: reduce) {
-    .ow__step { opacity: 1; transform: none; transition: none; }
+    .ow__step, .ow__offer { opacity: 1; transform: none; transition: none; }
     .ow__plans i { transition: none; }
-    .ow__tap, .ow__ring, .ow__done li, .ow__done span, .ow__go, .ow__you, .ow__you span { animation: none !important; }
-    .ow__faces li.ow__you { background: var(--night-amber); outline-color: transparent; }
-    .ow__you span { color: #3A2A1E; opacity: 1; }
-    .ow__done li, .ow__go { opacity: 1; }
-    .ow__done span { background: var(--night-amber); }
   }
+
 
   @media (max-width: 860px) {
     .ow__grid { grid-template-columns: minmax(0, 1fr); gap: 44px; }
     .ow__new { position: static; }
+    .ow__new .ow__tag { text-align: left; }
     .ow__head h2 { max-width: 16ch; }
   }
   @media (max-width: 480px) {
@@ -570,8 +468,8 @@
     /* The dots ride on the apps' row, at its right end. */
     .ow__plans { grid-area: apps; justify-self: end; }
     .ow__chain::before { left: 27px; }
-    .ow__done { grid-template-columns: 1fr; }
   }
+  @media (max-width: 385px) { .ow__offer { zoom: 0.88; } }
 </style>
 
 <script>
@@ -882,18 +780,17 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 
          The two columns are the argument. The old way is a tall list
          of steps, each with the real apps it takes and what goes wrong
-         there; min is one short card beside it. The height gap is the
-         point, so don't pad the min card to match.
+         there; min is one offer card beside it, the same card as the
+         hero's coverflow (activity-card.css), carrying everything the
+         six steps do: activity, new people going, time, prepaid items.
 
          The dots in each step are an illustration, not data: plans
-         still alive at that step. Most go dark at "find people",
-         because that's where the plan says most die.
+         still alive at that step. Most go dark at "find someone to go
+         with", because that's where the plan says most die.
 
-         Motion: .in (landing.js reveals) staggers the steps in by --i,
-         then the min card plays its tap. old-way.js only replays the
-         tap when someone presses the button; with JS off the card
-         still plays once on reveal, and with reduced motion everything
-         renders finished. -->
+         Motion: CSS only. .in (landing.js reveals) staggers the steps in
+         by --i, then the offer card rises once they've all arrived. With
+         reduced motion everything renders in place. -->
     <section class="ow" id="how" data-reveal>
       <div class="shell">
         <div class="ow__head">
@@ -1005,42 +902,25 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
           <!-- ┌─ min ─────────────────────────────────────────────┐ -->
           <div class="ow__new">
             <p class="ow__tag ow__tag--min">with min: the plan <em>and</em> the people</p>
-            <div class="ow__card resin" data-ow-card>
-              <div class="ow__app">
-                <img src="/assets/img/apps/min.png" alt="" width="52" height="52" loading="lazy">
-                <div>
-                  <b>board games</b>
-                  <i>Kallio · starts 16:30 · €3</i>
+            <!-- The offer card from the hero (activity-card.css), as one
+                 static card: the activity, new people already going, and
+                 the prepaid items, all on one screen. -->
+            <div class="acard ow__offer" role="group" aria-label="A min offer: board game night">
+              <div class="acard__head"><p class="acard__kind">group activity</p><p class="acard__time">18:00</p><p class="acard__status">live now</p></div>
+              <div class="acard__photo">
+                <img src="/assets/img/offers/photo-boardgames.jpg" alt="Friends laughing around a board game in a warm game café" width="720" height="576" decoding="async" loading="lazy">
+                <div class="acard__words">
+                  <p class="acard__title">Board game night</p>
+                  <p class="acard__venue">@ Noppakolo Game Café</p><p class="acard__length">~2 hours</p>
+                  <p class="acard__blurb">Pull up a chair, learn a new game and play a few rounds with fellow game nerds.</p>
                 </div>
               </div>
-
-              <!-- Who's going: new people min picked because they fit
-                   you. The dashed spot is yours; the tap fills it. -->
-              <div class="ow__people">
-                <ul class="ow__faces" aria-hidden="true">
-                  <li><img src="/assets/img/offers/avatar-dalia.png" alt="" width="132" height="125" loading="lazy"></li>
-                  <li><img src="/assets/img/offers/avatar-tim.png" alt="" width="132" height="125" loading="lazy"></li>
-                  <li><img src="/assets/img/offers/avatar-jane.png" alt="" width="132" height="125" loading="lazy"></li>
-                  <li class="ow__you"><span>you</span></li>
-                </ul>
-                <p><b>Dalia, Tim and Jane</b> are going. You haven't met yet,
-                  but you're into the same things.</p>
+              <div class="acard__panels">
+                <div class="acard__panel acard__who"><ul class="acard__people"><li class="acard__person"><span class="acard__pebble"><img src="/assets/img/offers/avatar-dalia.png" alt="" width="132" height="125"></span><span><span class="acard__name">Dalia</span><span class="acard__tags" aria-hidden="true"><img src="/assets/img/offers/tag-triangle.svg" alt="" width="8.66" height="7.5"><i></i><img src="/assets/img/offers/tag-circle.svg" alt="" width="9" height="9"></span></span></li></ul><div class="acard__spots" aria-hidden="true"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"></div><p class="acard__filled">1 of 4 spots filled</p></div>
+                <div class="acard__panel"><ul class="acard__items"><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🎲</span><span><span>Table fee</span><br><span class="acard__price">€4.00</span></span></li><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🍺</span><span><span>Table + a drink</span><br><span class="acard__price"><s>€9.00</s> <b>€7.50</b></span></span></li></ul></div>
               </div>
-
-              <button class="ow__tap" type="button" data-ow-tap aria-label="Tap to join (plays the demo again)">
-                <span class="ow__ring" aria-hidden="true"></span>
-                <span class="ow__tap-label">tap</span>
-              </button>
-
-              <ul class="ow__done">
-                <li style="--k:0"><span aria-hidden="true">✓</span> something to do</li>
-                <li style="--k:1"><span aria-hidden="true">✓</span> new people who fit you</li>
-                <li style="--k:2"><span aria-hidden="true">✓</span> time and place</li>
-                <li style="--k:3"><span aria-hidden="true">✓</span> already paid</li>
-              </ul>
-
-              <p class="ow__go">just walk over</p>
             </div>
+            <p class="ow__cap">One tap to join. The activity, the people and the payment are sorted.</p>
             <p class="ow__total ow__total--new"><b>1 tap</b> · <b>1 app</b> · <b>~15 minutes</b></p>
           </div>
 
@@ -1227,7 +1107,6 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 <script type="module" src="/assets/js/landing.js?v=20260915a"></script>
 <script type="module">
   import { waitlistForms } from '/assets/js/waitlist-form.js?v=20260922a';
-  import { oldWay } from '/assets/js/old-way.js?v=20261104a';
   import { offerFlow } from '/assets/js/offer-flow.js?v=20261103a';
   // The scan -> arrival ping rides in on that first import: waitlist-form.js
   // pulls in scan-attribution.js, which reports back to the Worker that this
@@ -1236,7 +1115,6 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
   // report zero arrivals when someone forgot, which reads as a page nobody
   // reaches rather than as a missing line.
   waitlistForms();   // hero + closer, the same module /waitlist posts through
-  oldWay();          // the min card's tap replays on press
   offerFlow();       // the hero's coverflow of offer cards
 </script>
 </body>
