@@ -1,0 +1,40 @@
+<!-- min waving: the eyes alone, exported from Figma min-app 2762:2480
+     ("Min · eyes only · aligned SVG") on the same 400×360 canvas as
+     min-wave-body.png, so the two stack 1:1. The frame's dark preview
+     fill is removed. This file is the design handoff; the site draws the
+     eyes inline in min-wave.js (with a gradient glow, not these filters)
+     so it can blink and move them. -->
+<svg width="400" height="360" viewBox="0 0 400 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="eye-left" filter="url(#glowL)">
+<ellipse cx="162" cy="151" rx="24" ry="25" fill="white"/>
+</g>
+<g id="eye-right" filter="url(#glowR)">
+<ellipse cx="247" cy="155" rx="24" ry="25" fill="white"/>
+</g>
+<defs>
+<filter id="glowL" x="105" y="93" width="114" height="116" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feMorphology radius="2" operator="dilate" in="SourceAlpha" result="d1"/>
+<feGaussianBlur in="d1" stdDeviation="7"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.95 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="s1"/>
+<feMorphology radius="3" operator="dilate" in="SourceAlpha" result="d2"/>
+<feGaussianBlur in="d2" stdDeviation="15"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.55 0"/>
+<feBlend mode="normal" in2="s1" result="s2"/>
+<feBlend mode="normal" in="SourceGraphic" in2="s2"/>
+</filter>
+<filter id="glowR" x="190" y="97" width="114" height="116" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feMorphology radius="2" operator="dilate" in="SourceAlpha" result="d1"/>
+<feGaussianBlur in="d1" stdDeviation="7"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.95 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="s1"/>
+<feMorphology radius="3" operator="dilate" in="SourceAlpha" result="d2"/>
+<feGaussianBlur in="d2" stdDeviation="15"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.55 0"/>
+<feBlend mode="normal" in2="s1" result="s2"/>
+<feBlend mode="normal" in="SourceGraphic" in2="s2"/>
+</filter>
+</defs>
+</svg>
