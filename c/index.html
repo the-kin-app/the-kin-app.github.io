@@ -139,11 +139,20 @@
      shades (z -1), so those still do their job on top. */
   .hero--app.hero--cry { background: #e3dbd0; }
   .nook { position: absolute; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
+  /* The blur runs top-down: the room is only lightly softened, and a
+     second, heavier-blurred copy on top is masked from full at the top
+     to nothing by the floor — haze up high, the furniture nearly in
+     focus where the cards stand. */
   .nook__room {
     position: absolute;
     inset: -40px;   /* bleed past the edges so the blur has no pale rim */
     background: #f0ebe2 url('/assets/img/nook-room.jpg') center 62% / cover no-repeat;
-    filter: blur(12px) saturate(1.05);
+    filter: blur(2.5px) saturate(1.05);
+  }
+  .nook__room--haze {
+    filter: blur(9px) saturate(1.05);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 18%, rgba(0,0,0,.45) 48%, transparent 72%);
+            mask-image: linear-gradient(to bottom, #000 0%, #000 18%, rgba(0,0,0,.45) 48%, transparent 72%);
   }
   .nook::after {
     content: '';
@@ -166,7 +175,63 @@
   @media (max-width: 800px) {
     /* Portrait crops the wide render to its middle third: lean right so
        the armchair and the window's glow stay in frame. */
-    .nook__room { background-position: 74% 62%; filter: blur(9px) saturate(1.05); }
+    .nook__room { background-position: 74% 62%; filter: blur(2px) saturate(1.05); }
+    .nook__room--haze { filter: blur(7px) saturate(1.05); }
+  }
+
+  /* ── min, standing in front of the cards ───────────────────────
+     A layer of the coverflow, after the track, so it draws over all
+     three cards. Sized and placed from --flow-scale, the same number
+     that shrinks the cards, so he stays planted on the front card's
+     bottom-right corner at every breakpoint. The 3D is three things:
+     a contact shadow where he meets the card edge, a cast shadow
+     thrown down-left onto the cards (the light is the nook's window,
+     top right), and his own shading — lit top-right, falling off to
+     the bottom-left — masked to his silhouette. */
+  .wmin {
+    --wmin-w: calc(168px * var(--flow-scale));
+    position: absolute;
+    z-index: 5;
+    width: var(--wmin-w);
+    aspect-ratio: 136 / 142;
+    /* x: centred just inside the front card's right edge (177px from
+       the track's centre). y: the front card's bottom edge sits ~518px
+       down the track; his feet land a little below it, so he reads as
+       standing in front of the stack rather than stuck to it. */
+    left: calc(50% + 177px * var(--flow-scale) - var(--wmin-w) * 0.38);
+    top: calc(518px * var(--flow-scale) - var(--wmin-w) * 0.9);
+    pointer-events: none;
+  }
+  .wmin img {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: auto;
+    filter:
+      drop-shadow(-4px 8px 6px rgba(50, 38, 30, 0.34))
+      drop-shadow(-22px 30px 28px rgba(50, 38, 30, 0.30));
+  }
+  .wmin::before {          /* contact shadow under his feet */
+    content: '';
+    position: absolute;
+    left: 6%; right: 2%;
+    bottom: -9%;
+    height: 20%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(46, 35, 28, 0.55), rgba(46, 35, 28, 0.2) 55%, transparent);
+    filter: blur(4px);
+  }
+  .wmin__shade {           /* his own light and shade */
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 72% 18%, rgba(255, 251, 242, 0.45), transparent 42%),
+      radial-gradient(ellipse at 28% 100%, rgba(84, 62, 48, 0.38), transparent 62%);
+    -webkit-mask: url('/assets/img/min-character/Min%20waving.png') center / 100% 100% no-repeat;
+            mask: url('/assets/img/min-character/Min%20waving.png') center / 100% 100% no-repeat;
+  }
+  @media (max-width: 800px) {
+    .wmin { --wmin-w: calc(175px * var(--flow-scale)); left: calc(50% + 177px * var(--flow-scale) - var(--wmin-w) * 0.62); }
   }
 
   /* The first two lines are the problem, set soft; the third is the
@@ -239,7 +304,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 
   <!-- ── hero ─────────────────────────────────────────────── -->
   <section class="hero hero--app hero--cry" id="top" data-reveal>
-    <div class="nook" aria-hidden="true"><div class="nook__room"></div></div>
+    <div class="nook" aria-hidden="true"><div class="nook__room"></div><div class="nook__room nook__room--haze"></div></div>
     <div class="shell">
       <div class="hero__copy">
 
@@ -481,6 +546,10 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
               <div class="acard__panel"><ul class="acard__items"><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🎟</span><span><span>Student ticket</span><br><span class="acard__price">€10.00</span></span></li><li class="acard__item"><span class="acard__thumb" aria-hidden="true">☕</span><span><span>Ticket + coffee</span><br><span class="acard__price"><s>€14.00</s> <b>€12.00</b></span></span></li></ul></div>
             </div>
           </div>
+        </div>
+        <div class="wmin" aria-hidden="true">
+          <img src="/assets/img/min-character/Min%20waving.png" alt="" width="136" height="142" decoding="async">
+          <span class="wmin__shade"></span>
         </div>
       </div>
 
