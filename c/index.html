@@ -127,6 +127,48 @@
      phone, a coverflow of min's offer cards. On phones it all stacks:
      logo, headline, one line, the cards, the form. -->
 <style>
+  /* ── the nook ───────────────────────────────────────────────
+     /c/ swaps the sunlit room for the nook render, treated the way
+     the app's chat screen treats its world (Figma min-app 2180:924):
+     the room is never shown sharp — it's blurred into light and
+     shade, and a vertical scrim (clear at the top and bottom, deeper
+     in the middle) plus a haze falling from the top blend it into the
+     base colour. The app's scrim runs at 0.55 because its text is
+     white; the hero's ink is dark, so the same stops run at about a
+     third of that. Two layers under the section's own ::before/::after
+     shades (z -1), so those still do their job on top. */
+  .hero--app.hero--cry { background: #e3dbd0; }
+  .nook { position: absolute; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
+  .nook__room {
+    position: absolute;
+    inset: -40px;   /* bleed past the edges so the blur has no pale rim */
+    background: #f0ebe2 url('/assets/img/nook-room.jpg') center 62% / cover no-repeat;
+    filter: blur(12px) saturate(1.05);
+  }
+  .nook::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      /* haze off the top  [palette/haze/base · fade/list/*] */
+      linear-gradient(to bottom,
+        rgba(154, 147, 138, 0.30) 0%,
+        rgba(154, 147, 138, 0.22) 14%,
+        rgba(154, 147, 138, 0) 32%),
+      /* warm scrim  [color/scrim/warm*], bottom to top */
+      linear-gradient(to top,
+        rgba(240, 235, 226, 0.55) 0%,
+        rgba(92, 90, 87, 0.12) 20%,
+        rgba(59, 55, 40, 0.16) 62%,
+        rgba(81, 76, 63, 0.10) 75%,
+        rgba(194, 190, 183, 0) 100%);
+  }
+  @media (max-width: 800px) {
+    /* Portrait crops the wide render to its middle third: lean right so
+       the armchair and the window's glow stay in frame. */
+    .nook__room { background-position: 74% 62%; filter: blur(9px) saturate(1.05); }
+  }
+
   /* The first two lines are the problem, set soft; the third is the
      push, set loud. */
   .hero--cry h1 { margin-bottom: 0; }
@@ -197,6 +239,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 
   <!-- ── hero ─────────────────────────────────────────────── -->
   <section class="hero hero--app hero--cry" id="top" data-reveal>
+    <div class="nook" aria-hidden="true"><div class="nook__room"></div></div>
     <div class="shell">
       <div class="hero__copy">
 
