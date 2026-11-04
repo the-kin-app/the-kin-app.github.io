@@ -3,8 +3,8 @@
    ------------------------------------------------------------
    A few of min's live offers, one in front and its neighbours
    turned away on either side, like a row of record sleeves. The
-   cards are the app's own (.offer, offer-card.css); this file only
-   places them. offer-flow.js sets each card's place in the row:
+   cards are the app's own (.acard, activity-card.css); this file
+   only places them. offer-flow.js sets each card's place in the row:
 
        --o   its offset from the front card: … -2 -1 0 1 2 …
        --d   how far that is, 0 / 1 / 2 (capped)
@@ -13,7 +13,7 @@
    and the row's size: --card-h, the tallest card in px, so the
    box takes the room the cards need. --flow-scale shrinks the
    whole row to fit; the card itself is always drawn at its real
-   340px, so it looks exactly like the survey's.
+   354px, so it matches the Figma card.
 
    Two away (--d: 2) a card is faded out. That's also where a card
    wraps from one end of the row to the other, so the jump across
@@ -37,9 +37,9 @@
   position: absolute;
   left: 50%;
   top: 0;
-  width: 340px;
+  width: 354px;
   height: var(--card-h);
-  margin-left: -170px;
+  margin-left: -177px;
   transform: scale(var(--flow-scale));
   transform-origin: top center;
   perspective: 1300px;
@@ -58,7 +58,7 @@
   top: 50%;
   translate: 0 -50%;
   margin: 0;
-  width: 340px;
+  width: 354px;
   transform:
     translateX(calc(var(--o) * 56%))
     translateZ(calc(var(--d) * -170px))

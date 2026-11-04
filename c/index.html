@@ -120,8 +120,8 @@
 <link rel="stylesheet" href="/assets/css/landing.css?v=20260928c">
 <link rel="stylesheet" href="/assets/css/home-hero.css?v=20260928a">
 <link rel="stylesheet" href="/assets/css/home-sections.css?v=20261009a">
-<link rel="stylesheet" href="/assets/css/offer-card.css?v=20261103a">
-<link rel="stylesheet" href="/assets/css/offer-flow.css?v=20261103a">
+<link rel="stylesheet" href="/assets/css/activity-card.css?v=20261104a">
+<link rel="stylesheet" href="/assets/css/offer-flow.css?v=20261104a">
 <!-- The styles this page adds. Desktop keeps the homepage's two
      columns: the words on the left, and where the homepage has its
      phone, a coverflow of min's offer cards. On phones it all stacks:
@@ -371,166 +371,73 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
       </div>
 
       <!-- min's live offers, as the app shows them: a coverflow of the
-           survey's offer card (offer-card.css), placed by offer-flow.css
-           and stepped by offer-flow.js. Example offers; the venues are
-           made up (as in the survey), so no real business is implied. -->
+           Figma offer card (activity-card.css; min-app › 11 Offer card,
+           node 2730:969), placed by offer-flow.css and stepped by
+           offer-flow.js. Example offers: the photos are generated and the
+           venues made up, so no real business or person is implied. -->
       <div class="oflow rise" data-delay="4" data-offer-flow tabindex="0"
            role="region" aria-roledescription="carousel" aria-label="Example offers from min">
         <div class="oflow__track">
-            <div class="offer oflow__card" role="group" aria-roledescription="slide" aria-label="1 of 5: Coffee + pulla">
-                <div class="offer__top">
-                  <img class="offer__app-icon" src="/assets/img/min-character/floating-min-favicon.png" alt="" width="22" height="22">
-                  <span class="offer__app">min</span>
-                  <span class="offer__live"><span class="offer__live-dot" aria-hidden="true"></span>live near you</span>
-                </div>
-                <div class="offer__hero">
-                  <span class="offer__pebble" aria-hidden="true">☕</span>
-                  <div>
-                    <p class="offer__title">Coffee + pulla</p>
-                    <p class="offer__venue">Kahvila Kanelitaivas, Kallio</p>
-                    <p class="offer__walk">starts in 15 min</p>
-                  </div>
-                </div>
-                <p class="offer__price"><span><b>€4.00</b> set <s>menu €5.00</s></span><span class="offer__fee">+ small service fee</span></p>
-                <div class="offer__group">
-                  <p class="offer__size">👥 3–5 people · 2 joined</p>
-                  <ul class="offer__who"><li class="offer__person"><span class="offer__avatar" aria-hidden="true">L</span><span class="offer__name">Leo</span><span class="offer__detail">an interest in common</span></li><li class="offer__person"><span class="offer__avatar" aria-hidden="true">S</span><span class="offer__name">Sara</span><span class="offer__detail">at the same stage of life</span></li><li class="offer__person offer__person--add"><span class="offer__avatar" aria-hidden="true">+</span><span class="offer__name">Bring a friend</span><span class="offer__detail">+1, after you join</span></li></ul>
-                </div>
-                <div class="offer__timer">
-                  <p class="offer__timer-main">⏱ 9:41 left to fill</p>
-                  <p class="offer__timer-sub">goes ahead at 3 · money back if not</p>
-                </div>
-                <div class="offer__accept" aria-hidden="true">
-                  <div class="slide">
-                    <span class="slide__fill"></span>
-                    <span class="slide__label">Slide to accept</span>
-                    <span class="slide__knob"><svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                  </div>
-                </div>
+          <div class="acard oflow__card" role="group" aria-roledescription="slide" aria-label="1 of 4: Coffee and chat">
+            <div class="acard__head"><p class="acard__kind">group activity</p><p class="acard__time">16:20</p><p class="acard__status">live now</p></div>
+            <div class="acard__photo">
+              <img src="/assets/img/offers/photo-coffee.jpg" alt="Friends chatting over coffee and cinnamon buns in a cosy café" width="720" height="576" decoding="async">
+              <div class="acard__words">
+                <p class="acard__title">Coffee and chat</p>
+                <p class="acard__venue">@ Kahvila Kanelitaivas</p><p class="acard__length">~30 mins</p>
+                <p class="acard__blurb">Warm coffee, fresh pulla and a quick casual chat with people you might vibe with ;)</p>
               </div>
-            <div class="offer oflow__card" role="group" aria-roledescription="slide" aria-label="2 of 5: Board game table">
-                <div class="offer__top">
-                  <img class="offer__app-icon" src="/assets/img/min-character/floating-min-favicon.png" alt="" width="22" height="22">
-                  <span class="offer__app">min</span>
-                  <span class="offer__live"><span class="offer__live-dot" aria-hidden="true"></span>live near you</span>
-                </div>
-                <div class="offer__hero">
-                  <span class="offer__pebble" aria-hidden="true">🎲</span>
-                  <div>
-                    <p class="offer__title">Board game table</p>
-                    <p class="offer__venue">Noppakolo Game Café, Sörnäinen</p>
-                    <p class="offer__walk">starts at 17:00</p>
-                  </div>
-                </div>
-                <p class="offer__price"><span><b>€6.00</b> a person</span><span class="offer__fee">+ small service fee</span></p>
-                <div class="offer__group">
-                  <p class="offer__size">👥 3–6 people · 1 joined</p>
-                  <ul class="offer__who"><li class="offer__person"><span class="offer__avatar" aria-hidden="true">L</span><span class="offer__name">Leo</span><span class="offer__detail">a similar background</span></li><li class="offer__person offer__person--add"><span class="offer__avatar" aria-hidden="true">+</span><span class="offer__name">Bring a friend</span><span class="offer__detail">+1, after you join</span></li></ul>
-                </div>
-                <div class="offer__timer">
-                  <p class="offer__timer-main">⏱ 14:20 left to fill</p>
-                  <p class="offer__timer-sub">goes ahead at 3 · money back if not</p>
-                </div>
-                <div class="offer__accept" aria-hidden="true">
-                  <div class="slide">
-                    <span class="slide__fill"></span>
-                    <span class="slide__label">Slide to accept</span>
-                    <span class="slide__knob"><svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                  </div>
-                </div>
+            </div>
+            <div class="acard__panels">
+              <div class="acard__panel acard__who"><ul class="acard__people"><li class="acard__person"><span class="acard__pebble"><img src="/assets/img/offers/avatar-jane.png" alt="" width="132" height="125"></span><span><span class="acard__name">Jane</span><span class="acard__tags" aria-hidden="true"><img src="/assets/img/offers/tag-triangle.svg" alt="" width="8.66" height="7.5"><i></i><img src="/assets/img/offers/tag-circle.svg" alt="" width="9" height="9"></span></span></li><li class="acard__person"><span class="acard__pebble"><img src="/assets/img/offers/avatar-tim.png" alt="" width="132" height="125"></span><span><span class="acard__name">Tim</span><span class="acard__tags" aria-hidden="true"><img src="/assets/img/offers/tag-triangle.svg" alt="" width="8.66" height="7.5"><i></i><img src="/assets/img/offers/tag-circle.svg" alt="" width="9" height="9"></span></span></li></ul><div class="acard__spots" aria-hidden="true"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"></div><p class="acard__filled">2 of 5 spots filled</p></div>
+              <div class="acard__panel"><ul class="acard__items"><li class="acard__item"><span class="acard__thumb" aria-hidden="true">☕</span><span><span>Coffee</span><br><span class="acard__price">€3.50</span></span></li><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🥐</span><span><span>Coffee &amp; pulla set</span><br><span class="acard__price"><s>€6.00</s> <b>€5.25</b></span></span></li></ul></div>
+            </div>
+          </div>
+          <div class="acard oflow__card" role="group" aria-roledescription="slide" aria-label="2 of 4: Board game night">
+            <div class="acard__head"><p class="acard__kind">group activity</p><p class="acard__time">18:00</p><p class="acard__status">live now</p></div>
+            <div class="acard__photo">
+              <img src="/assets/img/offers/photo-boardgames.jpg" alt="Friends laughing around a board game in a warm game café" width="720" height="576" decoding="async">
+              <div class="acard__words">
+                <p class="acard__title">Board game night</p>
+                <p class="acard__venue">@ Noppakolo Game Café</p><p class="acard__length">~2 hours</p>
+                <p class="acard__blurb">Pull up a chair, learn a new game and play a few rounds with fellow game nerds.</p>
               </div>
-            <div class="offer oflow__card" role="group" aria-roledescription="slide" aria-label="3 of 5: Art museum, student ticket">
-                <div class="offer__top">
-                  <img class="offer__app-icon" src="/assets/img/min-character/floating-min-favicon.png" alt="" width="22" height="22">
-                  <span class="offer__app">min</span>
-                  <span class="offer__live"><span class="offer__live-dot" aria-hidden="true"></span>live near you</span>
-                </div>
-                <div class="offer__hero">
-                  <span class="offer__pebble" aria-hidden="true">🖼</span>
-                  <div>
-                    <p class="offer__title">Art museum, student ticket</p>
-                    <p class="offer__venue">Valohalli Art Museum, Töölö</p>
-                    <p class="offer__walk">open now</p>
-                  </div>
-                </div>
-                <p class="offer__price"><span><b>€8.00</b></span><span class="offer__fee">+ small service fee</span></p>
-                <div class="offer__group">
-                  <p class="offer__size">👤 Just you</p>
-                </div>
-                <div class="offer__timer">
-                  <p class="offer__timer-main">Go now, no wait</p>
-                </div>
-                <div class="offer__accept" aria-hidden="true">
-                  <div class="slide">
-                    <span class="slide__fill"></span>
-                    <span class="slide__label">Slide to accept</span>
-                    <span class="slide__knob"><svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                  </div>
-                </div>
+            </div>
+            <div class="acard__panels">
+              <div class="acard__panel acard__who"><ul class="acard__people"><li class="acard__person"><span class="acard__pebble"><img src="/assets/img/offers/avatar-dalia.png" alt="" width="132" height="125"></span><span><span class="acard__name">Dalia</span><span class="acard__tags" aria-hidden="true"><img src="/assets/img/offers/tag-triangle.svg" alt="" width="8.66" height="7.5"><i></i><img src="/assets/img/offers/tag-circle.svg" alt="" width="9" height="9"></span></span></li></ul><div class="acard__spots" aria-hidden="true"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"></div><p class="acard__filled">1 of 4 spots filled</p></div>
+              <div class="acard__panel"><ul class="acard__items"><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🎲</span><span><span>Table fee</span><br><span class="acard__price">€4.00</span></span></li><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🍺</span><span><span>Table + a drink</span><br><span class="acard__price"><s>€9.00</s> <b>€7.50</b></span></span></li></ul></div>
+            </div>
+          </div>
+          <div class="acard oflow__card" role="group" aria-roledescription="slide" aria-label="3 of 4: Bouldering drop-in">
+            <div class="acard__head"><p class="acard__kind">group activity</p><p class="acard__time">17:30</p><p class="acard__status">live now</p></div>
+            <div class="acard__photo">
+              <img src="/assets/img/offers/photo-bouldering.jpg" alt="A climber on a bouldering wall while two friends cheer from the mat" width="720" height="576" decoding="async">
+              <div class="acard__words">
+                <p class="acard__title">Bouldering drop-in</p>
+                <p class="acard__venue">@ Otelauta Bouldering</p><p class="acard__length">~90 mins</p>
+                <p class="acard__blurb">First-timer friendly. Try a few problems, cheer each other on, juice after.</p>
               </div>
-            <div class="offer oflow__card" role="group" aria-roledescription="slide" aria-label="4 of 5: Live music tonight">
-                <div class="offer__top">
-                  <img class="offer__app-icon" src="/assets/img/min-character/floating-min-favicon.png" alt="" width="22" height="22">
-                  <span class="offer__app">min</span>
-                  <span class="offer__live"><span class="offer__live-dot" aria-hidden="true"></span>live near you</span>
-                </div>
-                <div class="offer__hero">
-                  <span class="offer__pebble" aria-hidden="true">🎵</span>
-                  <div>
-                    <p class="offer__title">Live music tonight</p>
-                    <p class="offer__venue">Bar Vinyylikettu, Punavuori</p>
-                    <p class="offer__walk">starts at 20:00</p>
-                  </div>
-                </div>
-                <p class="offer__price"><span><b>€5.00</b> entry</span><span class="offer__fee">+ small service fee</span></p>
-                <div class="offer__group">
-                  <p class="offer__size">👥 2–8 people · 1 joined</p>
-                  <ul class="offer__who"><li class="offer__person"><span class="offer__avatar" aria-hidden="true">M</span><span class="offer__name">Mia</span><span class="offer__detail">your friend</span></li><li class="offer__person offer__person--add"><span class="offer__avatar" aria-hidden="true">+</span><span class="offer__name">Invite friends</span><span class="offer__detail">after you join</span></li></ul>
-                </div>
-                <div class="offer__timer">
-                  <p class="offer__lock">🔒 Friends only</p>
-                  <p class="offer__timer-main">⏱ 22:05 left to fill</p>
-                  <p class="offer__timer-sub">goes ahead at 2 · money back if not</p>
-                </div>
-                <div class="offer__accept" aria-hidden="true">
-                  <div class="slide">
-                    <span class="slide__fill"></span>
-                    <span class="slide__label">Slide to accept</span>
-                    <span class="slide__knob"><svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                  </div>
-                </div>
+            </div>
+            <div class="acard__panels">
+              <div class="acard__panel acard__who"><ul class="acard__people"><li class="acard__person"><span class="acard__pebble"><img src="/assets/img/offers/avatar-tim.png" alt="" width="132" height="125"></span><span><span class="acard__name">Tim</span><span class="acard__tags" aria-hidden="true"><img src="/assets/img/offers/tag-triangle.svg" alt="" width="8.66" height="7.5"><i></i><img src="/assets/img/offers/tag-circle.svg" alt="" width="9" height="9"></span></span></li><li class="acard__person"><span class="acard__pebble"><img src="/assets/img/offers/avatar-dalia.png" alt="" width="132" height="125"></span><span><span class="acard__name">Dalia</span><span class="acard__tags" aria-hidden="true"><img src="/assets/img/offers/tag-triangle.svg" alt="" width="8.66" height="7.5"><i></i><img src="/assets/img/offers/tag-circle.svg" alt="" width="9" height="9"></span></span></li></ul><div class="acard__spots" aria-hidden="true"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"></div><p class="acard__filled">2 of 3 spots filled</p></div>
+              <div class="acard__panel"><ul class="acard__items"><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🧗</span><span><span>Student day pass</span><br><span class="acard__price"><s>€14.00</s> <b>€11.00</b></span></span></li><li class="acard__item"><span class="acard__thumb" aria-hidden="true">👟</span><span><span>Shoe rental</span><br><span class="acard__price">€4.00</span></span></li></ul></div>
+            </div>
+          </div>
+          <div class="acard oflow__card" role="group" aria-roledescription="slide" aria-label="4 of 4: A quiet museum hour">
+            <div class="acard__head"><p class="acard__kind">solo activity</p><p class="acard__time">15:45</p><p class="acard__status">open now</p></div>
+            <div class="acard__photo">
+              <img src="/assets/img/offers/photo-museum.jpg" alt="Someone looking at a large abstract painting in a quiet, light-filled gallery" width="720" height="576" decoding="async">
+              <div class="acard__words">
+                <p class="acard__title">A quiet museum hour</p>
+                <p class="acard__venue">@ Valohalli Art Museum</p><p class="acard__length">~1 hour</p>
+                <p class="acard__blurb">A slow wander through the new exhibition, at your own pace. No one to wait for.</p>
               </div>
-            <div class="offer oflow__card" role="group" aria-roledescription="slide" aria-label="5 of 5: Drop-in yoga, student price">
-                <div class="offer__top">
-                  <img class="offer__app-icon" src="/assets/img/min-character/floating-min-favicon.png" alt="" width="22" height="22">
-                  <span class="offer__app">min</span>
-                  <span class="offer__live"><span class="offer__live-dot" aria-hidden="true"></span>live near you</span>
-                </div>
-                <div class="offer__hero">
-                  <span class="offer__pebble" aria-hidden="true">🧘</span>
-                  <div>
-                    <p class="offer__title">Drop-in yoga, student price</p>
-                    <p class="offer__venue">Studio Sykevirta, Hakaniemi</p>
-                    <p class="offer__walk">starts at 18:30</p>
-                  </div>
-                </div>
-                <p class="offer__price"><span><b>€8.00</b> <s>normally €12.00</s></span><span class="offer__fee">+ small service fee</span></p>
-                <div class="offer__group">
-                  <p class="offer__size">👥 3–6 people · 2 joined</p>
-                  <ul class="offer__who"><li class="offer__person"><span class="offer__avatar" aria-hidden="true">S</span><span class="offer__name">Sara</span><span class="offer__detail">at the same stage of life</span></li><li class="offer__person"><span class="offer__avatar" aria-hidden="true">L</span><span class="offer__name">Leo</span><span class="offer__detail">a similar background</span></li><li class="offer__person offer__person--add"><span class="offer__avatar" aria-hidden="true">+</span><span class="offer__name">Bring a friend</span><span class="offer__detail">+1, after you join</span></li></ul>
-                </div>
-                <div class="offer__timer">
-                  <p class="offer__timer-main">⏱ 6:12 left to fill</p>
-                  <p class="offer__timer-sub">goes ahead at 3 · money back if not</p>
-                </div>
-                <div class="offer__accept" aria-hidden="true">
-                  <div class="slide">
-                    <span class="slide__fill"></span>
-                    <span class="slide__label">Slide to accept</span>
-                    <span class="slide__knob"><svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                  </div>
-                </div>
-              </div>
+            </div>
+            <div class="acard__panels">
+              <div class="acard__panel acard__who acard__who--solo"><div class="acard__solo"><b>Just you</b><span>no group to fill, so go whenever you like</span></div></div>
+              <div class="acard__panel"><ul class="acard__items"><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🎟</span><span><span>Student ticket</span><br><span class="acard__price">€10.00</span></span></li><li class="acard__item"><span class="acard__thumb" aria-hidden="true">☕</span><span><span>Ticket + coffee</span><br><span class="acard__price"><s>€14.00</s> <b>€12.00</b></span></span></li></ul></div>
+            </div>
+          </div>
         </div>
       </div>
 

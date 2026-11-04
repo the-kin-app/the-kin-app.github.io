@@ -15,6 +15,9 @@
    Accessibility: only the front card is exposed; the others are
    aria-hidden. The region is labelled, the dots are real buttons,
    and the arrow keys work once it has focus.
+
+   It needs four cards or more: with three there is no hidden slot,
+   so a wrapping card would be seen crossing the row.
    ============================================================ */
 
 const HOLD = 3200;        // how long a front card stays, auto
@@ -48,21 +51,50 @@ export function offerFlow(root = document) {
   });
   flow.append(dots);
 
-  /* ---- placing ---- */
-  const place = () => {
+  /* ---- placing ----
+     Each card's slot is its offset from the front card, -2…2; at ±2
+     it is hidden. A card that wraps round the row (left edge to right
+     edge, or back) must never be seen crossing it, so it first jumps,
+     without a transition and while hidden, to the ±2 slot on the side
+     it is arriving from, and slides in from there.
+
+     With an even number of cards one card sits exactly opposite the
+     front one. It goes to the side it just left by (-2 when stepping
+     forward), so it fades out the way it was already moving. */
+  const slot = new Map();
+  const set = (card, o) => {
+    const d = Math.min(Math.abs(o), 2);
+    card.style.setProperty('--o', String(o));
+    card.style.setProperty('--d', String(d));
+    card.style.setProperty('--t', String(Math.sign(o)));
+    card.dataset.pos = o === 0 ? 'center' : d === 1 ? 'side' : 'off';
+    card.setAttribute('aria-hidden', o === 0 ? 'false' : 'true');
+  };
+  const place = (dir = 0) => {
     cards.forEach((card, k) => {
       let o = (((k - i) % n) + n) % n;
-      if (o > n / 2) o -= n;                       // shortest way round
-      const d = Math.min(Math.abs(o), 2);
-      card.style.setProperty('--o', String(Math.max(-2, Math.min(2, o))));
-      card.style.setProperty('--d', String(d));
-      card.style.setProperty('--t', String(Math.sign(o)));
-      card.dataset.pos = o === 0 ? 'center' : d === 1 ? 'side' : 'off';
-      card.setAttribute('aria-hidden', o === 0 ? 'false' : 'true');
+      if (o > n / 2 || (o === n / 2 && dir > 0)) o -= n;   // shortest way round
+      o = Math.max(-2, Math.min(2, o));
+      const was = slot.get(card);
+      if (was !== undefined && Math.abs(o - was) > 2) {
+        card.style.transition = 'none';
+        set(card, Math.sign(o) * 2);
+        void card.offsetWidth;            // commit the jump before sliding in
+        card.style.transition = '';
+      }
+      set(card, o);
+      slot.set(card, o);
     });
     dotBtns.forEach((b, k) => b.setAttribute('aria-current', k === i ? 'true' : 'false'));
   };
-  const go = (k) => { i = ((k % n) + n) % n; place(); };
+  const go = (k) => {
+    const next = ((k % n) + n) % n;
+    let step = next - i;
+    if (step > n / 2) step -= n;
+    if (step < -n / 2) step += n;
+    i = next;
+    place(Math.sign(step));
+  };
 
   /* ---- sizing: the row is as tall as its tallest card ---- */
   const measure = () => {
