@@ -365,6 +365,8 @@
   /* Only the words rise in; min is outside that fade so he can be seen
      from the moment he leaves the corner. */
   .effort__helpwords { display: inline-block; }
+  /* "effortless" answers the first heading's amber "effort". */
+  .effort__less { font-style: normal; color: var(--night-amber); }
   .effort__float {
     position: absolute;
     left: 100%; top: 50%;
@@ -752,7 +754,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
               "effort" underlined by hand.
            2. The questions you have to answer first, strung on one
               loose line that wanders between them.
-           3. "min is here to help", the offer card, and what's left:
+           3. "min makes it effortless", the offer card, and what's left:
               get up and go.
 
          Motion, Apple-style: quiet and tied to the reader. The line
@@ -832,7 +834,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
         <div class="effort__min" data-reveal>
           <!-- min floats in from the top-left as you scroll and settles
                at the end of his line (effort-path.js → floatMin). -->
-          <h2 class="effort__help"><span class="effort__helptext"><span class="effort__helpwords rise">min is here to help</span><span class="effort__float" aria-hidden="true" data-float-min><img src="/assets/img/min-character/floating%20Min.png" alt="" width="206" height="206" loading="lazy"></span></span></h2>
+          <h2 class="effort__help"><span class="effort__helptext"><span class="effort__helpwords rise">min makes it <em class="effort__less">effortless</em></span><span class="effort__float" aria-hidden="true" data-float-min><img src="/assets/img/min-character/floating%20Min.png" alt="" width="206" height="206" loading="lazy"></span></span></h2>
           <!-- The offer card from the hero (activity-card.css). -->
           <div class="acard" role="group" aria-label="A min offer: board game night">
             <div class="acard__head"><p class="acard__kind">group activity</p><p class="acard__time">18:00</p><p class="acard__status">live now</p></div>
@@ -1019,7 +1021,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
   waitlistForms();   // hero + closer, the same module /waitlist posts through
   offerFlow();       // the hero's coverflow of offer cards
   effortPath();      // the questions' line draws as you scroll
-  floatMin();        // min floats in to 'min is here to help'
+  floatMin();        // min floats in to 'min makes it effortless'
   minWave();         // min in front of the cards: live eyes, reflection
 </script>
 </body>

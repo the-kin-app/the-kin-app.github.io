@@ -8,7 +8,7 @@
    --p (opacity, lift and blur live in CSS).
 
    With reduced motion, or no JS, everything stays drawn. */
-/* min floating in to "min is here to help". Scroll drives it: while the
+/* min floating in to "min makes it effortless". Scroll drives it: while the
    heading rises from the bottom of the screen to 40% down, he drifts
    in from a little up and to the left of his perch at the end of the
    line, along a gentle arc, turning upright and coming to full size.
