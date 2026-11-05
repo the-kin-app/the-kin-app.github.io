@@ -10,7 +10,7 @@
    With reduced motion, or no JS, everything stays drawn. */
 /* min floating in to "min is here to help". Scroll drives it: while the
    heading rises from the bottom of the screen to 40% down, he drifts
-   from the top-left corner of the screen to his perch at the end of the
+   in from a little up and to the left of his perch at the end of the
    line, along a gentle arc, turning upright and coming to full size.
    Scroll back and he drifts back out. The perch itself is CSS; this only
    writes the offset from it, so he always lands exactly there. */
@@ -28,14 +28,13 @@ export function floatMin() {
     // from the heading just below the fold to 40% down the screen
     const p = clamp((vh * 1.1 - a.top) / (vh * 0.7));
     const e = ease(p);
-    // where he rests (his box, untransformed) and where he starts
+    // he starts a little up and to the left of his perch
     const rest = el.offsetWidth;
-    const fx = a.right, fy = a.top + a.height / 2;
-    const sx = vw * 0.06, sy = vh * 0.08;
+    const ox = -Math.min(240, vw * 0.2), oy = -Math.min(170, vh * 0.2);
     const k = 1 - e;
-    // a soft arc: x eases straight in, y sags a little on the way
-    const dx = (sx - fx) * k;
-    const dy = (sy - fy) * k + Math.sin(e * Math.PI) * rest * 0.35;
+    // a soft arc: x eases straight in, y dips a little on the way
+    const dx = ox * k;
+    const dy = oy * k + Math.sin(e * Math.PI) * rest * 0.2;
     el.style.transform =
       `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) rotate(${(-18 * k).toFixed(2)}deg) scale(${(0.7 + 0.3 * e).toFixed(3)})`;
     el.style.opacity = clamp(p * 5).toFixed(3);
