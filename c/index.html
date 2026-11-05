@@ -367,15 +367,32 @@
       filter 900ms ease 250ms;
   }
   .effort__min.in .acard { opacity: 1; transform: none; filter: none; }
-  .effort__offer {
-    max-width: 28ch;
-    margin: clamp(36px, 6vh, 56px) auto 0;
-    font-size: clamp(1.15rem, 2vw, 1.45rem);
-    line-height: 1.4;
-    color: color-mix(in srgb, var(--ink) 78%, transparent);
+  /* Three answers in a row under the card; stacked on phones. */
+  .effort__wins {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(20px, 4vw, 56px);
+    max-width: 960px;
+    margin: clamp(48px, 8vh, 80px) auto 0;
+    padding: 0;
+  }
+  .effort__wins b {
+    display: block;
+    font-size: clamp(1.1rem, 1.7vw, 1.3rem);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: -0.01em;
+  }
+  .effort__wins span {
+    display: block;
+    margin-top: 6px;
+    font-size: 15.5px;
+    line-height: 1.45;
+    color: color-mix(in srgb, var(--ink) 66%, transparent);
+    text-wrap: pretty;
   }
   .effort__go {
-    margin: 10px 0 0;
+    margin: clamp(40px, 7vh, 64px) 0 0;
     font-size: clamp(1.15rem, 2vw, 1.45rem);
     font-weight: var(--font-weight-bold);
     color: var(--night-amber);
@@ -395,6 +412,7 @@
     .qpath__qs b { font-size: 1.12rem; }
     .qpath__qs i { font-size: 13.5px; white-space: normal; width: 205px; text-align: center; }
     .qpath__apps img { width: 22px; height: 22px; border-radius: 6px; }
+    .effort__wins { grid-template-columns: minmax(0, 1fr); gap: 28px; max-width: 340px; }
   }
   @media (max-width: 385px) { .effort__min .acard { zoom: 0.88; } }
 </style>
@@ -732,8 +750,8 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
             <path data-seg="1" pathLength="1" d="M236 142 C 280 192, 330 214, 386 218"/>
             <path data-seg="2" pathLength="1" d="M598 214 C 650 206, 630 66, 694 58"/>
             <path data-seg="3" pathLength="1" d="M948 60 C 1000 110, 996 262, 950 334"/>
-            <path data-seg="4" pathLength="1" d="M792 446 C 760 490, 680 504, 598 498"/>
-            <path data-seg="5" pathLength="1" d="M404 498 C 352 498, 330 432, 298 421"/>
+            <path data-seg="4" pathLength="1" d="M792 446 C 760 490, 690 504, 614 498"/>
+            <path data-seg="5" pathLength="1" d="M388 498 C 344 498, 328 432, 298 421"/>
           </svg>
           <svg class="qpath__lines qpath__lines--tall" viewBox="0 0 360 920" aria-hidden="true">
             <path data-seg="1" pathLength="1" d="M200 104 C 230 112, 246 128, 248 146"/>
@@ -750,12 +768,12 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
             <li data-q="1" style="--x:17%;--y:4.69%;--mx:33.3%;--my:0%">
               <b>what to do?</b>
               <i>something new? what's even on tonight?</i>
-              <span class="qpath__apps"><img src="/assets/img/apps/tiktok.png" alt="TikTok" width="26" height="26" loading="lazy"><img src="/assets/img/apps/googlemaps.png" alt="Google Maps" width="26" height="26" loading="lazy"><img src="/assets/img/apps/gemini.png" alt="Gemini" width="26" height="26" loading="lazy"></span>
+              <span class="qpath__apps"><img src="/assets/img/apps/tiktok.png" alt="TikTok" width="26" height="26" loading="lazy"><img src="/assets/img/apps/googlemaps.png" alt="Google Maps" width="26" height="26" loading="lazy"><img src="/assets/img/apps/gemini.png" alt="Gemini" width="26" height="26" loading="lazy"><img src="/assets/img/apps/luma.png" alt="Luma" width="26" height="26" loading="lazy"></span>
             </li>
             <li data-q="2" style="--x:49%;--y:31.25%;--mx:66.7%;--my:16.3%">
               <b>who to go with?</b>
-              <i>are my friends free? new people?</i>
-              <span class="qpath__apps"><img src="/assets/img/apps/whatsapp.png" alt="WhatsApp" width="26" height="26" loading="lazy"><img src="/assets/img/apps/timeleft.png" alt="Timeleft" width="26" height="26" loading="lazy"></span>
+              <i>are my friends free? new people? will we even click?</i>
+              <span class="qpath__apps"><img src="/assets/img/apps/whatsapp.png" alt="WhatsApp" width="26" height="26" loading="lazy"><img src="/assets/img/apps/snapchat.png" alt="Snapchat" width="26" height="26" loading="lazy"><img src="/assets/img/apps/tinder.png" alt="Tinder" width="26" height="26" loading="lazy"><img src="/assets/img/apps/discord.png" alt="Discord" width="26" height="26" loading="lazy"></span>
             </li>
             <li data-q="3" style="--x:82%;--y:6.25%;--mx:33.3%;--my:32.6%">
               <b>plan it</b>
@@ -768,14 +786,14 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
               <span class="qpath__apps"><img src="/assets/img/apps/thefork.png" alt="TheFork" width="26" height="26" loading="lazy"><img src="/assets/img/apps/kide.png" alt="Kide.app" width="26" height="26" loading="lazy"></span>
             </li>
             <li data-q="5" style="--x:50%;--y:75%;--mx:33.3%;--my:65.2%">
-              <b>who do I pay?</b>
-              <i>do we split it? who owes who?</i>
+              <b>what will it cost?</b>
+              <i>€30 for a ticket? is it even worth it?</i>
               <span class="qpath__apps"><img src="/assets/img/apps/mobilepay.png" alt="MobilePay" width="26" height="26" loading="lazy"></span>
             </li>
             <li data-q="6" style="--x:17%;--y:62.5%;--mx:66.7%;--my:81.5%">
               <b>how do I get there?</b>
               <i>bus or tram? how long will it take?</i>
-              <span class="qpath__apps"><img src="/assets/img/apps/hsl.png" alt="HSL" width="26" height="26" loading="lazy"><img src="/assets/img/apps/googlemaps.png" alt="Google Maps" width="26" height="26" loading="lazy"></span>
+              <span class="qpath__apps"><img src="/assets/img/apps/hsl.png" alt="HSL" width="26" height="26" loading="lazy"><img src="/assets/img/apps/bolt.png" alt="Bolt" width="26" height="26" loading="lazy"><img src="/assets/img/apps/googlemaps.png" alt="Google Maps" width="26" height="26" loading="lazy"></span>
             </li>
           </ol>
         </div>
@@ -798,11 +816,23 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
               <div class="acard__panel"><ul class="acard__items"><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🎲</span><span><span>Table fee</span><br><span class="acard__price">€4.00</span></span></li><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🍺</span><span><span>Table + a drink</span><br><span class="acard__price"><s>€9.00</s> <b>€7.50</b></span></span></li></ul></div>
             </div>
           </div>
-          <p class="effort__offer rise" data-delay="1">
-            An offer with the activity, the people and the planning
-            already figured out.
-          </p>
-          <p class="effort__go rise" data-delay="2">All that's left is to get up and go.</p>
+          <!-- What min answers, point for point: the people (the
+               question most plans die on), the cost, and the rest. -->
+          <ul class="effort__wins">
+            <li class="rise" data-delay="1">
+              <b>People you'll vibe with</b>
+              <span>min finds people nearby who are into the same things as you.</span>
+            </li>
+            <li class="rise" data-delay="2">
+              <b>Everyday things, made interesting</b>
+              <span>A coffee, a game night, an hour at the museum. Not a €30 event.</span>
+            </li>
+            <li class="rise" data-delay="3">
+              <b>Planned and paid</b>
+              <span>Time, place and your spot, sorted in one tap.</span>
+            </li>
+          </ul>
+          <p class="effort__go rise" data-delay="4">All that's left is to get up and go.</p>
         </div>
 
       </div>
