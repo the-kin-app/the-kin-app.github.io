@@ -7,9 +7,10 @@
    someone leaves open. Every timer counts from the same moment, so two
    copies of one card stay in step. */
 export function offerCountdowns() {
+  const MAX = 15 * 60;   // an offer is always for the next 15 minutes at most
   const timers = [...document.querySelectorAll('[data-countdown]')].map((el) => ({
     clock: el.querySelector('.acard__clock'),
-    total: Math.max(1, parseInt(el.dataset.countdown, 10) || 0),
+    total: Math.min(MAX, Math.max(1, parseInt(el.dataset.countdown, 10) || 0)),
   })).filter((t) => t.clock);
   if (!timers.length) return;
 

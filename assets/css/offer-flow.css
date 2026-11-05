@@ -65,17 +65,29 @@
     rotateY(calc(var(--t) * -38deg));
   transition:
     transform 700ms var(--ease-emergence),
-    opacity 420ms ease,
-    filter 420ms ease;
-  will-change: transform;
+    opacity 420ms ease;
+  /* No will-change and no filter here. will-change: transform makes the
+     browser keep the card's raster from wherever it was first drawn;
+     a side card is drawn small (further back), so on reaching the front
+     it was that small raster stretched up: the card went soft as it
+     became active. A filter on a 3D card forces the same low-res
+     redraws. Without either, the card is redrawn sharp once it lands.
+     The side cards' dimming is a plain overlay (::after) instead. */
   cursor: pointer;
 }
-.oflow__card[data-pos="center"] { z-index: 3; cursor: grab; }
-.oflow__card[data-pos="side"] {
-  z-index: 2;
-  opacity: 0.88;
-  filter: saturate(0.85) brightness(0.96);
+.oflow__card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(60, 48, 38, 0.08);
+  opacity: 0;
+  transition: opacity 420ms ease;
+  pointer-events: none;
 }
+.oflow__card[data-pos="center"] { z-index: 3; cursor: grab; }
+.oflow__card[data-pos="side"] { z-index: 2; opacity: 0.88; }
+.oflow__card[data-pos="side"]::after { opacity: 1; }
 .oflow__card[data-pos="off"] { z-index: 1; opacity: 0; pointer-events: none; }
 
 /* Without the script every card sits in front; show just the first. */
