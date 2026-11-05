@@ -8,6 +8,44 @@
    --p (opacity, lift and blur live in CSS).
 
    With reduced motion, or no JS, everything stays drawn. */
+/* min floating in to "min is here to help". Scroll drives it: while the
+   heading rises from the bottom of the screen to 40% down, he drifts
+   from the top-left corner of the screen to his perch at the end of the
+   line, along a gentle arc, turning upright and coming to full size.
+   Scroll back and he drifts back out. The perch itself is CSS; this only
+   writes the offset from it, so he always lands exactly there. */
+export function floatMin() {
+  const el = document.querySelector('[data-float-min]');
+  if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const anchor = el.parentElement;               // the heading's text box
+  const clamp = (v) => Math.min(1, Math.max(0, v));
+  const ease = (t) => t * t * (3 - 2 * t);       // eases out of the corner and into the perch
+  let raf = 0;
+  function paint() {
+    raf = 0;
+    const vw = innerWidth, vh = innerHeight;
+    const a = anchor.getBoundingClientRect();
+    // from the heading just below the fold to 40% down the screen
+    const p = clamp((vh * 1.1 - a.top) / (vh * 0.7));
+    const e = ease(p);
+    // where he rests (his box, untransformed) and where he starts
+    const rest = el.offsetWidth;
+    const fx = a.right, fy = a.top + a.height / 2;
+    const sx = vw * 0.06, sy = vh * 0.08;
+    const k = 1 - e;
+    // a soft arc: x eases straight in, y sags a little on the way
+    const dx = (sx - fx) * k;
+    const dy = (sy - fy) * k + Math.sin(e * Math.PI) * rest * 0.35;
+    el.style.transform =
+      `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) rotate(${(-18 * k).toFixed(2)}deg) scale(${(0.7 + 0.3 * e).toFixed(3)})`;
+    el.style.opacity = clamp(p * 5).toFixed(3);
+  }
+  const ask = () => { if (!raf) raf = requestAnimationFrame(paint); };
+  addEventListener('scroll', ask, { passive: true });
+  addEventListener('resize', ask, { passive: true });
+  paint();
+}
+
 export function effortPath() {
   const box = document.querySelector('[data-qpath]');
   if (!box || matchMedia('(prefers-reduced-motion: reduce)').matches) return;

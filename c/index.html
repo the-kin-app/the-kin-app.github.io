@@ -356,23 +356,27 @@
     line-height: 1.08;
     letter-spacing: -0.02em;
   }
-  /* He is the floating min PNG (square, with soft padding round him),
-     held still; the heading starts about two thirds of the way down
-     his body. */
-  .effort__helpwrap {
-    --float-w: clamp(190px, 18vw, 240px);
-    position: relative;
-    isolation: isolate;
-    padding-top: calc(var(--float-w) * 0.5);
-  }
-  .effort__help { text-shadow: 0 2px 18px rgba(20, 20, 30, 0.45); }
+  /* min, the floating PNG (square, soft padding round him). His resting
+     place is perched at the end of the line, set by `translate`; the
+     scroll flight from the top-left is a `transform` that floatMin()
+     writes, so the two compose and he always lands exactly here. */
+  .effort__help { margin-top: clamp(40px, 6vh, 64px); }
+  .effort__helptext { position: relative; display: inline-block; }
+  /* Only the words rise in; min is outside that fade so he can be seen
+     from the moment he leaves the corner. */
+  .effort__helpwords { display: inline-block; }
   .effort__float {
     position: absolute;
-    z-index: -1;
-    left: 50%; top: 0;
-    width: var(--float-w);
+    left: 100%; top: 50%;
+    width: clamp(110px, 10vw, 150px);
     aspect-ratio: 1;
-    translate: -50% 0;
+    translate: -14% -62%;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+  @media (max-width: 720px) {
+    /* Little room past the line on a phone: he perches above its end. */
+    .effort__float { width: 92px; translate: -62% -96%; }
   }
   .effort__float::before {          /* his warm glow on the room */
     content: '';
@@ -826,12 +830,9 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
         </div>
 
         <div class="effort__min" data-reveal>
-          <!-- min floats behind his own line: the words cross his lower
-               half, and he bobs slowly. -->
-          <div class="effort__helpwrap">
-            <span class="effort__float" aria-hidden="true"><img src="/assets/img/min-character/floating%20Min.png" alt="" width="206" height="206" loading="lazy"></span>
-            <h2 class="effort__help rise">min is here to help</h2>
-          </div>
+          <!-- min floats in from the top-left as you scroll and settles
+               at the end of his line (effort-path.js → floatMin). -->
+          <h2 class="effort__help"><span class="effort__helptext"><span class="effort__helpwords rise">min is here to help</span><span class="effort__float" aria-hidden="true" data-float-min><img src="/assets/img/min-character/floating%20Min.png" alt="" width="206" height="206" loading="lazy"></span></span></h2>
           <!-- The offer card from the hero (activity-card.css). -->
           <div class="acard" role="group" aria-label="A min offer: board game night">
             <div class="acard__head"><p class="acard__kind">group activity</p><p class="acard__time">18:00</p><p class="acard__status">live now</p></div>
@@ -1007,7 +1008,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
 <script type="module">
   import { waitlistForms } from '/assets/js/waitlist-form.js?v=20260922a';
   import { offerFlow } from '/assets/js/offer-flow.js?v=20261103a';
-  import { effortPath } from '/assets/js/effort-path.js?v=20261105a';
+  import { effortPath, floatMin } from '/assets/js/effort-path.js?v=20261105b';
   import { minWave } from '/assets/js/min-wave.js?v=20261104a';
   // The scan -> arrival ping rides in on that first import: waitlist-form.js
   // pulls in scan-attribution.js, which reports back to the Worker that this
@@ -1018,6 +1019,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
   waitlistForms();   // hero + closer, the same module /waitlist posts through
   offerFlow();       // the hero's coverflow of offer cards
   effortPath();      // the questions' line draws as you scroll
+  floatMin();        // min floats in to 'min is here to help'
   minWave();         // min in front of the cards: live eyes, reflection
 </script>
 </body>
