@@ -10,6 +10,7 @@ waitlist submissions.
 /
 ├── index.html              Homepage — the long-form landing page, hero headline finishing on a changing word. Side A of the landing A/B
 ├── b/index.html            Side B of the landing A/B: the homepage with a different hero headline ("a dose of social moment, delivered across your street")
+├── c/index.html            Side C (draft): the homepage with an emotional hero — "stop wasting your life on screens. go do something." + min waving
 ├── pitchdeck/index.html    The public pitch deck — swipeable slides (see below)
 ├── waitlist/index.html     The scan page — a three-slide banner + one-field signup, all above the fold
 ├── ads/index.html          The ad landing page — /waitlist/ plus a required school dropdown, and the only page paid social points at (see below)
@@ -26,6 +27,9 @@ waitlist submissions.
 │   │   ├── landing.css      Homepage only (does not load base/components)
 │   │   ├── pitchdeck.css    Deck paging + per-slide figures; loads on top of landing.css
 │   │   ├── qrgenerator.css  The QR workbench + its print sheet
+│   │   ├── offer-card.css   The survey's offer card (/survey/v2/)
+│   │   ├── activity-card.css  /c/ only: the Figma offer card, one per coverflow slot
+│   │   ├── offer-flow.css   /c/ only: the coverflow that places the offer cards
 │   │   ├── pro-survey.css   The Pro survey's tick grids + the question 5 read-back; loads on top of business.css and survey.css
 │   │   ├── waitlist.css     The waitlist card, form and inputs; loads on top of landing.css
 │   │   ├── ads.css          /ads only: the school select and its two-row form; loads on top of waitlist-hero.css
@@ -37,6 +41,7 @@ waitlist submissions.
 │   │   ├── qr-encode.js     QR encoder — byte mode, versions 1–10, no dependencies
 │   │   ├── qr-style.js      Draws an encoded grid as a Min-styled SVG
 │   │   ├── qrgenerator.js   The workbench page: controls, print sheet, SVG/PNG/ZIP export
+│   │   ├── offer-flow.js    /c/ only: steps the coverflow (auto, swipe, keys, dots)
 │   │   ├── pro-survey.js    The Pro survey: the three tick grids, the question 5 read-back, submit
 │   │   ├── press.js         The submerge button press (shared by every page)
 │   │   ├── min.js           Min himself: anatomy, the 5s morph loop, the gaze (shared)
@@ -584,6 +589,35 @@ line. That is the only style it adds.
 To run it, in `min-waitlist-worker src/index.js`: set `VARIANT_PATHS.b` to
 `'/b/'`, turn `LANDING_SPLIT` back on, and clear the old `b` variant data
 first. Until 2026-10-09 `b` meant `/waitlist/`.
+
+### Side C: the emotional hero (draft, from 2026-11-02)
+
+`/c/` is the homepage with the hero swapped: "stop wasting your life / on
+screens. / **go do something.**" and "min is here to make it *easier*." on the
+left, and where the homepage has its phone, a coverflow of min's offer cards.
+The card is the Figma one (min-app › 11 Offer card, node 2730:969), built as
+`.acard` in `assets/css/activity-card.css`. `assets/css/offer-flow.css` places
+the cards and `assets/js/offer-flow.js` steps them: auto-advance while visible
+(never with reduced motion), plus swipe, arrow keys, a tap on a side card, or
+the dots. It needs four cards or more.
+
+The four offers (coffee, board games, bouldering, a solo museum hour) are
+written in the page. Their photos are AI-generated in Figma (frames 2740:356–359
+on the Offer card page) and live in `assets/img/offers/` with the avatars and
+tag shapes from the file; the venues are made up, so no real business is shown. It declares
+`data-variant="c"` and is `noindex`.
+
+Its copy below the fold is rewritten for the current idea (IRL activity on
+demand, from the 2026-10-31 business plan): how it works is "see what's on
+nearby / join one, or ask min / prepay and go", plus new facts and FAQ. The
+homepage still describes the older one-to-one intro, so A against C compares
+the whole page, not just the hero. The phone in "how it works" shows CSS
+placeholder screens for steps 1 and 3 (the `.poffer` cards in the page's
+`<style>`) until the real app screens are exported.
+
+Not live yet. The Worker only accepts `a` and `b` (`VARIANTS` in
+`min-waitlist-worker src/index.js`), so a `/c/` signup is stored with no
+variant until `'c'` is added there, along with `VARIANT_PATHS.c = '/c/'`.
 
 ## Backend
 

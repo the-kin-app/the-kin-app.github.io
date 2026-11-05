@@ -1,0 +1,99 @@
+/* ============================================================
+   min — a coverflow of offer cards  (/c/ hero)
+   ------------------------------------------------------------
+   A few of min's live offers, one in front and its neighbours
+   turned away on either side, like a row of record sleeves. The
+   cards are the app's own (.acard, activity-card.css); this file
+   only places them. offer-flow.js sets each card's place in the row:
+
+       --o   its offset from the front card: … -2 -1 0 1 2 …
+       --d   how far that is, 0 / 1 / 2 (capped)
+       --t   which way it turns: -1 left, 0 front, 1 right
+
+   and the row's size: --card-h, the tallest card in px, so the
+   box takes the room the cards need. --flow-scale shrinks the
+   whole row to fit; the card itself is always drawn at its real
+   354px, so it matches the Figma card.
+
+   Two away (--d: 2) a card is faded out. That's also where a card
+   wraps from one end of the row to the other, so the jump across
+   happens while it's invisible.
+   ============================================================ */
+
+.oflow {
+  --flow-scale: 0.78;
+  --card-h: 500px;
+  position: relative;
+  width: 100%;
+  height: calc(var(--card-h) * var(--flow-scale) + 12px);   /* + room for the card's shadow */
+  text-align: left;             /* the card is the app's, not the hero's centred column */
+  touch-action: pan-y;          /* sideways drags are ours, scrolling isn't */
+  user-select: none;
+  -webkit-user-select: none;
+  outline: none;
+}
+
+.oflow__track {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 354px;
+  height: var(--card-h);
+  margin-left: -177px;
+  transform: scale(var(--flow-scale));
+  transform-origin: top center;
+  perspective: 1300px;
+  /* One shared 3D space, so the cards are drawn by real depth: the
+     front card is nearest, so it is always on top. With each card
+     flattened on its own, the browser fell back to source order and
+     a side card later in the markup was drawn over the front one;
+     z-index alone didn't stop it. */
+  transform-style: preserve-3d;
+}
+
+.oflow__card {
+  --o: 0; --d: 0; --t: 0;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  translate: 0 -50%;
+  margin: 0;
+  width: 354px;
+  transform:
+    translateX(calc(var(--o) * 56%))
+    translateZ(calc(var(--d) * -170px))
+    rotateY(calc(var(--t) * -38deg));
+  transition:
+    transform 700ms var(--ease-emergence),
+    opacity 420ms ease;
+  /* No will-change and no filter here. will-change: transform makes the
+     browser keep the card's raster from wherever it was first drawn;
+     a side card is drawn small (further back), so on reaching the front
+     it was that small raster stretched up: the card went soft as it
+     became active. A filter on a 3D card forces the same low-res
+     redraws. Without either, the card is redrawn sharp once it lands.
+     The side cards' dimming is a plain overlay (::after) instead. */
+  cursor: pointer;
+}
+.oflow__card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(60, 48, 38, 0.08);
+  opacity: 0;
+  transition: opacity 420ms ease;
+  pointer-events: none;
+}
+.oflow__card[data-pos="center"] { z-index: 3; cursor: grab; }
+.oflow__card[data-pos="side"] { z-index: 2; opacity: 0.88; }
+.oflow__card[data-pos="side"]::after { opacity: 1; }
+.oflow__card[data-pos="off"] { z-index: 1; opacity: 0; pointer-events: none; }
+
+/* Without the script every card sits in front; show just the first. */
+.oflow:not(.is-live) .oflow__card:not(:first-child) { display: none; }
+
+
+@media (prefers-reduced-motion: reduce) {
+  .oflow__card { transition: opacity 200ms ease; }
+}

@@ -66,6 +66,16 @@ function dock() {
     sink = Math.max(12, surface - Math.min(160, h * 0.14));
   };
 
+  /* It steps aside over the closer, which carries the same form, so the
+     two CTAs are never both in frame: once the closer's top passes 72%
+     down the screen. html.is-near-closer takes it down the same way
+     undocking does (landing.css): its emerge animation is dropped, so it
+     transitions out to the hidden values, and coming back replays the
+     emerge from the start. Forcing opacity over a still-attached
+     animation instead (the old body.is-near-closer rule) let mobile
+     Safari bring it back half off screen after the toolbar resized. */
+  const closer = document.querySelector('#closer');
+
   let up = false;
   const sync = () => {
     if (!up && scrollY > surface) {
@@ -74,6 +84,10 @@ function dock() {
     } else if (up && scrollY < sink) {
       up = false;
       root.classList.remove('is-docked');
+    }
+    if (closer) {
+      root.classList.toggle('is-near-closer',
+        closer.getBoundingClientRect().top < innerHeight * 0.72);
     }
   };
 

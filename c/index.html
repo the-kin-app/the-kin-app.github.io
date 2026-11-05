@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<!-- data-variant: which side of the landing A/B this page IS — side C.
+     Read by assets/js/scan-attribution.js and sent with every signup
+     from this page, scanned or not. On the <html> element rather than
+     inferred from the path, because the path differs between the live
+     site, a local file server and a copy opened from disk.
+
+     This page is the homepage with ONE change: the hero.
+       a  /    "spontaneous / IRL meetings / right around the corner"
+               + the "say hello to ▸ …" flip line + the app screenshot
+       c  /c/  "stop wasting your life / on screens. / go do something."
+               under the logo, "min is here to make it effortless.", and a
+               coverflow of min's offer cards (offer-flow.js) where the
+               homepage has its phone. No flip line.
+     From 2026-11-02 the copy below the fold differs too: this page
+     describes the current idea (IRL activity on demand: see what's on
+     nearby, join or ask min, prepay and go), per the 2026-10-31
+     business plan and min/PRODUCT.md. The homepage still describes the
+     older one-to-one intro. From 2026-11-04 the second section is no
+     longer "how it works" but "the old way vs min", from the business
+     plan's competition page: six steps across real apps, where plans
+     die, against min's one tap. -->
+<html lang="en" data-variant="c">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>min — Something real to do nearby, right now</title>
+<meta name="description" content="Stop wasting your life on screens. min offers a few things to do nearby, right now, alone or with people. Tap once, prepay the coffee or the ticket, and go. No feed, no swiping, no chat. Launching in Helsinki in early 2027.">
+<meta name="theme-color" content="#2F333F">
+<link rel="canonical" href="https://hellomin.app/">
+<!-- A duplicate of / by design: keep it out of search, point credit home. -->
+<meta name="robots" content="noindex,follow">
+
+<meta property="og:title" content="min — Something real to do nearby, right now">
+<meta property="og:description" content="Stop wasting your life on screens. Go do something. min is here to help.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hellomin.app/">
+<meta property="og:site_name" content="min">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="min: a softly glowing pebble with two lit eyes, waving hello in dusk light.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hellomin.app/assets/img/og-min-waving.jpg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://hellomin.app/#organization",
+      "name": "min",
+      "url": "https://hellomin.app/",
+      "logo": "https://hellomin.app/assets/img/min-logo-flat.svg",
+      "email": "hello@hellomin.app",
+      "foundingLocation": { "@type": "City", "name": "Helsinki" },
+      "sameAs": [
+        "https://www.instagram.com/hellomin.app/",
+        "https://www.tiktok.com/@hellomin.app"
+      ],
+      "description": "min is IRL activity on demand: a few concrete things to do nearby, right now, alone or with people. No feed, no swiping, no chat. Launching for Helsinki-area students in early 2027."
+    },
+    {
+      "@type": "MobileApplication",
+      "@id": "https://hellomin.app/#app",
+      "name": "min",
+      "url": "https://hellomin.app/",
+      "operatingSystem": "iOS",
+      "applicationCategory": "SocialNetworkingApplication",
+      "description": "Open min and see live offers close by that you can go to right now. Join one in a tap or tell min what you're up for, prepay the activity item, and go. Alone, with a friend, or with people nearby who share an interest.",
+      "areaServed": { "@type": "City", "name": "Helsinki", "containedInPlace": { "@type": "Country", "name": "Finland" } },
+      "audience": { "@type": "Audience", "audienceType": "Students in the Helsinki area" },
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "publisher": { "@id": "https://hellomin.app/#organization" }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://hellomin.app/#website",
+      "name": "min",
+      "url": "https://hellomin.app/",
+      "inLanguage": "en",
+      "publisher": { "@id": "https://hellomin.app/#organization" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://hellomin.app/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Is min a dating app?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. min finds you something to do nearby, alone or with people who share an interest. The activity is the point. What happens after it is up to you." } },
+        { "@type": "Question", "name": "Do I have to go with strangers?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Go alone, bring a friend, or join people nearby who are up for the same thing. Solo activities skip the wait entirely." } },
+        { "@type": "Question", "name": "How is min different from Meetup or event apps?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Events are planned days or weeks ahead. min is for the free hour you have right now: live offers close by that you can go to straight away, with the time, place and payment already sorted in one tap." } },
+        { "@type": "Question", "name": "Does it cost money?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Using min is free, with no subscription. When you join an activity you prepay its item, like the coffee or the museum ticket, plus a small service fee. You see the full price before you accept, and if a group doesn't fill in time you get your money back." } },
+        { "@type": "Question", "name": "What does min know about me?",
+          "acceptedAnswer": { "@type": "Answer", "text": "What you tell it in short chats and which activities you go to, so the offers fit you better. You can see, correct or delete it at any time. We don't sell your data, and min is built for GDPR from day one." } },
+        { "@type": "Question", "name": "Is it safe?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Activities happen in public venues, never anyone's home. min is 18+, with your date of birth confirmed at signup. Others only see a nickname, avatar, short intro and age range. You can cancel up to the meeting with a neutral “plans changed”, and block or report in one tap. Every report is reviewed by a person within 24 hours." } }
+      ]
+    }
+  ]
+}
+</script>
+
+<!-- ── The landing A/B ──────────────────────────────────────────────
+     /    side A — the homepage
+     /c/  side C — this page: the homepage with an emotional hero
+     This page splits nothing. The side is drawn per QR scan in the
+     Worker — see handleScan and VARIANT_PATHS in min-waitlist-worker
+     src/index.js. Only a poster scan is split.
+     ────────────────────────────────────────────────────────────────── -->
+
+<link rel="icon" href="/assets/img/min-character/floating-min-favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- ?v= is a cache bust — see the note on the same links in /waitlist/. -->
+<link rel="stylesheet" href="/assets/css/tokens.css?v=20260910b">
+<link rel="stylesheet" href="/assets/css/landing.css?v=20261105a">
+<link rel="stylesheet" href="/assets/css/home-hero.css?v=20260928a">
+<link rel="stylesheet" href="/assets/css/home-sections.css?v=20261009a">
+<link rel="stylesheet" href="/assets/css/activity-card.css?v=20261105b">
+<link rel="stylesheet" href="/assets/css/offer-flow.css?v=20261105b">
+<link rel="stylesheet" href="/assets/css/min-wave.css?v=20261104a">
+<!-- The styles this page adds. Desktop keeps the homepage's two
+     columns: the words on the left, and where the homepage has its
+     phone, a coverflow of min's offer cards. On phones it all stacks:
+     logo, headline, one line, the cards, the form. -->
+<style>
+  /* ── the nook ───────────────────────────────────────────────
+     /c/ swaps the sunlit room for the nook render, treated the way
+     the app's chat screen treats its world (Figma min-app 2180:924):
+     the room is never shown sharp — it's blurred into light and
+     shade, and a vertical scrim (clear at the top and bottom, deeper
+     in the middle) plus a haze falling from the top blend it into the
+     base colour. The app's scrim runs at 0.55 because its text is
+     white; the hero's ink is dark, so the same stops run at about a
+     third of that. Two layers under the section's own ::before/::after
+     shades (z -1), so those still do their job on top. */
+  .hero--app.hero--cry { background: #e3dbd0; }
+  .nook { position: absolute; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
+  /* The blur runs top-down: the room is only lightly softened, and a
+     second, heavier-blurred copy on top is masked from full at the top
+     to nothing by the floor — haze up high, the furniture nearly in
+     focus where the cards stand. */
+  .nook__room {
+    position: absolute;
+    inset: -40px;   /* bleed past the edges so the blur has no pale rim */
+    background: #f0ebe2 url('/assets/img/nook-room.jpg') center 62% / cover no-repeat;
+    filter: blur(2.5px) saturate(1.05);
+  }
+  .nook__room--haze {
+    filter: blur(9px) saturate(1.05);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 18%, rgba(0,0,0,.45) 48%, transparent 72%);
+            mask-image: linear-gradient(to bottom, #000 0%, #000 18%, rgba(0,0,0,.45) 48%, transparent 72%);
+  }
+  .nook::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      /* haze off the top  [palette/haze/base · fade/list/*] */
+      linear-gradient(to bottom,
+        rgba(154, 147, 138, 0.30) 0%,
+        rgba(154, 147, 138, 0.22) 14%,
+        rgba(154, 147, 138, 0) 32%),
+      /* warm scrim  [color/scrim/warm*], bottom to top */
+      linear-gradient(to top,
+        rgba(240, 235, 226, 0.55) 0%,
+        rgba(92, 90, 87, 0.12) 20%,
+        rgba(59, 55, 40, 0.16) 62%,
+        rgba(81, 76, 63, 0.10) 75%,
+        rgba(194, 190, 183, 0) 100%);
+  }
+  @media (max-width: 800px) {
+    /* Portrait crops the wide render to its middle third: lean right so
+       the armchair and the window's glow stay in frame. */
+    .nook__room { background-position: 74% 62%; filter: blur(2px) saturate(1.05); }
+    .nook__room--haze { filter: blur(7px) saturate(1.05); }
+  }
+
+  /* ── min, standing in front of the cards ───────────────────────
+     A layer of the coverflow, after the track, so it draws over all
+     three cards. Sized and placed from --flow-scale, the same number
+     that shrinks the cards, so he stays planted on the front card's
+     bottom-right corner at every breakpoint.
+
+     He is min-wave.js: the eyeless body render from Figma (min-app
+     2762:2478) with live eyes on top (they blink every 3–7 s, follow
+     the cursor, or look around and at what you press on touch), and
+     the Figma reflection (2773:48) under his feet. The render carries
+     its own light and shade, so the page only adds what it owes the
+     scene: a contact shadow where he meets the floor, and a shadow cast
+     down-left onto the cards (the light is the nook's window, top
+     right). */
+  .wmin {
+    --wmin-w: calc(160px * var(--flow-scale));
+    position: absolute;
+    z-index: 5;
+    width: var(--wmin-w);
+    /* x: centred just inside the front card's right edge (177px from
+       the track's centre). y: the front card's bottom edge sits ~518px
+       down the track; his feet (0.879 of his width below his top) land
+       about a quarter of his width below it, on the floor in front of
+       the stack, so he stands in the room rather than on a card, and the
+       reflection has floor to fall on. */
+    left: calc(50% + 177px * var(--flow-scale) - var(--wmin-w) * 0.38);
+    top: calc(518px * var(--flow-scale) - var(--wmin-w) * 0.5);
+  }
+  .wmin .min-wave__body {
+    filter:
+      drop-shadow(-3px 6px 6px rgba(50, 38, 30, 0.18))
+      drop-shadow(-18px 24px 26px rgba(50, 38, 30, 0.14));
+  }
+  .wmin::before {          /* contact shadow under his feet */
+    content: '';
+    position: absolute;
+    left: 14%; right: 8%;
+    bottom: -10%;
+    height: 13%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(46, 35, 28, 0.3), rgba(46, 35, 28, 0.1) 55%, transparent);
+    filter: blur(4px);
+  }
+  @media (max-width: 800px) {
+    .wmin { --wmin-w: calc(166px * var(--flow-scale)); left: calc(50% + 177px * var(--flow-scale) - var(--wmin-w) * 0.62); }
+  }
+
+  /* The first two lines are the problem, set soft; the third is the
+     push, set loud. */
+  .hero--cry h1 { margin-bottom: 0; }
+  .hero--cry .cry-soft { font-weight: var(--font-weight-semibold); color: var(--ink-soft); }
+
+  /* The one line under the headline. Plain lede ink; only "effortless"
+     leans. */
+  .hero--app.hero--cry .cry-sub { margin: 18px 0 0; max-width: none; font-size: 20px; }
+  .hero--cry .cry-sub i { font-style: italic; font-weight: var(--font-weight-semibold); color: var(--ink); }
+
+  @media (min-width: 801px) {
+    .hero--app.hero--cry .shell { grid-template-columns: 1fr 1.05fr; }
+    .hero--cry .oflow { --flow-scale: 0.86; }
+  }
+  @media (min-width: 801px) and (max-width: 1100px) {
+    .hero--cry .oflow { --flow-scale: 0.7; }
+  }
+
+  @media (max-width: 800px) {
+    .hero--app.hero--cry .wordmark--hero { width: 112px; margin: 0 auto 10px; }
+    .hero--app.hero--cry h1 { font-size: clamp(1.75rem, 8.4vw, 3rem); line-height: 1.06; }
+    .hero--app.hero--cry .cry-sub { margin: 10px auto 0; font-size: 17px; }
+    /* The cards take the slack between the line and the form. */
+    .hero--cry .oflow { order: 4; --flow-scale: 0.6; margin: auto 0; padding-block: 12px; box-sizing: content-box; }
+    .hero--app.hero--cry .hero__actions { margin-top: 0; }
+    :root.is-short .hero--cry .oflow { --flow-scale: 0.46; padding-block: 6px; }
+    :root.is-short .hero--app.hero--cry .wordmark--hero { width: 84px; margin-bottom: 6px; }
+  }
+
+  /* ── the night room: the hero's nook, after dark ──────────
+     Everything below the hero used the homepage's dusk room; /c/ now
+     shows its own nook (the hero's render) graded to night: slate-blue
+     walls, moonlight through the oval window (nook-night.webp, made
+     from nook-room.jpg). Same crop as the hero, defocused the same way
+     home-sections.css defocuses the old room; its scrim stays on top. */
+  .night__room::before {
+    background: url('/assets/img/nook-night.webp') center 62% / cover no-repeat;
+    filter: blur(4px) saturate(1);
+  }
+  @media (max-width: 800px) {
+    .night__room::before { background-image: url('/assets/img/nook-night-mobile.webp'); background-position: 74% 62%; }
+  }
+
+  /* ── footer: contact and social logos ───────────────────── */
+  .footer__links { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+  .footer__social { display: inline-flex; align-items: center; gap: 14px; margin-left: 14px; }
+  .footer__social a { display: grid; place-items: center; padding: 4px; margin: -4px; }
+  .footer__social svg { display: block; }
+
+  /* ── questions, centred ─────────────────────────────────────
+     /c/ is one centred column; the FAQ follows it: heading and lede
+     centred, the list a centred column. Each question and answer stays
+     left-aligned inside its pebble, which reads better over several
+     lines and keeps the +/− at the right. */
+  .faq__head { text-align: center; }
+  .faq__head h2 { margin-inline: auto; }
+  .faq__head .lede { margin-inline: auto; max-width: 46ch; }
+  .faq__list { margin-inline: auto; }
+
+  /* ── effort → min (#how) ───────────────────────────────────
+     One centred column, lots of air, big type. Nothing boxed: the
+     questions are just words on a line. */
+  .effort { text-align: center; }
+  .effort__title {
+    max-width: 21ch;
+    margin: 0 auto;
+    font-size: clamp(2rem, 4.6vw, 3.6rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+  /* "effort", underlined by hand: two pen strokes that draw in once
+     the heading has risen. */
+  .effort__word { position: relative; display: inline-block; color: var(--night-amber); }
+  .effort__word svg {
+    position: absolute;
+    left: -2%; bottom: -0.2em;
+    width: 104%; height: 0.36em;
+    overflow: visible;
+  }
+  .effort__word path {
+    fill: none;
+    stroke: var(--night-amber);
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 900ms cubic-bezier(0.65, 0, 0.35, 1) 700ms;
+  }
+  .in .effort__word path { stroke-dashoffset: 0; }
+
+  /* The questions. */
+  .qpath {
+    position: relative;
+    max-width: 1000px;
+    margin: clamp(56px, 9vh, 104px) auto 0;
+    aspect-ratio: 1000 / 640;
+  }
+  .qpath__lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .qpath__lines--tall { display: none; }
+  .qpath__lines path {
+    fill: none;
+    stroke: rgba(250, 247, 242, 0.5);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 0;           /* drawn unless the script says otherwise */
+  }
+  .qpath__qs { list-style: none; margin: 0; padding: 0; }
+  .qpath__qs li {
+    position: absolute;
+    left: var(--x); top: var(--y);
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    /* --p: 0 → 1 from effort-path.js; 1 without it */
+    opacity: var(--p, 1);
+    transform: translate(-50%, calc((1 - var(--p, 1)) * 14px));
+    filter: blur(calc((1 - var(--p, 1)) * 6px));
+    will-change: opacity, transform, filter;
+  }
+  .qpath__qs b {
+    font-size: clamp(1.15rem, 2.1vw, 1.6rem);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: color-mix(in srgb, var(--ink) 90%, transparent);
+  }
+  /* The thoughts it sets off: quieter, like an aside. */
+  .qpath__qs i {
+    font-style: normal;
+    font-size: 15px;
+    line-height: 1.35;
+    color: color-mix(in srgb, var(--ink) 56%, transparent);
+  }
+  .qpath__apps { display: flex; margin-top: 4px; }
+  .qpath__apps img {
+    width: 26px; height: 26px;
+    border-radius: 7px;
+    box-shadow: 0 0 0 1.5px rgba(30, 33, 44, 0.9), 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  .qpath__apps img + img { margin-left: -5px; }
+
+  /* min. */
+  .effort__min {
+    display: grid;
+    justify-items: center;
+    margin-top: clamp(120px, 20vh, 220px);
+  }
+  .effort__help {
+    margin: 0;
+    font-size: clamp(2rem, 4.6vw, 3.6rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+  /* min, the floating PNG (square, soft padding round him). His resting
+     place is perched at the end of the line, set by `translate`; the
+     scroll flight from the top-left is a `transform` that floatMin()
+     writes, so the two compose and he always lands exactly here. */
+  .effort__help { margin-top: clamp(40px, 6vh, 64px); }
+  .effort__helptext { position: relative; display: inline-block; }
+  /* Only the words rise in; min is outside that fade so he can be seen
+     from the moment he leaves the corner. */
+  .effort__helpwords { display: inline-block; }
+  /* "effortless" answers the first heading's amber "effort". */
+  .effort__less { font-style: normal; color: var(--night-amber); }
+  .effort__float {
+    position: absolute;
+    left: 100%; top: 50%;
+    width: clamp(110px, 10vw, 150px);
+    aspect-ratio: 1;
+    translate: -14% -62%;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+  @media (max-width: 720px) {
+    /* Little room past the line on a phone: he perches above its end. */
+    .effort__float { width: 92px; translate: -62% -96%; }
+  }
+  .effort__float::before {          /* his warm glow on the room */
+    content: '';
+    position: absolute;
+    inset: -45%;
+    background: radial-gradient(closest-side, rgba(251, 205, 159, 0.32), rgba(251, 205, 159, 0.08) 60%, transparent);
+    z-index: -1;
+  }
+  .effort__float img { display: block; width: 100%; height: 100%; }
+
+  .effort__min .acard {
+    margin-top: clamp(36px, 6vh, 64px);
+    opacity: 0;
+    transform: translateY(28px) scale(0.92);
+    filter: blur(8px);
+    transition:
+      opacity 900ms ease 250ms,
+      transform 1100ms cubic-bezier(0.16, 1, 0.3, 1) 250ms,
+      filter 900ms ease 250ms;
+  }
+  .effort__min.in .acard { opacity: 1; transform: none; filter: none; }
+  /* Three answers in a row under the card; stacked on phones. */
+  .effort__wins {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(20px, 4vw, 56px);
+    max-width: 960px;
+    margin: clamp(48px, 8vh, 80px) auto 0;
+    padding: 0;
+  }
+  .effort__wins b {
+    display: block;
+    font-size: clamp(1.1rem, 1.7vw, 1.3rem);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: -0.01em;
+  }
+  .effort__wins span {
+    display: block;
+    margin-top: 6px;
+    font-size: 15.5px;
+    line-height: 1.45;
+    color: color-mix(in srgb, var(--ink) 66%, transparent);
+    text-wrap: pretty;
+  }
+  .effort__go {
+    margin: clamp(40px, 7vh, 64px) 0 0;
+    font-size: clamp(1.15rem, 2vw, 1.45rem);
+    font-weight: var(--font-weight-bold);
+    color: var(--night-amber);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .effort__word path { stroke-dashoffset: 0; transition: none; }
+    .effort__min .acard { opacity: 1; transform: none; filter: none; transition: none; }
+  }
+
+  /* Phones: the tall zigzag. */
+  @media (max-width: 720px) {
+    .qpath { aspect-ratio: 360 / 920; max-width: 420px; }
+    .qpath__lines--wide { display: none; }
+    .qpath__lines--tall { display: block; }
+    .qpath__qs li { left: var(--mx); top: var(--my); gap: 4px; }
+    .qpath__qs b { font-size: 1.12rem; }
+    .qpath__qs i { font-size: 13.5px; white-space: normal; width: 205px; text-align: center; }
+    .qpath__apps img { width: 22px; height: 22px; border-radius: 6px; }
+    .effort__wins { grid-template-columns: minmax(0, 1fr); gap: 28px; max-width: 340px; }
+  }
+  @media (max-width: 385px) { .effort__min .acard { zoom: 0.88; } }
+</style>
+
+<script>
+/* One screen, in pixels, written once. The browser's toolbars retract as you
+   scroll and svh moves with them, which grew the hero and shoved the signup
+   down the page mid-scroll. Re-measured only when the WIDTH changes — i.e.
+   on rotation — so a height-only resize (the toolbar) can never reflow the
+   page. Inline and synchronous so the first paint already has the value. */
+(function(){var d=document.documentElement,w=-1;function pin(){if(innerWidth===w)return;
+w=innerWidth;d.style.setProperty('--vh-fixed',innerHeight+'px');
+d.classList.toggle('is-short',innerHeight<=700);
+d.classList.toggle('is-tiny',innerHeight<=600);}
+pin();addEventListener('resize',pin,{passive:true});
+addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})();
+</script>
+</head>
+<body>
+
+<div class="rail" aria-hidden="true"></div>
+
+<main>
+
+  <!-- ── hero ─────────────────────────────────────────────── -->
+  <section class="hero hero--app hero--cry" id="top" data-reveal>
+    <div class="nook" aria-hidden="true"><div class="nook__room"></div><div class="nook__room nook__room--haze"></div></div>
+    <div class="shell">
+      <div class="hero__copy">
+
+      <!-- The min · Resin wordmark artwork, minus the i-dot: min sits in
+           that gap. Inlined (not <img>) so the glass panels' backdrop-filter
+           can actually sample the page behind it. Forms once on load, same
+           beat sheet as the app's splash screen (SplashScreen.swift /
+           Figma "Splash · motion" 288:693): shade pools first, then the
+           mark's edge, then its fill+bloom, then min. -->
+      <div class="wordmark--hero wordmark--hero-resin" role="img" aria-label="min">
+        <svg class="wordmark-resin-svg" viewBox="0 0 182 107" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+<!-- the glow: a blurred duplicate of the letterforms themselves, not a
+     generic ellipse behind them — so it reads as light coming off the
+     mark's own shape rather than a floodlight placed behind it. -->
+<g class="wordmark-glow-group" filter="url(#wordmarkGlow)">
+<path d="M79.035 58.175C79.016 53.061 75.355 49.128 70.409 48.99C65.713 48.858 61.389 52.498 61.358 57.489L61.224 78.159C61.206 80.999 58.571 82.913 55.976 82.978C53.392 83.043 50.505 81.121 50.507 78.182L50.528 58.175C50.509 53.061 46.848 49.128 41.902 48.99C37.206 48.858 32.882 52.498 32.851 57.489L32.717 78.159C32.699 80.999 30.064 82.913 27.469 82.978C24.885 83.043 21.998 81.121 22 78.182L22.021 57.238C22.369 47.569 29.855 39.669 39.287 38.543C45.689 37.78 51.803 40.166 55.942 44.488C59.019 41.273 63.173 39.095 67.794 38.543C78.964 37.211 89.256 45.469 89.717 56.861L89.738 78.295C89.74 81.054 86.947 82.886 84.596 82.972C82.041 83.064 79.123 81.265 79.11 78.418L79.031 58.177L79.035 58.175Z" fill="#FFF6E6"/>
+<path d="M110.333 78.2095C109.824 81.136 107.628 82.9559 104.837 82.9768C102.463 82.9936 99.4845 81.1674 99.4845 78.3225L99.472 44.5076C99.472 41.6208 102.367 39.7193 104.883 39.7381C107.398 39.757 110.235 41.6878 110.244 44.5306L110.335 78.2137L110.333 78.2095Z" fill="#FFF6E6"/>
+<path d="M148.595 58.1752C148.576 53.0606 144.915 49.1279 139.969 48.9898C135.273 48.858 130.949 52.4979 130.918 57.489L130.784 78.1587C130.766 80.9994 128.131 82.9135 125.536 82.9783C122.952 83.0432 120.065 81.1208 120.067 78.1817L120.088 57.238C120.436 47.5695 127.922 39.6685 137.354 38.5431C148.524 37.2106 158.816 45.4692 159.277 56.8615L159.298 78.2947C159.3 81.0538 156.507 82.8863 154.156 82.972C151.601 83.0641 148.683 81.2651 148.67 78.4181L148.591 58.1773L148.595 58.1752Z" fill="#FFF6E6"/>
+</g>
+<!-- Formed one letter at a time, m → i → n, edge before fill within
+     each letter (see wm-form-* keyframes) -- each letter's own fill still
+     shares the single wordmarkShadow filter (a large enough region that
+     applying it per-letter doesn't reintroduce the seam three separate
+     small-region filters caused earlier). -->
+<g class="wordmark-letter wordmark-letter--m">
+<g filter="url(#wordmarkShadow)">
+<path d="M79.035 58.175C79.016 53.061 75.355 49.128 70.409 48.99C65.713 48.858 61.389 52.498 61.358 57.489L61.224 78.159C61.206 80.999 58.571 82.913 55.976 82.978C53.392 83.043 50.505 81.121 50.507 78.182L50.528 58.175C50.509 53.061 46.848 49.128 41.902 48.99C37.206 48.858 32.882 52.498 32.851 57.489L32.717 78.159C32.699 80.999 30.064 82.913 27.469 82.978C24.885 83.043 21.998 81.121 22 78.182L22.021 57.238C22.369 47.569 29.855 39.669 39.287 38.543C45.689 37.78 51.803 40.166 55.942 44.488C59.019 41.273 63.173 39.095 67.794 38.543C78.964 37.211 89.256 45.469 89.717 56.861L89.738 78.295C89.74 81.054 86.947 82.886 84.596 82.972C82.041 83.064 79.123 81.265 79.11 78.418L79.031 58.177L79.035 58.175Z" fill="url(#paint0_linear_503_356)" shape-rendering="crispEdges"/>
+<path d="M50.8281 58.1735C50.8084 52.9093 47.0293 48.8329 41.9102 48.6901C37.0643 48.554 32.583 52.3103 32.5508 57.487L32.417 78.1569C32.4003 80.7881 29.9459 82.616 27.4619 82.6784C26.2425 82.709 24.9436 82.2686 23.9531 81.4723C22.9664 80.679 22.2989 79.5452 22.2998 78.1823L22.3213 57.2487C22.6639 47.7305 30.0343 39.9494 39.3223 38.8405C45.6278 38.089 51.6497 40.4399 55.7256 44.696L55.9424 44.9215L56.1592 44.695C59.1899 41.5285 63.2803 39.384 67.8291 38.8405C78.8347 37.5281 88.9632 45.6651 89.417 56.8727L89.4385 78.2956C89.4393 79.5651 88.7985 80.6336 87.8594 81.404C86.9169 82.1771 85.6932 82.632 84.585 82.6725C83.3769 82.7159 82.0766 82.3107 81.0811 81.5583C80.1512 80.8553 79.5014 79.8619 79.4189 78.6598L79.4102 78.4167L79.3311 58.362L79.3359 58.36L79.335 58.1735C79.3152 52.9093 75.5361 48.8329 70.417 48.6901C65.5712 48.5541 61.0899 52.3104 61.0576 57.487L60.9238 78.1569C60.9071 80.7881 58.4528 82.616 55.9688 82.6784C54.7493 82.7091 53.4504 82.2686 52.46 81.4723C51.4733 80.679 50.8057 79.5452 50.8066 78.1823L50.8281 58.1754V58.1735Z" fill="none" stroke="url(#paint1_linear_503_356)" stroke-width="0.6" shape-rendering="crispEdges"/>
+</g>
+<path d="M79.035 58.175C79.016 53.061 75.355 49.128 70.409 48.99C65.713 48.858 61.389 52.498 61.358 57.489L61.224 78.159C61.206 80.999 58.571 82.913 55.976 82.978C53.392 83.043 50.505 81.121 50.507 78.182L50.528 58.175C50.509 53.061 46.848 49.128 41.902 48.99C37.206 48.858 32.882 52.498 32.851 57.489L32.717 78.159C32.699 80.999 30.064 82.913 27.469 82.978C24.885 83.043 21.998 81.121 22 78.182L22.021 57.238C22.369 47.569 29.855 39.669 39.287 38.543C45.689 37.78 51.803 40.166 55.942 44.488C59.019 41.273 63.173 39.095 67.794 38.543C78.964 37.211 89.256 45.469 89.717 56.861L89.738 78.295C89.74 81.054 86.947 82.886 84.596 82.972C82.041 83.064 79.123 81.265 79.11 78.418L79.031 58.177L79.035 58.175Z" fill="none" stroke="url(#paint2_linear_503_356)" stroke-width="0.9"/>
+</g>
+<g class="wordmark-letter wordmark-letter--i">
+<g filter="url(#wordmarkShadow)">
+<path d="M110.333 78.2095C109.824 81.136 107.628 82.9559 104.837 82.9768C102.463 82.9936 99.4845 81.1674 99.4845 78.3225L99.472 44.5076C99.472 41.6208 102.367 39.7193 104.883 39.7381C107.398 39.757 110.235 41.6878 110.244 44.5306L110.335 78.2137L110.333 78.2095Z" fill="url(#paint3_linear_503_356)" shape-rendering="crispEdges"/>
+<path d="M104.88 40.0378C106.067 40.0467 107.339 40.5091 108.313 41.3073C109.223 42.0536 109.856 43.0795 109.935 44.2878L109.944 44.532L110.035 78.1687C109.546 80.9486 107.474 82.6557 104.834 82.6755C103.718 82.6832 102.445 82.2567 101.454 81.4861C100.467 80.7181 99.7845 79.6302 99.7845 78.322L99.7718 44.5075L99.7796 44.2595C99.8567 43.0344 100.501 42.007 101.422 41.2673C102.408 40.4755 103.694 40.029 104.88 40.0378Z" fill="none" stroke="url(#paint4_linear_503_356)" stroke-width="0.6" shape-rendering="crispEdges"/>
+</g>
+<path d="M110.333 78.2095C109.824 81.136 107.628 82.9559 104.837 82.9768C102.463 82.9936 99.4845 81.1674 99.4845 78.3225L99.472 44.5076C99.472 41.6208 102.367 39.7193 104.883 39.7381C107.398 39.757 110.235 41.6878 110.244 44.5306L110.335 78.2137L110.333 78.2095Z" fill="none" stroke="url(#paint5_linear_503_356)" stroke-width="0.9"/>
+</g>
+<g class="wordmark-letter wordmark-letter--n">
+<g filter="url(#wordmarkShadow)">
+<path d="M148.595 58.1752C148.576 53.0606 144.915 49.1279 139.969 48.9898C135.273 48.858 130.949 52.4979 130.918 57.489L130.784 78.1587C130.766 80.9994 128.131 82.9135 125.536 82.9783C122.952 83.0432 120.065 81.1208 120.067 78.1817L120.088 57.238C120.436 47.5695 127.922 39.6685 137.354 38.5431C148.524 37.2106 158.816 45.4692 159.277 56.8615L159.298 78.2947C159.3 81.0538 156.507 82.8863 154.156 82.972C151.601 83.0641 148.683 81.2651 148.67 78.4181L148.591 58.1773L148.595 58.1752Z" fill="url(#paint6_linear_503_356)" shape-rendering="crispEdges"/>
+<path d="M137.389 38.8415C148.223 37.5491 158.206 45.4134 158.949 56.3503L158.977 56.8737L158.998 78.2946C158.999 79.5644 158.358 80.6334 157.419 81.404C156.476 82.177 155.253 82.6321 154.145 82.6725C152.937 82.716 151.636 82.3109 150.64 81.5583C149.648 80.8085 148.976 79.7282 148.97 78.4167L148.891 58.362L148.896 58.36L148.895 58.1745C148.876 52.9096 145.097 48.8332 139.978 48.6901C135.131 48.5541 130.65 52.3101 130.618 57.487L130.484 78.1569C130.466 80.789 128.013 82.6163 125.529 82.6784C124.309 82.709 123.011 82.2687 122.02 81.4723C121.033 80.6789 120.366 79.5451 120.367 78.1823L120.388 57.2379C120.737 47.725 128.105 39.9493 137.389 38.8415Z" fill="none" stroke="url(#paint7_linear_503_356)" stroke-width="0.6" shape-rendering="crispEdges"/>
+</g>
+<path d="M148.595 58.1752C148.576 53.0606 144.915 49.1279 139.969 48.9898C135.273 48.858 130.949 52.4979 130.918 57.489L130.784 78.1587C130.766 80.9994 128.131 82.9135 125.536 82.9783C122.952 83.0432 120.065 81.1208 120.067 78.1817L120.088 57.238C120.436 47.5695 127.922 39.6685 137.354 38.5431C148.524 37.2106 158.816 45.4692 159.277 56.8615L159.298 78.2947C159.3 81.0538 156.507 82.8863 154.156 82.972C151.601 83.0641 148.683 81.2651 148.67 78.4181L148.591 58.1773L148.595 58.1752Z" fill="none" stroke="url(#paint8_linear_503_356)" stroke-width="0.9"/>
+</g>
+<g class="wordmark-flash" fill="#fff">
+<path d="M79.035 58.175C79.016 53.061 75.355 49.128 70.409 48.99C65.713 48.858 61.389 52.498 61.358 57.489L61.224 78.159C61.206 80.999 58.571 82.913 55.976 82.978C53.392 83.043 50.505 81.121 50.507 78.182L50.528 58.175C50.509 53.061 46.848 49.128 41.902 48.99C37.206 48.858 32.882 52.498 32.851 57.489L32.717 78.159C32.699 80.999 30.064 82.913 27.469 82.978C24.885 83.043 21.998 81.121 22 78.182L22.021 57.238C22.369 47.569 29.855 39.669 39.287 38.543C45.689 37.78 51.803 40.166 55.942 44.488C59.019 41.273 63.173 39.095 67.794 38.543C78.964 37.211 89.256 45.469 89.717 56.861L89.738 78.295C89.74 81.054 86.947 82.886 84.596 82.972C82.041 83.064 79.123 81.265 79.11 78.418L79.031 58.177L79.035 58.175Z"/>
+<path d="M110.333 78.2095C109.824 81.136 107.628 82.9559 104.837 82.9768C102.463 82.9936 99.4845 81.1674 99.4845 78.3225L99.472 44.5076C99.472 41.6208 102.367 39.7193 104.883 39.7381C107.398 39.757 110.235 41.6878 110.244 44.5306L110.335 78.2137L110.333 78.2095Z"/>
+<path d="M148.595 58.1752C148.576 53.0606 144.915 49.1279 139.969 48.9898C135.273 48.858 130.949 52.4979 130.918 57.489L130.784 78.1587C130.766 80.9994 128.131 82.9135 125.536 82.9783C122.952 83.0432 120.065 81.1208 120.067 78.1817L120.088 57.238C120.436 47.5695 127.922 39.6685 137.354 38.5431C148.524 37.2106 158.816 45.4692 159.277 56.8615L159.298 78.2947C159.3 81.0538 156.507 82.8863 154.156 82.972C151.601 83.0641 148.683 81.2651 148.67 78.4181L148.591 58.1773L148.595 58.1752Z"/>
+</g>
+<defs>
+<filter id="wordmarkShadow" x="-6" y="12.4" width="194" height="94.6" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="2"/>
+<feGaussianBlur stdDeviation="6"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.968627 0 0 0 0 0.913725 0 0 0 0 0.815686 0 0 0 0.35 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="5"/>
+<feGaussianBlur stdDeviation="4"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.290196 0 0 0 0 0.25098 0 0 0 0 0.203922 0 0 0 0.16 0"/>
+<feBlend mode="normal" in2="effect1_dropShadow" result="effect2_dropShadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow" result="shape"/>
+</filter>
+<filter id="wordmarkGlow" x="-20" y="-10" width="222" height="127" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feGaussianBlur stdDeviation="3.2" in="SourceGraphic"/>
+</filter>
+<linearGradient id="paint0_linear_503_356" x1="22.7007" y1="52.8513" x2="62.4749" y2="94.1266" gradientUnits="userSpaceOnUse">
+<stop stop-color="white" stop-opacity="0.88"/>
+<stop offset="0.34" stop-color="#FFFBF3" stop-opacity="0.46"/>
+<stop offset="0.62" stop-color="#F2E3C8" stop-opacity="0.3"/>
+<stop offset="1" stop-color="white" stop-opacity="0.78"/>
+</linearGradient>
+<linearGradient id="paint1_linear_503_356" x1="22.7007" y1="52.8513" x2="62.4749" y2="94.1266" gradientUnits="userSpaceOnUse">
+<stop stop-color="white" stop-opacity="0.85"/>
+<stop offset="0.55" stop-color="#F7E9D0" stop-opacity="0.35"/>
+<stop offset="1" stop-color="#FFFBF3" stop-opacity="0.7"/>
+</linearGradient>
+<linearGradient id="paint2_linear_503_356" x1="22.7007" y1="52.8513" x2="62.4749" y2="94.1266" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="0.5" stop-color="#F7E9D0" stop-opacity="0.45"/>
+<stop offset="1" stop-color="#FFFBF3" stop-opacity="0.9"/>
+</linearGradient>
+<linearGradient id="paint3_linear_503_356" x1="99.5844" y1="53.7534" x2="112.454" y2="55.9615" gradientUnits="userSpaceOnUse">
+<stop stop-color="white" stop-opacity="0.88"/>
+<stop offset="0.34" stop-color="#FFFBF3" stop-opacity="0.46"/>
+<stop offset="0.62" stop-color="#F2E3C8" stop-opacity="0.3"/>
+<stop offset="1" stop-color="white" stop-opacity="0.78"/>
+</linearGradient>
+<linearGradient id="paint4_linear_503_356" x1="99.5844" y1="53.7534" x2="112.454" y2="55.9615" gradientUnits="userSpaceOnUse">
+<stop stop-color="white" stop-opacity="0.85"/>
+<stop offset="0.55" stop-color="#F7E9D0" stop-opacity="0.35"/>
+<stop offset="1" stop-color="#FFFBF3" stop-opacity="0.7"/>
+</linearGradient>
+<linearGradient id="paint5_linear_503_356" x1="99.5844" y1="53.7534" x2="112.454" y2="55.9615" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="0.5" stop-color="#F7E9D0" stop-opacity="0.45"/>
+<stop offset="1" stop-color="#FFFBF3" stop-opacity="0.9"/>
+</linearGradient>
+<linearGradient id="paint6_linear_503_356" x1="120.473" y1="52.8514" x2="155.62" y2="73.975" gradientUnits="userSpaceOnUse">
+<stop stop-color="white" stop-opacity="0.88"/>
+<stop offset="0.34" stop-color="#FFFBF3" stop-opacity="0.46"/>
+<stop offset="0.62" stop-color="#F2E3C8" stop-opacity="0.3"/>
+<stop offset="1" stop-color="white" stop-opacity="0.78"/>
+</linearGradient>
+<linearGradient id="paint7_linear_503_356" x1="120.473" y1="52.8514" x2="155.62" y2="73.975" gradientUnits="userSpaceOnUse">
+<stop stop-color="white" stop-opacity="0.85"/>
+<stop offset="0.55" stop-color="#F7E9D0" stop-opacity="0.35"/>
+<stop offset="1" stop-color="#FFFBF3" stop-opacity="0.7"/>
+</linearGradient>
+<linearGradient id="paint8_linear_503_356" x1="120.473" y1="52.8514" x2="155.62" y2="73.975" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="0.5" stop-color="#F7E9D0" stop-opacity="0.45"/>
+<stop offset="1" stop-color="#FFFBF3" stop-opacity="0.9"/>
+</linearGradient>
+</defs>
+        </svg>
+        <div class="wordmark__min wordmark__min--resin" aria-hidden="true">
+          <img class="min min--hero" src="/assets/img/min-character/floating%20Min.png" alt="">
+        </div>
+      </div>
+
+      <!-- The variant's whole idea: name the feeling first (the hours
+           lost to a screen), then the push. Three
+           authored lines, each its own block so the break never moves. -->
+      <h1 class="rise" data-delay="2">
+        <span class="hero__line cry-soft">stop wasting your life</span>
+        <span class="hero__line cry-soft">on screens.</span>
+        <span class="hero__line hero__line--lit">go do something.</span>
+      </h1>
+      <p class="lede cry-sub rise" data-delay="3">min is here to make it <i>effortless</i>.</p>
+      <!-- The signup itself, not a link to it: /waitlist is one more tap
+           between wanting in and being in. Same <form> contract, same
+           Worker, bound by waitlist-form.js. -->
+      <div class="hero__actions">
+        <div class="signup-block rise" data-delay="4">
+          <form class="signup" data-signup novalidate>
+            <div class="signup__row">
+              <input class="signup__input" id="hero-email" type="email" name="email" required
+                     placeholder="you@example.com" autocomplete="email" inputmode="email"
+                     aria-label="Your email">
+              <button class="btn btn--primary btn--lg" type="submit">
+                <span class="btn__fill" aria-hidden="true"></span>
+                <span class="btn__flash" aria-hidden="true"></span>
+                <span class="btn__label">Join waitlist</span>
+                <svg class="btn__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            <!-- Honeypot: hidden from humans, bots tend to fill it. Leave empty. -->
+            <input class="visually-hidden" type="text" name="website"
+                   tabindex="-1" autocomplete="off" aria-hidden="true">
+            <p class="field-error" role="alert"></p>
+            <p class="status" role="status"></p>
+          </form>
+          <div class="signup__done" data-signup-done hidden>
+            <span class="signup__tick" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                   stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>
+            </span>
+            <div>
+              <strong>You're on the list</strong>
+              <span>We'll email you the moment min opens in your neighbourhood</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="fineprint rise" data-delay="5">Launching for <b>all Helsinki students</b> first. Coming <b>Early 2027</b>.</p>
+      </div>
+
+      <!-- min's live offers, as the app shows them: a coverflow of the
+           Figma offer card (activity-card.css; min-app › 11 Offer card,
+           node 2730:969), placed by offer-flow.css and stepped by
+           offer-flow.js. Example offers: the photos are generated and the
+           venues made up, so no real business or person is implied. -->
+      <div class="oflow rise" data-delay="4" data-offer-flow tabindex="0"
+           role="region" aria-roledescription="carousel" aria-label="Example offers from min">
+        <div class="oflow__track">
+          <div class="acard oflow__card" role="group" aria-roledescription="slide" aria-label="1 of 4: Coffee and chat">
+            <div class="acard__head"><p class="acard__kind">group activity</p><p class="acard__time" data-countdown="400"><span class="acard__in">starts in</span><span class="acard__clock">06:40</span></p><p class="acard__status">live now</p></div>
+            <div class="acard__photo">
+              <img src="/assets/img/offers/photo-coffee.jpg" alt="Friends chatting over coffee and cinnamon buns in a cosy café" width="720" height="576" decoding="async">
+              <div class="acard__words">
+                <p class="acard__title">Coffee and chat</p>
+                <p class="acard__venue">@ Kahvila Kanelitaivas</p><p class="acard__length">~30 mins</p>
+                <p class="acard__blurb">Warm coffee, fresh pulla and a quick casual chat with people you might vibe with ;)</p>
+              </div>
+            </div>
+            <div class="acard__panels">
+              <div class="acard__panel acard__who"><ul class="acard__people"><li class="acard__person"><span class="acard__pebble"><img src="/assets/img/offers/avatar-jane.png" alt="" width="132" height="125"></span><span><span class="acard__name">Jane</span><span class="acard__common" aria-label="In common: same uni"><span>same uni</span></span></span></li><li class="acard__person"><span class="acard__pebble"><img src="/assets/img/offers/avatar-tim.png" alt="" width="132" height="125"></span><span><span class="acard__name">Tim</span><span class="acard__common" aria-label="In common: film nerd"><span>film nerd</span></span></span></li></ul><div class="acard__spots" aria-hidden="true"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"></div><p class="acard__filled">2 of 5 spots filled</p></div>
+              <div class="acard__panel"><ul class="acard__items"><li class="acard__item"><span class="acard__thumb" aria-hidden="true">☕</span><span><span>Coffee</span><br><span class="acard__price">€3.50</span></span></li><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🥐</span><span><span>Coffee &amp; pulla set</span><br><span class="acard__price"><s>€6.00</s> <b>€5.25</b></span></span></li></ul></div>
+            </div>
+          </div>
+          <div class="acard oflow__card" role="group" aria-roledescription="slide" aria-label="2 of 4: Board game night">
+            <div class="acard__head"><p class="acard__kind">group activity</p><p class="acard__time" data-countdown="735"><span class="acard__in">starts in</span><span class="acard__clock">12:15</span></p><p class="acard__status">live now</p></div>
+            <div class="acard__photo">
+              <img src="/assets/img/offers/photo-boardgames.jpg" alt="Friends laughing around a board game in a warm game café" width="720" height="576" decoding="async">
+              <div class="acard__words">
+                <p class="acard__title">Board game night</p>
+                <p class="acard__venue">@ Noppakolo Game Café</p><p class="acard__length">~2 hours</p>
+                <p class="acard__blurb">Pull up a chair, learn a new game and play a few rounds with fellow game nerds.</p>
+              </div>
+            </div>
+            <div class="acard__panels">
+              <div class="acard__panel acard__who"><ul class="acard__people"><li class="acard__person"><span class="acard__pebble"><img src="/assets/img/offers/avatar-dalia.png" alt="" width="132" height="125"></span><span><span class="acard__name">Dalia</span><span class="acard__common" aria-label="In common: D&amp;D, sci-fi"><span>D&amp;D</span><span>sci-fi</span></span></span></li></ul><div class="acard__spots" aria-hidden="true"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"></div><p class="acard__filled">1 of 4 spots filled</p></div>
+              <div class="acard__panel"><ul class="acard__items"><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🎲</span><span><span>Table fee</span><br><span class="acard__price">€4.00</span></span></li><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🍺</span><span><span>Table + a drink</span><br><span class="acard__price"><s>€9.00</s> <b>€7.50</b></span></span></li></ul></div>
+            </div>
+          </div>
+          <div class="acard oflow__card" role="group" aria-roledescription="slide" aria-label="3 of 4: Bouldering drop-in">
+            <div class="acard__head"><p class="acard__kind">group activity</p><p class="acard__time" data-countdown="870"><span class="acard__in">starts in</span><span class="acard__clock">14:30</span></p><p class="acard__status">live now</p></div>
+            <div class="acard__photo">
+              <img src="/assets/img/offers/photo-bouldering.jpg" alt="A climber on a bouldering wall while two friends cheer from the mat" width="720" height="576" decoding="async">
+              <div class="acard__words">
+                <p class="acard__title">Bouldering drop-in</p>
+                <p class="acard__venue">@ Otelauta Bouldering</p><p class="acard__length">~90 mins</p>
+                <p class="acard__blurb">First-timer friendly. Try a few problems, cheer each other on, juice after.</p>
+              </div>
+            </div>
+            <div class="acard__panels">
+              <div class="acard__panel acard__who"><ul class="acard__people"><li class="acard__person"><span class="acard__pebble"><img src="/assets/img/offers/avatar-tim.png" alt="" width="132" height="125"></span><span><span class="acard__name">Tim</span><span class="acard__common" aria-label="In common: first-timer"><span>first-timer</span></span></span></li><li class="acard__person"><span class="acard__pebble"><img src="/assets/img/offers/avatar-dalia.png" alt="" width="132" height="125"></span><span><span class="acard__name">Dalia</span><span class="acard__common" aria-label="In common: sci-fi"><span>sci-fi</span></span></span></li></ul><div class="acard__spots" aria-hidden="true"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"></div><p class="acard__filled">2 of 3 spots filled</p></div>
+              <div class="acard__panel"><ul class="acard__items"><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🧗</span><span><span>Student day pass</span><br><span class="acard__price"><s>€14.00</s> <b>€11.00</b></span></span></li><li class="acard__item"><span class="acard__thumb" aria-hidden="true">👟</span><span><span>Shoe rental</span><br><span class="acard__price">€4.00</span></span></li></ul></div>
+            </div>
+          </div>
+          <div class="acard oflow__card" role="group" aria-roledescription="slide" aria-label="4 of 4: A quiet museum hour">
+            <div class="acard__head"><p class="acard__kind">solo activity</p><p class="acard__time" data-countdown="180"><span class="acard__in">starts in</span><span class="acard__clock">03:00</span></p><p class="acard__status">open now</p></div>
+            <div class="acard__photo">
+              <img src="/assets/img/offers/photo-museum.jpg" alt="Someone looking at a large abstract painting in a quiet, light-filled gallery" width="720" height="576" decoding="async">
+              <div class="acard__words">
+                <p class="acard__title">A quiet museum hour</p>
+                <p class="acard__venue">@ Valohalli Art Museum</p><p class="acard__length">~1 hour</p>
+                <p class="acard__blurb">A slow wander through the new exhibition, at your own pace. No one to wait for.</p>
+              </div>
+            </div>
+            <div class="acard__panels">
+              <div class="acard__panel acard__who acard__who--solo"><div class="acard__solo"><b>Just you</b><span>no group to fill, so go whenever you like</span></div></div>
+              <div class="acard__panel"><ul class="acard__items"><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🎟</span><span><span>Student ticket</span><br><span class="acard__price">€10.00</span></span></li><li class="acard__item"><span class="acard__thumb" aria-hidden="true">☕</span><span><span>Ticket + coffee</span><br><span class="acard__price"><s>€14.00</s> <b>€12.00</b></span></span></li></ul></div>
+            </div>
+          </div>
+        </div>
+        <div class="wmin min-wave" data-min-wave data-reflect aria-hidden="true"></div>
+      </div>
+
+    </div>
+
+    <a class="scroll-cta" href="#how" aria-label="Scroll to learn more">
+      <span class="scroll-cta__label">See more</span>
+      <svg class="scroll-cta__chevron" width="14" height="8" viewBox="0 0 14 8" fill="none" aria-hidden="true">
+        <path d="M1 1l6 6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       THE NIGHT ROOM
+
+       Everything below the hero shares ONE environment: the dusk
+       render of the hero's own room held still behind all four sections,
+       so scrolling reads as moving through a single space rather
+       than past four backdrops. The hero keeps its own daylight —
+       the cut between the two is deliberate, not a gradient.
+
+       The raw render sits at L≈0.15–0.27, the exact middle where
+       neither cream nor graphite ink clears 4.5:1. The scrim in
+       .night__room::after is what buys cream its contrast; don't
+       lighten it without re-checking the text on top.
+       ══════════════════════════════════════════════════════════ -->
+  <div class="night">
+    <div class="night__room" aria-hidden="true">
+      <span class="night__fog night__fog--1"></span>
+      <span class="night__fog night__fog--2"></span>
+    </div>
+
+    <!-- ── effort → min ──────────────────────────────────────────
+         From Nao's sketch (2026-11-05): one centred column.
+           1. "Going from 'I'm bored' to doing something takes effort",
+              "effort" underlined by hand.
+           2. The questions you have to answer first, strung on one
+              loose line that wanders between them.
+           3. "min makes it effortless", the offer card, and what's left:
+              get up and go.
+
+         Motion, Apple-style: quiet and tied to the reader. The line
+         draws as you scroll and each question surfaces (fade, lift,
+         un-blur) when the line reaches it; scroll back and it undraws.
+         effort-path.js maps the block's position to progress and
+         writes it per item. With JS off or reduced motion everything
+         is simply there.
+
+         Each point carries the thoughts it sets off ("are my friends
+         free? new people?") and the real apps it sends you to.
+
+         Two layouts for the questions: a wide zigzag (desktop) and a
+         tall one (phones). Labels are shared, placed by --x/--y and
+         --mx/--my; each layout has its own SVG of line segments. -->
+    <section class="effort" id="how">
+      <div class="shell">
+
+        <h2 class="effort__title rise" data-reveal>
+          Going from “I'm bored” to doing something takes
+          <span class="effort__word">effort<svg viewBox="0 0 200 24" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 15 C 50 9, 120 7, 196 11 M30 21 C 80 16, 140 15, 186 17"/></svg></span>
+        </h2>
+
+        <div class="qpath" data-qpath>
+          <svg class="qpath__lines qpath__lines--wide" viewBox="0 0 1000 640" aria-hidden="true">
+            <path data-seg="1" pathLength="1" d="M236 142 C 280 192, 330 214, 386 218"/>
+            <path data-seg="2" pathLength="1" d="M598 214 C 650 206, 630 66, 694 58"/>
+            <path data-seg="3" pathLength="1" d="M948 60 C 1000 110, 996 262, 950 334"/>
+            <path data-seg="4" pathLength="1" d="M792 446 C 760 490, 690 504, 614 498"/>
+            <path data-seg="5" pathLength="1" d="M388 498 C 344 498, 328 432, 298 421"/>
+          </svg>
+          <svg class="qpath__lines qpath__lines--tall" viewBox="0 0 360 920" aria-hidden="true">
+            <path data-seg="1" pathLength="1" d="M200 104 C 230 112, 246 128, 248 146"/>
+            <path data-seg="2" pathLength="1" d="M164 256 C 134 264, 118 280, 116 296"/>
+            <path data-seg="3" pathLength="1" d="M200 404 C 230 412, 246 428, 248 446"/>
+            <path data-seg="4" pathLength="1" d="M164 556 C 134 564, 118 580, 116 596"/>
+            <path data-seg="5" pathLength="1" d="M200 704 C 230 712, 246 728, 248 746"/>
+          </svg>
+
+          <!-- Each point: the question, the thoughts it sets off (first
+               person, like the question), and the apps it sends you to.
+               Placed by its top centre. -->
+          <ol class="qpath__qs">
+            <li data-q="1" style="--x:17%;--y:4.69%;--mx:33.3%;--my:0%">
+              <b>what to do?</b>
+              <i>something new? idk what to do</i>
+              <span class="qpath__apps"><img src="/assets/img/apps/tiktok.png" alt="TikTok" width="26" height="26" loading="lazy"><img src="/assets/img/apps/googlemaps.png" alt="Google Maps" width="26" height="26" loading="lazy"><img src="/assets/img/apps/gemini.png" alt="Gemini" width="26" height="26" loading="lazy"></span>
+            </li>
+            <li data-q="2" style="--x:49%;--y:31.25%;--mx:66.7%;--my:16.3%">
+              <b>who to go with?</b>
+              <i>is anyone free? are there interesting people to meet?</i>
+              <span class="qpath__apps"><img src="/assets/img/apps/whatsapp.png" alt="WhatsApp" width="26" height="26" loading="lazy"><img src="/assets/img/apps/snapchat.png" alt="Snapchat" width="26" height="26" loading="lazy"><img src="/assets/img/apps/tinder.png" alt="Tinder" width="26" height="26" loading="lazy"><img src="/assets/img/apps/discord.png" alt="Discord" width="26" height="26" loading="lazy"></span>
+            </li>
+            <li data-q="3" style="--x:82%;--y:6.25%;--mx:33.3%;--my:32.6%">
+              <b>plan it</b>
+              <i>when works for everyone? where?</i>
+              <span class="qpath__apps"><img src="/assets/img/apps/messages.svg" alt="Messages" width="26" height="26" loading="lazy"><img src="/assets/img/apps/phone.svg" alt="Phone" width="26" height="26" loading="lazy"></span>
+            </li>
+            <li data-q="4" style="--x:83%;--y:51.56%;--mx:66.7%;--my:48.9%">
+              <b>do I need to book?</b>
+              <i>is it full? do I need tickets?</i>
+              <span class="qpath__apps"><img src="/assets/img/apps/thefork.png" alt="TheFork" width="26" height="26" loading="lazy"><img src="/assets/img/apps/kide.png" alt="Kide.app" width="26" height="26" loading="lazy"><img src="/assets/img/apps/luma.png" alt="Luma" width="26" height="26" loading="lazy"></span>
+            </li>
+            <li data-q="5" style="--x:50%;--y:75%;--mx:33.3%;--my:65.2%">
+              <b>what will it cost?</b>
+              <i>€30 for a ticket? is it even worth it?</i>
+              <span class="qpath__apps"><img src="/assets/img/apps/op.png" alt="OP" width="26" height="26" loading="lazy"><img src="/assets/img/apps/nordea.png" alt="Nordea" width="26" height="26" loading="lazy"><img src="/assets/img/apps/revolut.png" alt="Revolut" width="26" height="26" loading="lazy"><img src="/assets/img/apps/mobilepay.png" alt="MobilePay" width="26" height="26" loading="lazy"></span>
+            </li>
+            <li data-q="6" style="--x:17%;--y:62.5%;--mx:66.7%;--my:81.5%">
+              <b>how do I get there?</b>
+              <i>bus or tram? how long will it take?</i>
+              <span class="qpath__apps"><img src="/assets/img/apps/hsl.png" alt="HSL" width="26" height="26" loading="lazy"><img src="/assets/img/apps/bolt.png" alt="Bolt" width="26" height="26" loading="lazy"><img src="/assets/img/apps/googlemaps.png" alt="Google Maps" width="26" height="26" loading="lazy"></span>
+            </li>
+          </ol>
+        </div>
+
+        <div class="effort__min" data-reveal>
+          <!-- min floats in from the top-left as you scroll and settles
+               at the end of his line (effort-path.js → floatMin). -->
+          <h2 class="effort__help"><span class="effort__helptext"><span class="effort__helpwords rise">min makes it <em class="effort__less">effortless</em></span><span class="effort__float" aria-hidden="true" data-float-min><img src="/assets/img/min-character/floating%20Min.png" alt="" width="206" height="206" loading="lazy"></span></span></h2>
+          <!-- The offer card from the hero (activity-card.css). -->
+          <div class="acard" role="group" aria-label="A min offer: board game night">
+            <div class="acard__head"><p class="acard__kind">group activity</p><p class="acard__time" data-countdown="735"><span class="acard__in">starts in</span><span class="acard__clock">12:15</span></p><p class="acard__status">live now</p></div>
+            <div class="acard__photo">
+              <img src="/assets/img/offers/photo-boardgames.jpg" alt="Friends laughing around a board game in a warm game café" width="720" height="576" decoding="async" loading="lazy">
+              <div class="acard__words">
+                <p class="acard__title">Board game night</p>
+                <p class="acard__venue">@ Noppakolo Game Café</p><p class="acard__length">~2 hours</p>
+                <p class="acard__blurb">Pull up a chair, learn a new game and play a few rounds with fellow game nerds.</p>
+              </div>
+            </div>
+            <div class="acard__panels">
+              <div class="acard__panel acard__who"><ul class="acard__people"><li class="acard__person"><span class="acard__pebble"><img src="/assets/img/offers/avatar-dalia.png" alt="" width="132" height="125"></span><span><span class="acard__name">Dalia</span><span class="acard__common" aria-label="In common: D&amp;D, sci-fi"><span>D&amp;D</span><span>sci-fi</span></span></span></li></ul><div class="acard__spots" aria-hidden="true"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"><img src="/assets/img/offers/open-spot.svg" alt="" width="22" height="22"></div><p class="acard__filled">1 of 4 spots filled</p></div>
+              <div class="acard__panel"><ul class="acard__items"><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🎲</span><span><span>Table fee</span><br><span class="acard__price">€4.00</span></span></li><li class="acard__item"><span class="acard__thumb" aria-hidden="true">🍺</span><span><span>Table + a drink</span><br><span class="acard__price"><s>€9.00</s> <b>€7.50</b></span></span></li></ul></div>
+            </div>
+          </div>
+          <!-- What min answers, point for point: the people (the
+               question most plans die on), the cost, and the rest. -->
+          <ul class="effort__wins">
+            <li class="rise" data-delay="1">
+              <b>People you'll vibe with</b>
+              <span>min finds people nearby who are into the same things as you.</span>
+            </li>
+            <li class="rise" data-delay="2">
+              <b>Everyday things, made interesting</b>
+              <span>A coffee, a game night, an hour at the museum. Not a €30 event.</span>
+            </li>
+            <li class="rise" data-delay="3">
+              <b>Planned and prepaid</b>
+              <span>No wasted time. Simply show up, have fun, then get back to whatever you were doing.</span>
+            </li>
+          </ul>
+          <p class="effort__go rise" data-delay="4">All that's left is to get up and go.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── questions ──────────────────────────────────────────── -->
+    <section class="faq" id="faq" data-reveal>
+      <div class="shell">
+        <div class="faq__head">
+          <div>
+            <h2 class="rise">Questions people ask</h2>
+            <p class="lede rise" data-delay="1">
+              If we've missed yours, reply to the waitlist email — a person answers it.
+            </p>
+          </div>
+        </div>
+
+        <div class="faq__list">
+          <details class="faq__item resin rise" data-delay="1">
+            <summary>Is min a dating app?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              No. min finds you something to do nearby, alone or with people who share an interest. The activity is the point. What happens after it is up to you.
+            </p></div>
+          </details>
+          <details class="faq__item resin rise" data-delay="2">
+            <summary>Do I have to go with strangers?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              No. Go alone, bring a friend, or join people nearby who are up for the same thing. Solo activities skip the wait entirely.
+            </p></div>
+          </details>
+          <details class="faq__item resin rise" data-delay="3">
+            <summary>How is min different from Meetup or event apps?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              Events are planned days or weeks ahead. min is for the free hour you have right now: live offers close by that you can go to straight away, with the time, place and payment already sorted in one tap.
+            </p></div>
+          </details>
+          <details class="faq__item resin rise" data-delay="4">
+            <summary>Does it cost money?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              Using min is free, with no subscription. When you join an activity you prepay its item, like the coffee or the museum ticket, plus a small service fee. You see the full price before you accept, and if a group doesn't fill in time you get your money back.
+            </p></div>
+          </details>
+          <details class="faq__item resin rise" data-delay="4">
+            <summary>What does min know about me?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              What you tell it in short chats and which activities you go to, so the offers fit you better. You can see, correct or delete it at any time. We don't sell your data, and min is built for GDPR from day one.
+            </p></div>
+          </details>
+          <details class="faq__item resin rise" data-delay="4">
+            <summary>Is it safe?<i aria-hidden="true"></i></summary>
+            <div class="faq__answer"><p>
+              Activities happen in public venues, never anyone's home. min is 18+, with your date of birth confirmed at signup. Others only see a nickname, avatar, short intro and age range. You can cancel up to the meeting with a neutral “plans changed”, and block or report in one tap. Every report is reviewed by a person within 24 hours.
+            </p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── join ───────────────────────────────────────────────── -->
+    <section class="closer" id="closer">
+      <div class="shell" data-reveal>
+        <img class="closer__min" src="/assets/img/min-listening.png" alt=""
+             width="287" height="350" decoding="async" loading="lazy">
+        <h2 class="rise">min is coming to Helsinki first</h2>
+        <p class="lede rise" data-delay="2">
+          min launches for students in the Helsinki area in early 2027. Join the
+          waitlist and be one of the first to swap a scroll for something real.
+        </p>
+        <div class="hero__actions rise" data-delay="3">
+          <div class="signup-block">
+            <form class="signup" data-signup novalidate>
+              <div class="signup__row">
+                <input class="signup__input" type="email" name="email" required
+                       placeholder="you@example.com" autocomplete="email" inputmode="email"
+                       aria-label="Your email">
+                <button class="btn btn--primary btn--lg" type="submit">
+                  <span class="btn__fill" aria-hidden="true"></span>
+                  <span class="btn__flash" aria-hidden="true"></span>
+                  <span class="btn__label">Join waitlist</span>
+                  <svg class="btn__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+              <!-- Honeypot: hidden from humans, bots tend to fill it. Leave empty. -->
+              <input class="visually-hidden" type="text" name="website"
+                     tabindex="-1" autocomplete="off" aria-hidden="true">
+              <p class="field-error" role="alert"></p>
+              <p class="status" role="status"></p>
+            </form>
+            <div class="signup__done" data-signup-done hidden>
+              <span class="signup__tick" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                     stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>
+              </span>
+              <div>
+                <strong>You're on the list</strong>
+                <span>We'll email you the moment min opens in your neighbourhood</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+</main>
+
+<footer class="footer footer--tight">
+  <div class="footer__row">
+    <span>© 2026 min · <a href="mailto:hello@hellomin.app">hello@hellomin.app</a></span>
+    <span class="footer__links">
+      <a href="/privacy-policy/">Privacy Policy</a> ·
+      <a href="/waitlist/">Waitlist</a>
+      <!-- Glyphs from Simple Icons (CC0), drawn in the link colour. -->
+      <span class="footer__social">
+        <a href="https://www.instagram.com/hellomin.app/" target="_blank" rel="noopener" aria-label="min on Instagram"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></a>
+        <a href="https://www.tiktok.com/@hellomin.app" target="_blank" rel="noopener" aria-label="min on TikTok"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
+      </span>
+    </span>
+  </div>
+</footer>
+
+<!-- The only docked chrome: a floating pill at the bottom of the viewport
+     (see .dock-cta), last in the source so the page's content comes before
+     it for keyboard and screen readers. It surfaces once the hero is behind
+     you and steps aside over the closer, which carries the same form — see
+     dock() in landing.js.
+
+     It targets the hero's own field rather than /waitlist: the signup is
+     already on this page, so sending someone to a second one would cost a
+     navigation to reach a form they had just scrolled past. The href is a
+     real fragment, so it still works with JS off. -->
+<a class="dock-cta btn btn--primary" href="#hero-email">
+  <span class="btn__fill" aria-hidden="true"></span>
+  <span class="btn__flash" aria-hidden="true"></span>
+  <span class="btn__label">Join waitlist</span>
+  <svg class="btn__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</a>
+<script type="module" src="/assets/js/landing.js?v=20261105b"></script>
+<script type="module">
+  import { waitlistForms } from '/assets/js/waitlist-form.js?v=20260922a';
+  import { offerFlow } from '/assets/js/offer-flow.js?v=20261105a';
+  import { offerCountdowns } from '/assets/js/offer-countdown.js?v=20261105b';
+  import { effortPath, floatMin } from '/assets/js/effort-path.js?v=20261105c';
+  import { minWave } from '/assets/js/min-wave.js?v=20261104a';
+  // The scan -> arrival ping rides in on that first import: waitlist-form.js
+  // pulls in scan-attribution.js, which reports back to the Worker that this
+  // page actually rendered, if and only if a QR scan sent us here with a ?s=
+  // token. Nothing to call — a page that had to remember the call would
+  // report zero arrivals when someone forgot, which reads as a page nobody
+  // reaches rather than as a missing line.
+  waitlistForms();   // hero + closer, the same module /waitlist posts through
+  offerFlow();       // the hero's coverflow of offer cards
+  offerCountdowns(); // the cards' 'starts in mm:ss' timers tick
+  effortPath();      // the questions' line draws as you scroll
+  floatMin();        // min floats in to 'min makes it effortless'
+  minWave();         // min in front of the cards: live eyes, reflection
+</script>
+</body>
+</html>

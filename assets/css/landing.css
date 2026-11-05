@@ -660,6 +660,16 @@ p { margin: 0; }
 .dock-armed.is-docked .dock-cta .btn__flash {
   animation: btn-emerge-flash 900ms cubic-bezier(0.33, 0, 0.15, 1) 260ms both;
 }
+/* Over the closer (which carries the same form) it steps aside exactly
+   as if undocked: with the animations dropped it transitions back to the
+   hidden values above, and leaving the closer replays the emerge fresh,
+   so it always lands in place. Set by dock() in landing.js. */
+.dock-armed.is-docked.is-near-closer .dock-cta,
+.dock-armed.is-docked.is-near-closer .dock-cta > :not(.btn__fill):not(.btn__flash):not(.btn__ripple),
+.dock-armed.is-docked.is-near-closer .dock-cta .btn__flash {
+  animation: none;
+}
+.dock-armed.is-docked.is-near-closer .dock-cta { pointer-events: none; filter: blur(5px); }
 @media (prefers-reduced-motion: reduce) {
   .dock-armed.is-docked .dock-cta,
   .dock-armed.is-docked .dock-cta > :not(.btn__fill):not(.btn__flash):not(.btn__ripple),
@@ -679,6 +689,8 @@ p { margin: 0; }
   .dock-armed.is-docked .dock-cta > :not(.btn__fill):not(.btn__flash):not(.btn__ripple) {
     opacity: 1;
   }
+  /* …and still steps aside over the closer, without the slide. */
+  .dock-armed.is-docked.is-near-closer .dock-cta { opacity: 0; }
 }
 
 .nav__brand {
