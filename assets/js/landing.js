@@ -66,6 +66,12 @@ function dock() {
     sink = Math.max(12, surface - Math.min(160, h * 0.14));
   };
 
+  /* It steps aside over the closer, which carries the same form, so the
+     two CTAs are never both in frame: once the closer's top passes 72%
+     down the screen (home-sections.css hides it on body.is-near-closer).
+     This used to live in home-steps.js and went with that section. */
+  const closer = document.querySelector('#closer');
+
   let up = false;
   const sync = () => {
     if (!up && scrollY > surface) {
@@ -74,6 +80,10 @@ function dock() {
     } else if (up && scrollY < sink) {
       up = false;
       root.classList.remove('is-docked');
+    }
+    if (closer) {
+      document.body.classList.toggle('is-near-closer',
+        closer.getBoundingClientRect().top < innerHeight * 0.72);
     }
   };
 
