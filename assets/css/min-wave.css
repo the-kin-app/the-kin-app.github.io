@@ -1,0 +1,23 @@
+/* min waving, with live eyes — layers for min-wave.js.
+   The host is min himself: size it by width; the ratio is the crop of
+   the 400×360 body render to his outline (330×296, see VB in the JS).
+   All three layers share that box; the body image overhangs it by the
+   empty canvas around him, so it lines up with the eyes' viewBox. */
+.min-wave {
+  position: relative;
+  display: block;
+  aspect-ratio: 330 / 296;
+  pointer-events: none;
+  user-select: none;
+}
+.min-wave > * { position: absolute; }
+.min-wave__still,
+.min-wave__eyes { inset: 0; width: 100%; height: 100%; overflow: visible; }
+.min-wave__body {
+  /* 400/330 wide, 360/296 tall, shifted by the crop's 36 / 24 px */
+  left: -10.909%;
+  top: -8.108%;
+  width: 121.212%;
+  height: 121.622%;
+  max-width: none;
+}

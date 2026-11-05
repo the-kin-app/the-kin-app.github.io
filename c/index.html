@@ -124,6 +124,7 @@
 <link rel="stylesheet" href="/assets/css/home-sections.css?v=20261009a">
 <link rel="stylesheet" href="/assets/css/activity-card.css?v=20261104a">
 <link rel="stylesheet" href="/assets/css/offer-flow.css?v=20261104a">
+<link rel="stylesheet" href="/assets/css/min-wave.css?v=20261104a">
 <!-- The styles this page adds. Desktop keeps the homepage's two
      columns: the words on the left, and where the homepage has its
      phone, a coverflow of min's offer cards. On phones it all stacks:
@@ -185,55 +186,47 @@
      A layer of the coverflow, after the track, so it draws over all
      three cards. Sized and placed from --flow-scale, the same number
      that shrinks the cards, so he stays planted on the front card's
-     bottom-right corner at every breakpoint. The 3D is three things:
-     a contact shadow where he meets the card edge, a cast shadow
-     thrown down-left onto the cards (the light is the nook's window,
-     top right), and his own shading — lit top-right, falling off to
-     the bottom-left — masked to his silhouette. */
+     bottom-right corner at every breakpoint.
+
+     He is min-wave.js: the eyeless body render from Figma (min-app
+     2762:2478) with live eyes on top (they blink every 3–7 s, follow
+     the cursor, or look around and at what you press on touch), and
+     the Figma reflection (2773:48) under his feet. The render carries
+     its own light and shade, so the page only adds what it owes the
+     scene: a contact shadow where he meets the floor, and a shadow cast
+     down-left onto the cards (the light is the nook's window, top
+     right). */
   .wmin {
-    --wmin-w: calc(168px * var(--flow-scale));
+    --wmin-w: calc(160px * var(--flow-scale));
     position: absolute;
     z-index: 5;
     width: var(--wmin-w);
-    aspect-ratio: 136 / 142;
     /* x: centred just inside the front card's right edge (177px from
        the track's centre). y: the front card's bottom edge sits ~518px
-       down the track; his feet land a little below it, so he reads as
-       standing in front of the stack rather than stuck to it. */
+       down the track; his feet (0.879 of his width below his top) land
+       about a quarter of his width below it, on the floor in front of
+       the stack, so he stands in the room rather than on a card, and the
+       reflection has floor to fall on. */
     left: calc(50% + 177px * var(--flow-scale) - var(--wmin-w) * 0.38);
-    top: calc(518px * var(--flow-scale) - var(--wmin-w) * 0.9);
-    pointer-events: none;
+    top: calc(518px * var(--flow-scale) - var(--wmin-w) * 0.5);
   }
-  .wmin img {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: auto;
+  .wmin .min-wave__body {
     filter:
-      drop-shadow(-4px 8px 6px rgba(50, 38, 30, 0.34))
-      drop-shadow(-22px 30px 28px rgba(50, 38, 30, 0.30));
+      drop-shadow(-4px 8px 6px rgba(50, 38, 30, 0.30))
+      drop-shadow(-22px 30px 28px rgba(50, 38, 30, 0.26));
   }
   .wmin::before {          /* contact shadow under his feet */
     content: '';
     position: absolute;
-    left: 6%; right: 2%;
-    bottom: -9%;
-    height: 20%;
+    left: 14%; right: 8%;
+    bottom: -6%;
+    height: 13%;
     border-radius: 50%;
-    background: radial-gradient(closest-side, rgba(46, 35, 28, 0.55), rgba(46, 35, 28, 0.2) 55%, transparent);
+    background: radial-gradient(closest-side, rgba(46, 35, 28, 0.5), rgba(46, 35, 28, 0.18) 55%, transparent);
     filter: blur(4px);
   }
-  .wmin__shade {           /* his own light and shade */
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(circle at 72% 18%, rgba(255, 251, 242, 0.45), transparent 42%),
-      radial-gradient(ellipse at 28% 100%, rgba(84, 62, 48, 0.38), transparent 62%);
-    -webkit-mask: url('/assets/img/min-character/Min%20waving.png') center / 100% 100% no-repeat;
-            mask: url('/assets/img/min-character/Min%20waving.png') center / 100% 100% no-repeat;
-  }
   @media (max-width: 800px) {
-    .wmin { --wmin-w: calc(175px * var(--flow-scale)); left: calc(50% + 177px * var(--flow-scale) - var(--wmin-w) * 0.62); }
+    .wmin { --wmin-w: calc(166px * var(--flow-scale)); left: calc(50% + 177px * var(--flow-scale) - var(--wmin-w) * 0.62); }
   }
 
   /* The first two lines are the problem, set soft; the third is the
@@ -648,10 +641,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
             </div>
           </div>
         </div>
-        <div class="wmin" aria-hidden="true">
-          <img src="/assets/img/min-character/Min%20waving.png" alt="" width="136" height="142" decoding="async">
-          <span class="wmin__shade"></span>
-        </div>
+        <div class="wmin min-wave" data-min-wave data-reflect aria-hidden="true"></div>
       </div>
 
     </div>
@@ -903,6 +893,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
   import { waitlistForms } from '/assets/js/waitlist-form.js?v=20260922a';
   import { offerFlow } from '/assets/js/offer-flow.js?v=20261103a';
   import { effortPath } from '/assets/js/effort-path.js?v=20261105a';
+  import { minWave } from '/assets/js/min-wave.js?v=20261104a';
   // The scan -> arrival ping rides in on that first import: waitlist-form.js
   // pulls in scan-attribution.js, which reports back to the Worker that this
   // page actually rendered, if and only if a QR scan sent us here with a ?s=
@@ -912,6 +903,7 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
   waitlistForms();   // hero + closer, the same module /waitlist posts through
   offerFlow();       // the hero's coverflow of offer cards
   effortPath();      // the questions' line draws as you scroll
+  minWave();         // min in front of the cards: live eyes, reflection
 </script>
 </body>
 </html>
