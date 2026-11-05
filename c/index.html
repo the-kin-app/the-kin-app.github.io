@@ -272,6 +272,16 @@
     .night__room::before { background-image: url('/assets/img/nook-night-mobile.webp'); background-position: 74% 62%; }
   }
 
+  /* ── questions, centred ─────────────────────────────────────
+     /c/ is one centred column; the FAQ follows it: heading and lede
+     centred, the list a centred column. Each question and answer stays
+     left-aligned inside its pebble, which reads better over several
+     lines and keeps the +/− at the right. */
+  .faq__head { text-align: center; }
+  .faq__head h2 { margin-inline: auto; }
+  .faq__head .lede { margin-inline: auto; max-width: 46ch; }
+  .faq__list { margin-inline: auto; }
+
   /* ── effort → min (#how) ───────────────────────────────────
      One centred column, lots of air, big type. Nothing boxed: the
      questions are just words on a line. */
