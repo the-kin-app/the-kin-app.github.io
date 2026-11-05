@@ -164,9 +164,20 @@
 .acard__people { list-style: none; margin: 0; padding: 0 0 0 16px; display: grid; gap: 10px; }
 .acard__person { display: grid; grid-template-columns: 44px 1fr; column-gap: 12px; align-items: start; }
 .acard__name { font-size: 17px; font-weight: 500; line-height: 20px; }
-.acard__tags { display: flex; align-items: center; gap: 7px; margin-top: 9px; }
-.acard__tags img { display: block; }
-.acard__tags i { display: block; width: 8px; height: 8px; border-radius: 2px; background: #bdb3a6; }
+/* What this person has in common with you: two short pills under the
+   name, tinted warm so they read as shared, not as profile labels. */
+.acard__common { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.acard__common span {
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: nowrap;
+  color: #7a5a3e;
+  background: rgba(251, 205, 159, 0.38);
+  box-shadow: inset 0 0 0 0.75px rgba(170, 120, 74, 0.18);
+}
 
 /* The portrait pebble: a white glass tile, the avatar fading out at
    the collar (the mask), a soft inner rim over the top. */
