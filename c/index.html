@@ -258,6 +258,20 @@
     :root.is-short .hero--app.hero--cry .wordmark--hero { width: 84px; margin-bottom: 6px; }
   }
 
+  /* ── the night room: the hero's nook, after dark ──────────
+     Everything below the hero used the homepage's dusk room; /c/ now
+     shows its own nook (the hero's render) graded to night: slate-blue
+     walls, moonlight through the oval window (nook-night.webp, made
+     from nook-room.jpg). Same crop as the hero, defocused the same way
+     home-sections.css defocuses the old room; its scrim stays on top. */
+  .night__room::before {
+    background: url('/assets/img/nook-night.webp') center 62% / cover no-repeat;
+    filter: blur(4px) saturate(1);
+  }
+  @media (max-width: 800px) {
+    .night__room::before { background-image: url('/assets/img/nook-night-mobile.webp'); background-position: 74% 62%; }
+  }
+
   /* ── effort → min (#how) ───────────────────────────────────
      One centred column, lots of air, big type. Nothing boxed: the
      questions are just words on a line. */
