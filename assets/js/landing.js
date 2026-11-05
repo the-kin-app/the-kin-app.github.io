@@ -68,8 +68,12 @@ function dock() {
 
   /* It steps aside over the closer, which carries the same form, so the
      two CTAs are never both in frame: once the closer's top passes 72%
-     down the screen (home-sections.css hides it on body.is-near-closer).
-     This used to live in home-steps.js and went with that section. */
+     down the screen. html.is-near-closer takes it down the same way
+     undocking does (landing.css): its emerge animation is dropped, so it
+     transitions out to the hidden values, and coming back replays the
+     emerge from the start. Forcing opacity over a still-attached
+     animation instead (the old body.is-near-closer rule) let mobile
+     Safari bring it back half off screen after the toolbar resized. */
   const closer = document.querySelector('#closer');
 
   let up = false;
@@ -82,7 +86,7 @@ function dock() {
       root.classList.remove('is-docked');
     }
     if (closer) {
-      document.body.classList.toggle('is-near-closer',
+      root.classList.toggle('is-near-closer',
         closer.getBoundingClientRect().top < innerHeight * 0.72);
     }
   };
