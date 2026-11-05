@@ -25,7 +25,7 @@
   --card-h: 500px;
   position: relative;
   width: 100%;
-  height: calc(var(--card-h) * var(--flow-scale) + 34px);
+  height: calc(var(--card-h) * var(--flow-scale) + 12px);   /* + room for the card's shadow */
   text-align: left;             /* the card is the app's, not the hero's centred column */
   touch-action: pan-y;          /* sideways drags are ours, scrolling isn't */
   user-select: none;
@@ -93,35 +93,6 @@
 /* Without the script every card sits in front; show just the first. */
 .oflow:not(.is-live) .oflow__card:not(:first-child) { display: none; }
 
-/* The dots: which card is in front, and a way to pick one. */
-.oflow__dots {
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  display: flex;
-  justify-content: center;
-  gap: 4px;
-  margin: 0; padding: 0;
-  list-style: none;
-}
-.oflow:not(.is-live) .oflow__dots { display: none; }
-.oflow__dot {
-  display: grid;
-  place-items: center;
-  width: 22px; height: 22px;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-.oflow__dot::before {
-  content: "";
-  width: 7px; height: 7px;
-  border-radius: 999px;
-  background: rgba(90, 69, 54, 0.22);
-  transition: width 300ms var(--ease-emergence), background 300ms ease;
-}
-.oflow__dot[aria-current="true"]::before { width: 18px; background: rgba(90, 69, 54, 0.6); }
-.oflow__dot:focus-visible { outline: 2px solid rgba(90, 69, 54, 0.5); outline-offset: -2px; border-radius: 999px; }
 
 @media (prefers-reduced-motion: reduce) {
   .oflow__card { transition: opacity 200ms ease; }

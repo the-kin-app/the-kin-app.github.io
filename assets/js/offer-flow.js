@@ -3,8 +3,8 @@
    ------------------------------------------------------------
    Places each card in the row (offer-flow.css reads --o/--d/--t
    and data-pos), steps the front card along on its own, and lets
-   the reader take over: swipe or drag, the arrow keys, a tap on a
-   side card, or a dot.
+   the reader take over: swipe or drag, the arrow keys, or a tap on a
+   side card. (No dots under the row, by design.)
 
    It steps on its own only while someone can see it: on screen,
    tab in front, no pointer or focus resting on it, and never with
@@ -13,8 +13,8 @@
    from under them.
 
    Accessibility: only the front card is exposed; the others are
-   aria-hidden. The region is labelled, the dots are real buttons,
-   and the arrow keys work once it has focus.
+   aria-hidden. The region is labelled and the arrow keys work once
+   it has focus.
 
    It needs four cards or more: with three there is no hidden slot,
    so a wrapping card would be seen crossing the row.
@@ -34,22 +34,6 @@ export function offerFlow(root = document) {
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   let i = 0;
-
-  /* ---- the dots ---- */
-  const dots = document.createElement('ol');
-  dots.className = 'oflow__dots';
-  const dotBtns = cards.map((_, k) => {
-    const li = document.createElement('li');
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'oflow__dot';
-    b.setAttribute('aria-label', `Show offer ${k + 1} of ${n}`);
-    b.addEventListener('click', () => { go(k); userMoved(); });
-    li.append(b);
-    dots.append(li);
-    return b;
-  });
-  flow.append(dots);
 
   /* ---- placing ----
      Each card's slot is its offset from the front card, -2…2; at ±2
@@ -85,7 +69,6 @@ export function offerFlow(root = document) {
       set(card, o);
       slot.set(card, o);
     });
-    dotBtns.forEach((b, k) => b.setAttribute('aria-current', k === i ? 'true' : 'false'));
   };
   const go = (k) => {
     const next = ((k % n) + n) % n;
