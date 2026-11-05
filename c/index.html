@@ -295,7 +295,7 @@
     position: relative;
     max-width: 1000px;
     margin: clamp(56px, 9vh, 104px) auto 0;
-    aspect-ratio: 1000 / 460;
+    aspect-ratio: 1000 / 640;
   }
   .qpath__lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   .qpath__lines--tall { display: none; }
@@ -312,17 +312,37 @@
   .qpath__qs li {
     position: absolute;
     left: var(--x); top: var(--y);
+    display: grid;
+    justify-items: center;
+    gap: 6px;
     white-space: nowrap;
-    font-size: clamp(1.15rem, 2.1vw, 1.6rem);
-    font-weight: var(--font-weight-semibold);
-    letter-spacing: -0.01em;
-    color: color-mix(in srgb, var(--ink) 88%, transparent);
     /* --p: 0 → 1 from effort-path.js; 1 without it */
     opacity: var(--p, 1);
-    transform: translate(-50%, calc(-50% + (1 - var(--p, 1)) * 14px));
+    transform: translate(-50%, calc((1 - var(--p, 1)) * 14px));
     filter: blur(calc((1 - var(--p, 1)) * 6px));
     will-change: opacity, transform, filter;
   }
+  .qpath__qs b {
+    font-size: clamp(1.15rem, 2.1vw, 1.6rem);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: color-mix(in srgb, var(--ink) 90%, transparent);
+  }
+  /* The thoughts it sets off: quieter, like an aside. */
+  .qpath__qs i {
+    font-style: normal;
+    font-size: 15px;
+    line-height: 1.35;
+    color: color-mix(in srgb, var(--ink) 56%, transparent);
+  }
+  .qpath__apps { display: flex; margin-top: 4px; }
+  .qpath__apps img {
+    width: 26px; height: 26px;
+    border-radius: 7px;
+    box-shadow: 0 0 0 1.5px rgba(30, 33, 44, 0.9), 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  .qpath__apps img + img { margin-left: -5px; }
 
   /* min. */
   .effort__min {
@@ -368,10 +388,13 @@
 
   /* Phones: the tall zigzag. */
   @media (max-width: 720px) {
-    .qpath { aspect-ratio: 360 / 640; max-width: 420px; }
+    .qpath { aspect-ratio: 360 / 920; max-width: 420px; }
     .qpath__lines--wide { display: none; }
     .qpath__lines--tall { display: block; }
-    .qpath__qs li { left: var(--mx); top: var(--my); font-size: 1.12rem; }
+    .qpath__qs li { left: var(--mx); top: var(--my); gap: 4px; }
+    .qpath__qs b { font-size: 1.12rem; }
+    .qpath__qs i { font-size: 13.5px; white-space: normal; width: 205px; text-align: center; }
+    .qpath__apps img { width: 22px; height: 22px; border-radius: 6px; }
   }
   @media (max-width: 385px) { .effort__min .acard { zoom: 0.88; } }
 </style>
@@ -690,6 +713,9 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
          writes it per item. With JS off or reduced motion everything
          is simply there.
 
+         Each point carries the thoughts it sets off ("are my friends
+         free? new people?") and the real apps it sends you to.
+
          Two layouts for the questions: a wide zigzag (desktop) and a
          tall one (phones). Labels are shared, placed by --x/--y and
          --mx/--my; each layout has its own SVG of line segments. -->
@@ -702,28 +728,55 @@ addEventListener('orientationchange',function(){w=-1;setTimeout(pin,120);});})()
         </h2>
 
         <div class="qpath" data-qpath>
-          <svg class="qpath__lines qpath__lines--wide" viewBox="0 0 1000 460" aria-hidden="true">
-            <path data-seg="1" pathLength="1" d="M212 96 C 270 150, 320 178, 372 190"/>
-            <path data-seg="2" pathLength="1" d="M592 176 C 650 160, 652 86, 728 74"/>
-            <path data-seg="3" pathLength="1" d="M868 96 C 948 136, 950 214, 902 246"/>
-            <path data-seg="4" pathLength="1" d="M762 300 C 724 362, 656 384, 606 380"/>
-            <path data-seg="5" pathLength="1" d="M398 372 C 340 370, 316 352, 294 342"/>
+          <svg class="qpath__lines qpath__lines--wide" viewBox="0 0 1000 640" aria-hidden="true">
+            <path data-seg="1" pathLength="1" d="M236 142 C 280 192, 330 214, 386 218"/>
+            <path data-seg="2" pathLength="1" d="M598 214 C 650 206, 630 66, 694 58"/>
+            <path data-seg="3" pathLength="1" d="M948 60 C 1000 110, 996 262, 950 334"/>
+            <path data-seg="4" pathLength="1" d="M792 446 C 760 490, 680 504, 598 498"/>
+            <path data-seg="5" pathLength="1" d="M404 498 C 352 498, 330 432, 298 421"/>
           </svg>
-          <svg class="qpath__lines qpath__lines--tall" viewBox="0 0 360 640" aria-hidden="true">
-            <path data-seg="1" pathLength="1" d="M118 64 C 150 86, 196 98, 226 122"/>
-            <path data-seg="2" pathLength="1" d="M222 164 C 204 196, 150 206, 118 224"/>
-            <path data-seg="3" pathLength="1" d="M112 262 C 132 292, 196 300, 224 322"/>
-            <path data-seg="4" pathLength="1" d="M226 362 C 210 398, 150 404, 120 424"/>
-            <path data-seg="5" pathLength="1" d="M116 462 C 140 494, 196 500, 222 522"/>
+          <svg class="qpath__lines qpath__lines--tall" viewBox="0 0 360 920" aria-hidden="true">
+            <path data-seg="1" pathLength="1" d="M200 104 C 230 112, 246 128, 248 146"/>
+            <path data-seg="2" pathLength="1" d="M164 256 C 134 264, 118 280, 116 296"/>
+            <path data-seg="3" pathLength="1" d="M200 404 C 230 412, 246 428, 248 446"/>
+            <path data-seg="4" pathLength="1" d="M164 556 C 134 564, 118 580, 116 596"/>
+            <path data-seg="5" pathLength="1" d="M200 704 C 230 712, 246 728, 248 746"/>
           </svg>
 
+          <!-- Each point: the question, the thoughts it sets off (first
+               person, like the question), and the apps it sends you to.
+               Placed by its top centre. -->
           <ol class="qpath__qs">
-            <li data-q="1" style="--x:17%;--y:13%;--mx:30%;--my:6.5%">what to do?</li>
-            <li data-q="2" style="--x:48.5%;--y:41.5%;--mx:66%;--my:22%">who to go with?</li>
-            <li data-q="3" style="--x:80%;--y:15%;--mx:27%;--my:37.5%">plan it</li>
-            <li data-q="4" style="--x:82%;--y:59%;--mx:66%;--my:53%">do I need to book?</li>
-            <li data-q="5" style="--x:50%;--y:82.5%;--mx:33%;--my:69%">who do I pay?</li>
-            <li data-q="6" style="--x:15%;--y:72%;--mx:64%;--my:84.5%">how do I get there?</li>
+            <li data-q="1" style="--x:17%;--y:4.69%;--mx:33.3%;--my:0%">
+              <b>what to do?</b>
+              <i>something new? what's even on tonight?</i>
+              <span class="qpath__apps"><img src="/assets/img/apps/tiktok.png" alt="TikTok" width="26" height="26" loading="lazy"><img src="/assets/img/apps/googlemaps.png" alt="Google Maps" width="26" height="26" loading="lazy"><img src="/assets/img/apps/gemini.png" alt="Gemini" width="26" height="26" loading="lazy"></span>
+            </li>
+            <li data-q="2" style="--x:49%;--y:31.25%;--mx:66.7%;--my:16.3%">
+              <b>who to go with?</b>
+              <i>are my friends free? new people?</i>
+              <span class="qpath__apps"><img src="/assets/img/apps/whatsapp.png" alt="WhatsApp" width="26" height="26" loading="lazy"><img src="/assets/img/apps/timeleft.png" alt="Timeleft" width="26" height="26" loading="lazy"></span>
+            </li>
+            <li data-q="3" style="--x:82%;--y:6.25%;--mx:33.3%;--my:32.6%">
+              <b>plan it</b>
+              <i>when works for everyone? where?</i>
+              <span class="qpath__apps"><img src="/assets/img/apps/whatsapp.png" alt="WhatsApp" width="26" height="26" loading="lazy"><img src="/assets/img/apps/messenger.png" alt="Messenger" width="26" height="26" loading="lazy"></span>
+            </li>
+            <li data-q="4" style="--x:83%;--y:51.56%;--mx:66.7%;--my:48.9%">
+              <b>do I need to book?</b>
+              <i>is it full? do I need tickets?</i>
+              <span class="qpath__apps"><img src="/assets/img/apps/thefork.png" alt="TheFork" width="26" height="26" loading="lazy"><img src="/assets/img/apps/kide.png" alt="Kide.app" width="26" height="26" loading="lazy"></span>
+            </li>
+            <li data-q="5" style="--x:50%;--y:75%;--mx:33.3%;--my:65.2%">
+              <b>who do I pay?</b>
+              <i>do we split it? who owes who?</i>
+              <span class="qpath__apps"><img src="/assets/img/apps/mobilepay.png" alt="MobilePay" width="26" height="26" loading="lazy"></span>
+            </li>
+            <li data-q="6" style="--x:17%;--y:62.5%;--mx:66.7%;--my:81.5%">
+              <b>how do I get there?</b>
+              <i>bus or tram? how long will it take?</i>
+              <span class="qpath__apps"><img src="/assets/img/apps/hsl.png" alt="HSL" width="26" height="26" loading="lazy"><img src="/assets/img/apps/googlemaps.png" alt="Google Maps" width="26" height="26" loading="lazy"></span>
+            </li>
           </ol>
         </div>
 
