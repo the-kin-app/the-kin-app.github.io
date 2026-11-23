@@ -1,20 +1,22 @@
-# Min
+# min
 
-> Min is an IRL social app that introduces you to people nearby so you can meet new people in real life. You talk to Min, Min introduces you to one person around you, and if you both accept, you walk over and say hello. Not a dating app: no profiles, no swiping, no chat, no feed. Launching first for all students in the Helsinki area, Finland, in early 2027.
+> min is IRL activity on demand: a few concrete things to do nearby, right now, alone or with people. Tap once, prepay the coffee or the ticket, and go. No feed, no swiping, no chat. Launching for Helsinki-area students in early 2027.
 
 ## Key facts
 
-- What it is: an app for meeting people nearby, in person. What the relationship becomes — a friend, a running group, or a date — is up to the two of you.
-- How it works: (1) Min gets to know you through conversation. (2) Min finds people nearby you might vibe with. (3) Accept the intro, walk over and say hello, somewhere public.
-- How it differs from Meetup, Bumble BFF or other friend apps: no profile to build, nothing to swipe and no group chat to keep alive.
-- Privacy: your memory shape is stored only on your phone; the conversation is deleted after use. Anonymity holds until an introduction is mutually accepted.
-- Price: talking to Min and getting introductions are free forever. A subscription with more control and curated group events is planned; price not set.
+- What it is: open min and see live offers close by that you can go to right now. Join one in a tap or tell min what you're up for, prepay the activity item, and go. Alone, with a friend, or with people nearby who share an interest.
+- Not a dating app: min finds you something to do nearby, alone or with people who share an interest. The activity is the point. What happens after it is up to you.
+- Strangers are optional: go alone, bring a friend, or join people nearby who are up for the same thing. Solo activities skip the wait entirely.
+- How it differs from Meetup or event apps: events are planned days or weeks ahead. min is for the free hour you have right now: live offers close by that you can go to straight away, with the time, place and payment already sorted in one tap.
+- Price: using min is free, with no subscription. When you join an activity you prepay its item, like the coffee or the museum ticket, plus a small service fee. You see the full price before you accept, and if a group doesn't fill in time you get your money back.
+- Privacy: min knows what you tell it in short chats and which activities you go to, so the offers fit you better. You can see, correct or delete it at any time. We don't sell your data, and min is built for GDPR from day one.
+- Safety: activities happen in public venues, never anyone's home. min is 18+, with your date of birth confirmed at signup. Others only see a nickname, avatar, short intro and age range. You can cancel up to the meeting with a neutral "plans changed", and block or report in one tap. Every report is reviewed by a person within 24 hours.
 - Where and when: Helsinki area first (Aalto University, Arcada, Diak, Haaga-Helia, Hanken, Humak, Laurea, Metropolia, Uniarts, University of Helsinki and more), including international and exchange students. Early 2027.
 - Contact: hello@hellomin.app
 
 ## Pages
 
-- [Home](https://hellomin.app/): what Min is, how it works, FAQ
-- [Pitch deck](https://hellomin.app/pitchdeck/): why real-life connection disappeared and what Min does about it
+- [Home](https://hellomin.app/): what min is, how it works, FAQ
+- [Pitch deck](https://hellomin.app/pitchdeck/): why real-life connection disappeared and what min does about it
 - [Waitlist](https://hellomin.app/waitlist/)
 - [Privacy policy](https://hellomin.app/privacy-policy/)
