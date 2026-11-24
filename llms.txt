@@ -17,6 +17,5 @@
 ## Pages
 
 - [Home](https://hellomin.app/): what min is, how it works, FAQ
-- [Pitch deck](https://hellomin.app/pitchdeck/): why real-life connection disappeared and what min does about it
 - [Waitlist](https://hellomin.app/waitlist/)
 - [Privacy policy](https://hellomin.app/privacy-policy/)
