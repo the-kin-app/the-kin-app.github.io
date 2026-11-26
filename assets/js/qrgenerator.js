@@ -71,6 +71,7 @@
         { slug: 'nirvana', label: 'Nirvana' },
         { slug: 'wanted', label: 'Wanted' },
         { slug: 'halloween', label: 'Halloween' },
+        { slug: 'gta', label: 'GTA' },
         // `to` means the Worker counts the scan and sends it somewhere other
         // than the landing page (OUTBOUND in the Worker). Same URL shape, so
         // it is printed exactly like any other poster code.

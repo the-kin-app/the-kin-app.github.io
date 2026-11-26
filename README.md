@@ -362,7 +362,7 @@ than refusing the scan. Paper cannot be reissued. The generator flags that shape
 and tells you the locationless URL to print instead.
 
 Each asset type owns its own design list: posters are `unclesam`,
-`unclesam-footer`, `happy`, `trump`, `nirvana`, `wanted` and `halloween`; cards are `unclemin` and `help`.
+`unclesam-footer`, `happy`, `trump`, `nirvana`, `wanted`, `halloween` and `gta`; cards are `unclemin` and `help`.
 Posters also have `halloween-event` and `survey`, which carry `to:` because
 the Worker sends them somewhere other than the landing page (`OUTBOUND` in the
 Worker): Instagram, and the IRL activities survey at `/survey/v2/`. They are
